@@ -20,22 +20,22 @@ function AllFAQs() {
   }
 
   return (
-    <div>
+    <div className="bg-gray-300 dark:bg-black/30">
       <Navbar />
       <div className="w-[95%] mx-auto px-4 py-3">
-        <h1 className="text-3xl font-bold text-white mb-6">Frequently Asked Questions</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Frequently Asked Questions</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {faq.map((item: FAQ) => (
             <div
               key={item.id}
-              className="bg-[#1A1A1A] border border-gray-600/30 rounded-xl p-4 text-white"
+              className="border border-gray-600/30 rounded-xl p-4 text-gray-900 dark:text-white bg-white/90 dark:bg-[#1A1A1A]"
             >
               {/* Question */}
               <h4 className="text-lg font-semibold mb-2">{item.question}</h4>
 
               {/* Answer */}
-              <p className="text-gray-300 text-sm leading-relaxed">
+              <p className="dark:text-gray-400 text-gray-600 text-sm leading-relaxed">
                 {item.answer}
               </p>
             </div>

@@ -138,35 +138,35 @@ function About() {
   return (
     <div>
         <Navbar />
-        <section className="relative flex flex-col md:flex-row bg-black/30 py-6 px-6 md:px-7 lg:px-10 lg:gap-12 md:gap-3" id="Journey">
+        <section className="relative flex flex-col md:flex-row bg-gray-300 dark:bg-black/30 py-6 px-6 md:px-7 lg:px-10 lg:gap-12 md:gap-3" id="Journey">
           <div className="flex-1  flex flex-col justify-center space-y-6 z-10 order-last md:order-first ">
            <img
               src="/logo/Abstract Design (1).png"
               alt="Icon"
               className="w-13 h-13 object-contain"
             />
-          <h1 className="text-white md:text-4xl text-3xl">
+          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
             Our Journey
           </h1>
 
-          <p className="text-gray-400 text-[14px] max-w-[95%]">
+          <p className="text-gray-600 dark:text-gray-400 text-[14px] max-w-[95%]">
             Our story is one of continuous growth and evolution. We started as a small team with big dreams, determined to create a real estate platform that transcended the ordinary. Over the years, we've expanded our reach, forged valuable partnerships, and gained the trust of countless clients.
           </p>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 items-center text-center lg:text-left w-full">
-              <div className="bg-[#1A1A1A] border border-gray-600/30 text-white px-4 py-3 rounded w-full">
-                <p className="text-lg font-semibold">200+</p>
-                <p className="text-sm text-gray-400">Happy customers</p>
-              </div>
-              <div className="bg-[#1A1A1A] border border-gray-600/30 text-white px-4 py-3 rounded w-full">
-                <p className="text-lg font-semibold">10k+</p>
-                <p className="text-sm text-gray-400">Properties for Clients</p>
-              </div>
-              <div className="bg-[#1A1A1A] border border-gray-600/30 text-white px-4 py-3 rounded w-full col-span-2 lg:col-span-1">
-                <p className="text-lg font-semibold">16+</p>
-                <p className="text-sm text-gray-400">Years of Experience</p>
-              </div>
-          </div>    
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 items-center text-center md:text-left w-full">
+                <div className="bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-600/30 text-gray-900 dark:text-white px-4 py-3 rounded w-full">
+                  <p className="text-lg font-semibold">200+</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Happy customers</p>
+                </div>
+                <div className="bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-600/30 text-gray-900 dark:text-white px-4 py-3 rounded w-full">
+                  <p className="text-lg font-semibold">10k+</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Properties</p>
+                </div>
+                <div className="bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-600/30 text-gray-900 dark:text-white px-4 py-3 rounded w-full col-span-2 md:col-span-1">
+                  <p className="text-lg font-semibold">16+</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Years of Experience</p>
+                </div>
+              </div>   
         </div>
 
         
@@ -184,13 +184,13 @@ function About() {
             <img
               src={hero}
               alt="Hero"
-              className="w-full h-[300px] object-cover rounded-2xl sm:rounded-none max-h-[700px] xl:max-h-[500px] sm:min-w-[300px]"
+              className="w-full h-[300px] object-cover bg-gray-300 dark:bg-black/10 rounded-2xl sm:rounded-none max-h-[700px] xl:max-h-[500px] sm:min-w-[300px]"
             />
           </div>
       </div>
     </section>
 
-    <section className="bg-black/30 md:py-6 py-3 px-2 md:px-7 lg:px-10 lg:gap-12 flex flex-col md:flex-row gap-8 md:gap-0" id="Values">
+    <section className="bg-gray-300 dark:bg-black/30 md:py-6 py-3 px-2 md:px-4 lg:px-10 lg:gap-12 flex flex-col md:flex-row gap-8 md:gap-0" id="Values">
         {/* LEFT SIDE — 1 PART WIDTH */}
         <div className="flex-1 flex flex-col justify-center px-5 space-y-6 z-10 ">
           <img
@@ -199,15 +199,15 @@ function About() {
             className="w-13 h-13 object-contain"
           />
 
-          <h1 className="text-white md:text-4xl text-3xl">Our Values</h1>
+          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Our Values</h1>
 
-          <p className="text-gray-400 text-[14px] max-w-[95%]">
+          <p className="dark:text-gray-400 text-gray-600 text-[14px] max-w-[95%]">
             Our story is one of continuous growth and evolution. We started as a small team with big dreams, determined to create a real estate platform that transcended the ordinary.
           </p>
         </div>
 
         {/* RIGHT SIDE — 2 PARTS WIDTH */}
-        <div className="border-7 border-neutral-800/50 rounded-3xl h-fit flex-2">
+        <div className="border-7 dark:bg-[#121212] bg-white border-neutral-800/50 rounded-3xl h-fit flex-2">
           <div className="flex-2 border border-neutral-700/30 rounded-2xl p-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
   
@@ -222,10 +222,10 @@ function About() {
                 >
                   <div className="flex items-center gap-4">
                     {iconMap[item.icon]}
-                    <h3 className="text-white text-lg font-semibold">{item.title}</h3>
+                    <h3 className="text-gray-900 dark:text-white text-lg font-semibold">{item.title}</h3>
                   </div>
   
-                  <p className="text-gray-400 text-sm leading-relaxed">
+                  <p className="dark:text-gray-400 text-gray-600 text-sm leading-relaxed">
                     {item.description}
                   </p>
                 </div>
@@ -236,7 +236,7 @@ function About() {
         </div>
       </section>
 
-      <section className="bg-black/30 md:py-6 py-3 px-2 md:px-7 lg:px-10 lg:gap-10" id="Achievements">
+      <section className="bg-gray-300 dark:bg-black/30 md:py-6 py-3 px-2 lg:gap-10" id="Achievements">
          <div className="flex-1 flex flex-col justify-center px-5 space-y-3 z-10 ">
           <img
             src="/logo/Abstract Design (1).png"
@@ -244,23 +244,23 @@ function About() {
             className="w-13 h-13 object-contain"
           />
 
-          <h1 className="text-white md:text-4xl text-3xl">Our Achievements</h1>
+          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Our Achievements</h1>
 
-          <p className="text-gray-400 text-[14px] max-w-[95%]">
+          <p className="dark:text-gray-400 text-gray-600 text-[14px] max-w-[95%]">
            Our story is one of continuous growth and evolution. We started as a small team with big dreams, determined to create a real estate platform that transcended the ordinary.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-3 w-[95%] mx-auto mt-8">
+        <div className="grid md:grid-cols-3 gap-3 w-[98%] md:w-[97%] mx-auto mt-8">
             {Achievements.map((item: AchievementItem) => (
               <div
                 key={item.id}
-                className="bg-[#121212]  border-7 border-neutral-800/50 rounded-3xl"
+                className="dark:bg-[#121212] bg-white  border-7 border-neutral-800/50 rounded-3xl"
               >
                 <div className=" rounded-2xl border border-gray-700/40 p-5 space-y-4 h-full">
 
-                <h3 className="text-white text-lg font-semibold">{item.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
+                <h3 className="text-gray-900 dark:text-white text-lg font-semibold">{item.title}</h3>
+                <p className="dark:text-gray-400 text-gray-600 text-sm leading-relaxed">
                   {item.description}
                 </p>
                 </div>
@@ -269,41 +269,41 @@ function About() {
         </div>
       </section>
 
-      <section className="bg-black/30 md:py-6 py-3 px-2 md:px-7 lg:px-10 lg:gap-10" id="Process">
-         <div className="flex-1 flex flex-col justify-center px-5 space-y-3 z-10 ">
+      <section className="bg-gray-300 dark:bg-black/30 md:py-6 py-3 px-2 md:px-7 lg:gap-10" id="Process">
+         <div className="flex-1 flex flex-col justify-center space-y-3 z-10 ">
           <img
             src="/logo/Abstract Design (1).png"
             alt="Icon"
             className="w-13 h-13 object-contain"
           />
 
-          <h1 className="text-white md:text-4xl text-3xl">Navigating the RewaCity Experience</h1>
+          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Navigating the RewaCity Experience</h1>
 
-          <p className="text-gray-400 text-[14px] max-w-[95%]">
+          <p className="dark:text-gray-400 text-gray-600 text-[14px] max-w-[95%]">
             At RewaCity, we've designed a straightforward process to help you find and purchase your dream property with ease. Here's a step-by-step guide to how it all works.
           </p>
         </div>
 
-         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 w-[95%] mx-auto mt-8">
+         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 w-[99%] mx-auto mt-8">
           {stepsData.map((item) => (
               <div
                 key={item.id}
                 className="mx-auto ">
-                  <p className="text-white font-semibold text-sm border-l border-[#703BF7] p-2">{item.step}</p>
+                  <p className="text-gray-900 dark:text-white font-semibold text-sm border-l border-[#703BF7] p-2">{item.step}</p>
 
-                  <div className="relative border border-gray-700/40 p-4 rounded-md rounded-l-none rounded-b-md space-y-3 mx-auto justify-center">
+                  <div className="relative border dark:bg-[#121212] bg-white border-gray-700/40 p-4 rounded-md rounded-l-none rounded-b-md space-y-3 mx-auto justify-center">
                     {/* Top-left border accent */}
                     <div className="absolute top-0 left-0 w-25 h-px bg-[#703BF7]"></div>
                     <div className="absolute top-0 left-0 w-px h-10 bg-[#703BF7]"></div>
 
                     {/* Faint Purple Glow */}
-                    <div className="absolute top-0 left-0 w-24 h-10 bg-linear-to-br from-[#201a2f] via-purple-700/10 to-transparent pointer-events-none"></div>
+                    <div className="absolute top-0 left-0 w-24 h-10 bg-linear-to-br dark:from-[#201a2f] from-[rgb(90,64,156)] via-purple-700/10 to-transparent pointer-events-none"></div>
 
-                    <h3 className="text-white text-xl font-semibold">
+                    <h3 className="text-gray-900 dark:text-white text-xl font-semibold">
                       {item.title}
                     </h3>
 
-                    <p className="text-gray-400 text-sm leading-relaxed">
+                    <p className="dark:text-gray-400 text-gray-600 text-sm leading-relaxed">
                       {item.description}
                     </p>
                   </div>
@@ -312,26 +312,26 @@ function About() {
         </div>
       </section>
 
-      <section className="bg-black/30 md:py-6 py-3 px-2 md:px-7 lg:px-10 lg:gap-10 space-y-5" id="Team">
-          <div className="flex-1 flex flex-col justify-center px-5 space-y-3 z-10 ">
+      <section className="bg-gray-300 dark:bg-black/30 md:py-6 py-3 px-2 md:px-7 lg:px-10 lg:gap-10 space-y-5" id="Team">
+          <div className="flex-1 flex flex-col justify-center space-y-3 z-10 ">
           <img
             src="/logo/Abstract Design (1).png"
             alt="Icon"
             className="w-13 h-13 object-contain"
           />
 
-          <h1 className="text-white md:text-4xl text-3xl">Meet the RewaCity Team</h1>
+          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Meet the RewaCity Team</h1>
 
-          <p className="text-gray-400 text-[14px] max-w-[95%]">
+          <p className="dark:text-gray-400 text-gray-600 text-[14px] max-w-[95%]">
             At RewaCity, our success is driven by the dedication and expertise of our team. Get to know the people behind our mission to make your real estate dreams a reality.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-[95%] mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mx-auto">
           {teamData.map((member: TeamMember) => (
             <div
               key={member.id}
-              className="p-5 rounded-xl border border-gray-700/40 shadow-md hover:shadow-lg transition"
+              className="p-5 rounded-xl dark:bg-[#121212] bg-white border border-gray-700/40 shadow-md hover:shadow-lg transition"
             >
               {/* IMAGE + TWITTER */}
               <div className="relative">
@@ -349,8 +349,8 @@ function About() {
 
               {/* Name + Role */}
               <div className="mt-8 text-center space-y-1">
-                <h3 className="text-white text-lg font-semibold">{member.name}</h3>
-                <p className="text-gray-400 text-sm mb-2">{member.role}</p>
+                <h3 className=" text-gray-900 dark:text-white text-lg font-semibold">{member.name}</h3>
+                <p className="dark:text-gray-400 text-gray-600 text-sm mb-2">{member.role}</p>
               </div>
 
               {/* Email Chat Box */}
@@ -358,7 +358,7 @@ function About() {
                 <input
                   type="text"
                   placeholder="Say Hello ✋"
-                  className="text-white outline-none w-full placeholder:text-white "
+                  className="text-gray-900 dark:text-white outline-none w-full placeholder:text-gray-400 dark:placeholder:text-gray-500"
                 />
                 <button type="submit" className="flex items-center justify-center p-2 bg-[#703BF7] rounded-full">
                   <img src={Entericon} alt="enter" className="w-3 h-3" />
@@ -368,7 +368,7 @@ function About() {
           ))}
       </div>
     </section>
-    <section className="bg-black/30">
+    <section className="bg-gray-300 dark:bg-black/30 pt-5">
         <Footer/>
       </section> 
   </div>

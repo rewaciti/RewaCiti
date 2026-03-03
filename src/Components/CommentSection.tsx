@@ -31,7 +31,7 @@ function CommentSection() {
   }
 
   return (
-    <div className="w-[95%] mx-auto py-5 md:py-0">
+    <div className="md:w-[98%] w-[95%] mx-auto py-5 md:py-0">
       <div>
           <img
               src="/logo/Abstract Design (1).png"

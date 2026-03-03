@@ -136,12 +136,12 @@ function PropertySearchSection() {
     <div>
       <Navbar />
       <div className="relative" id="Categories">
-        <div className="bg-linear-to-r from-neutral-600/20 to-black/60 p-10  space-y-6 border-b border-gray-600">
-          <h1 className="text-white md:text-4xl text-3xl">
+        <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-10  space-y-6 border-b border-gray-600">
+          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
             Find Your Dream Property
           </h1>
 
-          <p className="text-gray-400 text-[14px] max-w-[95%]">
+          <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
             Welcome to RewaCity, where your dream property awaits in every
             corner of our beautiful world. Explore our curated selection of
             properties, each offering a unique story and a chance to redefine
@@ -155,17 +155,17 @@ function PropertySearchSection() {
           </NavLink>
         </div>
         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[80%]">
-          <div className="border-7 border-neutral-800/90 rounded-2xl bg-neutral-700/90 rounded-b-none flex">
+          <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-b-none flex">
             <input
               type="text"
               placeholder="Search For A Property"
-              className="p-3 flex justify-center items-center placeholder-gray-400 rounded-lg bg-black/70 text-white focus:outline-none border border-gray-600/70 w-full rounded-b-none"
+              className="p-3 flex justify-center items-center dark:placeholder-gray-400 placeholder-gray-900/70 rounded-lg dark:bg-black/70 bg-gray-300 text-white focus:outline-none border border-gray-600/70 w-full rounded-b-none"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 bg-black/70 text-white rounded-lg border border-gray-600 md:hidden"
+              className="flex items-center gap-2 px-4 py-2 dark:bg-black/70 bg-gray-300 text-white rounded-lg border border-gray-600 md:hidden"
             >
               <FiFilter />
             </button>
@@ -173,7 +173,7 @@ function PropertySearchSection() {
         </div>
       </div>
 
-      <div className="bg-black/30">
+      <div className="bg-gray-300 dark:bg-black/30">
         <div className="pt-8 w-[95%] mx-auto">
           {/* Filters Container */}
           <div
@@ -181,12 +181,12 @@ function PropertySearchSection() {
                     md:block bg-neutral-900 md:bg-transparent rounded-2xl md:rounded-none p-4 md:p-0 mb-6`}
           >
             {/* Location */}
-            <div className="border-7 border-neutral-800/90 rounded-2xl bg-neutral-700/90 rounded-tr-none">
+            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-tr-none">
               <div className="relative">
-                <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg bg-black/70 text-white focus:outline-none border w-full border-gray-600/70 rounded-tr-none"
+                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-tr-none"
                   value={location}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -208,12 +208,12 @@ function PropertySearchSection() {
             </div>
 
             {/* Area */}
-            <div className="border-7 border-neutral-800/90 rounded-2xl bg-neutral-700/90 rounded-t-none">
+            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-t-none">
               <div className="relative">
-                <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg bg-black/70 text-white focus:outline-none border w-full border-gray-600/70 rounded-t-none"
+                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 dark:text-gray-400 text-gray-900 focus:outline-none border w-full border-gray-600/70 rounded-t-none"
                   value={area}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -235,12 +235,12 @@ function PropertySearchSection() {
             </div>
 
             {/* Type */}
-            <div className="border-7 border-neutral-800/90 rounded-2xl bg-neutral-700/90 rounded-t-none">
+            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-t-none">
               <div className="relative">
-                <FiHome className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <FiHome className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg bg-black/70 text-white focus:outline-none border w-full border-gray-600/70 rounded-t-none"
+                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 dark:text-gray-400 text-gray-900 focus:outline-none border w-full border-gray-600/70 rounded-t-none"
                   value={type}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -260,12 +260,12 @@ function PropertySearchSection() {
               </div>
             </div>
 
-            <div className="border-7 border-neutral-800/90 rounded-2xl bg-neutral-700/90 rounded-t-none">
+            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-t-none">
               <div className="relative">
-                <IoBedOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <IoBedOutline className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg bg-black/70 text-white focus:outline-none border w-full border-gray-600/70 rounded-t-none"
+                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 dark:text-gray-400 text-gray-900 focus:outline-none border w-full border-gray-600/70 rounded-t-none"
                   value={bedrooms}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -287,9 +287,9 @@ function PropertySearchSection() {
 
 
             {/* PRICE RANGE - SELECT */}
-            <div className="border-7 border-neutral-800/90 rounded-2xl bg-neutral-700/90 rounded-tl-none">
+            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-tl-none">
               <select
-                className="p-2 rounded-lg bg-black/70 text-white focus:outline-none border w-full border-gray-600/70 rounded-tl-none"
+                className="p-2 rounded-lg dark:bg-black/70 bg-gray-300 dark:text-gray-400 text-gray-900 focus:outline-none border w-full border-gray-600/70 rounded-tl-none"
                 value={selectedPriceLabel}
                 onChange={(e) => {
                   const label = e.target.value;
@@ -319,11 +319,11 @@ function PropertySearchSection() {
                 className="w-13 h-13 object-contain"
               />
 
-              <h1 className="text-white md:text-4xl text-3xl">
+              <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
                 Discover a World of Possibilities
               </h1>
 
-              <p className="text-gray-400 text-[14px] max-w-[95%]">
+              <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
                 Our portfolio of properties is as diverse as your dreams.
                 Explore the following categories to find the perfect property
                 that resonates with your vision of home
@@ -348,11 +348,11 @@ function PropertySearchSection() {
             </div>
           </div>
 
-          <hr className="my-4 border-gray-600/30" />
+          <hr className="my-4 border-gray-600" />
 
           {/* Pagination */}
           <div className="flex justify-between items-center text-white mt-6">
-            <p className="text-sm">
+            <p className="text-sm text-black dark:text-white">
               {page + 1} of {totalPages}
             </p>
 
@@ -377,7 +377,7 @@ function PropertySearchSection() {
         </div>
       </div>
 
-      <section className="bg-black/30 p-5 pb-20" id="Portfolio">
+      <section className="bg-gray-300 dark:bg-black/30 p-5 pb-20" id="Portfolio">
         <div className="  ">
           <div className="flex-1 flex flex-col justify-center px-5 space-y-3 z-10 mb-6">
             <img
@@ -386,11 +386,11 @@ function PropertySearchSection() {
               className="w-13 h-13 object-contain"
             />
 
-            <h1 className="text-white md:text-4xl text-3xl">
+            <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
               Let's Make it Happen
             </h1>
 
-            <p className="text-gray-400 text-[14px] max-w-[95%]">
+            <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
               Ready to take the first step toward your dream property? Fill out
               the form below, and our real estate wizards will work their magic
               to find your perfect match. Don't wait; let's embark on this
@@ -398,44 +398,44 @@ function PropertySearchSection() {
             </p>
           </div>
 
-          <form className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 border border-gray-700/40 rounded-3xl p-6 md:p-10">
+          <form className="grid dark:bg-[#121212] bg-white  grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 border border-gray-700/40 rounded-3xl p-6 md:p-10">
             {/* Name */}
             <div>
-              <label className="text-gray-300 text-sm">Name</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm">Name</label>
               <input
                 type="text"
                 placeholder="Enter Full Name"
-                className="w-full mt-1 p-3 rounded-lg bg-black/70 text-white border border-gray-600/70 focus:outline-none"
+                className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
               />
             </div>
 
             {/* Email */}
             <div>
-              <label className="text-gray-300 text-sm">Email</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm">Email</label>
               <input
                 type="email"
                 placeholder="Enter your Email"
-                className="w-full mt-1 p-3 rounded-lg bg-black/70 text-white border border-gray-600/70 focus:outline-none"
+                className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
               />
             </div>
 
             {/* Phone */}
             <div>
-              <label className="text-gray-300 text-sm">Phone</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm">Phone</label>
               <input
                 type="tel"
                 placeholder="Enter Phone Number"
-                className="w-full mt-1 p-3 rounded-lg bg-black/70 text-white border border-gray-600/70 focus:outline-none"
+                className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
               />
             </div>
 
             {/* Preferred Location */}
             <div>
-              <label className="text-gray-300 text-sm">
+              <label className="text-gray-700 dark:text-gray-300 text-sm">
                 Preferred Location
               </label>
               <select
-                className="p-3 rounded-lg bg-black/70 text-gray-400 focus:outline-none border w-full border-gray-600/70"
+                className="p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 border w-full border-gray-600/70"
                 value={preferedLocation}
                 onChange={(e) => setPreferedLocation(e.target.value)}
               >
@@ -452,9 +452,9 @@ function PropertySearchSection() {
 
             {/* Property Type */}
             <div>
-              <label className="text-gray-300 text-sm">Property Type</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm">Property Type</label>
               <select
-                className="p-3 rounded-lg bg-black/70 text-gray-400 focus:outline-none border w-full border-gray-600/70"
+                className="p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 border w-full border-gray-600/70"
                 value={preferedType}
                 onChange={(e) => setPreferedType(e.target.value)}
               >
@@ -471,19 +471,19 @@ function PropertySearchSection() {
 
             {/* Bedrooms */}
             <div>
-              <label className="text-gray-300 text-sm">No of Bedrooms</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm">No of Bedrooms</label>
               <input
                 type="number"
                 placeholder="Enter Number of Bedrooms"
-                className="w-full mt-1 p-3 py-2.5 rounded-lg bg-black/70 text-white border border-gray-600/70 focus:outline-none"
+                className="w-full mt-1 p-3 py-2.5 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
               />
             </div>
 
             {/* Budget */}
             <div>
-              <label className="text-gray-300 text-sm">Budget</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm">Budget</label>
               <select
-                className="p-3 rounded-lg bg-black/70 text-gray-400 focus:outline-none border w-full border-gray-600/70 "
+                className="p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 border w-full border-gray-600/70 "
                 value={Budget}
                 onChange={(e) => {
                   const label = e.target.value;
@@ -505,10 +505,10 @@ function PropertySearchSection() {
 
             {/* Preferred Contact */}
             <div>
-              <label className="text-gray-300 text-sm">
+              <label className="text-gray-700 dark:text-gray-300 text-sm">
                 Preferred Contact Method
               </label>
-              <select className="w-full mt-1 p-3 rounded-lg bg-black/70 text-gray-400 border border-gray-600/70 focus:outline-none">
+              <select className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70">
                 <option hidden>Select Method</option>
                 <option>Phone</option>
                 <option>Email</option>
@@ -516,22 +516,22 @@ function PropertySearchSection() {
             </div>
 
             {/* Message */}
-            <div className="sm:col-span-2 lg:col-span-4">
-              <label className="text-gray-300 text-sm">Message</label>
+            <div className="sm:col-span-2 lg:col-span-4 ">
+              <label className="text-gray-700 dark:text-gray-300 text-sm">Message</label>
               <textarea
                 placeholder="Enter your Message here.."
                 rows={4}
-                className="w-full mt-1 p-3 rounded-lg bg-black/70 text-white border border-gray-600/70 focus:outline-none resize-none"
+                className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 resize-none"
               />
             </div>
 
             {/* Agreement */}
             <div className="sm:col-span-2 flex items-center gap-3">
               <input type="checkbox" className="mt-0.5" />
-              <p className="text-gray-400 text-sm">
+              <p className="text-gray-900 dark:text-white text-sm">
                 I agree with the{" "}
-                <span className="text-white underline">Terms</span> and{" "}
-                <span className="text-white underline">Policy</span>
+                <span className="text-gray-900 dark:text-white underline">Terms</span> and{" "}
+                <span className="text-gray-900 dark:text-white underline">Policy</span>
               </p>
             </div>
 
@@ -547,7 +547,7 @@ function PropertySearchSection() {
           </form>
         </div>
       </section>
-      <section className="bg-black/30">
+      <section className="bg-gray-300 dark:bg-black/30">
         <Footer />
       </section>
     </div>

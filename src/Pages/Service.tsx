@@ -106,23 +106,23 @@ const services4 = [
   return (
     <div>
         <Navbar />
-         <div className="bg-linear-to-r from-neutral-600/20 to-black/60 p-10  space-y-6">
-                <h1 className="text-white md:text-4xl text-3xl">
+         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-10  space-y-6">
+                <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
                Elevate Your Real Estate Experience
             </h1>
 
-            <p className="text-gray-400 text-[14px] max-w-[95%]">
+            <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
                 Welcome to RewaCity, where your real estate aspirations meet expert guidance. Explore our comprehensive range of services, each designed to cater to your unique needs and dreams.
             </p> 
         </div>
-        <section className="px-2 py-2 bg-black/30 border-t-5 border-b-5 border-gray-600/30" id="whatweoffer">
+        <section className="px-2 py-2 bg-gray-300 dark:bg-black/30 border-t-5 border-b-5 border-gray-600/30" id="whatweoffer">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             
             {/* BOX ITEM */}
             {services1.map((item, index) => (
               <div
                 key={index}
-                className="relative bg-[#1A1A1A] border border-gray-600/30 rounded-xl p-6 flex flex-col items-center hover:scale-[1.02] transition"
+                className="relative bg-white/90 dark:bg-[#1A1A1A] border border-gray-600/30 rounded-xl p-6 flex flex-col items-center hover:scale-[1.02] transition"
               >
                 {/* Arrow at top-right */}
                 <div className="absolute top-3 right-3">
@@ -141,7 +141,7 @@ const services4 = [
                 />
 
                 {/* Text */}
-                <p className="text-white text-center text-sm">
+                <p className="text-gray-900 dark:text-white text-center text-sm">
                   {item.text}
                 </p>
               </div>
@@ -149,18 +149,18 @@ const services4 = [
           </div>
         </section>
 
-        <section className="bg-black/30 p-4 space-y-6" id="valuation">
+        <section className="bg-gray-300 dark:bg-black/30 p-4 space-y-6" id="valuation">
            <div className="space-y-4">
                 <img
                   src="/logo/Abstract Design (1).png"
                   alt="Icon"
                   className="w-13 object-contain"
                 />
-              <h1 className="text-white md:text-4xl text-3xl ">
+              <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl ">
                 Unlock Property Value
               </h1>
     
-              <p className="text-gray-400 text-[14px] max-w-[95%]">
+              <p className="text-gray-600 dark:text-gray-400 text-[14px] max-w-[95%]">
                 Selling your property should be a rewarding experience, and at RewaCity, we make sure it is. Our Property Selling Service is designed to maximize the value of your property, ensuring you get the best deal possible. Explore the categories below to see how we can help you at every step of your selling journey
               </p>
            </div>
@@ -171,7 +171,7 @@ const services4 = [
             {services2.map((service, index) => (
               <div
                 key={index}
-                className="relative bg-[#1A1A1A] border border-gray-600/30 rounded-xl p-6 flex flex-col hover:scale-[1.02] transition"
+                className="relative bg-white/90 dark:bg-[#1A1A1A] border border-gray-600/30 rounded-xl p-6 flex flex-col hover:scale-[1.02] transition"
               >
                 {/* Center Image */}
                 <div className=" flex items-center gap-5 ">
@@ -181,12 +181,12 @@ const services4 = [
                   className="w-13 h-13 object-contain"
                 />
       
-                    <h3 className="text-lg font-semibold mb-2">
+                    <h3 className=" text-gray-900 dark:text-white text-lg font-semibold mb-2">
                       {service.title}
                     </h3>
                 </div>
 
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 {service.description}
               </p>
               </div>
@@ -201,7 +201,7 @@ const services4 = [
               }}
             >
               {/* Overlay */}
-              <div className="absolute inset-0 bg-neutral-900/70"></div>
+              <div className="absolute inset-0 bg-neutral-900/50"></div>
 
               {/* Content */}
               <div className="relative z-10">
@@ -210,7 +210,7 @@ const services4 = [
                     Unlock the Value of Your Property Today
                   </h3>
 
-                  <button className="px-6 py-3 bg-black rounded-lg font-medium hover:bg-neutral-800 transition hidden md:block">
+                  <button className="px-6 py-3 bg-[#703BF7] hover:bg-[#9677df] rounded-lg font-medium transition hidden md:block">
                     Learn More
                   </button>
                 </div>
@@ -219,7 +219,7 @@ const services4 = [
                  Ready to unlock the true value of your property? Explore our Property Selling Service categories and let us help you achieve the best deal possible for your valuable asset.
                 </p>
 
-                <button className="px-6 py-3 bg-black rounded-lg font-medium hover:bg-neutral-800 transition w-full mt-2 md:hidden">
+                <button className="px-6 py-3 bg-[#703BF7] hover:bg-[#9677df] rounded-lg font-medium transition w-full mt-2 md:hidden">
                     Learn More
                 </button>
               </div>
@@ -227,18 +227,18 @@ const services4 = [
              </div>
         </section>
 
-        <section className="bg-black/30 p-4 space-y-6" id="Management">
+        <section className="bg-gray-300 dark:bg-black/30 p-4 space-y-6" id="Management">
            <div className="space-y-4">
                 <img
                   src="/logo/Abstract Design (1).png"
                   alt="Icon"
                   className="w-13 object-contain"
                 />
-              <h1 className="text-white md:text-4xl text-3xl">
+              <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
                 Effortless Property Management
               </h1>
     
-              <p className="text-gray-400 text-[14px] max-w-[95%]">
+              <p className="text-gray-600 dark:text-gray-400 text-[14px] max-w-[95%]">
                 Owning a property should be a pleasure, not a hassle. RewaCity's Property Management Service takes the stress out of property ownership, offering comprehensive solutions tailored to your needs. Explore the categories below to see how we can make property management effortless for you
               </p>
            </div>
@@ -249,7 +249,7 @@ const services4 = [
             {services3.map((service, index) => (
               <div
                 key={index}
-                className="relative bg-[#1A1A1A] border border-gray-600/30 rounded-xl p-6 flex flex-col hover:scale-[1.02] transition"
+                className="relative bg-white/90 dark:bg-[#1A1A1A] border border-gray-600/30 rounded-xl p-6 flex flex-col hover:scale-[1.02] transition"
               >
                 {/* Center Image */}
                 <div className=" flex items-center gap-5 ">
@@ -259,12 +259,12 @@ const services4 = [
                       className="w-13 h-13 object-contain mb-3"
                     />
       
-                    <h3 className="text-lg font-semibold mb-2">
+                    <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-2">
                       {service.title}
                     </h3>
                 </div>
 
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 {service.description}
               </p>
               </div>
@@ -279,7 +279,7 @@ const services4 = [
               }}
             >
               {/* Overlay */}
-              <div className="absolute inset-0 bg-neutral-900/70"></div>
+              <div className="absolute inset-0 bg-neutral-900/50"></div>
 
               {/* Content */}
               <div className="relative z-10">
@@ -288,7 +288,7 @@ const services4 = [
                     Experience Effortless Property Management
                   </h3>
 
-                  <button className="px-6 py-3 bg-black rounded-lg font-medium hover:bg-neutral-800 transition hidden md:block">
+                  <button className="px-6 py-3 bg-[#703BF7] hover:bg-[#9677df] rounded-lg font-medium transition hidden md:block">
                     Learn More
                   </button>
                 </div>
@@ -299,7 +299,7 @@ const services4 = [
                   enjoy the benefits of property ownership.
                 </p>
 
-                 <button className="px-6 py-3 bg-black rounded-lg font-medium hover:bg-neutral-800 transition w-full mt-2 md:hidden">
+                 <button className="px-6 py-3 bg-[#703BF7] hover:bg-[#9677df] rounded-lg font-medium transition w-full mt-2 md:hidden">
                       Learn More
                 </button>
               </div>
@@ -308,7 +308,7 @@ const services4 = [
           </div>
         </section>
 
-        <section className="bg-black/30 p-4 space-y-6" id="marketing">
+        <section className="bg-gray-300 dark:bg-black/30 p-4 space-y-6" id="marketing">
            <img
                   src="/logo/Abstract Design (1).png"
                   alt="Icon"
@@ -319,11 +319,11 @@ const services4 = [
               {/* LEFT SIDE (smaller) */}
               <div className="md:w-5/12 space-y-6">
                 <div>
-                  <h1 className="text-white md:text-4xl text-3xl">
+                  <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
                     Smart Investments, Informed Decisions
                   </h1>
 
-                  <p className="text-gray-400 text-sm max-w-[95%] mt-3">
+                  <p className="dark:text-gray-400 text-gray-600 text-sm max-w-[95%] mt-3">
                    Building a real estate portfolio requires a strategic approach. RewaCity's Investment Advisory Service empowers you to make smart investments and informed decisions.
                   </p>
                 </div>
@@ -337,7 +337,7 @@ const services4 = [
                     backgroundSize: "cover",
                   }}
                 >
-                  <div className="absolute inset-0 bg-neutral-900/70 z-0"></div>
+                  <div className="absolute inset-0 bg-neutral-900/50 z-0"></div>
 
                   <div className="relative z-10 flex flex-col gap-4">
                     <h3 className="text-xl font-semibold">
@@ -349,7 +349,7 @@ const services4 = [
                       the complexities while you enjoy the benefits of property ownership.
                     </p>
 
-                    <button className="px-6 py-3 bg-black rounded-lg font-medium hover:bg-neutral-800 transition w-full">
+                    <button className="px-6 py-3 bg-[#703BF7] hover:bg-[#9677df] rounded-lg font-medium transition w-full">
                       Learn More
                     </button>
                   </div>
@@ -357,11 +357,11 @@ const services4 = [
               </div>
 
               {/* RIGHT SIDE (larger) */}
-              <div className="md:w-7/12 grid grid-cols-1 md:grid-cols-2 gap-2 bg-neutral-800/70 p-2 rounded-xl ">
+              <div className="md:w-7/12 grid grid-cols-1 md:grid-cols-2 gap-2 bg-neutral-800/50 p-2 rounded-xl ">
                 {services4.map((service, index) => (
                   <div
                     key={index}
-                    className="bg-[#1A1A1A] border border-gray-600/30 rounded-xl p-6 flex flex-col"
+                    className="bg-white/90 dark:bg-[#1A1A1A] border border-gray-600/30 rounded-xl p-6 flex flex-col"
                   >
                     <div className="flex items-center gap-4 mb-3">
                      <img
@@ -370,12 +370,12 @@ const services4 = [
                       className="w-13 h-13 object-contain"
                     />
 
-                      <h3 className="text-lg font-semibold">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white ">
                         {service.title}
                       </h3>
                     </div>
 
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm dark:text-gray-400 text-gray-600">
                       {service.description}
                     </p>
                   </div>
@@ -383,7 +383,7 @@ const services4 = [
               </div>
             </div>     
         </section>
-        <section className="bg-black/30">
+        <section className="bg-gray-300 dark:bg-black/30">
         <Footer/>
       </section> 
     </div>

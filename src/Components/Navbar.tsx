@@ -21,7 +21,7 @@ const Navbar = () => {
     <div className="bg-gray-300 text-black dark:bg-[#1A1A1A] dark:text-white">
       {/* Top small bar */}
       <div
-        className="h-10 flex items-center justify-between px-4 sm:px-10 w-full text-black bg-gray-300 dark:bg-[#1A1A1A] dark:text-white"
+        className="h-10 flex items-center justify-between px-4 sm:px-10 w-full text-black dark:bg-[#1A1A1A] bg-gray-400"
         style={{
           backgroundImage: "url('/logo/Abstract Design.png')",
           backgroundPosition: "center",
@@ -29,8 +29,8 @@ const Navbar = () => {
       >
         <div className="flex justify-center lg:ml-[40%] sm:ml-[20%] items-center">
           
-         <p className="flex items-center mr-1 ">✨Discover Properties with RewaCity</p>
-          <NavLink to="/Service" className="underline text-sm hidden sm:block">
+         <p className="flex items-center mr-1 text-gray-900 dark:text-white ">✨Discover Properties with RewaCity</p>
+          <NavLink to="/Service" className="underline text-sm hidden sm:block text-gray-900 dark:text-white">
             Learn More
           </NavLink>
         </div>
@@ -63,7 +63,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden sm:flex space-x-6 items-center text-gray-800 2xl:text-[18px] sm:text-[15px] dark:text-white">
+          <div className="hidden md:flex space-x-6 items-center text-gray-800 2xl:text-[18px] sm:text-[15px] dark:text-white">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
@@ -82,7 +82,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Contact Button */}
-         <div className="hidden sm:block">
+         <div className="hidden md:block">
             <NavLink to="/Contact">
               {({ isActive }) => (
                 <button
@@ -102,7 +102,7 @@ const Navbar = () => {
 
 
           {/* MOBILE MENU BUTTON */}
-          <div className="sm:hidden">
+          <div className="md:hidden">
             <button onClick={() => setIsOpen(!isOpen)}>
               <img src={Hanburger} alt="mobile menu" className="w-7" />
             </button>
@@ -111,7 +111,7 @@ const Navbar = () => {
           {/* MOBILE MENU */}
          {isOpen && (
           <div
-            className={`fixed top-10.5 right-0 w-[55%] bg-white dark:bg-[#1A1A1A] backdrop-blur-lx 
+            className={`fixed top-10.5 right-0 w-[55%] bg-gray-200/90 dark:bg-[#1A1A1A] backdrop-blur-lx 
             text-gray-800 dark:text-white p-6 rounded-xl shadow-xl z-50 
             flex flex-col items-start space-y-4 transition duration-300`}
           >

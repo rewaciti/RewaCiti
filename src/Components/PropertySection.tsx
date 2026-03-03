@@ -61,7 +61,7 @@ function PropertySection() {
   
         {/* Pagination */}
         <div className="flex justify-between items-center  text-white ">
-          <p className="text-sm text-black">
+          <p className="text-sm text-black dark:text-white">
             {page + 1} of {totalPages}
           </p>
           <NavLink

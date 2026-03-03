@@ -125,22 +125,12 @@ function PropertyCard({ property }: PropertyCardProps) {
   {/* Price + Button */}
   <div className="flex justify-between items-center">
     <span className="text-lg font-bold text-[#703BF7]">
-      ₦{finalPrice.toFixed(2)}
+      ₦{finalPrice.toFixed(0)}
     </span>
 
     <NavLink
       to={`/properties/${slugify(property.name)}`}
-      className="
-      bg-[#703BF7]
-      text-white
-      px-4 py-1.5
-      rounded-lg
-      text-sm
-      shadow
-      hover:bg-[#5d2fe0]
-      hover:shadow-md
-      transition
-    "
+      className="bg-[#703BF7] text-white px-4 py-1.5 rounded-lg text-sm shadow hover:bg-[#5d2fe0] hover:shadow-md transition"
     >
       View Property
     </NavLink>

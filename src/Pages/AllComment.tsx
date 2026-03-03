@@ -20,16 +20,16 @@ function AllComments() {
   }
 
   return (
-    <div>
+    <div className="bg-gray-300 dark:bg-black/30">
       <Navbar />
       <div className="w-[95%] mx-auto px-4 py-3">
-        <h1 className="text-3xl font-bold text-white mb-6">All Comments</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">All Comments</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {comments.map((comment: Comment) => (
             <div
               key={comment.id}
-              className="bg-[#1A1A1A] border border-gray-600/30 rounded-xl p-3 text-white"
+              className="rounded-xl p-5 text-gray-900 dark:text-white bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30"
             >
               {/* Star Rating */}
                <p className="text-yellow-400 text-lg">
@@ -41,7 +41,7 @@ function AllComments() {
               <h4 className="text-md font-semibold mb-2">{comment.summary}</h4>
 
               {/* Description */}
-              <p className="text-gray-300 mb-4">{comment.description}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">{comment.description}</p>
 
               <div className="flex">
                     <div className="flex justify-center">
