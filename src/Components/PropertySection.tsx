@@ -26,7 +26,7 @@ function PropertySection() {
   );
 
   return (
-   <div className="w-[99%] mx-auto py-10 md:py-4">
+   <div className="w-[98%] mx-auto py-10 md:py-4">
      <div className="">
           <img
               src="/logo/Abstract Design (1).png"
