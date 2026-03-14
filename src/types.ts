@@ -1,60 +1,16 @@
-export interface Property {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  images: string[];
-  thumbnail?: string;
-  location?: string;
-  type?: string;
-  bedrooms?: number;
-  landSize?: string;
-  yearBuilt?: number | null;
-}
-
-export interface PropertyStore {
-  properties: Property[];
-  filteredProperties: Property[];
-  loading: boolean;
-  error: string | null;
-
-  ITEMS_PER_PAGE: number;
-  page: number;
-
-  fetchProperties: () => Promise<void>;
-  nextPage: () => void;
-  prevPage: () => void;
-  setPage: (page: number) => void;
-
-  filterProperties: (filters: {
-    location?: string;
-    propertyType?: string;
-    priceRange?: string;
-    rooms?: number;
-    buildYear?: number;
-  }) => void;
-}
 // export interface Property {
-//   id: number;
-//   name: string;
-//   img: string;
-//   images: string[];
+//   id: string;
+//   title: string;
 //   description: string;
-//   bedrooms: number ;
-//   bathrooms: number | string;
-//   type: string;
 //   price: number;
-//   createdBy: number; 
-//   location: {
-//     area: string;
-//     city: string;
-//     state: string;
-//   };
-//   yearBuilt: number; 
-//   keyFeatures: string[]; 
-//   videoUrl?: string; 
+//   images: string[];
+//   thumbnail?: string;
+//   location?: string;
+//   type?: string;
+//   bedrooms?: number;
+//   landSize?: string;
+//   yearBuilt?: number | null;
 // }
-
 
 // export interface PropertyStore {
 //   properties: Property[];
@@ -69,6 +25,7 @@ export interface PropertyStore {
 //   nextPage: () => void;
 //   prevPage: () => void;
 //   setPage: (page: number) => void;
+
 //   filterProperties: (filters: {
 //     location?: string;
 //     propertyType?: string;
@@ -77,6 +34,49 @@ export interface PropertyStore {
 //     buildYear?: number;
 //   }) => void;
 // }
+export interface Property {
+  id: number;
+  name: string;
+  img: string;
+  images: string[];
+  description: string;
+  bedrooms: number ;
+  bathrooms: number | string;
+  type: string;
+  price: number;
+  createdBy: number; 
+  location: {
+    area: string;
+    city: string;
+    state: string;
+  };
+  yearBuilt: number; 
+  keyFeatures: string[]; 
+  videoUrl?: string; 
+}
+
+
+export interface PropertyStore {
+  properties: Property[];
+  filteredProperties: Property[];
+  loading: boolean;
+  error: string | null;
+
+  ITEMS_PER_PAGE: number;
+  page: number;
+
+  fetchProperties: () => Promise<void>;
+  nextPage: () => void;
+  prevPage: () => void;
+  setPage: (page: number) => void;
+  filterProperties: (filters: {
+    location?: string;
+    propertyType?: string;
+    priceRange?: string;
+    rooms?: number;
+    buildYear?: number;
+  }) => void;
+}
 
 export interface Comment {
   id: number;

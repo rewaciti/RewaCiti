@@ -53,98 +53,78 @@ function PropertySearchSection() {
   }, [fetchProperties]);
 
   // Filtering
-  useEffect(() => {
-  const results = properties.filter((p) => {
-    const locationText = p.location?.toLowerCase() || "";
+   useEffect(() => {
+    const results = properties.filter((p) => {
+      const matchesSearch =
+        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.description.toLowerCase().includes(searchTerm.toLowerCase())||
+        p.location.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.location.area.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesSearch =
-      p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      locationText.includes(searchTerm.toLowerCase());
+      const matchesLocation = location ? p.location.state === location : true;
+      const matchesType = type ? p.type === type : true;
+      const matchesBedrooms = bedrooms ? p.bedrooms === Number(bedrooms) : true;
+      const matchesArea = area ? p.location.area === area : true;
 
-    const matchesLocation = location
-      ? locationText.includes(location.toLowerCase())
-      : true;
+      const priceNum = Number(String(p.price).replace(/[^0-9]/g, ""));
+      const matchesPrice =
+        priceNum >= priceRange[0] && priceNum <= priceRange[1];
 
-    const matchesType = type ? p.type === type : true;
+      return (
+        matchesSearch &&
+        matchesLocation &&
+        matchesType &&
+        matchesBedrooms &&
+        matchesArea &&
+        matchesPrice
+      );
+    });
 
-    const matchesBedrooms = bedrooms
-      ? p.bedrooms === Number(bedrooms)
-      : true;
+    setFiltered(results);
+    setPage(0);
+  }, [
+    searchTerm,
+    location,
+    type,
+    bedrooms,
+    area,
+    priceRange,
+    properties,
+    setPage,
+  ]);
 
-    const matchesArea = area
-      ? locationText.includes(area.toLowerCase())
-      : true;
-
-    const priceNum = Number(p.price);
-
-    const matchesPrice =
-      priceNum >= priceRange[0] && priceNum <= priceRange[1];
-
-    return (
-      matchesSearch &&
-      matchesLocation &&
-      matchesType &&
-      matchesBedrooms &&
-      matchesArea &&
-      matchesPrice
-    );
-  });
-
-  setFiltered(results);
-  setPage(0);
-}, [
-  searchTerm,
-  location,
-  type,
-  bedrooms,
-  area,
-  priceRange,
-  properties,
-  setPage,
-]);
-
-// Pagination
-const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-
-const currentProperties = filtered.slice(
-  page * ITEMS_PER_PAGE,
-  page * ITEMS_PER_PAGE + ITEMS_PER_PAGE
-);
-
-// Dropdown unique options
-const uniqueLocations = Array.from(
-  new Set(properties.map((p) => p.location).filter(Boolean))
-);
-
-const uniqueTypes = Array.from(
-  new Set(properties.map((p) => p.type).filter(Boolean))
-);
-
-const uniqueBedrooms = Array.from(
-  new Set(properties.map((p) => p.bedrooms).filter(Boolean))
-).sort((a, b) => Number(a) - Number(b));
-
-const uniqueAreas = Array.from(
-  new Set(
-    properties
-      .filter((p) =>
-        location
-          ? p.location?.toLowerCase().includes(location.toLowerCase())
-          : true
-      )
-      .map((p) => p.location)
-      .filter(Boolean)
-  )
-);
-
-if (loading) {
-  return (
-    <p className="text-center text-white py-10">
-      Loading properties...
-    </p>
+  // Pagination
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const currentProperties = filtered.slice(
+    page * ITEMS_PER_PAGE,
+    page * ITEMS_PER_PAGE + ITEMS_PER_PAGE,
   );
-}
+
+  // Dropdown unique options
+  const uniqueLocations = Array.from(
+    new Set(
+      properties.map(
+        (p) => `${p.location.state}`,
+      ),
+    ),
+  );
+  const uniqueTypes = Array.from(new Set(properties.map((p) => p.type)));
+  const uniqueBedrooms = Array.from(
+    new Set(properties.map((p) => p.bedrooms)),
+  ).sort((a, b) => a - b);
+  const uniqueAreas = Array.from(
+    new Set(
+      properties
+        .filter((p) => (location ? p.location.state === location : true))
+        .map((p) => p.location.area),
+    ),
+  );
+
+  if (loading) {
+    return (
+      <p className="text-center text-white py-10">Loading properties...</p>
+    );
+  }
 
   return (
     <div>

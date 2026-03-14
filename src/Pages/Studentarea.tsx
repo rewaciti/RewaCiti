@@ -53,78 +53,67 @@ function Studentarea() {
 
   // Filtering
   useEffect(() => {
-  const search = searchTerm.toLowerCase();
+      const results = properties.filter((p) => {
+        const matchesSearch =
+          p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          p.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-  const results = properties.filter((p) => {
-    const locationText = p.location?.toLowerCase() || "";
+      const matchesUniversity = selectedUniversity
+        ? areaMaps
+            .find((u) => u.id === selectedUniversity)
+            ?.areas.includes(p.location.area)
+        : true;
 
-    const matchesSearch =
-      p.title.toLowerCase().includes(search) ||
-      p.description.toLowerCase().includes(search);
+      const matchesLocation = location
+        ? p.location.area === location
+        : true;
 
-    const matchesUniversity = selectedUniversity
-      ? areaMaps
-          .find((u) => u.id === selectedUniversity)
-          ?.areas.some((area) =>
-            locationText.includes(area.toLowerCase())
-          )
-      : true;
+        const matchesType = type ? p.type === type : true;
+        const matchesBedrooms = bedrooms ? p.bedrooms === Number(bedrooms) : true;
 
-    const matchesLocation = location
-      ? locationText.includes(location.toLowerCase())
-      : true;
+        const priceNum = Number(String(p.price).replace(/[^0-9]/g, ""));
+        const matchesPrice =
+          priceNum >= priceRange[0] && priceNum <= priceRange[1];
 
-    const matchesType = type ? p.type === type : true;
+        return (
+          matchesSearch &&
+          matchesUniversity &&
+          matchesLocation &&
+          matchesType &&
+          matchesBedrooms &&
+          matchesPrice
+        );
+      });
 
-    const matchesBedrooms = bedrooms
-      ? p.bedrooms === Number(bedrooms)
-      : true;
+      setFiltered(results);
+      setPage(0);
+    }, [
+      searchTerm,
+      location,
+      type,
+      bedrooms,
+      priceRange,
+      properties,
+      setPage,
+      areaMaps,
+      selectedUniversity
+    ]);
 
-    const priceNum = Number(p.price);
-
-    const matchesPrice =
-      priceNum >= priceRange[0] && priceNum <= priceRange[1];
-
-    return (
-      matchesSearch &&
-      matchesUniversity &&
-      matchesLocation &&
-      matchesType &&
-      matchesBedrooms &&
-      matchesPrice
+    // Pagination
+    const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+    const currentProperties = filtered.slice(
+      page * ITEMS_PER_PAGE,
+      page * ITEMS_PER_PAGE + ITEMS_PER_PAGE,
     );
-  });
 
-  setFiltered(results);
-  setPage(0);
-}, [
-  searchTerm,
-  location,
-  type,
-  bedrooms,
-  priceRange,
-  properties,
-  setPage,
-  areaMaps,
-  selectedUniversity,
-]);
-
-// Pagination
-const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-
-const currentProperties = filtered.slice(
-  page * ITEMS_PER_PAGE,
-  page * ITEMS_PER_PAGE + ITEMS_PER_PAGE
-);
-
-// Dropdown unique options
-const uniqueLocations = Array.from(
-  new Set(
-    properties
-      .map((p) => p.location)
-      .filter(Boolean)
-  )
-);
+    // Dropdown unique options
+    const uniqueLocations = Array.from(
+      new Set(
+        properties.map(
+          (p) => `${p.location.area}, ${p.location.city}, ${p.location.state}`,
+        ),
+      ),
+    );
   const uniqueTypes = Array.from(new Set(properties.map((p) => p.type)));
 
   if (loading) {
