@@ -1,8 +1,8 @@
 [
   {
     "id": 1,
-    "question": "What is RewaCity?",
-    "answer": "RewaCity is a digital real estate platform that helps users find, list, and manage properties with ease."
+    "question": "What is RewaCitty?",
+    "answer": "RewaCitty is a digital real estate platform that helps users find, list, and manage properties with ease."
   },
   {
     "id": 2,
@@ -11,7 +11,7 @@
   },
   {
     "id": 3,
-    "question": "Is RewaCity free to use?",
+    "question": "Is RewaCitty free to use?",
     "answer": "Yes, browsing properties is completely free. Premium features may require a subscription."
   },
   {
@@ -41,7 +41,7 @@
   },
   {
     "id": 9,
-    "question": "Does RewaCity verify all listed properties?",
+    "question": "Does RewaCitty verify all listed properties?",
     "answer": "We perform verification on most listings, but users are encouraged to conduct additional checks."
   },
   {
@@ -56,7 +56,7 @@
   },
   {
     "id": 12,
-    "question": "Does RewaCity offer mortgage assistance?",
+    "question": "Does RewaCitty offer mortgage assistance?",
     "answer": "We provide mortgage calculators and connect users with trusted financial lenders."
   },
   {
@@ -77,22 +77,22 @@
   {
     "id": 16,
     "question": "Which locations do you cover?",
-    "answer": "RewaCity covers major cities and towns, and we are constantly expanding to more areas."
+    "answer": "RewaCitty covers major cities and towns, and we are constantly expanding to more areas."
   },
   {
     "id": 17,
-    "question": "Can I advertise my real estate agency on RewaCity?",
+    "question": "Can I advertise my real estate agency on RewaCitty?",
     "answer": "Yes, agencies can partner with us for advertising and premium features."
   },
   {
     "id": 18,
-    "question": "Does RewaCity offer customer support?",
+    "question": "Does RewaCitty offer customer support?",
     "answer": "We offer 24/7 customer support via email, chat, and phone."
   },
   {
     "id": 19,
     "question": "Are there hidden fees when buying a property?",
-    "answer": "RewaCity does not charge hidden fees, but additional charges may come from agents or legal services."
+    "answer": "RewaCitty does not charge hidden fees, but additional charges may come from agents or legal services."
   },
   {
     "id": 20,
@@ -101,7 +101,7 @@
   },
   {
     "id": 21,
-    "question": "Can I rent properties using RewaCity?",
+    "question": "Can I rent properties using RewaCitty?",
     "answer": "Yes, we support both rental and purchase property listings."
   },
   {
@@ -117,7 +117,7 @@
   {
     "id": 24,
     "question": "Can I list commercial properties?",
-    "answer": "Yes, RewaCity supports residential, commercial, and land listings."
+    "answer": "Yes, RewaCitty supports residential, commercial, and land listings."
   },
   {
     "id": 25,
@@ -136,8 +136,8 @@
   },
   {
     "id": 28,
-    "question": "Can international users access RewaCity?",
-    "answer": "Yes, RewaCity is accessible worldwide and supports global users."
+    "question": "Can international users access RewaCitty?",
+    "answer": "Yes, RewaCitty is accessible worldwide and supports global users."
   },
   {
     "id": 29,

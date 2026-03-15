@@ -277,10 +277,10 @@ function About() {
             className="w-13 h-13 object-contain"
           />
 
-          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Navigating the RewaCity Experience</h1>
+          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Navigating the RewaCitty Experience</h1>
 
           <p className="dark:text-gray-400 text-gray-600 text-[14px] max-w-[95%]">
-            At RewaCity, we've designed a straightforward process to help you find and purchase your dream property with ease. Here's a step-by-step guide to how it all works.
+            At RewaCitty, we've designed a straightforward process to help you find and purchase your dream property with ease. Here's a step-by-step guide to how it all works.
           </p>
         </div>
 
@@ -320,10 +320,10 @@ function About() {
             className="w-13 h-13 object-contain"
           />
 
-          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Meet the RewaCity Team</h1>
+          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Meet the RewaCitty Team</h1>
 
           <p className="dark:text-gray-400 text-gray-600 text-[14px] max-w-[95%]">
-            At RewaCity, our success is driven by the dedication and expertise of our team. Get to know the people behind our mission to make your real estate dreams a reality.
+            At RewaCitty, our success is driven by the dedication and expertise of our team. Get to know the people behind our mission to make your real estate dreams a reality.
           </p>
         </div>
 

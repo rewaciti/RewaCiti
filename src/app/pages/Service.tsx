@@ -112,7 +112,7 @@ const services4 = [
             </h1>
 
             <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-                Welcome to RewaCity, where your real estate aspirations meet expert guidance. Explore our comprehensive range of services, each designed to cater to your unique needs and dreams.
+                Welcome to RewaCitty, where your real estate aspirations meet expert guidance. Explore our comprehensive range of services, each designed to cater to your unique needs and dreams.
             </p> 
         </div>
         <section className="p-4 bg-gray-300 dark:bg-black/30 border-t-5 border-b-5 border-gray-600/30" id="whatweoffer">
@@ -161,7 +161,7 @@ const services4 = [
               </h1>
     
               <p className="text-gray-600 dark:text-gray-400 text-[14px] max-w-[95%]">
-                Selling your property should be a rewarding experience, and at RewaCity, we make sure it is. Our Property Selling Service is designed to maximize the value of your property, ensuring you get the best deal possible. Explore the categories below to see how we can help you at every step of your selling journey
+                Selling your property should be a rewarding experience, and at RewaCitty, we make sure it is. Our Property Selling Service is designed to maximize the value of your property, ensuring you get the best deal possible. Explore the categories below to see how we can help you at every step of your selling journey
               </p>
            </div>
 
@@ -239,7 +239,7 @@ const services4 = [
               </h1>
     
               <p className="text-gray-600 dark:text-gray-400 text-[14px] max-w-[95%]">
-                Owning a property should be a pleasure, not a hassle. RewaCity's Property Management Service takes the stress out of property ownership, offering comprehensive solutions tailored to your needs. Explore the categories below to see how we can make property management effortless for you
+                Owning a property should be a pleasure, not a hassle. RewaCitty's Property Management Service takes the stress out of property ownership, offering comprehensive solutions tailored to your needs. Explore the categories below to see how we can make property management effortless for you
               </p>
            </div>
 
@@ -324,7 +324,7 @@ const services4 = [
                   </h1>
 
                   <p className="dark:text-gray-400 text-gray-600 text-sm max-w-[95%] mt-3">
-                   Building a real estate portfolio requires a strategic approach. RewaCity's Investment Advisory Service empowers you to make smart investments and informed decisions.
+                   Building a real estate portfolio requires a strategic approach. RewaCitty's Investment Advisory Service empowers you to make smart investments and informed decisions.
                   </p>
                 </div>
 

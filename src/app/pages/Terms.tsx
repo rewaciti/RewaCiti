@@ -82,7 +82,7 @@ const TermsPolicy = () => {
             8. Contact Us
           </h2>
           <p className="text-gray-700 dark:text-gray-300">
-            Questions? Contact us at <strong>support@rewacity.com</strong>
+            Questions? Contact us at <strong>support@RewaCitty.com</strong>
           </p>
         </section>
       </div>

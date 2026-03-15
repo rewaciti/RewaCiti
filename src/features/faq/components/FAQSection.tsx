@@ -46,7 +46,7 @@ function FAQSection() {
           <div className="space-y-2">
             <h1 className="text-4xl font-semibold text-gray-900 dark:text-white">Frequently Asked Questions</h1>
             <p className="dark:text-gray-400 text-gray-600 w-[95%]">
-              Find answers to common questions about RewaCity's services, property listings, and the real estate process. We're here to provide clarity and assist you every step of the way.
+              Find answers to common questions about RewaCitty's services, property listings, and the real estate process. We're here to provide clarity and assist you every step of the way.
             </p>
           </div>
 

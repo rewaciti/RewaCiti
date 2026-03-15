@@ -44,7 +44,7 @@ function PropertyDetails() {
     const payload = {
       companyId: "69b4712ce95a2df514b1c789",
       pipelineId: "69b49c7541d35d158e336621",
-      title: `Inquiry for ${property.name}`,
+      title: `${fullName} interested in ${property.name} (₦${finalPrice.toLocaleString()})`,
       name: fullName,
       email: email,
       phone: phone,
@@ -62,11 +62,7 @@ function PropertyDetails() {
         {
           label: "Preferred Location",
           value: `${property.location.area}, ${property.location.city}`,
-        },
-          {
-          label: "Final Price",
-          value: `₦${finalPrice}`
-        },
+        }
       ]
     };
 
