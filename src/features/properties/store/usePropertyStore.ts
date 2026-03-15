@@ -16,7 +16,7 @@
 
 //     try {
 //       const res = await axios.get<SabiFlowProduct[]>(
-//         "https://api.sabiflow.com/api/inventory/portal/RewaCitty/products"
+//         "https://api.sabiflow.com/api/inventory/portal/Rẹ́wàCity/products"
 //       );
 
 //       const properties: Property[] = res.data.map((item) => ({

@@ -19,7 +19,7 @@ function Footer() {
             <div className="space-y-3">
               <h1 className="text-3xl font-semibold text-white">Start Your Real Estate Journey Today</h1>
               <p className="dark:text-gray-400 text-gray-100 w-[90%]">
-                Your dream property is just a click away. Whether you're looking for a new home, a strategic investment, or expert real estate advice, RewaCitty is here to assist you every step of the way. Take the first step towards your real estate goals and explore our available properties or get in touch with our team for personalized assistance.
+                Your dream property is just a click away. Whether you're looking for a new home, a strategic investment, or expert real estate advice, Rẹ́wàCity is here to assist you every step of the way. Take the first step towards your real estate goals and explore our available properties or get in touch with our team for personalized assistance.
               </p>
             </div>
     
@@ -34,7 +34,7 @@ function Footer() {
         <div className="py-8 px-4 lg:flex space-y-10 lg:space-y-0 justify-between">
           <div className="mr-[5%]  space-y-4">
             <p className="flex items-center space-x-2 text-gray-800 text-[30px] font-bold dark:text-white">
-              <img src={logo} alt="logo" className="h-10 mr-1" /><span className="text-black dark:text-white">RewaCitty</span></p>
+              <img src={logo} alt="logo" className="h-10 mr-1" /><span className="text-black dark:text-white">Rẹ́wàCity</span></p>
               <div>
                 <div className="text-black dark:text-white">Get updates about new properties</div>
               </div>
@@ -170,7 +170,7 @@ function Footer() {
             
             {/* Left side: Year and Terms */}
             <div className="text-gray-900 dark:text-gray-500 text-sm flex flex-col md:flex-row items-center gap-2">
-              <span>© {currentYear} RewaCitty. All rights reserved.</span>
+              <span>© {currentYear} Rẹ́wàCity. All rights reserved.</span>
               <a href="/terms-policies" className="hover:text-[#703BF7] text-gray-900 dark:text-gray-500 text-sm">
                 Terms & Conditions
               </a>

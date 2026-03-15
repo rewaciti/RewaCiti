@@ -29,7 +29,7 @@ const Navbar = () => {
       >
         <div className="flex justify-center lg:ml-[40%] sm:ml-[20%] items-center">
           
-         <p className="flex items-center mr-1 text-gray-900 dark:text-white ">✨Discover Properties with RewaCitty</p>
+         <p className="flex items-center mr-1 text-gray-900 dark:text-white ">✨Discover Properties with Rẹ́wàCity</p>
           <NavLink to="/Service" className="underline text-sm hidden sm:block text-gray-900 dark:text-white">
             Learn More
           </NavLink>
@@ -59,7 +59,7 @@ const Navbar = () => {
           {/* Logo */}
           <NavLink to="/" className="flex items-center space-x-2 text-gray-800 text-[30px] font-bold dark:text-white">
             <img src={logo} alt="logo" className="h-10 mr-1" />
-           <span> RewaCitty</span>
+           <span> Rẹ́wàCity</span>
           </NavLink>
 
           {/* Desktop Nav */}

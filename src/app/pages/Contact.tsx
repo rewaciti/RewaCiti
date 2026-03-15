@@ -67,7 +67,7 @@ function Contact() {
   const services1 = [
     {
       img: "/logo/servicecontainer/Icon Container (17).png",
-      text: "RewaCitty@yahoo.com",
+      text: "Rẹ́wàCity@yahoo.com",
     },
     {
       img: "/logo/servicecontainer/Icon Container (16).png",
@@ -87,11 +87,11 @@ function Contact() {
       <Navbar />
       <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10  space-y-6">
         <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-          Get in Touch with RewaCitty
+          Get in Touch with Rẹ́wàCity
         </h1>
 
         <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-          Welcome to RewaCitty's Contact Us page. We're here to assist you with
+          Welcome to Rẹ́wàCity's Contact Us page. We're here to assist you with
           any inquiries, requests, or feedback you may have. Whether you're
           looking to buy or sell a property, explore investment opportunities,
           or simply want to connect, we're just a message away. Reach out to us,
@@ -145,7 +145,7 @@ function Contact() {
 
           <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
             We're excited to connect with you and learn more about your real
-            estate goals. Use the form below to get in touch with RewaCitty.
+            estate goals. Use the form below to get in touch with Rẹ́wàCity.
             Whether you're a prospective client, partner, or simply curious
             about our services, we're here to answer your questions and provide
             the assistance you need.
@@ -337,11 +337,11 @@ function Contact() {
           </h1>
 
           <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-            RewaCitty is here to serve you across multiple locations. Whether
+            Rẹ́wàCity is here to serve you across multiple locations. Whether
             you're looking to meet our team, discuss real estate opportunities,
             or simply drop by for a chat, we have offices conveniently located
             to serve your needs. Explore the categories below to find the
-            RewaCitty office nearest to you
+            Rẹ́wàCity office nearest to you
           </p>
         </div>
         <div className="border border-gray-600/30 rounded-xl p-6 dark:bg-[#1A1A1A] bg-white space-y-5">
@@ -351,13 +351,13 @@ function Contact() {
               Main Headquarters
             </h3>
             <p className="text-gray-800 dark:text-gray-400 text-sm">
-              123 RewaCitty Plaza, City Center, Metropolis
+              123 Rẹ́wàCity Plaza, City Center, Metropolis
             </p>
           </div>
 
           {/* Description */}
           <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-            Our main headquarters serve as the heart of RewaCitty. Located in the
+            Our main headquarters serve as the heart of Rẹ́wàCity. Located in the
             bustling city center, this is where our core team of experts
             operates, driving the excellence and innovation that define us.
           </p>
@@ -366,11 +366,11 @@ function Contact() {
           <div className="space-y-3 md:flex gap-5">
             {/* Email */}
             <a
-              href="mailto:info@RewaCitty.com"
+              href="mailto:info@Rẹ́wàCity.com"
               className="flex items-center gap-3 text-gray-300 hover:text-[#703BF7] transition bg-black p-2 px-4 rounded-full w-full  border border-gray-600/70 md:w-fit justify-center"
             >
               <FaEnvelope />
-              <span>info@RewaCitty.com</span>
+              <span>info@Rẹ́wàCity.com</span>
             </a>
 
             {/* Phone */}

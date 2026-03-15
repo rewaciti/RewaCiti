@@ -42,7 +42,7 @@ function CommentSection() {
         <div className="space-y-2">
           <h1 className="text-4xl font-semibold text-gray-900 dark:text-white">What Our Clients Say </h1>
           <p className="dark:text-gray-400 text-gray-600 w-full">
-           Read the success stories and heartfelt testimonials from our valued clients. Discover why they chose RewaCitty for their real estate needs.
+           Read the success stories and heartfelt testimonials from our valued clients. Discover why they chose Rẹ́wàCity for their real estate needs.
           </p>
         </div>
 
