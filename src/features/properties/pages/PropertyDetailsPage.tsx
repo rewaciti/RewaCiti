@@ -52,6 +52,7 @@ function PropertyDetails() {
       pipelineId: "69b49c7541d35d158e336621",
       title: `${fullName} interested in ${property.name} (₦${finalPrice.toLocaleString()})`,
       name: fullName,
+      amount: `(₦${finalPrice.toLocaleString()})`,
       email: email,
       phone: phone,
       address: `${property.location.area}, ${property.location.city}, ${property.location.state}`,
