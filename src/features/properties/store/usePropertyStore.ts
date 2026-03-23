@@ -102,7 +102,7 @@
 
 import { create } from "zustand";
 import axios from "axios";
-import type { Property, PropertyStore } from "../../../types";
+import type { Property, PropertyStore, SabiFlowProduct } from "../../../types";
 
 export const usePropertyStore = create<PropertyStore>((set, get) => ({
   properties: [],
@@ -117,11 +117,35 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
     set({ loading: true });
 
     try {
-      const res = await axios.get<Property[]>("/data/Properties.json");
-      set({ 
-        properties: res.data, 
-        filteredProperties: res.data, // initialize filtered properties
-        loading: false 
+      const res = await axios.get<{ data: SabiFlowProduct[] }>(
+        "https://api.sabiflow.com/api/inventory/portal/rewacity/products"
+      );
+
+      const properties: Property[] = res.data.data.map((item: SabiFlowProduct) => ({
+        id: item._id,
+        name: item.name,
+        img: item.thumbnail || item.images[0] || "",
+        images: item.images || [],
+        description: item.description || "",
+        bedrooms: item.customData?.bedrooms || 0,
+        bathrooms: item.customData?.bathrooms || 0,
+        type: item.productType || "Property",
+        price: item.price || 0,
+        createdBy: item.createdBy || "",
+        location: {
+          area: item.customData?.location?.area || "",
+          city: item.customData?.location?.city || "",
+          state: item.customData?.location?.state || "",
+        },
+        yearBuilt: item.customData?.yearBuilt || 0,
+        keyFeatures: item.customData?.key_features_and_amenities || [],
+        videoUrl: item.videoUrl || "",
+      }));
+
+      set({
+        properties: properties,
+        filteredProperties: properties,
+        loading: false,
       });
     } catch (err) {
       console.error(err);
@@ -170,7 +194,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         locationMatch &&
         (!filters.propertyType || p.type === filters.propertyType) &&
         (!filters.rooms || p.bedrooms === filters.rooms) &&
-        (!filters.buildYear || p.yearBuilt === filters.buildYear) &&
+        // (!filters.buildYear || p.yearBuilt === filters.buildYear) &&
         (!filters.priceRange ||
           (maxPrice
             ? priceNum >= minPrice && priceNum <= maxPrice

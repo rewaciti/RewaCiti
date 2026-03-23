@@ -43,7 +43,7 @@ function Home() {
         </div>
 
         {/* LEFT SECTION */}
-        <div className="flex-1 bg-gray-300 dark:bg-black/30 flex flex-col justify-center p-2 py-6 sm:px-8 sm:py-10 space-y-6 z-10 order-last md:order-first">
+        <div className="flex-1 bg-gray-300 dark:bg-black/30 flex flex-col justify-center p-4 py-6 sm:px-8 sm:py-10 space-y-6 z-10 order-last md:order-first">
           <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
             Discover Your Dream Property with RewaCiti
           </h1>

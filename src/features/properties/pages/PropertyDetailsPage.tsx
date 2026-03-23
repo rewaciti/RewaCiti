@@ -243,7 +243,7 @@ const finalPrice = property?.price ? property.price * getProfitMultiplier(proper
 
       <section>
         {/* Property Video Section */}
-       {property?.videoUrl && (
+        {property?.videoUrl && (
           <div className="px-4 pb-10 ">
             <div className="p-5 border border-gray-600/30 rounded-xl">
               <h2 className="text-2xl text-gray-900 dark:text-white font-semibold mb-4">
@@ -251,11 +251,31 @@ const finalPrice = property?.price ? property.price * getProfitMultiplier(proper
               </h2>
 
               <div className="relative w-full h-[70vh] aspect-video rounded-xl overflow-hidden border border-gray-600/30 ">
-                <video
-                  src={property.videoUrl}
-                  controls
-                  className="w-full h-full object-cover"
-                />
+                {property.videoUrl.includes("youtube.com") ||
+                property.videoUrl.includes("youtu.be") ? (
+                  <iframe
+                    src={
+                      property.videoUrl.includes("watch?v=")
+                        ? property.videoUrl.replace("watch?v=", "embed/")
+                        : property.videoUrl.includes("youtu.be/")
+                        ? property.videoUrl.replace(
+                            "youtu.be/",
+                            "youtube.com/embed/"
+                          )
+                        : property.videoUrl
+                    }
+                    title="Property Video Tour"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full"
+                  ></iframe>
+                ) : (
+                  <video
+                    src={property.videoUrl}
+                    controls
+                    className="w-full h-full object-cover"
+                  />
+                )}
               </div>
             </div>
           </div>

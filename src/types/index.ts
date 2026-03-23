@@ -125,22 +125,25 @@ export interface User {
 export interface SabiFlowProduct {
   _id: string;
   name: string;
+  slug: string;
   description: string;
   price: number;
   images: string[];
   thumbnail: string;
-
-  categoryId?: {
-    _id: string;
-    name: string;
-    id: string;
+  videoUrl?: string;
+  productType?: string;
+  createdBy?: string;
+  customData?: {
+    bedrooms?: number;
+    bathrooms?: number;
+    yearBuilt?: number;
+    key_features_and_amenities?: string[];
+    location?: {
+      area?: string;
+      city?: string;
+      state?: string;
+    };
   };
-
-  specifications?: {
-    Location?: string;
-    Bedrooms?: number;
-    "Land Size"?: string;
-  };
-
   createdAt?: string;
+  updatedAt?: string;
 }
