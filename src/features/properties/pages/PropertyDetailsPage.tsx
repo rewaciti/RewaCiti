@@ -180,7 +180,7 @@ const finalPrice = property?.price ? property.price * getProfitMultiplier(proper
       </div>
 
       <section className="px-4 pb-10 ">
-        <div className="p-5 border border-gray-600/30 rounded-xl">
+        <div className="p-2 border border-gray-600/30 rounded-xl">
           {/* Thumbnail Row */}
           <div className="flex gap-3 overflow-x-auto mb-6 p-2 border border-gray-600/30 rounded-xl bg-black/20">
             {images.map((img, index) => (
@@ -202,7 +202,7 @@ const finalPrice = property?.price ? property.price * getProfitMultiplier(proper
                 <img
                   key={index}
                   src={img}
-                  className="w-full dark:bg-[#1A1A1A] bg-white h-[450px] object-cover rounded-xl"
+                  className="w-full dark:bg-[#1A1A1A] bg-white h-[70vh] object-cover rounded-xl"
                 />
               ))}
             </div>
@@ -245,7 +245,7 @@ const finalPrice = property?.price ? property.price * getProfitMultiplier(proper
         {/* Property Video Section */}
         {property?.videoUrl && (
           <div className="px-4 pb-10 ">
-            <div className="p-5 border border-gray-600/30 rounded-xl">
+            <div className="p-2 border border-gray-600/30 rounded-xl">
               <h2 className="text-2xl text-gray-900 dark:text-white font-semibold mb-4">
                 Property Video Tour
               </h2>
@@ -273,7 +273,7 @@ const finalPrice = property?.price ? property.price * getProfitMultiplier(proper
                   <video
                     src={property.videoUrl}
                     controls
-                    className="w-full h-full object-cover"
+                    className="w-full h-full"
                   />
                 )}
               </div>

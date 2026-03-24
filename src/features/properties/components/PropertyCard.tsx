@@ -42,14 +42,14 @@ function PropertyCard({ property }: PropertyCardProps) {
   text-gray-900 dark:text-white
   shadow-sm hover:shadow-lg
   transition-all duration-300
-  rounded-xl p-5
+  rounded-xl p-2
 "
 >
   {/* Image */}
   <img
     src={property.img}
     alt={property.name}
-    className="w-full h-40 object-cover rounded-lg mb-4"
+    className="w-full h-70 object-cover rounded-lg mb-4"
   />
 
   {/* Title */}
@@ -80,7 +80,7 @@ function PropertyCard({ property }: PropertyCardProps) {
       border border-purple-100 dark:border-gray-600/30
       bg-purple-50 dark:bg-transparent
       text-gray-700 dark:text-gray-300
-      rounded-2xl px-3 py-1
+      rounded-2xl px-2 py-1
       flex items-center justify-center gap-2
       text-xs sm:text-sm
       transition
@@ -95,7 +95,7 @@ function PropertyCard({ property }: PropertyCardProps) {
       border border-purple-100 dark:border-gray-600/30
       bg-purple-50 dark:bg-transparent
       text-gray-700 dark:text-gray-300
-      rounded-2xl px-3 py-1
+      rounded-2xl px-2 py-1
       flex items-center justify-center gap-2
       text-xs sm:text-sm
       transition
@@ -110,7 +110,7 @@ function PropertyCard({ property }: PropertyCardProps) {
       border border-purple-100 dark:border-gray-600/30
       bg-purple-50 dark:bg-transparent
       text-gray-700 dark:text-gray-300
-      rounded-2xl px-3 py-1
+      rounded-2xl px-2 py-1
       flex items-center justify-center gap-2
       col-span-2 lg:col-span-1
       text-xs sm:text-sm

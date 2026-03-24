@@ -67,15 +67,15 @@ function Home() {
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 items-center text-center md:text-left w-full">
                 <div className="bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-600/30 text-gray-900 dark:text-white px-4 py-3 rounded w-full">
-                  <p className="text-lg font-semibold">200+</p>
+                  <p className="text-lg font-semibold">50+</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Happy customers</p>
                 </div>
                 <div className="bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-600/30 text-gray-900 dark:text-white px-4 py-3 rounded w-full">
-                  <p className="text-lg font-semibold">10k+</p>
+                  <p className="text-lg font-semibold">60+</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Properties for Clients</p>
                 </div>
                 <div className="bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-600/30 text-gray-900 dark:text-white px-4 py-3 rounded w-full col-span-2 md:col-span-1">
-                  <p className="text-lg font-semibold">16+</p>
+                  <p className="text-lg font-semibold">1+</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Years of Experience</p>
                 </div>
               </div>
