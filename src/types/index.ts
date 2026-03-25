@@ -108,6 +108,7 @@ export interface TeamMember {
   name: string;
   role: string;
   image: string;
+  email?: string;
 }
 
 export interface AchievementItem {
@@ -132,10 +133,13 @@ export interface SabiFlowProduct {
   thumbnail: string;
   videoUrl?: string;
   productType?: string;
+  categoryId?: {
+    name: string;
+  };
   createdBy?: string;
   customData?: {
     bedrooms?: number;
-    bathrooms?: number;
+    bathrooms?: number|string;
     yearBuilt?: number;
     key_features_and_amenities?: string[];
     location?: {

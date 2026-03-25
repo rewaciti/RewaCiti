@@ -38,9 +38,6 @@ function App() {
         <Route path="/Service" element={<Service />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/Studentarea" element={<StudentHousing />} />
-        {/* <Route path="/login" element={<Login />} />
-        <Route path="/Admindashboard" element={<Admindashboard />} />
-        <Route path="/property-form" element={<PropertyForm />} /> */}
         <Route path="*" element={<NotFound />} />
         <Route path="/terms-policies" element={<TermsPolicies />} />
       </Routes>

@@ -4,179 +4,188 @@
     "rating": 5,
     "summary": "Excellent service",
     "description": "The property was exactly as described. Very satisfied with the service and the communication was excellent.",
-    "img": "/images/users/user1.jpg",
-    "name": "Alice Johnson",
-    "location": "New York, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Chinedu%20Okafor",
+    "name": "Chinedu Okafor",
+    "location": "Lagos, Nigeria"
   },
   {
     "id": 2,
     "rating": 4,
     "summary": "Very good experience",
     "description": "Overall a very good experience. The staff were friendly and the property met my expectations.",
-    "img": "/images/users/user2.jpg",
-    "name": "Michael Smith",
-    "location": "Los Angeles, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Aisha%20Bello",
+    "name": "Aisha Bello",
+    "location": "Abuja, Nigeria"
   },
   {
     "id": 3,
     "rating": 5,
     "summary": "Highly recommend",
     "description": "I highly recommend this agency. They made the process seamless and stress-free.",
-    "img": "/images/users/user3.jpg",
-    "name": "Emma Williams",
-    "location": "Chicago, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Tunde%20Adeyemi",
+    "name": "Tunde Adeyemi",
+    "location": "Ibadan, Nigeria"
   },
   {
     "id": 4,
     "rating": 3,
     "summary": "Average experience",
     "description": "The property was okay but not exactly what I expected. Service was acceptable.",
-    "img": "/images/users/user4.jpg",
-    "name": "James Brown",
-    "location": "Houston, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Ibrahim%20Musa",
+    "name": "Ibrahim Musa",
+    "location": "Kano, Nigeria"
   },
   {
     "id": 5,
     "rating": 4,
     "summary": "Good support",
     "description": "Support from the team was very good. They answered all my questions quickly.",
-    "img": "/images/users/user5.jpg",
-    "name": "Sophia Davis",
-    "location": "Miami, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Ngozi%20Nwankwo",
+    "name": "Ngozi Nwankwo",
+    "location": "Enugu, Nigeria"
   },
   {
     "id": 6,
     "rating": 5,
     "summary": "Perfect property",
     "description": "The property was perfect and everything was as promised. Loved it!",
-    "img": "/images/users/user6.jpg",
-    "name": "Daniel Miller",
-    "location": "Seattle, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Sadiq%20Abdullahi",
+    "name": "Sadiq Abdullahi",
+    "location": "Kaduna, Nigeria"
   },
   {
     "id": 7,
     "rating": 4,
     "summary": "Very satisfied",
     "description": "I am very satisfied with the service and the property quality.",
-    "img": "/images/users/user7.jpg",
-    "name": "Olivia Wilson",
-    "location": "San Francisco, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Blessing%20Eze",
+    "name": "Blessing Eze",
+    "location": "Owerri, Nigeria"
   },
   {
     "id": 8,
     "rating": 3,
     "summary": "Could be better",
     "description": "The property was okay but had some minor issues. Service was decent.",
-    "img": "/images/users/user8.jpg",
-    "name": "William Moore",
-    "location": "Boston, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Yusuf%20Lawal",
+    "name": "Yusuf Lawal",
+    "location": "Ilorin, Nigeria"
   },
   {
     "id": 9,
     "rating": 5,
     "summary": "Exceptional experience",
     "description": "Everything exceeded my expectations. Excellent communication and property condition.",
-    "img": "/images/users/user9.jpg",
-    "name": "Ava Taylor",
-    "location": "Austin, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Zainab%20Mohammed",
+    "name": "Zainab Mohammed",
+    "location": "Sokoto, Nigeria"
   },
   {
     "id": 10,
     "rating": 4,
     "summary": "Good value",
     "description": "The property offered good value for money. Staff were helpful.",
-    "img": "/images/users/user10.jpg",
-    "name": "Ethan Anderson",
-    "location": "Denver, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Emeka%20Obi",
+    "name": "Emeka Obi",
+    "location": "Onitsha, Nigeria"
   },
   {
     "id": 11,
     "rating": 5,
     "summary": "Wonderful experience",
     "description": "Everything went smoothly and the property was in excellent condition.",
-    "img": "/images/users/user11.jpg",
-    "name": "Isabella Thomas",
-    "location": "Philadelphia, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Fatima%20Hassan",
+    "name": "Fatima Hassan",
+    "location": "Jos, Nigeria"
   },
   {
     "id": 12,
     "rating": 3,
     "summary": "Okay service",
     "description": "Service was okay but could be improved. Property met basic expectations.",
-    "img": "/images/users/user12.jpg",
-    "name": "Alexander Jackson",
-    "location": "Dallas, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=David%20Olatunji",
+    "name": "David Olatunji",
+    "location": "Akure, Nigeria"
   },
   {
     "id": 13,
     "rating": 4,
     "summary": "Very helpful",
     "description": "The team was very helpful and responsive. The property was great.",
-    "img": "/images/users/user13.jpg",
-    "name": "Mia White",
-    "location": "Atlanta, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Hadiza%20Sani",
+    "name": "Hadiza Sani",
+    "location": "Minna, Nigeria"
   },
   {
     "id": 14,
     "rating": 5,
     "summary": "Exceeded expectations",
     "description": "The property and service exceeded my expectations. Highly recommended.",
-    "img": "/images/users/user14.jpg",
-    "name": "Benjamin Harris",
-    "location": "San Diego, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Oluwaseun%20Adewale",
+    "name": "Oluwaseun Adewale",
+    "location": "Abeokuta, Nigeria"
   },
   {
     "id": 15,
     "rating": 4,
     "summary": "Good support",
     "description": "Support from the staff was very good. Property as described.",
-    "img": "/images/users/user15.jpg",
-    "name": "Charlotte Martin",
-    "location": "Orlando, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Grace%20Okon",
+    "name": "Grace Okon",
+    "location": "Uyo, Nigeria"
   },
   {
     "id": 16,
     "rating": 5,
     "summary": "Perfect service",
     "description": "The service and property were perfect. Very satisfied with my experience.",
-    "img": "/images/users/user16.jpg",
-    "name": "Henry Lee",
-    "location": "Portland, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Abdulrahman%20Shehu",
+    "name": "Abdulrahman Shehu",
+    "location": "Maiduguri, Nigeria"
   },
   {
     "id": 17,
     "rating": 4,
     "summary": "Good experience",
     "description": "A good experience overall. Property was nice and service was friendly.",
-    "img": "/images/users/user17.jpg",
-    "name": "Amelia Perez",
-    "location": "Las Vegas, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Chioma%20Uche",
+    "name": "Chioma Uche",
+    "location": "Port Harcourt, Nigeria"
   },
   {
     "id": 18,
     "rating": 3,
     "summary": "Average property",
     "description": "The property was average. Service was okay, nothing outstanding.",
-    "img": "/images/users/user18.jpg",
-    "name": "Jacob Thompson",
-    "location": "Phoenix, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Kabiru%20Danjuma",
+    "name": "Kabiru Danjuma",
+    "location": "Zaria, Nigeria"
   },
   {
     "id": 19,
     "rating": 5,
     "summary": "Highly recommended",
     "description": "I highly recommend this service. The property and staff were excellent.",
-    "img": "/images/users/user19.jpg",
-    "name": "Harper Garcia",
-    "location": "Charlotte, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Esther%20Ajayi",
+    "name": "Esther Ajayi",
+    "location": "Osogbo, Nigeria"
   },
   {
     "id": 20,
     "rating": 4,
     "summary": "Very happy",
     "description": "Very happy with the property and service provided. Smooth process.",
-    "img": "/images/users/user20.jpg",
-    "name": "Liam Martinez",
-    "location": "San Antonio, USA"
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Suleiman%20Abdulkadir",
+    "name": "Suleiman Abdulkadir",
+    "location": "Bauchi, Nigeria"
+  },
+   {
+    "id": 21,
+    "rating": 5,
+    "summary": "Highly recommended",
+    "description": "I highly recommend this service. The property and staff were excellent.",
+    "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=Esther%20Ajayi",
+    "name": "Esther Ajayi",
+    "location": "Osogbo, Nigeria"
   }
 ]

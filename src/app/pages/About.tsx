@@ -98,29 +98,33 @@ const stepsData: Step[] = [
 ];
 
 const teamData: TeamMember[] = [
-  {
+{
     id: 1,
     name: "John Williams",
     role: "Founder & CEO",
     image: "/team/member1.jpg",
+    email: "john@gmail.com"
   },
   {
     id: 2,
     name: "Sarah Johnson",
     role: "Chief Real Estate Officer",
     image: "/team/member2.jpg",
+    email: "sarah@gmail.com"
   },
   {
     id: 3,
     name: "Michael Brown",
     role: "Head of Property Management",
     image: "/team/member3.jpg",
+    email: "michael@gmail.com"
   },
   {
     id: 4,
     name: "Emily Carter",
     role: "Legal Counsel",
     image: "/team/member4.jpg",
+    email: "emily@gmail.com"
   },
 ];
 
@@ -354,12 +358,36 @@ function About() {
               </div>
 
               {/* Email Chat Box */}
-              <form className="flex items-center p-2 rounded-full overflow-hidden border border-gray-600/30 w-full">
-                <input
-                  type="text"
-                  placeholder="Say Hello ✋"
-                  className="text-gray-900 dark:text-white outline-none w-full placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                />
+              <form
+                 onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                    e.preventDefault();
+
+                    const form = e.currentTarget;
+
+                    const message = (form.elements.namedItem("message") as HTMLInputElement).value;
+
+                    const subject = `Message for ${member.name}`;
+
+                    const body = `Hello ${member.name},
+
+                  ${message}
+
+                  Best regards,
+                  `;
+
+                    window.location.href = `mailto:${member.email}?subject=${encodeURIComponent(
+                      subject
+                    )}&body=${encodeURIComponent(body)}`;
+                    (form.elements.namedItem("message") as HTMLInputElement).value = "";
+                  }}
+                  className="flex items-center p-2 rounded-full overflow-hidden border border-gray-600/30 w-full"
+                >
+               <input
+                    type="text"
+                    name="message"
+                    placeholder="Say Hello ✋"
+                    className="text-gray-900 dark:text-white outline-none w-full placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                  />
                 <button type="submit" className="flex items-center justify-center p-2 bg-[#703BF7] rounded-full">
                   <img src={Entericon} alt="enter" className="w-3 h-3" />
                 </button>

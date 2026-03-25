@@ -129,7 +129,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         description: item.description || "",
         bedrooms: item.customData?.bedrooms || 0,
         bathrooms: item.customData?.bathrooms || 0,
-        type: item.productType || "Property",
+        type: item.categoryId?.name || "Property",
         price: item.price || 0,
         createdBy: item.createdBy || "",
         location: {

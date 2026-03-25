@@ -2,9 +2,45 @@ import logo from "/Symbol.png";
 import Entericon from "/logo/Send.png";
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import { Link } from "react-router";
+import { useState } from "react";
+import axios from "axios";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email) {
+      alert("Please enter your email");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const payload = {
+      companyId: "69b4712ce95a2df514b1c789",
+      pipelineId: "69b49c7541d35d158e336621",
+      title: `Newsletter Subscription: ${email}`,
+      name: "Newsletter Subscriber",
+      email: email,
+      note: "User subscribed to newsletter via footer form.",
+    };
+
+    try {
+      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
+      alert("Subscribed successfully!");
+      setEmail("");
+    } catch (error) {
+      console.error("Error subscribing:", error);
+      alert("Failed to subscribe. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="">
         <div className="relative py-10 px-5 bg-cover"
@@ -38,13 +74,16 @@ function Footer() {
               <div>
                 <div className="text-black dark:text-white">Get updates about new properties</div>
               </div>
-            <form className="flex items-center p-2 rounded overflow-hidden border dark:border-gray-400/30 border-gray-900 lg:w-[250px] w-full">
+            <form onSubmit={handleSubmit} className="flex items-center p-2 rounded overflow-hidden border dark:border-gray-400/30 border-gray-900 lg:w-[250px] w-full">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="text-black dark:text-white outline-none w-full "
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="text-black dark:text-white outline-none w-full bg-transparent"
+                disabled={isSubmitting}
               />
-              <button type="submit" className="flex items-center justify-center">
+              <button type="submit" className="flex items-center justify-center disabled:opacity-50" disabled={isSubmitting}>
                 <img src={Entericon} alt="enter" className="w-4 h-4" />
               </button>
             </form>

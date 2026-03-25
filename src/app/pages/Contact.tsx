@@ -351,13 +351,13 @@ function Contact() {
               Main Headquarters
             </h3>
             <p className="text-gray-800 dark:text-gray-400 text-sm">
-              123 RewaCitty Plaza, City Center, Metropolis
+              Adan and Eve Hostel,Ibadan Rd, energy filling station,camus gate, OAU, Ile-Ife.
             </p>
           </div>
 
           {/* Description */}
           <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-            Our main headquarters serve as the heart of RewaCitty. Located in the
+            Our main headquarters serve as the heart of RewaCiti.Located in the
             bustling city center, this is where our core team of experts
             operates, driving the excellence and innovation that define us.
           </p>
@@ -370,7 +370,7 @@ function Contact() {
               className="flex items-center gap-3 text-gray-300 hover:text-[#703BF7] transition bg-black p-2 px-4 rounded-full w-full  border border-gray-600/70 md:w-fit justify-center"
             >
               <FaEnvelope />
-              <span>info@RewaCitty.com</span>
+              <span>rewacity@yahoo.com</span>
             </a>
 
             {/* Phone */}
@@ -385,13 +385,13 @@ function Contact() {
             {/* City */}
             <div className="flex items-center gap-3 text-gray-300 bg-black  px-4 rounded-full w-full border border-gray-600/70 h-11 md:w-fit justify-center ">
               <FiMapPin />
-              <span>Metropolis</span>
+              <span>OAU, Ile-Ife</span>
             </div>
           </div>
 
           {/* Action Button */}
           <a
-            href="https://www.google.com/maps"
+            href="https://www.google.com/maps/place/Adam+and+Eve+Hostel/@7.4947457,4.5248031,3a,75y,90t/data=!3m8!1e2!3m6!1sCIHM0ogKEICAgICcxreZKg!2e10!3e12!6shttps:%2F%2Flh3.googleusercontent.com%2Fgps-cs-s%2FAHVAwepfoA-TPS0YVlGhOaP24wuMT4wRE4bmRN8Nr_K9chUpKMqbpHs6C_JUKr5qvbwGRGV9dbvG2BGyoUgO9sm5-67AycS9427fDDcOureud3jqCAroqvcMgDLMYnUKKXFcdZD6xFk%3Dw203-h270-k-no!7i3120!8i4160!4m7!3m6!1s0x103837296ccb765b:0xa5dca41cd9bf8328!8m2!3d7.4948027!4d4.5246398!10e5!16s%2Fg%2F12ht2d5dw?entry=ttu&g_ep=EgoyMDI2MDMyMi4wIKXMDSoASAFQAw%3D%3Dogle.com/maps?q=Awolowo+Hall+OAU+Ile-Ifehttps://www.google.com/maps/place/Adam+and+Eve+Hostel/@7.4947457,4.5248031,3a,75y,90t/data=!3m8!1e2!3m6!1sCIHM0ogKEICAgICcxreZKg!2e10!3e12!6shttps:%2F%2Flh3.googleusercontent.com%2Fgps-cs-s%2FAHVAwepfoA-TPS0YVlGhOaP24wuMT4wRE4bmRN8Nr_K9chUpKMqbpHs6C_JUKr5qvbwGRGV9dbvG2BGyoUgO9sm5-67AycS9427fDDcOureud3jqCAroqvcMgDLMYnUKKXFcdZD6xFk%3Dw203-h270-k-no!7i3120!8i4160!4m9!3m8!1s0x103837296ccb765b:0xa5dca41cd9bf8328!8m2!3d7.4948027!4d4.5246398!10e5!14m1!1BCgIgAQ!16s%2Fg%2F12ht2d5dw?entry=ttu&g_ep=EgoyMDI2MDMyMi4wIKXMDSoASAFQAw%3D%3D"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-5 py-3 bg-[#703BF7] hover:bg-[#5c2fe0] transition rounded-lg text-white font-medium w-full justify-center mt-4 lg:w-fit"
