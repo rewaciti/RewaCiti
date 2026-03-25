@@ -236,6 +236,9 @@ function Contact() {
                 <option value="investment" className="">
                   Investment
                 </option>
+                <option value="agent" className="">
+                  Be an Agent
+                </option>
               </select>
             </div>
 

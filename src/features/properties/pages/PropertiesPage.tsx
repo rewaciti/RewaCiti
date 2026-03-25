@@ -18,9 +18,20 @@ import { NavLink } from "react-router";
 
 function PropertySearchSection() {
   useScrollToHash();
-  const {properties,loading,page,ITEMS_PER_PAGE,fetchProperties,nextPage,prevPage,setPage,} = usePropertyStore();
+  const {
+    properties,
+    loading,
+    page,
+    ITEMS_PER_PAGE,
+    fetchProperties,
+    nextPage,
+    prevPage,
+    setPage,
+  } = usePropertyStore();
 
   const [searchTerm, setSearchTerm] = useState("");
+  // ... rest of state stays same ...
+
   const [location, setLocation] = useState("");
   const [type, setType] = useState("");
   const [bedrooms, setBedrooms] = useState("");
@@ -401,10 +412,10 @@ function PropertySearchSection() {
               )}
             </div>
           </div>
-
+          
           <hr className="my-4 border-gray-600" />
 
-          {/* Pagination */}
+          {/* Local Pagination */}
           <div className="flex justify-between items-center text-white mt-6">
             <p className="text-sm text-black dark:text-white">
               {page + 1} of {totalPages}

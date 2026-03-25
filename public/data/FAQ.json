@@ -17,7 +17,7 @@
   {
     "id": 4,
     "question": "How do I request a property?",
-    "answer": "Go to the property page, click on 'View Property', and fill in your details to request that specific property."
+    "answer": "Go to the property page, click on 'View Property' on the property of your choice, and fill in your details to request that specific property."
   },
   {
     "id": 5,
@@ -37,7 +37,7 @@
   {
     "id": 8,
     "question": "Can I list my property on RewaCiti?",
-    "answer": "Property listing is currently restricted and handled by approved listers only."
+    "answer": "Yes, you can. Go to the contact page and fill out the form indicating that you want to become an agent."
   },
   {
     "id": 9,
@@ -73,5 +73,21 @@
     "id": 15,
     "question": "What should I do if I have issues with a property?",
     "answer": "All communication should be done through the property details page before completing any transaction, as RewaCiti does not handle disputes after deals are made."
+  },
+  {
+  "id": 16,
+  "question": "How long does it take to get a response after submitting a request?",
+  "answer": "You will receive a response within at most 48 hours. If you do not get a reply after 48 hours, please visit the contact page again and send a message to lodge your complaint."
+  },
+  {
+    "id": 17,
+    "question": "Can I become a property agent with RewaCiti?",
+    "answer": "Yes, you can. Go to the contact page and fill out the form indicating that you want to become an agent."
+  },
+  {
+    "id": 18,
+    "question": "Can I invest in properties through RewaCiti?",
+    "answer": "Yes, you can. Go to the contact page and fill out the form indicating that you want to invest in properties."
   }
+
 ]

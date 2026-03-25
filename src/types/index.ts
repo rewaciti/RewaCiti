@@ -28,8 +28,10 @@ export interface PropertyStore {
 
   ITEMS_PER_PAGE: number;
   page: number;
+  apiPage: number;
+  totalProperties: number;
 
-  fetchProperties: () => Promise<void>;
+  fetchProperties: (apiPage?: number) => Promise<void>;
   nextPage: () => void;
   prevPage: () => void;
   setPage: (page: number) => void;
