@@ -165,10 +165,28 @@ const finalPrice = property?.price ? property.price * getProfitMultiplier(proper
 
           <div className="flex justify-between md:items-center w-full mt-4 md:mt-0">
             {/* Location */}
-            <p className="text-sm border dark:text-gray-400 text-gray-900 border-gray-600/30 rounded-sm px-2 py-1 inline-flex items-center gap-2">
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                property
+                  ? [
+                      property.location.area,
+                      property.location.city,
+                      property.location.state,
+                    ].join(", ")
+                  : ""
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm border dark:text-gray-400 text-gray-900 border-gray-600/30 rounded-sm px-2 py-1 inline-flex items-center gap-2 hover:text-[#703BF7] hover:border-[#703BF7] transition-colors"
+            >
               <FiMapPin className="" />
-              {property && [property.location.area, property.location.city, property.location.state].join(", ")}
-            </p>
+              {property &&
+                [
+                  property.location.area,
+                  property.location.city,
+                  property.location.state,
+                ].join(", ")}
+            </a>
 
             {/* Price */}
             <div className="flex md:flex-col items-center md:items-start">

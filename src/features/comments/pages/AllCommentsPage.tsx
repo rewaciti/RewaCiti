@@ -55,9 +55,16 @@ function AllComments() {
                     {/* Name + Location */}
                     <div>
                         <h3 className="text-lg font-semibold">{comment.name}</h3>
-                        <p className="text-sm text-gray-400 ">
+                        <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                                comment.location
+                            )}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-gray-400 hover:text-[#703BF7] transition-colors"
+                        >
                             {comment.location}
-                        </p>
+                        </a>
                     </div>
               </div>
 

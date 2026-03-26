@@ -353,9 +353,14 @@ function Contact() {
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
               Main Headquarters
             </h3>
-            <p className="text-gray-800 dark:text-gray-400 text-sm">
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=Adam+and+Eve+Hostel+Ibadan+Rd+Ile-Ife"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-800 dark:text-gray-400 text-sm hover:text-[#703BF7] transition-colors"
+            >
               Adan and Eve Hostel,Ibadan Rd, energy filling station,camus gate, OAU, Ile-Ife.
-            </p>
+            </a>
           </div>
 
           {/* Description */}

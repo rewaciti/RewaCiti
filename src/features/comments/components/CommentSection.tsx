@@ -90,7 +90,16 @@ function CommentSection() {
               />
               <div>
                 <p className="font-semibold">{comment.name}</p>
-                <p className="text-gray-400 text-sm">{comment.location}</p>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    comment.location
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 text-sm hover:text-[#703BF7] transition-colors"
+                >
+                  {comment.location}
+                </a>
               </div>
             </div>
           </div>

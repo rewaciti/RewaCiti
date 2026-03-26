@@ -30,7 +30,7 @@ function Studentarea() {
 
   const [location, setLocation] = useState("");
   const [selectedUniversity, setUniversity] = useState("");
-  // const [availableLocations, setAvailableLocations] = useState<string[]>([]);
+
   const { areaMaps, loading: areaLoading, fetchAreaMaps } = useAreaMapStore();
   const [type, setType] = useState("");
   const [bedrooms, setBedrooms] = useState("");
