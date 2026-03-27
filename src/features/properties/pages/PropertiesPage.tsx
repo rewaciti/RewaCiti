@@ -179,6 +179,13 @@ function PropertySearchSection() {
       ),
     ),
   );
+  //   const preferedLocations = Array.from(
+  //   new Set(
+  //     properties.map(
+  //       (p) => `${p.location.state}, ${p.location.city}, ${p.location.area}`,
+  //     ),
+  //   ),
+  // );
   const uniqueTypes = Array.from(new Set(properties.map((p) => p.type)));
   const uniqueBedrooms = Array.from(
     new Set(properties.map((p) => p.bedrooms)),
@@ -504,7 +511,7 @@ function PropertySearchSection() {
             </div>
 
             {/* Preferred Location */}
-            <div>
+            {/* <div>
               <label className="text-gray-700 dark:text-gray-300 text-sm">Preferred Location</label>
               <select
                 required
@@ -515,10 +522,22 @@ function PropertySearchSection() {
                 <option value="" disabled hidden>
                   Select Location
                 </option>
-                {uniqueLocations.map((loc, idx) => (
+                {preferedLocations.map((loc, idx) => (
                   <option key={idx} value={loc}>{loc}</option>
                 ))}
               </select>
+            </div> */}
+
+            <div>
+              <label className="text-gray-700 dark:text-gray-300 text-sm">Preferred Location</label>
+              <input
+                type="text"
+                placeholder="Enter Prefered Location"
+                required
+                value={name}
+                onChange={(e) => setPreferedLocation(e.target.value)}
+                className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+              />
             </div>
 
             {/* Property Type */}
