@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { FiX, FiAlertTriangle } from "react-icons/fi";
 import type { Property } from "../../../types";
+import axios from "axios";
 
 interface ReportAgentModalProps {
   property: Property;
@@ -14,6 +15,9 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
   open,
   onOpenChange,
 }) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [reason, setReason] = useState("");
   const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,14 +26,43 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Mock API call
+    const payload = {
+      companyId: "69b4712ce95a2df514b1c789",
+      pipelineId: "69b49c7541d35d158e336621", // You might want to use a different pipeline for reports if available
+      title: `AGENT REPORT: ${property.name} - ${reason}`,
+      name: name,
+      email: email,
+      phone: phone,
+      address: `${property.location.area}, ${property.location.city}, ${property.location.state}`,
+      note: `Reason: ${reason}\n\nDescription: ${description}`,
+      customData: [
+        {
+          label: "Property Name",
+          value: property.name,
+        },
+        {
+          label: "Agent ID",
+          value: property.createdBy.toString(),
+        },
+        {
+          label: "Report Reason",
+          value: reason,
+        }
+      ]
+    };
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
       alert("Report submitted successfully. We will investigate this agent.");
       onOpenChange(false);
+      // Reset form
+      setName("");
+      setEmail("");
+      setPhone("");
       setReason("");
       setDescription("");
     } catch (error) {
+      console.error("Error submitting report:", error);
       alert("Failed to submit report. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -40,7 +73,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-6 rounded-xl shadow-2xl z-50">
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-6 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto">
           <div className="flex justify-between items-center mb-6">
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900 flex items-center gap-2">
               <FiAlertTriangle className="text-red-500" />
@@ -54,6 +87,43 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Your Full Name</label>
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter your name"
+                className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Email</label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your email"
+                  className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
+                />
+              </div>
+              <div>
+                <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Phone</label>
+                <input
+                  type="tel"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Your phone"
+                  className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
+                />
+              </div>
+            </div>
+
             <div>
               <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Reason for Reporting</label>
               <select

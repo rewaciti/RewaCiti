@@ -24,8 +24,8 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   const [feedback, setFeedback] = useState("");
 
   const price = property.price || 0;
-  const ourFee = price * 0.05;
-  const agentFee = price * 0.95;
+  const ourFee = price * 0.07;
+  const agentFee = price * 0.93;
 
   const config = {
     reference: new Date().getTime().toString(),
@@ -36,8 +36,8 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
 
   const initializePayment = usePaystackPayment(config);
 
-  const onSuccess = (reference: any) => {
-    alert("Payment successful! Thank you for your purchase.");
+  const onSuccess = (response: { reference: string; status: string; trans: string }) => {
+    alert(`Payment successful! Reference: ${response.reference}`);
     onOpenChange(false);
   };
 
@@ -132,7 +132,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
               </div>
               
               <div className="flex justify-between text-sm border-t border-gray-600/20 pt-2">
-                <span className="text-gray-600 dark:text-gray-400">Our Fee (5%)</span>
+                <span className="text-gray-600 dark:text-gray-400">Our Fee (7%)</span>
                 <span className="font-medium text-[#703BF7]">₦{ourFee.toLocaleString()}</span>
               </div>
               

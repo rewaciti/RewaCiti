@@ -208,11 +208,11 @@ const price = property?.price || 0;
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDropdownOpen((prev) => !prev)}
-                  className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-6 py-2 rounded-lg font-medium transition-all shadow-lg hover:shadow-[#703BF7]/20 flex items-center gap-2"
+                  className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-6 py-2 rounded-lg font-medium transition-all shadow-lg hover:shadow-[#703BF7]/20 flex items-center gap-2 cursor-pointer"
                 >
                   Actions
                   <FiChevronDown
-                    className={`transition-transform duration-200 ${
+                    className={`transition-transform duration-200${
                       isDropdownOpen ? "rotate-180" : ""
                     }`}
                   />
@@ -226,7 +226,7 @@ const price = property?.price || 0;
                         setIsPaymentModalOpen(true);
                         setIsDropdownOpen(false);
                       }}
-                      className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 group first:rounded-t-xl"
+                      className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 group first:rounded-t-xl cursor-pointer"
                     >
                       <div className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-white group-hover:text-white">
                         <span>💳</span> Pay for Property
@@ -239,7 +239,7 @@ const price = property?.price || 0;
                         setIsInspectionModalOpen(true);
                         setIsDropdownOpen(false);
                       }}
-                      className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 border-t border-gray-600/30 group"
+                      className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 border-t border-gray-600/30 group cursor-pointer"
                     >
                       <div className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-white group-hover:text-white">
                         <span>📅</span> Book a Visit
@@ -252,7 +252,7 @@ const price = property?.price || 0;
                         setIsReportModalOpen(true);
                         setIsDropdownOpen(false);
                       }}
-                      className="w-full text-left px-4 py-3 hover:bg-red-500 dark:hover:bg-red-600 hover:text-white transition-all duration-300 border-t border-gray-600/30 group last:rounded-b-xl"
+                      className="w-full text-left px-4 py-3 hover:bg-red-500 dark:hover:bg-red-600 hover:text-white transition-all duration-300 border-t border-gray-600/30 group last:rounded-b-xl cursor-pointer"
                     >
                       <div className="text-sm font-medium flex items-center gap-2 text-red-500 group-hover:text-white">
                         <span>🚩</span> Report Agent
@@ -304,7 +304,7 @@ const price = property?.price || 0;
   
           {/* Main Image Display */}
           <div className="relative">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {visibleImages.map((img, index) => (
                 <img
                   key={index}

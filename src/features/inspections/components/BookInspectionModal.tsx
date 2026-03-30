@@ -24,19 +24,21 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const addInspection = useInspectionStore((state) => state.addInspection);
   const updatePaymentStatus = useInspectionStore((state) => state.updatePaymentStatus);
 
-  // Example fee calculation based on city/state
-  const calculateFee = (state: string) => {
+  // Example fee calculation based on city
+  const calculateFee = (city: string) => {
+    const normalizedCity = city.toLowerCase();
     const fees: { [key: string]: number } = {
-      Lagos: 10000,
-      Abuja: 15000,
-      "Port Harcourt": 12000,
-      Osun: 8000,
+      yaba: 10000,
+      abuja: 15000,
+      "port harcourt": 12000,
+      "ile-ife": 7000, 
+      osogbo: 8000,
       default: 5000,
     };
-    return fees[state] || fees.default;
+    return fees[normalizedCity] || fees.default;
   };
 
-  const amount = calculateFee(property.location.state);
+  const amount = calculateFee(property.location.city);
   const config = {
     reference: new Date().getTime().toString(),
     email: email,
@@ -46,9 +48,9 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
 
   const initializePayment = usePaystackPayment(config);
 
-  const onSuccess = (reference: { reference: string; status: string; trans: string }) => {
-    updatePaymentStatus(reference.reference, "paid");
-    alert("Inspection booked successfully!");
+  const onSuccess = (response: { reference: string; status: string; trans: string }) => {
+    updatePaymentStatus(response.reference, "paid");
+    alert(`Inspection booked successfully! Reference: ${response.reference}`);
     onOpenChange(false);
   };
 
