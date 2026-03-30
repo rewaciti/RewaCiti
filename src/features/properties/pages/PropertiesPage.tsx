@@ -279,7 +279,7 @@ function PropertySearchSection() {
                 <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 dark:text-gray-400 text-gray-900 focus:outline-none border w-full border-gray-600/70 rounded-t-none"
+                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-t-none"
                   value={area}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -306,7 +306,7 @@ function PropertySearchSection() {
                 <FiHome className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 dark:text-gray-400 text-gray-900 focus:outline-none border w-full border-gray-600/70 rounded-t-none"
+                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-t-none"
                   value={type}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -331,7 +331,7 @@ function PropertySearchSection() {
                 <IoBedOutline className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 dark:text-gray-400 text-gray-900 focus:outline-none border w-full border-gray-600/70 rounded-t-none"
+                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-t-none"
                   value={bedrooms}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -355,7 +355,7 @@ function PropertySearchSection() {
             {/* PRICE RANGE - SELECT */}
             <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-tl-none">
               <select
-                className="p-2 rounded-lg dark:bg-black/70 bg-gray-300 dark:text-gray-400 text-gray-900 focus:outline-none border w-full border-gray-600/70 rounded-tl-none"
+                className="p-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-tl-none"
                 value={selectedPriceLabel}
                 onChange={(e) => {
                   const label = e.target.value;

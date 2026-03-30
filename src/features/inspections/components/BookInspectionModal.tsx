@@ -86,7 +86,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-6 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto">
           <div className="flex justify-between items-center mb-6">
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900">
-              Book Inspection
+              Book a Visit
             </Dialog.Title>
             <Dialog.Close asChild>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600">
@@ -148,9 +148,13 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
             </div>
 
             <div className="p-3 bg-[#703BF7]/10 rounded-lg border border-[#703BF7]/30 space-y-2">
-              <div className="flex items-center gap-2 text-sm dark:text-gray-300 text-gray-700">
-                <FiMapPin className="text-[#703BF7]" />
-                <span>{property.location.area}, {property.location.city}</span>
+              <div className="border-b border-[#703BF7]/20 pb-2 mb-2">
+                <h4 className="font-semibold dark:text-white text-gray-900">{property.name}</h4>
+                <p className="text-xs dark:text-gray-400 text-gray-600">{property.type} • {property.bedrooms} Bedrooms</p>
+              </div>
+              <div className="flex items-start gap-2 text-sm dark:text-gray-300 text-gray-700">
+                <FiMapPin className="text-[#703BF7] mt-1 shrink-0" />
+                <span>{property.location.area}, {property.location.city}, {property.location.state}</span>
               </div>
               <div className="flex justify-between items-center border-t border-[#703BF7]/20 pt-2">
                 <span className="text-sm font-medium dark:text-white text-gray-900">Inspection Fee</span>
@@ -162,11 +166,13 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               type="submit"
               className="w-full bg-[#703BF7] hover:bg-[#5c2fe0] text-white font-medium py-3 rounded-md transition-colors mt-4"
             >
-              Pay & Book Inspection
+              Pay & Book a Visit
             </button>
 
             <p className="text-xs dark:text-gray-400 text-gray-600 text-center italic mt-2">
-              * Payment is non-refundable and covers transportation and logistics.
+            <p>
+              * Payment is non-refundable and covers transportation and logistics. However, a refund will only be issued if the issue arises from our side, such as the agent failing to show up or the property being unavailable (e.g., already sold or rented but not updated on the site).
+            </p>
             </p>
           </form>
         </Dialog.Content>

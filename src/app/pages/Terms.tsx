@@ -62,12 +62,28 @@ const TermsPolicy = () => {
         {/* 5 PROPERTY VISITS */}
         <section className="bg-white/90 dark:bg-[#1A1A1A] border rounded-xl p-6 mb-4">
           <h2 className="text-xl font-semibold mb-2">5. Property Visits</h2>
+
           <p>
-            All property visits require a payment of <strong>₦2,000</strong>.
+           All property visits require a visitation fee, which varies based on the property's location.
+            The exact fee will be displayed during the booking process.
           </p>
+
+          <p className="mt-2">
+            All payments must be made strictly through the platform. Users are advised not to make
+            any payments directly to agents outside the platform.The platform is not responsible for any losses resulting from payments made outside the platform.
+            Any such transactions are done at the user's own risk.
+          </p>
+
           <p className="mt-2">
             Visits must be booked at least <strong>48 hours in advance</strong> and are subject to confirmation.
           </p>
+
+          <p className="mt-2">
+           Payments are generally non-refundable. However, refunds may only be considered if the issue
+            is directly caused by the platform, such as an agent failing to show up or a property being
+            unavailable but still listed.
+          </p>
+
         </section>
 
         {/* 6 RESPONSE TIME */}
@@ -75,7 +91,7 @@ const TermsPolicy = () => {
           <h2 className="text-xl font-semibold mb-2">6. Response Time</h2>
           <p>
             All requests, including agent applications and inquiries, will be responded to within
-            <strong> 48 hours</strong>.
+            <strong> 24 hours</strong>.
           </p>
           <p className="mt-2">
             If you do not receive a response within this time, please contact us again through the contact page.

@@ -1,12 +1,14 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
 import { useParams } from "react-router";
-import { FiMapPin, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiMapPin, FiChevronLeft, FiChevronRight, FiChevronDown} from "react-icons/fi";
 import { usePropertyStore } from "../store/usePropertyStore";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaBed, FaBath, FaHome, FaBolt  } from "react-icons/fa";
 import Footer from "../../../shared/components/Layout/Footer";
 import axios from "axios";
 import BookInspectionModal from "../../inspections/components/BookInspectionModal";
+import PropertyPaymentModal from "../components/PropertyPaymentModal";
+import ReportAgentModal from "../components/ReportAgentModal";
 
 const slugify = (text: string) =>
   text.toLowerCase().replace(/\s+/g, "-");
@@ -34,6 +36,20 @@ function PropertyDetails() {
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isInspectionModalOpen, setIsInspectionModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -153,7 +169,9 @@ const price = property?.price || 0;
       <div className="mx-auto">
         {/* Name, Location & Price Section */}
         <div className="md:flex gap-3 items-center px-4 py-6 whitespace-nowrap">
-          <h1 className="text-2xl font-semibold mb-1 text-gray-900 dark:text-white">{property?.name}</h1>
+          <div className="flex flex-col">
+            <h1 className="text-2xl font-semibold mb-1 text-gray-900 dark:text-white max-w-[90%]">{property?.name}</h1>
+          </div>
 
           <div className="md:flex justify-between md:items-center w-full mt-4 md:mt-0">
             {/* Location */}
@@ -180,18 +198,71 @@ const price = property?.price || 0;
                 ].join(", ")}
             </a>
 
-            {/* Price */}
+            {/* Price & Action */}
             <div className="flex gap-4 items-center justify-between mt-4 md:mt-0">
               <div className="flex md:flex-col items-center md:items-start">
                 <p className="text-xs text-gray-800 dark:text-gray-400 hidden md:flex">Price</p>
                 <p className="text-2xl font-semibold text-gray-900 dark:text-white">₦{price.toLocaleString()}</p>
               </div>
-              <button
-                onClick={() => setIsInspectionModalOpen(true)}
-                className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-6 py-3 rounded-lg font-medium transition-all shadow-lg hover:shadow-[#703BF7]/20"
-              >
-                Book Inspection
-              </button>
+              
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setIsDropdownOpen((prev) => !prev)}
+                  className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-6 py-2 rounded-lg font-medium transition-all shadow-lg hover:shadow-[#703BF7]/20 flex items-center gap-2"
+                >
+                  Actions
+                  <FiChevronDown
+                    className={`transition-transform duration-200 ${
+                      isDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {isDropdownOpen && (
+                  <div className="absolute right-0 top-9 mt-2 w-64 bg-white/95 dark:bg-[#1A1A1A]/95 backdrop-blur-md border border-gray-600/30 rounded-xl shadow-2xl z-100 overflow-hidden flex flex-col">
+                    
+                    <button
+                      onClick={() => {
+                        setIsPaymentModalOpen(true);
+                        setIsDropdownOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 group first:rounded-t-xl"
+                    >
+                      <div className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-white group-hover:text-white">
+                        <span>💳</span> Pay for Property
+                      </div>
+                      <div className="text-[10px] text-gray-500 dark:text-gray-400 group-hover:text-white/80">Complete property purchase & rating</div>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setIsInspectionModalOpen(true);
+                        setIsDropdownOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 border-t border-gray-600/30 group"
+                    >
+                      <div className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-white group-hover:text-white">
+                        <span>📅</span> Book a Visit
+                      </div>
+                      <div className="text-[10px] text-gray-500 dark:text-gray-400 group-hover:text-white/80">Non-refundable inspection fee applies</div>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setIsReportModalOpen(true);
+                        setIsDropdownOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-3 hover:bg-red-500 dark:hover:bg-red-600 hover:text-white transition-all duration-300 border-t border-gray-600/30 group last:rounded-b-xl"
+                    >
+                      <div className="text-sm font-medium flex items-center gap-2 text-red-500 group-hover:text-white">
+                        <span>🚩</span> Report Agent
+                      </div>
+                      <div className="text-[10px] text-red-400 group-hover:text-white/80">Report unprofessional behavior</div>
+                    </button>
+
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -203,10 +274,22 @@ const price = property?.price || 0;
         onOpenChange={setIsInspectionModalOpen}
       />
 
+      <PropertyPaymentModal
+        property={property}
+        open={isPaymentModalOpen}
+        onOpenChange={setIsPaymentModalOpen}
+      />
+
+      <ReportAgentModal
+        property={property}
+        open={isReportModalOpen}
+        onOpenChange={setIsReportModalOpen}
+      />
+
       <section className="px-4 pb-10 ">
         <div className="p-2 border border-gray-600/30 rounded-xl">
           {/* Thumbnail Row */}
-          <div className="flex gap-3 overflow-x-auto mb-6 p-2 border border-gray-600/30 rounded-xl bg-black/20">
+          <div className="flex gap-2 overflow-x-auto mb-6 p-1 border border-gray-600/30 rounded-xl bg-black/20">
             {images.map((img, index) => (
               <img
                 key={index}

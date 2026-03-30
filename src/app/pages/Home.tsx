@@ -54,12 +54,12 @@ function Home() {
 
           <div className="flex space-x-4">
             <Link to="/Studentarea">
-              <button className="bg-gray-100 dark:bg-black/30 border border-gray-200 dark:border-gray-600/30 text-gray-900 dark:text-white px-4 py-2 rounded text-sm hover:bg-[#9677df] hover:text-white">
+              <button className="bg-gray-100 dark:bg-black/30 border border-gray-200 dark:border-gray-600/30 text-gray-900 dark:text-white px-4 py-2 rounded text-sm hover:bg-[#9677df] hover:text-white cursor-pointer dark:hover:bg-[#9677df]">
                 School Area
               </button>
             </Link>
            <Link to = "/Properties">
-              <button className="bg-[#703BF7] hover:bg-[#9677df] text-white px-4 py-2 rounded text-sm">
+              <button className="bg-[#703BF7] hover:bg-[#9677df] text-white px-4 py-2 rounded text-sm cursor-pointer">
                 Browse Properties
               </button>
            </Link>

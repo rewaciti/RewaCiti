@@ -174,8 +174,6 @@ function Studentarea() {
       page * ITEMS_PER_PAGE + ITEMS_PER_PAGE,
     );
 
-    
-  const uniqueTypes = Array.from(new Set(properties.map((p) => p.type)));
 
   if (loading) {
     return (
@@ -270,7 +268,7 @@ function Studentarea() {
                 <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 dark:text-gray-400 text-gray-900 focus:outline-none border w-full border-gray-600/70 rounded-t-none"
+                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-t-none"
                   value={location}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -299,7 +297,7 @@ function Studentarea() {
                 <FiHome className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 dark:text-gray-400 text-gray-900 focus:outline-none border w-full border-gray-600/70 rounded-t-none"
+                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-t-none"
                   value={type}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -313,6 +311,8 @@ function Studentarea() {
                   <option value="Self Contain">Self Contain</option>
                   <option value="Single Room">Single Room</option>
                   <option value="Mini Flat">Mini Flat</option>
+                  <option value="Single Room">Single Room</option>
+                  <option value="Shared Room">Shared Room</option>
                 </select>
               </div>
             </div>
@@ -322,7 +322,7 @@ function Studentarea() {
                 <IoBedOutline className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 dark:text-gray-400 text-gray-900 focus:outline-none border w-full border-gray-600/70 rounded-t-none"
+                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-t-none"
                   value={bedrooms}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -339,14 +339,12 @@ function Studentarea() {
                   <option value="4">shared</option>
                 </select>
               </div>
-            </div>
-
-            
+            </div>    
 
             {/* PRICE RANGE - SELECT */}
             <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-tl-none">
               <select
-                className="p-2 rounded-lg dark:bg-black/70 bg-gray-300 dark:text-gray-400 text-gray-900 focus:outline-none border w-full border-gray-600/70 rounded-tl-none"
+                className="p-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-tl-none"
                 value={selectedPriceLabel}
                 onChange={(e) => {
                   const label = e.target.value;
@@ -520,9 +518,45 @@ function Studentarea() {
                 <option value="" disabled hidden>
                   Property Type
                 </option>
-                {uniqueTypes.map((t, idx) => (
-                  <option key={idx} value={t}>{t}</option>
-                ))}
+                  <option value="Self Contain">Self Contain</option>
+                  <option value="Studio Apartment">Studio Apartment</option>
+                  <option value="Mini Flat (1 Bedroom)">Mini Flat (1 Bedroom)</option>
+                  <option value="2 Bedroom Flat">2 Bedroom Flat</option>
+                  <option value="3 Bedroom Flat">3 Bedroom Flat</option>
+                  <option value="4 Bedroom Flat">4 Bedroom Flat</option>
+                  <option value="Detached Bungalow">Detached Bungalow</option>
+                  <option value="Semi-Detached Bungalow">Semi-Detached Bungalow</option>
+                  <option value="Semi-Detached Duplex">Semi-Detached Duplex</option>
+                  <option value="Fully Detached Duplex">Fully Detached Duplex</option>
+                  <option value="Terrace Duplex">Terrace Duplex</option>
+                  <option value="Mansion">Mansion</option>
+                  <option value="Villa">Villa</option>
+                  <option value="Smart Home">Smart Home</option>
+                  <option value="Shared Apartment">Shared Apartment</option>
+                  <option value="Single Room (Shared)">Single Room (Shared)</option>
+                  <option value="Face-me-I-face-you">Face-me-I-face-you</option>
+                  <option value="Short Let Apartment">Short Let Apartment</option>
+                  <option value="Furnished Apartment">Furnished Apartment</option>
+                  <option value="Student Hostel">Student Hostel</option>
+                  <option value="Private Lodge">Private Lodge</option>
+
+                  {/* Commercial */}
+                  <option value="Shop">Shop</option>
+                  <option value="Office Space">Office Space</option>
+                  <option value="Co-working Space">Co-working Space</option>
+                  <option value="Warehouse">Warehouse</option>
+                  <option value="Event Hall">Event Hall</option>
+                  <option value="Hotel">Hotel</option>
+                  <option value="Guest House">Guest House</option>
+
+                  {/* Land */}
+                  <option value="Residential Land">Residential Land</option>
+                  <option value="Commercial Land">Commercial Land</option>
+                  <option value="Agricultural Land">Agricultural Land</option>
+
+                  {/* Special */}
+                  <option value="Mixed-Use Property">Mixed-Use Property</option>
+                  <option value="Uncompleted Building">Uncompleted Building</option>
               </select>
             </div>
 
