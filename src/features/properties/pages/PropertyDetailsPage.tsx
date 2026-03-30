@@ -65,6 +65,8 @@ function PropertyDetails() {
 
     const fullName = `${firstName} ${lastName}`.trim();
 
+    const propertyUrl = window.location.href;
+
     const payload = {
       companyId: "69b4712ce95a2df514b1c789",
       pipelineId: "69b49c7541d35d158e336621",
@@ -74,11 +76,15 @@ function PropertyDetails() {
       email: email,
       phone: phone,
       address: `${property.location.area}, ${property.location.city}, ${property.location.state}`,
-      note: message,
+      note: `${message}\n\nProperty Link: ${propertyUrl}`,
       customData: [
         {
           label: "Property",
           value: property.name,
+        },
+        {
+          label: "Property Link",
+          value: propertyUrl,
         },
         {
           label: "Property Type",

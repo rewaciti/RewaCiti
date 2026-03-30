@@ -39,19 +39,22 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
 
     const fullName = `${firstName} ${lastName}`.trim();
     const reference = `demo_pay_${new Date().getTime()}`;
+    const propertyUrl = window.location.href;
 
     const payload = {
       companyId: "69b4712ce95a2df514b1c789",
       pipelineId: "69b49c7541d35d158e336621",
       title: `PROPERTY PAYMENT: ${property.name} - ${fullName}`,
       name: fullName,
-      amount: price.toString(),
+      amount: `(₦${price.toLocaleString()})`,
       email: email,
       phone: phone,
       address: `${property.location.area}, ${property.location.city}, ${property.location.state}`,
-      note: `Reference: ${reference}\nRating: ${rating}/5\nFeedback: ${feedback}\n\nBreakdown:\n- Our Fee (7%): ₦${ourFee.toLocaleString()}\n- Agent Fee (93%): ₦${agentFee.toLocaleString()}`,
+      note: `Rating: ${rating}/5\nFeedback: ${feedback}`,
       customData: [
         { label: "Property Name", value: property.name },
+        { label: "Property Link", value: propertyUrl },
+        { label: "Total Property Price", value: `₦${price.toLocaleString()}` },
         { label: "Payment Reference", value: reference },
         { label: "Service Rating", value: `${rating} Stars` },
         { label: "Our Fee (7%)", value: `₦${ourFee.toLocaleString()}` },

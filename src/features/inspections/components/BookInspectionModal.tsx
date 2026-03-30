@@ -48,19 +48,21 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
     const fullName = `${firstName} ${lastName}`.trim();
     const reference = `demo_visit_${new Date().getTime()}`;
     const propertyAddress = `${property.location.area}, ${property.location.city}, ${property.location.state}`;
+    const propertyUrl = window.location.href;
 
     const payload = {
       companyId: "69b4712ce95a2df514b1c789",
       pipelineId: "69b49c7541d35d158e336621",
       title: `VISIT BOOKING: ${property.name} - ${fullName}`,
       name: fullName,
-      amount: amount.toString(),
+      amount: `(₦${amount.toLocaleString()})`,
       email: email,
       phone: phone,
       address: propertyAddress,
-      note: `Reference: ${reference}\nTask: Property Visit/Inspection\n\nFee Paid: ₦${amount.toLocaleString()}`,
+      note: `Reference: ${reference}\nTask: Property Visit/Inspection\nProperty Link: ${propertyUrl}`,
       customData: [
         { label: "Property Name", value: property.name },
+        { label: "Property Link", value: propertyUrl },
         { label: "Booking Reference", value: reference },
         { label: "Inspection Fee", value: `₦${amount.toLocaleString()}` },
         { label: "Agent ID", value: property.createdBy.toString() },
