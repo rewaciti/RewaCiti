@@ -67,11 +67,11 @@ function Contact() {
   const services1 = [
     {
       img: "/logo/servicecontainer/Icon Container (17).png",
-      text: "rewaCity@yahoo.com",
+      text: "rewaciti@gmail.com",
     },
     {
       img: "/logo/servicecontainer/Icon Container (16).png",
-      text: "+234 701 896 0275",
+      text: "+234 706 530 4417",
     },
     {
       img: "/logo/servicecontainer/Icon Container (15).png",
@@ -374,11 +374,11 @@ function Contact() {
           <div className="space-y-3 md:flex gap-5">
             {/* Email */}
             <a
-              href="mailto:info@RewaCitty.com"
+              href="mailto:info@RewaCiti.com"
               className="flex items-center gap-3 text-gray-300 hover:text-[#703BF7] transition bg-black p-2 px-4 rounded-full w-full  border border-gray-600/70 md:w-fit justify-center"
             >
               <FaEnvelope />
-              <span>rewacity@yahoo.com</span>
+              <span>rewaciti@gmail.com</span>
             </a>
 
             {/* Phone */}
@@ -387,7 +387,7 @@ function Contact() {
               className="flex items-center gap-3 text-gray-300 hover:text-[#703BF7] transition bg-black p-2 px-4 rounded-full w-full border border-gray-600/70 md:w-fit justify-center"
             >
               <FaPhone />
-              <span>+234 701 896 0275</span>
+              <span>+234 706 530 4417</span>
             </a>
 
             {/* City */}
