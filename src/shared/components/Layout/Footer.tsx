@@ -22,7 +22,7 @@ function Footer() {
 
     const payload = {
       companyId: "69b4712ce95a2df514b1c789",
-      pipelineId: "69b49c7541d35d158e336621",
+      pipelineId: "69cec882dd40685bfe20ad43",
       title: `Newsletter Subscription: ${email}`,
       name: "Newsletter Subscriber",
       email: email,

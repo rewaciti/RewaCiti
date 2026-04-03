@@ -32,7 +32,7 @@ function Contact() {
 
     const payload = {
       companyId: "69b4712ce95a2df514b1c789",
-      pipelineId: "69b49c7541d35d158e336621",
+      pipelineId: "69cec9f3dd40685bfe20adb2",
       title: `Contact Inquiry from ${fullName}`,
       name: fullName,
       email: email,

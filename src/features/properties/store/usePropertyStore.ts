@@ -47,6 +47,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
       if (searchQuery) {
         filtered = properties.filter((p) =>
           p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
           p.location.area.toLowerCase().includes(searchQuery.toLowerCase()) ||
           p.location.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
           p.location.state.toLowerCase().includes(searchQuery.toLowerCase())
