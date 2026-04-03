@@ -305,7 +305,7 @@ function Contact() {
               />
               <p className="text-gray-900 dark:text-white text-sm">
                 I agree with the{" "}
-                <Link to="/terms-policies" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
+                <Link to="/terms" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
                   Terms & Conditions
                 </Link>
               </p>

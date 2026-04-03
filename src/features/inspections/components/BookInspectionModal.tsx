@@ -210,7 +210,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               />
               <p className="dark:text-white text-gray-900 text-sm">
                 I agree with the{" "}
-                <Link to="/terms-policies" className="hover:text-[#703BF7] text-[#703BF7] underline">
+                <Link to="/terms" className="hover:text-[#703BF7] text-[#703BF7] underline">
                   Terms & Conditions
                 </Link>
               </p>

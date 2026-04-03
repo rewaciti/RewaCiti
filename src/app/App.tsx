@@ -12,7 +12,9 @@ import Service from "./pages/Service";
 import Contact from "./pages/Contact";
 import StudentHousing from "./pages/StudentArea";
 import NotFound from "./pages/NotFound";
-import TermsPolicies from "./pages/Terms";
+import Terms from "./pages/Terms";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+
 
 
 function App() {
@@ -39,7 +41,8 @@ function App() {
         <Route path="/Contact" element={<Contact />} />
         <Route path="/Studentarea" element={<StudentHousing />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/terms-policies" element={<TermsPolicies />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       </Routes>
     </BrowserRouter>
   )
