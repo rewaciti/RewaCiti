@@ -47,7 +47,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
     e.preventDefault();
 
     if (!agreed) {
-      alert("Please agree to the Terms & Conditions");
+      alert("Please agree to the Terms and Privacy Policy");
       return;
     }
 
@@ -178,10 +178,14 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                 className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
               />
             </div>
-
             <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
               <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
-                An agent will contact you with feedback within the next <span className="font-semibold text-[#703BF7]">24 hours</span> to finalize your inspection details.
+                A verified agent will contact you within the next{" "}
+                <span className="font-semibold text-[#703BF7]">24 hours</span> to finalize your inspection arrangements.
+              </p>
+
+              <p className="text-sm dark:text-gray-300 text-gray-700 text-center mt-1">
+                The agent’s contact details will be shared once your booking has been successfully confirmed.
               </p>
             </div>
 
@@ -211,7 +215,11 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               <p className="dark:text-white text-gray-900 text-sm">
                 I agree with the{" "}
                 <Link to="/terms" className="hover:text-[#703BF7] text-[#703BF7] underline">
-                  Terms & Conditions
+                  Terms
+                </Link>{" "}
+                and{" "}
+                <Link to="/privacy-policy" className="hover:text-[#703BF7] text-[#703BF7] underline">
+                  Privacy Policy
                 </Link>
               </p>
             </div>
@@ -228,9 +236,9 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               {isSubmitting ? "Processing..." : "Pay & Book a Visit"}
             </button>
 
-            <p className="text-xs dark:text-gray-400 text-gray-600 text-center italic mt-2">
-              * Payment is non-refundable and covers transportation and logistics. However, a refund will only be issued if the issue arises from our side, such as the agent failing to show up or the property being unavailable (e.g., already sold or rented but not updated on the site).
-            </p>
+            {/* <p className="text-xs dark:text-gray-400 text-gray-600 text-center italic mt-2">
+              * Payment is non-refundable. However, a refund will only be issued if the issue arises from our side, such as the agent failing to show up or the property being unavailable (e.g., already sold or rented but not updated on the site).
+            </p> */}
           </form>
         </Dialog.Content>
       </Dialog.Portal>

@@ -38,7 +38,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
     }
 
     if (!agreed) {
-      alert("Please agree to the Terms & Conditions");
+      alert("Please agree to the Terms and Privacy Policy");
       return;
     }
     
@@ -157,6 +157,16 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 />
               </div>
             </div>
+           <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
+              <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
+                A verified agent will reach out within the next{" "}
+                <span className="font-semibold text-[#703BF7]">24 hours</span> to complete your property details and next steps.
+              </p>
+
+              <p className="text-sm dark:text-gray-300 text-gray-700 text-center mt-1">
+                Contact details will be shared once your payment has been successfully confirmed.
+              </p>
+            </div>
 
             {/* Breakdown Section */}
             <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-3">
@@ -237,7 +247,11 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
               <p className="dark:text-white text-gray-900 text-sm">
                 I agree with the{" "}
                 <Link to="/terms" className="hover:text-[#703BF7] text-[#703BF7] underline">
-                  Terms & Conditions
+                  Terms
+                </Link>{" "}
+                and{" "}
+                <Link to="/privacy-policy" className="hover:text-[#703BF7] text-[#703BF7] underline">
+                  Privacy Policy
                 </Link>
               </p>
             </div>

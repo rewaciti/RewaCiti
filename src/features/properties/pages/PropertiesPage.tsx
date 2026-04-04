@@ -52,7 +52,7 @@ function PropertySearchSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreed) {
-      alert("Please agree to the Terms & Conditions");
+      alert("Please agree to the Terms and Privacy Policy");
       return;
     }
 
@@ -654,7 +654,11 @@ function PropertySearchSection() {
               <p className="text-gray-900 dark:text-white text-sm">
                 I agree with the{" "}
                 <Link to="/terms" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
-                  Terms & Conditions
+                  Terms
+                </Link>{" "}
+                and{" "}
+                <Link to="/privacy-policy" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
+                  Privacy Policy
                 </Link>
               </p>
             </div>

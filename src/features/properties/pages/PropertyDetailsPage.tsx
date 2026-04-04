@@ -1,5 +1,5 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
-import { useParams } from "react-router";
+import { useParams, Link } from "react-router";
 import { FiMapPin, FiChevronLeft, FiChevronRight, FiChevronDown} from "react-icons/fi";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { useState, useEffect, useRef } from "react";
@@ -56,7 +56,7 @@ function PropertyDetails() {
     e.preventDefault();
 
     if (!agreed) {
-      alert("Please agree to the Terms & Conditions");
+      alert("Please agree to the Terms and Privacy Policy");
       return;
     }
 
@@ -540,9 +540,13 @@ const price = property?.price || 0;
               />
               <p className="text-gray-900 dark:text-white text-sm">
                 I agree with the{" "}
-                <a href="/terms-policies" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
-                  Terms & Conditions
-                </a>
+                <Link to="/terms" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
+                  Terms
+                </Link>{" "}
+                and{" "}
+                <Link to="/privacy-policy" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
+                  Privacy Policy
+                </Link>
               </p>
             </div>
 
