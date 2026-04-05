@@ -2,7 +2,7 @@ import { Skeleton } from "./Skeleton";
 
 export function PropertyCardSkeleton() {
   return (
-    <div className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 rounded-xl p-2 animate-pulse">
+    <div className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 rounded-xl p-2">
       <Skeleton className="w-full h-70 rounded-lg mb-4" />
       <Skeleton className="h-6 w-3/4 mb-2" />
       <Skeleton className="h-4 w-1/2 mb-4" />
@@ -25,7 +25,7 @@ export function PropertyCardSkeleton() {
 
 export function CommentCardSkeleton() {
   return (
-    <div className="rounded-xl p-5 bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 animate-pulse">
+    <div className="rounded-xl p-5 bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30">
       <Skeleton className="h-6 w-24 mb-4" />
       <Skeleton className="h-6 w-3/4 mb-2" />
       <div className="space-y-2 mb-4">
@@ -45,7 +45,7 @@ export function CommentCardSkeleton() {
 
 export function FAQCardSkeleton() {
   return (
-    <div className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 rounded-xl p-5 animate-pulse">
+    <div className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 rounded-xl p-5">
       <Skeleton className="h-6 w-3/4 mb-4" />
       <div className="space-y-2">
         <Skeleton className="h-4 w-full" />
@@ -58,7 +58,7 @@ export function FAQCardSkeleton() {
 
 export function PropertyDetailsSkeleton() {
   return (
-    <div className="bg-gray-300 dark:bg-black/30 min-h-screen animate-pulse">
+    <div className="bg-gray-300 dark:bg-black/30 min-h-screen">
       <div className="mx-auto">
         {/* Header Section */}
         <div className="md:flex gap-3 items-center px-4 py-6">
