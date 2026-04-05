@@ -49,12 +49,12 @@ function Footer() {
             }}
         >
             {/* overlay */}
-            <div className="absolute inset-0 bg-black/50 dark:bg-black/0"></div>
+            <div className="absolute inset-0 bg-black/80 dark:bg-black/0"></div>
 
             <div className="relative sm:flex justify-between items-center space-y-6 sm:space-y-0">
             <div className="space-y-3">
               <h1 className="text-3xl font-semibold text-white">Start Your Real Estate Journey Today</h1>
-              <p className="dark:text-gray-400 text-gray-100 w-[90%]">
+              <p className="dark:text-gray-400 text-gray-200 w-[90%]">
                 Your dream property is just a click away. Whether you're looking for a new home, a strategic investment, or expert real estate advice, RewaCiti is here to assist you every step of the way. Take the first step towards your real estate goals and explore our available properties or get in touch with our team for personalized assistance.
               </p>
             </div>

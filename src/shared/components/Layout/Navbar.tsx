@@ -27,8 +27,8 @@ const Navbar = () => {
           backgroundPosition: "center",
         }}
       >
-        <div className="flex justify-center lg:ml-[40%] sm:ml-[20%] items-center">
-          
+        
+        <div className="flex justify-center lg:ml-[40%] sm:ml-[20%] items-center">        
          <p className="flex items-center mr-1 text-gray-900 dark:text-white ">✨Discover Properties with RewaCiti</p>
           <NavLink to="/Service" className="underline text-sm hidden sm:block text-gray-900 dark:text-white">
             Learn More
