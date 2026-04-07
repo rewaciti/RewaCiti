@@ -2,16 +2,39 @@
   {
     "id": "OAU",
     "name": "Obafemi Awolowo University",
-    "city": "Ife",
+    "city": "Ile-Ife",
     "state": "Osun",
     "areas": [
       "Parakin",
-      "Moore",
       "Mayfair",
       "Ododuwa",
-      "Ibadan Road",
-      "Moremi Estate",
       "Asherifa",
+      "Ibadan Road",
+      "Lagere",
+      "Sabo",
+      "Ilode",
+      "Eleyele",
+      "Moremi Estate",
+      "Road 7",
+      "Campus"
+    ]
+  },
+  {
+    "id": "UI",
+    "name": "University of Ibadan",
+    "city": "Ibadan",
+    "state": "Oyo",
+    "areas": [
+      "Agbowo",
+      "Samonda",
+      "Sango",
+      "Bodija",
+      "Ojoo",
+      "Ajibode",
+      "Apete",
+      "Mokola",
+      "Orogun",
+      "University Road",
       "Campus"
     ]
   },
@@ -23,17 +46,404 @@
     "areas": [
       "Akoka",
       "Yaba",
-      "Bariga"
+      "Bariga",
+      "Onike",
+      "Sabo",
+      "Jibowu",
+      "Fola Agoro",
+      "Abule Oja",
+      "Shomolu",
+      "Campus"
     ]
   },
   {
-    "id": "UI",
-    "name": "University of Ibadan",
+    "id": "FUTA",
+    "name": "Federal University of Technology Akure",
+    "city": "Akure",
+    "state": "Ondo",
+    "areas": [
+      "Oba-Ile",
+      "North Gate",
+      "South Gate",
+      "Apatapiti",
+      "Roadblock",
+      "FUTA Junction",
+      "Orita Obele",
+      "Campus"
+    ]
+  },
+  {
+    "id": "UNIBEN",
+    "name": "University of Benin",
+    "city": "Benin City",
+    "state": "Edo",
+    "areas": [
+      "Ugbowo",
+      "Ekosodin",
+      "Isihor",
+      "Ekehuan",
+      "Aduwawa",
+      "Oluku",
+      "Campus"
+    ]
+  },
+  {
+    "id": "UNN",
+    "name": "University of Nigeria Nsukka",
+    "city": "Nsukka",
+    "state": "Enugu",
+    "areas": [
+      "Odenigwe",
+      "Onuiyi",
+      "Hilltop",
+      "Obukpa",
+      "University Road",
+      "Campus"
+    ]
+  },
+  {
+    "id": "LASU",
+    "name": "Lagos State University",
+    "city": "Lagos",
+    "state": "Lagos",
+    "areas": [
+      "Ojo",
+      "Iyana Iba",
+      "Okokomaiko",
+      "Volks",
+      "Alaba",
+      "Campus"
+    ]
+  },
+  {
+    "id": "POLYIBADAN",
+    "name": "The Polytechnic Ibadan",
     "city": "Ibadan",
     "state": "Oyo",
     "areas": [
+      "Sango",
+      "Eleyele",
+      "Apete",
+      "Awotan",
+      "Ajibode",
+      "Campus"
+    ]
+  },
+  {
+    "id": "YABATECH",
+    "name": "Yaba College of Technology",
+    "city": "Lagos",
+    "state": "Lagos",
+    "areas": [
+      "Yaba",
+      "Sabo",
+      "Onike",
+      "Abule Oja",
+      "Fadeyi",
+      "Campus"
+    ]
+  },
+  {
+    "id": "UNILORIN",
+    "name": "University of Ilorin",
+    "city": "Ilorin",
+    "state": "Kwara",
+    "areas": [
+      "Tanke",
+      "Oke-Odo",
+      "Fate",
+      "Pipeline",
+      "Tipper Garage",
+      "Campus"
+    ]
+  },
+    {
+    "id": "ILORIN",
+    "name": "University of Ilorin",
+    "city": "Ilorin",
+    "state": "Kwara",
+    "areas": [
+      "Tanke",
+      "Oke-Odo",
+      "Fate",
+      "Challenge",
+      "Pipeline",
+      "Tipper Garage",
+      "Sanrab",
+      "University Road",
+      "Campus"
+    ]
+  },
+  {
+    "id": "LASUSTECH",
+    "name": "Lagos State University of Science and Technology",
+    "city": "Ikorodu",
+    "state": "Lagos",
+    "areas": [
+      "Ikorodu Town",
+      "Odongunyan",
+      "Agric",
+      "Ebute",
+      "Igbogbo",
+      "Garage",
+      "Campus"
+    ]
+  },
+  {
+    "id": "POLYIBADAN",
+    "name": "The Polytechnic Ibadan",
+    "city": "Ibadan",
+    "state": "Oyo",
+    "areas": [
+      "Sango",
+      "Eleyele",
+      "Apete",
+      "Awotan",
+      "Ajibode",
       "Agbowo",
-      "Samonda"
+      "Campus"
+    ]
+  },
+  {
+    "id": "YABATECH",
+    "name": "Yaba College of Technology",
+    "city": "Lagos",
+    "state": "Lagos",
+    "areas": [
+      "Yaba",
+      "Sabo",
+      "Onike",
+      "Abule Oja",
+      "Fadeyi",
+      "Jibowu",
+      "Campus"
+    ]
+  },
+  {
+    "id": "MAPOLY",
+    "name": "Moshood Abiola Polytechnic",
+    "city": "Abeokuta",
+    "state": "Ogun",
+    "areas": [
+      "Ojere",
+      "Adigbe",
+      "Camp",
+      "Lafenwa",
+      "Sapon",
+      "Kuto",
+      "Campus"
+    ]
+  },
+  {
+    "id": "FEDPOLYILARO",
+    "name": "Federal Polytechnic Ilaro",
+    "city": "Ilaro",
+    "state": "Ogun",
+    "areas": [
+      "Ilaro Town",
+      "Oke-Odan",
+      "Sawonjo",
+      "Ibeshe",
+      "Imasayi",
+      "Campus"
+    ]
+  },
+  {
+    "id": "AAUA",
+    "name": "Adekunle Ajasin University",
+    "city": "Akungba",
+    "state": "Ondo",
+    "areas": [
+      "Akungba Town",
+      "Supare",
+      "Ikare",
+      "Oka",
+      "Oba Akoko",
+      "Campus"
+    ]
+  },
+  {
+    "id": "EKSU",
+    "name": "Ekiti State University",
+    "city": "Ado Ekiti",
+    "state": "Ekiti",
+    "areas": [
+      "Odo-Ado",
+      "Ajilosun",
+      "Iworoko",
+      "Basiri",
+      "Fajuyi",
+      "Adebayo",
+      "Campus"
+    ]
+  },
+  {
+    "id": "FEDPOLYADO",
+    "name": "Federal Polytechnic Ado-Ekiti",
+    "city": "Ado Ekiti",
+    "state": "Ekiti",
+    "areas": [
+      "Iworoko Road",
+      "Odo-Ado",
+      "Ajebamidele",
+      "Falegan",
+      "Aba Erinfun",
+      "Campus"
+    ]
+  },
+  {
+    "id": "BOWEN",
+    "name": "Bowen University",
+    "city": "Iwo",
+    "state": "Osun",
+    "areas": [
+      "Iwo Town",
+      "Oke-Odo",
+      "Post Office Area",
+      "Olupona",
+      "Adeeke",
+      "Campus"
+    ]
+  },
+  {
+    "id": "REDEEMERS",
+    "name": "Redeemer's University",
+    "city": "Ede",
+    "state": "Osun",
+    "areas": [
+      "Ede Town",
+      "Redemption Camp Road",
+      "Akoda",
+      "Ofatedo",
+      "Sekona",
+      "Campus"
+    ]
+  },
+  {
+    "id": "BABCOCK",
+    "name": "Babcock University",
+    "city": "Ilishan",
+    "state": "Ogun",
+    "areas": [
+      "Ilishan Town",
+      "Iperu",
+      "Sagamu Road",
+      "Ilisan-Remo",
+      "Ogijo",
+      "Campus"
+    ]
+  },
+  {
+    "id": "AUCHI",
+    "name": "Auchi Polytechnic",
+    "city": "Auchi",
+    "state": "Edo",
+    "areas": [
+      "Auchi Town",
+      "Jattu",
+      "South Ibie",
+      "Auchi Poly Road",
+      "Aviele",
+      "Campus"
+    ]
+  },
+  {
+    "id": "NEKEDE",
+    "name": "Federal Polytechnic Nekede",
+    "city": "Owerri",
+    "state": "Imo",
+    "areas": [
+      "Nekede",
+      "Ihiagwa",
+      "World Bank Area",
+      "FUTO Road",
+      "Umuguma",
+      "Campus"
+    ]
+  },
+  {
+    "id": "IMO_POLY",
+    "name": "Imo State Polytechnic",
+    "city": "Umuagwo",
+    "state": "Imo",
+    "areas": [
+      "Umuagwo",
+      "Ohaji",
+      "Mgbirichi",
+      "Assa",
+      "Obile",
+      "Campus"
+    ]
+  },
+  {
+    "id": "DELSU",
+    "name": "Delta State University",
+    "city": "Abraka",
+    "state": "Delta",
+    "areas": [
+      "Abraka Town",
+      "Railway",
+      "Oria",
+      "Ekrejeta",
+      "Campus III",
+      "Campus"
+    ]
+  },
+  {
+    "id": "UNIPORT",
+    "name": "University of Port Harcourt",
+    "city": "Port Harcourt",
+    "state": "Rivers",
+    "areas": [
+      "Choba",
+      "Alakahia",
+      "Aluu",
+      "Rumuokoro",
+      "Rukpokwu",
+      "East-West Road",
+      "Campus"
+    ]
+  },
+  {
+    "id": "RSUST",
+    "name": "Rivers State University",
+    "city": "Port Harcourt",
+    "state": "Rivers",
+    "areas": [
+      "Nkpolu",
+      "Rumuokoro",
+      "Mile 3",
+      "Diobu",
+      "D-Line",
+      "Campus"
+    ]
+  },
+  {
+    "id": "NAU",
+    "name": "Nnamdi Azikiwe University",
+    "city": "Awka",
+    "state": "Anambra",
+    "areas": [
+      "Ifite",
+      "Awka Town",
+      "Amansea",
+      "Temporary Site",
+      "Okpuno",
+      "Campus"
+    ]
+  },
+  {
+    "id": "UNICAL",
+    "name": "University of Calabar",
+    "city": "Calabar",
+    "state": "Cross River",
+    "areas": [
+      "Malabor",
+      "Etta Agbor",
+      "State Housing",
+      "Calabar South",
+      "Marian",
+      "Campus"
     ]
   }
 ]
