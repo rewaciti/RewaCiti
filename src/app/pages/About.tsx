@@ -1,10 +1,10 @@
 import Navbar from "../../shared/components/Layout/Navbar"
 import hero from "/logo/Image (1).png"
 import { FaStar, FaUsers, FaShieldAlt,FaGraduationCap, FaLinkedin } from "react-icons/fa";
-import Entericon from "/logo/Send.png";
 import type { ValueItem,Step,TeamMember, AchievementItem } from "../../types";
 import Footer from "../../shared/components/Layout/Footer";
 import useScrollToHash from "../../shared/hooks/useScrollToHash";
+import { Send } from "lucide-react";
 
 
 
@@ -388,8 +388,8 @@ function About() {
                     placeholder="Say Hello ✋"
                     className="text-gray-900 dark:text-white outline-none w-full placeholder:text-gray-400 dark:placeholder:text-gray-500"
                   />
-                <button type="submit" className="flex items-center justify-center p-2 bg-[#703BF7] rounded-full">
-                  <img src={Entericon} alt="enter" className="w-3 h-3" />
+                <button type="submit" className="flex items-center justify-center p-2 bg-[#703BF7] rounded-full cursor-pointer hover:bg-purple-600">
+                  <Send className="w-4 h-4 text-white" />
                 </button>
               </form>
             </div>

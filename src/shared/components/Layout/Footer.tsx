@@ -1,5 +1,5 @@
 import logo from "/Symbol.png"; 
-import Entericon from "/logo/Send.png";
+import { Send } from "lucide-react";
 import { FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router";
@@ -85,7 +85,7 @@ function Footer() {
                 disabled={isSubmitting}
               />
               <button type="submit" className="flex items-center justify-center disabled:opacity-50" disabled={isSubmitting}>
-                <img src={Entericon} alt="enter" className="w-4 h-4" />
+                <Send className="w-4 h-4 text-black dark:text-white cursor-pointer" />
               </button>
             </form>
           </div>
