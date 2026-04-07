@@ -1,5 +1,5 @@
 import Navbar from "../../shared/components/Layout/Navbar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { usePropertyStore } from "../../features/properties/store/usePropertyStore";
 import { useAreaMapStore } from "../../features/map/store/useAreaMapStore";
@@ -121,64 +121,70 @@ function Studentarea() {
     fetchAreaMaps();
   }, [fetchProperties, fetchAreaMaps]);
 
+  // Filter areaMaps to only include universities and areas that have properties
+  const availableUniversities = useMemo(() => {
+    return areaMaps
+      .filter((u) => u.areas.some((area) => properties.some((p) => p.location.area === area)))
+      .map((u) => ({
+        ...u,
+        areas: u.areas.filter((area) => properties.some((p) => p.location.area === area)),
+      }));
+  }, [areaMaps, properties]);
+
   // Filtering
   useEffect(() => {
-      const results = properties.filter((p) => {
-        const matchesSearch =
-          p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          p.location.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          p.location.area.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          p.location.state.toLowerCase().includes(searchTerm.toLowerCase());
+    const results = properties.filter((p) => {
+      const matchesSearch =
+        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.location.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.location.area.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.location.state.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesUniversity = selectedUniversity
-        ? areaMaps
+        ? availableUniversities
             .find((u) => u.id === selectedUniversity)
             ?.areas.includes(p.location.area)
         : true;
 
-      const matchesLocation = location
-        ? p.location.area === location
-        : true;
+      const matchesLocation = location ? p.location.area === location : true;
 
-        const matchesType = type ? p.type === type : true;
-        const matchesBedrooms = bedrooms ? p.bedrooms === Number(bedrooms) : true;
+      const matchesType = type ? p.type === type : true;
+      const matchesBedrooms = bedrooms ? p.bedrooms === Number(bedrooms) : true;
 
-        const priceNum = Number(String(p.price).replace(/[^0-9]/g, ""));
-        const matchesPrice =
-          priceNum >= priceRange[0] && priceNum <= priceRange[1];
+      const priceNum = Number(String(p.price).replace(/[^0-9]/g, ""));
+      const matchesPrice = priceNum >= priceRange[0] && priceNum <= priceRange[1];
 
-        return (
-          matchesSearch &&
-          matchesUniversity &&
-          matchesLocation &&
-          matchesType &&
-          matchesBedrooms &&
-          matchesPrice
-        );
-      });
+      return (
+        matchesSearch &&
+        matchesUniversity &&
+        matchesLocation &&
+        matchesType &&
+        matchesBedrooms &&
+        matchesPrice
+      );
+    });
 
-      setFiltered(results);
-      setPage(0);
-    }, [
-      searchTerm,
-      location,
-      type,
-      bedrooms,
-      priceRange,
-      properties,
-      setPage,
-      areaMaps,
-      selectedUniversity
-    ]);
+    setFiltered(results);
+    setPage(0);
+  }, [
+    searchTerm,
+    location,
+    type,
+    bedrooms,
+    priceRange,
+    properties,
+    setPage,
+    availableUniversities,
+    selectedUniversity,
+  ]);
 
-    // Pagination
-    const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-    const currentProperties = filtered.slice(
-      page * ITEMS_PER_PAGE,
-      page * ITEMS_PER_PAGE + ITEMS_PER_PAGE,
-    );
-
+  // Pagination
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const currentProperties = filtered.slice(
+    page * ITEMS_PER_PAGE,
+    page * ITEMS_PER_PAGE + ITEMS_PER_PAGE,
+  );
 
   return (
     <div>
@@ -247,7 +253,7 @@ function Studentarea() {
                     University
                   </option>
                   <option value="__all__">All Universities</option>
-                  {areaMaps.map((u) => (
+                  {availableUniversities.map((u) => (
                     <option key={u.id} value={u.id}>
                       {u.name}
                     </option>
@@ -274,7 +280,7 @@ function Studentarea() {
                     Area
                   </option>
                   <option value="__all__">All Areas</option>
-                  {areaMaps
+                  {availableUniversities
                     .find((u) => u.id === selectedUniversity)
                     ?.areas.map((a, idx) => (
                       <option key={idx} value={a}>
@@ -332,7 +338,7 @@ function Studentarea() {
                   <option value="4">shared</option>
                 </select>
               </div>
-            </div>    
+            </div>
 
             {/* PRICE RANGE - SELECT */}
             <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-tl-none">
@@ -380,9 +386,7 @@ function Studentarea() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
               {loading || areaLoading ? (
-                [...Array(3)].map((_, i) => (
-                  <PropertyCardSkeleton key={i} />
-                ))
+                [...Array(3)].map((_, i) => <PropertyCardSkeleton key={i} />)
               ) : currentProperties.length === 0 ? (
                 <div className="col-span-full text-center py-10">
                   <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">
@@ -393,9 +397,7 @@ function Studentarea() {
                   </p>
                 </div>
               ) : (
-                currentProperties.map((item) => (
-                  <PropertyCard key={item.id} property={item} />
-                ))
+                currentProperties.map((item) => <PropertyCard key={item.id} property={item} />)
               )}
             </div>
           </div>
@@ -429,7 +431,7 @@ function Studentarea() {
         </div>
       </div>
 
-       <section className="bg-gray-300 dark:bg-black/30 py-2 px-4 pb-20" id="Portfolio">
+      <section className="bg-gray-300 dark:bg-black/30 py-2 px-4 pb-20" id="Portfolio">
         <div className="  ">
           <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
             <img
@@ -450,7 +452,10 @@ function Studentarea() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 border border-gray-700/40 rounded-3xl p-6 md:p-10">
+          <form
+            onSubmit={handleSubmit}
+            className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 border border-gray-700/40 rounded-3xl p-6 md:p-10"
+          >
             {/* Name */}
             <div>
               <label className="text-gray-700 dark:text-gray-300 text-sm">Name</label>
@@ -516,35 +521,35 @@ function Studentarea() {
                   Property Type
                 </option>
                 <option value="Self Contain">Self Contain</option>
-                  <option value="Studio Apartment">Studio Apartment</option>
-                  <option value="Mini Flat">Mini Flat</option>
-                  <option value="Flat">Flat</option>
-                  <option value="Bungalow">Bungalow</option>
-                  <option value="Duplex">Duplex</option>
-                  <option value="Mansion">Mansion</option>
-                  <option value="Villa">Villa</option>
-                  <option value="Smart Home">Smart Home</option>
-                  <option value="Single Room (Shared)">Single Room (Shared)</option>
-                  <option value="Shared Room">Shared Room</option>
-                  <option value="Face-me-I-face-you">Face-me-I-face-you</option>
-                  <option value="Furnished Apartment">Furnished Apartment</option>
-                  <option value="Hostel">Hostel</option>
+                <option value="Studio Apartment">Studio Apartment</option>
+                <option value="Mini Flat">Mini Flat</option>
+                <option value="Flat">Flat</option>
+                <option value="Bungalow">Bungalow</option>
+                <option value="Duplex">Duplex</option>
+                <option value="Mansion">Mansion</option>
+                <option value="Villa">Villa</option>
+                <option value="Smart Home">Smart Home</option>
+                <option value="Single Room (Shared)">Single Room (Shared)</option>
+                <option value="Shared Room">Shared Room</option>
+                <option value="Face-me-I-face-you">Face-me-I-face-you</option>
+                <option value="Furnished Apartment">Furnished Apartment</option>
+                <option value="Hostel">Hostel</option>
 
-                  {/* Commercial */}
-                  <option value="Shop">Shop</option>
-                  <option value="Office Space">Office Space</option>
-                  <option value="Co-working Space">Co-working Space</option>
-                  <option value="Warehouse">Warehouse</option>
-                  <option value="Event Hall">Event Hall</option>
-                  <option value="Hotel">Hotel</option>
-                  <option value="Guest House">Guest House</option>
+                {/* Commercial */}
+                <option value="Shop">Shop</option>
+                <option value="Office Space">Office Space</option>
+                <option value="Co-working Space">Co-working Space</option>
+                <option value="Warehouse">Warehouse</option>
+                <option value="Event Hall">Event Hall</option>
+                <option value="Hotel">Hotel</option>
+                <option value="Guest House">Guest House</option>
 
-                  {/* Land */}
-                  <option value="Land">Land</option>
+                {/* Land */}
+                <option value="Land">Land</option>
 
-                  {/* Special */}
-                  <option value="Mixed-Use Property">Mixed-Use Property</option>
-                  <option value="Uncompleted Building">Uncompleted Building</option>
+                {/* Special */}
+                <option value="Mixed-Use Property">Mixed-Use Property</option>
+                <option value="Uncompleted Building">Uncompleted Building</option>
               </select>
             </div>
 
@@ -575,21 +580,27 @@ function Studentarea() {
                   Price Range
                 </option>
                 {priceOptions.map((opt, idx) => (
-                  <option key={idx} value={opt.label}>{opt.label}</option>
+                  <option key={idx} value={opt.label}>
+                    {opt.label}
+                  </option>
                 ))}
               </select>
             </div>
 
             {/* Preferred Contact */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">Preferred Contact Method</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm">
+                Preferred Contact Method
+              </label>
               <select
                 required
                 value={preferredContact}
                 onChange={(e) => setPreferredContact(e.target.value)}
                 className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none"
               >
-                <option value="" hidden>Select Method</option>
+                <option value="" hidden>
+                  Select Method
+                </option>
                 <option>Phone</option>
                 <option>Email</option>
               </select>
@@ -597,7 +608,9 @@ function Studentarea() {
 
             {/* Message */}
             <div className="sm:col-span-2 lg:col-span-4">
-              <label className="text-gray-700 dark:text-gray-300 text-sm">Describe What You Want</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm">
+                Describe What You Want
+              </label>
               <textarea
                 placeholder="Enter your Description here.."
                 rows={4}
@@ -619,11 +632,17 @@ function Studentarea() {
               />
               <p className="text-gray-900 dark:text-white text-sm">
                 I agree with the{" "}
-                <Link to="/terms" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
+                <Link
+                  to="/terms"
+                  className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]"
+                >
                   Terms
                 </Link>{" "}
                 and{" "}
-                <Link to="/privacy-policy" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
+                <Link
+                  to="/privacy-policy"
+                  className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]"
+                >
                   Privacy Policy
                 </Link>
               </p>
@@ -635,9 +654,10 @@ function Studentarea() {
                 type="submit"
                 disabled={!agreed || isSubmitting}
                 className={`px-4 py-3 rounded-lg font-medium transition
-                  ${agreed && !isSubmitting
-                    ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" 
-                    : "bg-gray-400 cursor-not-allowed text-gray-200"
+                  ${
+                    agreed && !isSubmitting
+                      ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white"
+                      : "bg-gray-400 cursor-not-allowed text-gray-200"
                   }`}
               >
                 {isSubmitting ? "Sending..." : "Send Your Message"}
