@@ -221,13 +221,12 @@ function Studentarea() {
         </div>
       </div>
 
-      <div className="
-       dark:bg-black/30 px-4">
+      <div className="bg-gray-300 dark:bg-black/30 px-4">
         <div className="pt-8 mx-auto">
           {/* Filters Container */}
           <div
             className={`md:grid md:grid-cols-3 lg:grid-cols-5 
-                      ${showFilters ? "block" : "hidden"} md:block bg-neutral-900 md:bg-transparent rounded-2xl md:rounded-none p-4 md:p-0 mb-6 max-w-6xl mx-auto items-center justify-center`}
+                      ${showFilters ? "block" : "hidden"} md:block md:bg-transparent rounded-2xl md:rounded-none md:p-0 mb-6`}
           >
             {/* University (select) */}
             <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-tr-none">
