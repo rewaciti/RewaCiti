@@ -178,11 +178,20 @@ export interface Inspection {
   location: string;
 }
 
+export type Fees = {
+  [state: string]: {
+    [area: string]: number;
+  };
+} & {
+  default: number;
+};
+
 export interface InspectionStore {
   inspections: Inspection[];
   loading: boolean;
-  fees: { [key: string]: number } | null;
+  fees: Fees | null;
   addInspection: (inspection: Omit<Inspection, "id" | "status" | "paymentStatus">) => void;
   updatePaymentStatus: (reference: string, status: "paid" | "failed") => void;
   fetchFees: () => Promise<void>;
 }
+

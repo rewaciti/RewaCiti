@@ -215,7 +215,7 @@ function PropertySearchSection() {
             Welcome to RewaCitty, where your dream property awaits in every
             corner of our beautiful world. Explore our curated selection of
             properties, each offering a unique story and a chance to redefine
-            your life. With categories to suit every dreamer, your journey
+            your lile-ife. With categories to suit every dreamer, your journey
           </p>
           <NavLink
             to="/Studentarea"
