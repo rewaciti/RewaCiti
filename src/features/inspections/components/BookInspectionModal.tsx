@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useInspectionStore } from "../store/useInspectionStore";
 import type { Property } from "../../../types";
@@ -24,21 +24,19 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const addInspection = useInspectionStore((state) => state.addInspection);
-  const updatePaymentStatus = useInspectionStore((state) => state.updatePaymentStatus);
+  const { addInspection, updatePaymentStatus, fees, fetchFees } = useInspectionStore();
+
+  useEffect(() => {
+    if (!fees) {
+      fetchFees();
+    }
+  }, [fees, fetchFees]);
 
   // Example fee calculation based on city
   const calculateFee = (city: string) => {
+    if (!fees) return 5000; 
     const normalizedCity = city.toLowerCase();
-    const fees: { [key: string]: number } = {
-      yaba: 10000,
-      abuja: 15000,
-      "port harcourt": 12000,
-      "ile-ife": 7000, 
-      osogbo: 8000,
-      default: 5000,
-    };
-    return fees[normalizedCity] || fees.default;
+    return fees[normalizedCity] || fees.default || 5000;
   };
 
   const amount = calculateFee(property.location.city);

@@ -312,6 +312,8 @@ function Studentarea() {
                   <option value="Single Room">Single Room</option>
                   <option value="Mini Flat">Mini Flat</option>
                   <option value="Shared Room">Shared Room</option>
+                  <option value="Flat">Flat</option>
+
                 </select>
               </div>
             </div>

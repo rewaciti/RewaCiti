@@ -25,6 +25,7 @@ export interface PropertyStore {
   filteredProperties: Property[];
   loading: boolean;
   error: string | null;
+  fees: PropertyPaymentFees | null;
 
   ITEMS_PER_PAGE: number;
   page: number;
@@ -32,6 +33,7 @@ export interface PropertyStore {
   totalProperties: number;
 
   fetchProperties: (apiPage?: number) => Promise<void>;
+  fetchPropertyFees: () => Promise<void>;
   nextPage: () => void;
   prevPage: () => void;
   setPage: (page: number) => void;
@@ -44,6 +46,10 @@ export interface PropertyStore {
     rooms?: number;
     buildYear?: number;
   }) => void;
+}
+
+export interface PropertyPaymentFees {
+  agent_fee_ranges: { min: number; max: number | null; percentage: number }[];
 }
 
 export interface Comment {
@@ -175,6 +181,8 @@ export interface Inspection {
 export interface InspectionStore {
   inspections: Inspection[];
   loading: boolean;
+  fees: { [key: string]: number } | null;
   addInspection: (inspection: Omit<Inspection, "id" | "status" | "paymentStatus">) => void;
   updatePaymentStatus: (reference: string, status: "paid" | "failed") => void;
+  fetchFees: () => Promise<void>;
 }

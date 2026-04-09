@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import axios from "axios";
-import type { Property, PropertyStore, SabiFlowProduct } from "../../../types";
+import type { Property, PropertyStore, SabiFlowProduct, PropertyPaymentFees } from "../../../types";
 
 export const usePropertyStore = create<PropertyStore>((set, get) => ({
   properties: [],
   filteredProperties: [], // new: filtered list
   loading: false,
   error: null,
+  fees: null,
 
   ITEMS_PER_PAGE: 3,
   page: 0,
@@ -64,6 +65,15 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
     } catch (err) {
       console.error(err);
       set({ error: "Failed to load property data", loading: false });
+    }
+  },
+
+  fetchPropertyFees: async () => {
+    try {
+      const res = await axios.get<PropertyPaymentFees>("/data/PropertyPaymentFees.json");
+      set({ fees: res.data });
+    } catch (err) {
+      console.error("Failed to fetch property payment fees", err);
     }
   },
 

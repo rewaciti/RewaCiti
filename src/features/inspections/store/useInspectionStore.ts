@@ -1,9 +1,22 @@
 import { create } from "zustand";
+import axios from "axios";
 import type { Inspection, InspectionStore } from "../../../types";
 
 export const useInspectionStore = create<InspectionStore>((set) => ({
   inspections: [],
+  fees: null,
   loading: false,
+
+  fetchFees: async () => {
+    set({ loading: true });
+    try {
+      const res = await axios.get<{ [key: string]: number }>("/data/InspectionFees.json");
+      set({ fees: res.data, loading: false });
+    } catch (err) {
+      console.error("Failed to fetch inspection fees", err);
+      set({ loading: false });
+    }
+  },
 
   addInspection: (inspectionData) => {
     const newInspection: Inspection = {

@@ -1,0 +1,10 @@
+{
+  "agent_fee_ranges": [
+    {"min":0, "max":149999, "percentage":10},
+    { "min": 150000, "max": 1000000, "percentage": 15 },
+    { "min": 1000001, "max": 5000000, "percentage": 12 },
+    { "min": 5000001, "max": 10000000, "percentage": 10 },
+    { "min": 10000001, "max": 49999999, "percentage": 8 },
+    { "min": 50000000, "max": null, "percentage": 5 }
+  ]
+}
