@@ -4,6 +4,7 @@ import { FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 import axios from "axios";
 
 function Footer() {
@@ -15,7 +16,7 @@ function Footer() {
     e.preventDefault();
 
     if (!email) {
-      alert("Please enter your email");
+      toast.error("Please enter your email");
       return;
     }
 
@@ -32,11 +33,11 @@ function Footer() {
 
     try {
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
-      alert("Subscribed successfully!");
+      toast.success("Subscribed successfully!");
       setEmail("");
     } catch (error) {
       console.error("Error subscribing:", error);
-      alert("Failed to subscribe. Please try again.");
+      toast.error("Failed to subscribe. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

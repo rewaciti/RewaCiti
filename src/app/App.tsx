@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import { useEffect } from "react";
+import { Toaster } from "sonner";
 import { useThemeStore } from "../shared/store/useThemeStore";
 import Home from "./pages/Home";
 import AllProperties from "../features/properties/pages/AllPropertiesPage";
@@ -29,6 +30,7 @@ function App() {
   }, [theme]);
   return (
     <BrowserRouter>
+      <Toaster theme={theme as any} richColors closeButton position="top-right" />
       <Routes>
         <Route index path="/" element={<Home />} />
         <Route path="/AllProperties" element={<AllProperties />} />

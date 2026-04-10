@@ -5,6 +5,7 @@ import type { Property } from "../../../types";
 import axios from "axios";
 import { Link } from "react-router";
 import { usePropertyStore } from "../store/usePropertyStore";
+import { toast } from "sonner";
 
 interface PropertyPaymentModalProps {
   property: Property;
@@ -54,12 +55,12 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (rating === 0) {
-      alert("Please rate our service before proceeding.");
+      toast.error("Please rate our service before proceeding.");
       return;
     }
 
     if (!agreed) {
-      alert("Please agree to the Terms and Privacy Policy");
+      toast.error("Please agree to the Terms and Privacy Policy");
       return;
     }
     
@@ -98,7 +99,9 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       // Send to SabiFlow
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
       
-      alert(`Payment successful! (Demo Mode)\nReference: ${reference}\nInformation sent to our team.`);
+      toast.success(`Payment successful! (Demo Mode)\nReference: ${reference}\nInformation sent to our team.`, {
+        duration: 5000,
+      });
       onOpenChange(false);
 
       // Reset form
@@ -110,7 +113,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       setFeedback("");
     } catch (error) {
       console.error("Error submitting payment details:", error);
-      alert("Payment simulated, but failed to send data to CRM. Please try again.");
+      toast.error("Payment simulated, but failed to send data to CRM. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

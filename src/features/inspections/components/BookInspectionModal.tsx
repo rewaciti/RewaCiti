@@ -5,6 +5,7 @@ import type { Property } from "../../../types";
 import { FiX, FiMapPin } from "react-icons/fi";
 import axios from "axios";
 import { Link } from "react-router";
+import { toast } from "sonner";
 
 interface BookInspectionModalProps {
   property: Property;
@@ -44,7 +45,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
     e.preventDefault();
 
     if (!agreed) {
-      alert("Please agree to the Terms and Privacy Policy");
+      toast.error("Please agree to the Terms and Privacy Policy");
       return;
     }
 
@@ -98,7 +99,9 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
 
       updatePaymentStatus(reference, "paid");
       
-      alert(`Visit booked successfully! (Demo Mode)\nReference: ${reference}\nOur team will contact you within 24 hours.`);
+      toast.success(`Visit booked successfully! (Demo Mode)\nReference: ${reference}\nOur team will contact you within 24 hours.`, {
+        duration: 5000,
+      });
       onOpenChange(false);
       
       // Reset form
@@ -108,7 +111,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
       setPhone("");
     } catch (error) {
       console.error("Error submitting visit booking:", error);
-      alert("Failed to submit booking details to CRM. Please try again.");
+      toast.error("Failed to submit booking details to CRM. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

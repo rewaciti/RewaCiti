@@ -10,6 +10,7 @@ import BookInspectionModal from "../../inspections/components/BookInspectionModa
 import PropertyPaymentModal from "../components/PropertyPaymentModal";
 import ReportAgentModal from "../components/ReportAgentModal";
 import { PropertyDetailsSkeleton } from "../../../shared/components/ui/Skeletons";
+import { toast } from "sonner";
 
 const slugify = (text: string) =>
   text.toLowerCase().replace(/\s+/g, "-");
@@ -73,7 +74,7 @@ function PropertyDetails() {
     e.preventDefault();
 
     if (!agreed) {
-      alert("Please agree to the Terms and Privacy Policy");
+      toast.error("Please agree to the Terms and Privacy Policy");
       return;
     }
 
@@ -117,7 +118,7 @@ function PropertyDetails() {
 
     try {
      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
-      alert("Message sent successfully!");
+      toast.success("Message sent successfully!");
       // reset form
       setFirstName("");
       setLastName("");
@@ -128,7 +129,7 @@ function PropertyDetails() {
 
     } catch (error) {
       console.error("Error sending message:", error);
-      alert("Failed to send message. Please try again.");
+      toast.error("Failed to send message. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

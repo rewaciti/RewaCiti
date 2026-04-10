@@ -6,6 +6,7 @@ import useScrollToHash from "../../shared/hooks/useScrollToHash";
 import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router";
+import { toast } from "sonner";
 
 function Contact() {
   const [agreed, setAgreed] = useState(false);
@@ -23,7 +24,7 @@ function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreed) {
-      alert("Please agree to the Terms and Privacy Policy");
+      toast.error("Please agree to the Terms and Privacy Policy");
       return;
     }
 
@@ -47,7 +48,7 @@ function Contact() {
 
     try {
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
-      alert("Message sent successfully!");
+      toast.success("Message sent successfully!");
       // Reset form
       setFirstName("");
       setLastName("");
@@ -59,7 +60,7 @@ function Contact() {
       setAgreed(false);
     } catch (error) {
       console.error("Error sending message:", error);
-      alert("Failed to send message. Please try again.");
+      toast.error("Failed to send message. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

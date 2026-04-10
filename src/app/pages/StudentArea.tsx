@@ -11,6 +11,7 @@ import Footer from "../../shared/components/Layout/Footer";
 import { FiFilter } from "react-icons/fi";
 import useScrollToHash from "../../shared/hooks/useScrollToHash";
 import { Link, NavLink } from "react-router";
+import { toast } from "sonner";
 
 import { PropertyCardSkeleton } from "../../shared/components/ui/Skeletons";
 
@@ -51,7 +52,7 @@ function Studentarea() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreed) {
-      alert("Please agree to the Terms and Privacy Policy");
+      toast.error("Please agree to the Terms and Privacy Policy");
       return;
     }
 
@@ -77,7 +78,7 @@ function Studentarea() {
 
     try {
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
-      alert("Message sent successfully!");
+      toast.success("Message sent successfully!");
       // Reset form
       setName("");
       setEmail("");
@@ -91,7 +92,7 @@ function Studentarea() {
       setAgreed(false);
     } catch (error) {
       console.error("Error sending message:", error);
-      alert("Failed to send message. Please try again.");
+      toast.error("Failed to send message. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

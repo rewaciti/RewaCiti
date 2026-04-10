@@ -3,6 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { FiX, FiAlertTriangle } from "react-icons/fi";
 import type { Property } from "../../../types";
 import axios from "axios";
+import { toast } from "sonner";
 
 interface ReportAgentModalProps {
   property: Property;
@@ -53,7 +54,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
 
     try {
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
-      alert("Report submitted successfully. We will investigate this agent.");
+      toast.success("Report submitted successfully. We will investigate this agent.");
       onOpenChange(false);
       // Reset form
       setName("");
@@ -63,7 +64,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
       setDescription("");
     } catch (error) {
       console.error("Error submitting report:", error);
-      alert("Failed to submit report. Please try again.");
+      toast.error("Failed to submit report. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
