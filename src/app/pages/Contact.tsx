@@ -165,7 +165,7 @@ function Contact() {
                 required
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/30 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-none text-gray-900 dark:text-white"
+                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-3 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
               />
             </div>
 
@@ -177,7 +177,7 @@ function Contact() {
                 required
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/30 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-none text-gray-900 dark:text-white"
+                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-3 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
               />
             </div>
 
@@ -190,7 +190,7 @@ function Contact() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/30 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-none text-gray-900 dark:text-white"
+                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-3 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
               />
             </div>
 
@@ -201,7 +201,7 @@ function Contact() {
                 placeholder="Enter Phone Number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/30 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-none text-gray-900 dark:text-white"
+                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-3 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
               />
             </div>
 
@@ -213,7 +213,7 @@ function Contact() {
                 required 
                 value={inquiryType}
                 onChange={(e) => setInquiryType(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/30 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-none text-gray-900 dark:text-white"
+                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-3 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
               >
                 <option value="" hidden className=" ">
                   Select Inquiry Type
@@ -253,7 +253,7 @@ function Contact() {
                 required 
                 value={source}
                 onChange={(e) => setSource(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 dark:text-white text-gray-900 border border-gray-600/30 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-none"
+                className="w-full dark:bg-black/70 bg-gray-300 dark:text-white text-gray-900 border border-gray-600/70 rounded-md px-4 py-3 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
               >
                 <option value="" hidden className=" ">
                   Select Option
@@ -291,7 +291,7 @@ function Contact() {
               placeholder="Enter your Message here..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/30 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+              className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-3 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
             />
           </div>
 
@@ -399,7 +399,7 @@ function Contact() {
             {/* City */}
             <div className="flex items-center gap-3 text-gray-300 bg-black  px-4 rounded-full w-full border border-gray-600/70 h-11 md:w-fit justify-center ">
               <FiMapPin />
-              <span>OAU, Ile-ile-ife</span>
+              <span>OAU, ile-ife</span>
             </div>
           </div>
 
