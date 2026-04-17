@@ -16,6 +16,7 @@ export interface Property {
   };
   yearBuilt: number; 
   keyFeatures: string[]; 
+  attributes?: { label: string; value: string }[];
   videoUrl?: string; 
 }
 
@@ -142,6 +143,7 @@ export interface SabiFlowProduct {
   images: string[];
   thumbnail: string;
   videoUrl?: string;
+  specifications?: Record<string, string>;
   productType?: string;
   categoryId?: {
     name: string;
@@ -157,6 +159,7 @@ export interface SabiFlowProduct {
       city?: string;
       state?: string;
     };
+    attributes?: { label: string; value: string }[];
   };
   createdAt?: string;
   updatedAt?: string;
@@ -190,4 +193,5 @@ export interface InspectionStore {
   updatePaymentStatus: (reference: string, status: "paid" | "failed") => void;
   fetchFees: () => Promise<void>;
 }
+
 

@@ -40,6 +40,10 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         },
         yearBuilt: item.customData?.yearBuilt || 0,
         keyFeatures: item.customData?.key_features_and_amenities || [],
+        attributes: [
+          ...(item.specifications ? Object.entries(item.specifications).map(([label, value]) => ({ label, value })) : []),
+          ...(item.customData?.attributes || [])
+        ],
         videoUrl: item.videoUrl || "",
       }));
 

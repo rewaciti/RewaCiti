@@ -410,18 +410,38 @@ function PropertyDetails() {
           </div>
       </div>
 
-      {/* Key Features */}
-      <div className="px-4 py-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl flex-1 space-y-3 h-fit">
-        <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">Key Features and Amenities</h2>
-        <ul className="space-y-4">
-          {property?.keyFeatures.map((feature, index) => (
-            <li key={index} className="flex items-center gap-2 border-[#703BF7] border-l pl-2 bg-linear-to-r from-black/20 to-neutral  p-2">
-              <span className="text-gray-700 dark:text-gray-300">< FaBolt  /></span>
-              <span className="text-gray-700 dark:text-gray-300">{feature}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* Key Features & Attributes */}
+      {((property?.keyFeatures && property.keyFeatures.length > 0) || (property?.attributes && property.attributes.length > 0)) && (
+        <div className="flex-1 flex flex-col gap-6">
+          {property?.keyFeatures && property.keyFeatures.length > 0 && (
+            <div className="px-4 py-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl space-y-3 h-fit">
+              <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">Key Features and Amenities</h2>
+              <ul className="space-y-4">
+                {property.keyFeatures.map((feature, index) => (
+                  <li key={index} className="flex items-center gap-2 border-[#703BF7] border-l pl-2 bg-linear-to-r from-black/20 to-neutral p-2">
+                    <span className="text-gray-700 dark:text-gray-300"><FaBolt /></span>
+                    <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {property?.attributes && property.attributes.length > 0 && (
+            <div className="px-4 py-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl space-y-3 h-fit">
+              <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">Property Rules & Attributes</h2>
+              <ul className="space-y-4">
+                {property.attributes.map((attr, index) => (
+                  <li key={index} className="flex flex-col border-[#703BF7] border-l pl-2 bg-linear-to-r from-black/20 to-neutral p-2">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 uppercase font-medium">{attr.label}</span>
+                    <span className="text-gray-700 dark:text-gray-300">{attr.value}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
       </section>
 
       <section className="md:flex justify-between px-4">
