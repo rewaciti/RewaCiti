@@ -23,6 +23,9 @@ function PropertyDetails() {
   const price = property?.price ?? 0;
   const images = property?.images ?? [];
 
+  const hasBedrooms = !!property && property.bedrooms !== 0;
+  const hasBathrooms = !!property && !!property.bathrooms && property.bathrooms !== 0 && property.bathrooms !== "0";
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [step, setStep] = useState(window.innerWidth < 768 ? 1 : 2);
 
@@ -354,6 +357,7 @@ function PropertyDetails() {
 
               <div className="relative w-full h-[70vh] aspect-video rounded-xl overflow-hidden border border-gray-600/30 ">
                 {property.videoUrl.includes("youtube.com") ||
+
                 property.videoUrl.includes("youtu.be") ? (
                   <iframe
                     src={
@@ -394,52 +398,55 @@ function PropertyDetails() {
           </div>
   
           {/* Property Details */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 border-t border-gray-600/30 pt-2">
-            <div className="flex flex-col px-2 ">
-              <span className="text-gray-800 dark:text-gray-400 mt-1 flex items-center gap-1"><FaBed/>Bedrooms</span>
-              <span className="text-xl font-semibold text-gray-900 dark:text-white">{property?.bedrooms}</span> 
-            </div>
-            <div className="flex flex-col border-l border-gray-600/30 px-2">
-               <span className="text-gray-800 dark:text-gray-400 mt-1 flex items-center gap-1"><FaBath /> Bathrooms</span>
-              <span className="text-xl font-semibold text-gray-900 dark:text-white">{property?.bathrooms}</span>
-            </div>
-             <div className="flex flex-col sm:border-l border-gray-600/30 px-2">
+          <div className="flex flex-wrap gap-6 border-t border-gray-600/30 pt-2 justify-between">
+            {hasBedrooms && (
+              <div className="flex flex-col px-2 ">
+                <span className="text-gray-800 dark:text-gray-400 mt-1 flex items-center gap-1"><FaBed/>Bedrooms</span>
+                <span className="text-xl font-semibold text-gray-900 dark:text-white">{property?.bedrooms}</span> 
+              </div>
+            )}
+            
+            {hasBathrooms && (
+              <div className="flex flex-col border-l border-gray-600/30 px-2">
+                 <span className="text-gray-800 dark:text-gray-400 mt-1 flex items-center gap-1"><FaBath /> Bathrooms</span>
+                <span className="text-xl font-semibold text-gray-900 dark:text-white">{property?.bathrooms}</span>
+              </div>
+            )}
+
+             <div className={`flex flex-col px-2 ${(hasBedrooms || hasBathrooms) ? 'sm:border-l border-gray-600/30' : ''}`}>
                <span className="text-gray-800 dark:text-gray-400 mt-1 flex  items-center gap-1"><FaHome/>Type</span>
               <span className="text-xl font-semibold text-gray-900 dark:text-white">{property?.type}</span>
             </div>
           </div>
+
+          {/* Property Rules & Attributes */}
+          {property?.attributes && property.attributes.length > 0 && (
+            <div className="mt-8 pt-8 border-t border-gray-600/30">
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">Property Rules & Attributes</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {property.attributes.map((attr, index) => (
+                  <div key={index} className="flex flex-col border-[#703BF7] border-l pl-3 py-1">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">{attr.label}</span>
+                    <span className="text-gray-800 dark:text-gray-200 font-medium">{attr.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
       </div>
 
-      {/* Key Features & Attributes */}
-      {((property?.keyFeatures && property.keyFeatures.length > 0) || (property?.attributes && property.attributes.length > 0)) && (
-        <div className="flex-1 flex flex-col gap-6">
-          {property?.keyFeatures && property.keyFeatures.length > 0 && (
-            <div className="px-4 py-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl space-y-3 h-fit">
-              <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">Key Features and Amenities</h2>
-              <ul className="space-y-4">
-                {property.keyFeatures.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-2 border-[#703BF7] border-l pl-2 bg-linear-to-r from-black/20 to-neutral p-2">
-                    <span className="text-gray-700 dark:text-gray-300"><FaBolt /></span>
-                    <span className="text-gray-700 dark:text-gray-300">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {property?.attributes && property.attributes.length > 0 && (
-            <div className="px-4 py-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl space-y-3 h-fit">
-              <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">Property Rules & Attributes</h2>
-              <ul className="space-y-4">
-                {property.attributes.map((attr, index) => (
-                  <li key={index} className="flex flex-col border-[#703BF7] border-l pl-2 bg-linear-to-r from-black/20 to-neutral p-2">
-                    <span className="text-xs text-gray-500 dark:text-gray-400 uppercase font-medium">{attr.label}</span>
-                    <span className="text-gray-700 dark:text-gray-300">{attr.value}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+      {/* Key Features */}
+      {property?.keyFeatures && property.keyFeatures.length > 0 && (
+        <div className="flex-1 px-4 py-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl space-y-3 h-fit">
+          <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">Key Features and Amenities</h2>
+          <ul className="space-y-4">
+            {property.keyFeatures.map((feature, index) => (
+              <li key={index} className="flex items-center gap-2 border-[#703BF7] border-l pl-2 bg-linear-to-r from-black/20 to-neutral p-2">
+                <span className="text-gray-700 dark:text-gray-300"><FaBolt /></span>
+                <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
       </section>

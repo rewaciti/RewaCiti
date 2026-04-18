@@ -547,20 +547,10 @@ function PropertySearchSection() {
                   <option value="Mansion">Mansion</option>
                   <option value="Villa">Villa</option>
                   <option value="Smart Home">Smart Home</option>
-                  <option value="Single Room (Shared)">Single Room (Shared)</option>
+                  <option value="Single Room (Shared)">Single Room</option>
                   <option value="Shared Room">Shared Room</option>
-                  <option value="Face-me-I-face-you">Face-me-I-face-you</option>
                   <option value="Furnished Apartment">Furnished Apartment</option>
                   <option value="Hostel">Hostel</option>
-
-                  {/* Commercial */}
-                  <option value="Shop">Shop</option>
-                  <option value="Office Space">Office Space</option>
-                  <option value="Co-working Space">Co-working Space</option>
-                  <option value="Warehouse">Warehouse</option>
-                  <option value="Event Hall">Event Hall</option>
-                  <option value="Hotel">Hotel</option>
-                  <option value="Guest House">Guest House</option>
 
                   {/* Land */}
                   <option value="Land">Land</option>
