@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { usePropertyStore } from "../store/usePropertyStore";
 import type { Property } from "../../../types";
-import { NavLink } from "react-router";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import PropertyCard from "./PropertyCard";
 
