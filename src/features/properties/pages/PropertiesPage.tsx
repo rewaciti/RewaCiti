@@ -266,7 +266,7 @@ function PropertySearchSection() {
         <div className="pt-8 mx-auto">
           {/* Filters Container */}
           <div
-            className={`md:grid md:grid-cols-3 lg:grid-cols-5 md:gap-0 ${showFilters ? "block" : "hidden"}
+            className={`md:grid md:grid-cols-5 md:gap-0 ${showFilters ? "block" : "hidden"}
                     md:block md:bg-transparent rounded-2xl md:rounded-none md:p-0 mb-6`}
           >
             {/* Location */}
@@ -337,7 +337,7 @@ function PropertySearchSection() {
                   }}
                 >
                   <option value="" disabled hidden>
-                    Property Type
+                    Type
                   </option>
                   <option value="__all__">All Types</option>
                   {uniqueTypes.map((t, idx) => (
@@ -362,7 +362,7 @@ function PropertySearchSection() {
                   }}
                 >
                   <option value="" disabled hidden>
-                    Number of Rooms
+                    Rooms
                   </option>
                   <option value="__all__">All Bedrooms</option>
                   {uniqueBedrooms.map((b, idx) => (
@@ -388,7 +388,7 @@ function PropertySearchSection() {
                 }}
               >
                 <option value="" disabled hidden>
-                  Price Range
+                  Budget
                 </option>
                 {priceOptions.map((opt, idx) => (
                   <option key={idx} value={opt.label}>
@@ -421,7 +421,7 @@ function PropertySearchSection() {
                   </p>
                   <button
                     onClick={() => setShowAll(!showAll)}
-                    className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center shrink-0"
+                    className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center shrink-0 hidden md:block"
                   >
                     {showAll ? "Show Less" : "View All"}
                   </button>

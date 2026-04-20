@@ -250,7 +250,7 @@ function Studentarea() {
         <div className="pt-8 mx-auto">
           {/* Filters Container */}
           <div
-            className={`md:grid md:grid-cols-3 lg:grid-cols-5 
+            className={`md:grid md:grid-cols-5 
                       ${showFilters ? "block" : "hidden"} md:block md:bg-transparent rounded-2xl md:rounded-none md:p-0 mb-6`}
           >
             {/* University (select) */}
@@ -324,7 +324,7 @@ function Studentarea() {
                   }}
                 >
                   <option value="" disabled hidden>
-                    Property Type
+                    Type
                   </option>
                   <option value="__all__">Any Type</option>
                   <option value="Self Contain">Self Contain</option>
@@ -350,7 +350,7 @@ function Studentarea() {
                   }}
                 >
                   <option value="" disabled hidden>
-                    Number of Rooms
+                    Rooms
                   </option>
                   <option value="__all__">Any</option>
                   <option value="1">1</option>
