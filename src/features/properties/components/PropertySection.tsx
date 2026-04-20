@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePropertyStore } from "../store/usePropertyStore";
 import type { Property } from "../../../types";
 import { NavLink } from "react-router";
@@ -8,19 +8,47 @@ import PropertyCard from "./PropertyCard";
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
 
 function PropertySection() {
-  const {properties,loading,page,ITEMS_PER_PAGE,fetchProperties,nextPage,prevPage,} = usePropertyStore();
+  const {
+    properties,
+    loading,
+    page,
+    ITEMS_PER_PAGE,
+    fetchProperties,
+    nextPage,
+    prevPage,
+    apiPage,
+    totalProperties,
+  } = usePropertyStore();
+
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     fetchProperties();
   }, [fetchProperties]);
 
   // Pagination Calculations
+  const totalApiPages = Math.ceil(totalProperties / 30);
   const totalPages = Math.ceil(properties.length / ITEMS_PER_PAGE);
 
-  const currentProperties: Property[] = properties.slice(
-    page * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE + ITEMS_PER_PAGE
-  );
+  const currentProperties: Property[] = showAll
+    ? properties
+    : properties.slice(page * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE + ITEMS_PER_PAGE);
+
+  const handleNext = () => {
+    if (showAll) {
+      if (apiPage < totalApiPages) fetchProperties(apiPage + 1);
+    } else {
+      nextPage();
+    }
+  };
+
+  const handlePrev = () => {
+    if (showAll) {
+      if (apiPage > 1) fetchProperties(apiPage - 1);
+    } else {
+      prevPage();
+    }
+  };
 
   return (
    <div className="px-4 mx-auto py-5 md:py-0">
@@ -38,12 +66,12 @@ function PropertySection() {
           </p>
         </div>
 
-        <NavLink
-          to="/AllProperties"
+        <button
+          onClick={() => setShowAll(!showAll)}
           className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center hidden md:block"
         >
-          View All
-        </NavLink>
+          {showAll ? "Show Less" : "View All"}
+        </button>
       </div>  
        </div>
       <div className=" py-4">
@@ -65,28 +93,31 @@ function PropertySection() {
         {/* Pagination */}
         <div className="flex justify-between items-center  text-white ">
           <p className="text-sm text-black dark:text-white">
-            {page + 1} of {totalPages}
+            {showAll
+              ? `Page ${apiPage} of ${totalApiPages || 1}`
+              : `${page + 1} of ${totalPages || 1}`}
           </p>
-          <NavLink
-            to="/AllProperties"
+          
+          <button
+            onClick={() => setShowAll(!showAll)}
             className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center w-[120px] md:hidden"
           >
-            View All
-          </NavLink>
+            {showAll ? "Show Less" : "View All"}
+          </button>
 
           <div className="flex gap-4">
             <button
-              onClick={prevPage}
+              onClick={handlePrev}
               className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600 "
-              disabled={page === 0}
+              disabled={showAll ? apiPage === 1 : page === 0}
             >
                 <FiArrowLeft size={20} />
             </button>
     
             <button
-              onClick={nextPage}
+              onClick={handleNext}
               className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
-              disabled={page >= totalPages - 1}
+              disabled={showAll ? apiPage >= totalApiPages : page >= totalPages - 1}
             >
                 <FiArrowRight size={20} />
             </button>

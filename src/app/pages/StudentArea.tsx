@@ -26,10 +26,11 @@ function Studentarea() {
     nextPage,
     prevPage,
     setPage,
+    apiPage,
+    totalProperties,
   } = usePropertyStore();
 
   const [searchTerm, setSearchTerm] = useState("");
-  // ... rest of state stays same ...
 
   const [location, setLocation] = useState("");
   const [selectedUniversity, setUniversity] = useState("");
@@ -107,6 +108,7 @@ function Studentarea() {
   const [showFilters, setShowFilters] = useState(false);
   const [filtered, setFiltered] = useState<Property[]>([]);
   const [agreed, setAgreed] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   const priceOptions = [
     { label: "Budget", range: [0, 999999999] },
@@ -181,11 +183,27 @@ function Studentarea() {
   ]);
 
   // Pagination
+  const totalApiPages = Math.ceil(totalProperties / 30);
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const currentProperties = filtered.slice(
-    page * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE + ITEMS_PER_PAGE,
-  );
+  const currentProperties = showAll 
+    ? filtered 
+    : filtered.slice(page * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE + ITEMS_PER_PAGE);
+
+  const handleNext = () => {
+    if (showAll) {
+      if (apiPage < totalApiPages) fetchProperties(apiPage + 1);
+    } else {
+      nextPage();
+    }
+  };
+
+  const handlePrev = () => {
+    if (showAll) {
+      if (apiPage > 1) fetchProperties(apiPage - 1);
+    } else {
+      prevPage();
+    }
+  };
 
   return (
     <div>
@@ -197,7 +215,7 @@ function Studentarea() {
           </h1>
 
           <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-            Welcome to RewaCitty, where your dream property awaits in every
+            Welcome to RewaCiti, where your dream property awaits in every
             corner of our beautiful world. Explore our curated selection of
             properties, each offering a unique story and a chance to redefine
             your life. With categories to suit every dreamer, your journey
@@ -369,22 +387,33 @@ function Studentarea() {
 
           {/* Properties */}
           <div>
-            <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
-              <img
-                src="/logo/Abstract Design (1).png"
-                alt="Icon"
-                className="w-13 h-13 object-contain"
-              />
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
+                <img
+                  src="/logo/Abstract Design (1).png"
+                  alt="Icon"
+                  className="w-13 h-13 object-contain"
+                />
 
-              <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-                Discover a World of Possibilities
-              </h1>
+                <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
+                  Discover a World of Possibilities
+                </h1>
 
-              <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-                Our portfolio of properties is as diverse as your dreams.
-                Explore the following categories to find the perfect property
-                that resonates with your vision of home
-              </p>
+               <div className="flex justify-between items-center">
+                  <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
+                    Our portfolio of properties is as diverse as your dreams.
+                    Explore the following categories to find the perfect property
+                    that resonates with your vision of home
+                  </p>
+                  <button
+                    onClick={() => setShowAll(!showAll)}
+                    className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center hidden md:block shrink-0"
+                  >
+                    {showAll ? "Show Less" : "View All"}
+                  </button>
+               </div>
+
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -400,31 +429,42 @@ function Studentarea() {
                   </p>
                 </div>
               ) : (
-                currentProperties.map((item) => <PropertyCard key={item.id} property={item} />)
+                currentProperties.map((item) => (
+                  <PropertyCard key={item.id} property={item} />
+                ))
               )}
             </div>
           </div>
 
           <hr className="my-4 border-gray-600" />
 
-          {/* Local Pagination */}
-          <div className="flex justify-between items-center text-white mt-6">
+          {/* Pagination */}
+          <div className="flex justify-between items-center text-white">
             <p className="text-sm text-black dark:text-white">
-              {page + 1} of {totalPages}
+              {showAll 
+                ? `Page ${apiPage} of ${totalApiPages || 1}` 
+                : `${page + 1} of ${totalPages || 1}`}
             </p>
+
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center w-[120px] md:hidden"
+            >
+              {showAll ? "View Less" : "View All"}
+            </button>
 
             <div className="flex gap-4">
               <button
-                onClick={prevPage}
-                disabled={page === 0}
+                onClick={handlePrev}
+                disabled={showAll ? apiPage === 1 : page === 0}
                 className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
               >
                 <FiArrowLeft size={20} />
               </button>
 
               <button
-                onClick={nextPage}
-                disabled={page >= totalPages - 1}
+                onClick={handleNext}
+                disabled={showAll ? apiPage >= totalApiPages : page >= totalPages - 1}
                 className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
               >
                 <FiArrowRight size={20} />

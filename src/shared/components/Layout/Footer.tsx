@@ -51,7 +51,7 @@ function Footer() {
             }}
         >
             {/* overlay */}
-            <div className="absolute inset-0 bg-black/80 dark:bg-black/0"></div>
+            <div className="absolute inset-0 bg-black/80 dark:bg-transparent"></div>
 
             <div className="relative sm:flex justify-between items-center space-y-6 sm:space-y-0">
             <div className="space-y-3">
