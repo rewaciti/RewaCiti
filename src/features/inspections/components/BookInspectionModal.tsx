@@ -6,6 +6,7 @@ import { FiX, FiMapPin } from "react-icons/fi";
 import axios from "axios";
 import { Link } from "react-router";
 import { toast } from "sonner";
+import { usePaystackPayment } from "react-paystack";
 
 interface BookInspectionModalProps {
   property: Property;
@@ -41,21 +42,21 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const normalizedState = property.location.state?.toLowerCase().replace(/\s+/g, "-") ?? "";
   const amount = fees?.[normalizedState]?.[normalizedCity] ?? fees?.default ?? 5000;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const fullName = `${firstName} ${lastName}`.trim();
+  const propertyAddress = `${property.location.area}, ${property.location.city}, ${property.location.state}`;
+  const propertyUrl = window.location.href;
 
-    if (!agreed) {
-      toast.error("Please agree to the Terms and Privacy Policy");
-      return;
-    }
+  const config = {
+    reference: `visit_${new Date().getTime().toString()}`,
+    email: email,
+    amount: amount * 100, // Paystack amount is in kobo
+    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
+  };
 
+  const initializePayment = usePaystackPayment(config);
+
+  const handleSuccess = async (reference: { reference: string }) => {
     setIsSubmitting(true);
-
-    const fullName = `${firstName} ${lastName}`.trim();
-    const reference = `demo_visit_${new Date().getTime()}`;
-    const propertyAddress = `${property.location.area}, ${property.location.city}, ${property.location.state}`;
-    const propertyUrl = window.location.href;
-
     const payload = {
       companyId: "69b4712ce95a2df514b1c789",
       pipelineId: "69b49c7541d35d158e336621",
@@ -65,11 +66,11 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
       email: email,
       phone: phone,
       address: propertyAddress,
-      note: `Reference: ${reference}\nTask: Property Visit/Inspection\nProperty Link: ${propertyUrl}`,
+      note: `Reference: ${reference.reference}\nTask: Property Visit/Inspection\nProperty Link: ${propertyUrl}`,
       customData: [
         { label: "Property Name", value: property.name },
         { label: "Property Link", value: propertyUrl },
-        { label: "Booking Reference", value: reference },
+        { label: "Booking Reference", value: reference.reference },
         { label: "Inspection Fee", value: `₦${amount.toLocaleString()}` },
         { label: "Agent ID", value: property.createdBy.toString() },
         { label: "Property Type", value: property.type }
@@ -77,9 +78,6 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
     };
 
     try {
-      // Simulate Processing Delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
       // Send to SabiFlow CRM
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
 
@@ -93,13 +91,13 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
         date: new Date().toISOString().split('T')[0],
         time: new Date().toLocaleTimeString(),
         amount,
-        reference: reference,
+        reference: reference.reference,
         location: propertyAddress,
       });
 
-      updatePaymentStatus(reference, "paid");
+      updatePaymentStatus(reference.reference, "paid");
       
-      toast.success(`Visit booked successfully! (Demo Mode)\nReference: ${reference}\nOur team will contact you within 24 hours.`, {
+      toast.success(`Visit booked successfully!\nReference: ${reference.reference}\nOur team will contact you within 24 hours.`, {
         duration: 5000,
       });
       onOpenChange(false);
@@ -111,16 +109,32 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
       setPhone("");
     } catch (error) {
       console.error("Error submitting visit booking:", error);
-      toast.error("Failed to submit booking details to CRM. Please try again.");
+      toast.error("Payment successful, but failed to submit booking details to CRM. Please contact support.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const onClose = () => {
+    toast.info("Payment cancelled.");
+    setIsSubmitting(false);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!agreed) {
+      toast.error("Please agree to the Terms and Privacy Policy");
+      return;
+    }
+
+    setIsSubmitting(true);
+    initializePayment({ onSuccess: handleSuccess, onClose });
+  };
+
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+    <Dialog.Root open={open} onOpenChange={onOpenChange} modal={false}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-6 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto">
           <div className="flex justify-between items-center mb-6">
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900">

@@ -6,6 +6,7 @@ import axios from "axios";
 import { Link } from "react-router";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { toast } from "sonner";
+import { usePaystackPayment } from "react-paystack";
 
 interface PropertyPaymentModalProps {
   property: Property;
@@ -52,24 +53,20 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   const agentFee = price * (agentPercentage / 100);
   const houseFee = price * (houseFeePercentage / 100);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (rating === 0) {
-      toast.error("Please rate our service before proceeding.");
-      return;
-    }
+  const fullName = `${firstName} ${lastName}`.trim();
+  const propertyUrl = window.location.href;
 
-    if (!agreed) {
-      toast.error("Please agree to the Terms and Privacy Policy");
-      return;
-    }
-    
+  const config = {
+    reference: `prop_${new Date().getTime().toString()}`,
+    email: email,
+    amount: price * 100, // Paystack amount is in kobo
+    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
+  };
+
+  const initializePayment = usePaystackPayment(config);
+
+  const handleSuccess = async (reference: { reference: string }) => {
     setIsSubmitting(true);
-
-    const fullName = `${firstName} ${lastName}`.trim();
-    const reference = `demo_pay_${new Date().getTime()}`;
-    const propertyUrl = window.location.href;
-
     const payload = {
       companyId: "69b4712ce95a2df514b1c789",
       pipelineId: "69b49c7541d35d158e336621",
@@ -79,12 +76,12 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       email: email,
       phone: phone,
       address: `${property.location.area}, ${property.location.city}, ${property.location.state}`,
-      note: `Rating: ${rating}/5\nFeedback: ${feedback}`,
+      note: `Rating: ${rating}/5\nFeedback: ${feedback}\nPayment Reference: ${reference.reference}`,
       customData: [
         { label: "Property Name", value: property.name },
         { label: "Property Link", value: propertyUrl },
         { label: "Total Property Price", value: `₦${price.toLocaleString()}` },
-        { label: "Payment Reference", value: reference },
+        { label: "Payment Reference", value: reference.reference },
         { label: "Service Rating", value: `${rating} Stars` },
         { label: "Agent Fee", value: `₦${agentFee.toLocaleString()} (${agentPercentage}%)` },
         { label: "House Fee", value: `₦${houseFee.toLocaleString()} (${houseFeePercentage}%)` },
@@ -93,13 +90,10 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
     };
 
     try {
-      // Simulate Payment Processing Delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      
       // Send to SabiFlow
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
       
-      toast.success(`Payment successful! (Demo Mode)\nReference: ${reference}\nInformation sent to our team.`, {
+      toast.success(`Payment successful!\nReference: ${reference.reference}\nInformation sent to our team.`, {
         duration: 5000,
       });
       onOpenChange(false);
@@ -113,16 +107,36 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       setFeedback("");
     } catch (error) {
       console.error("Error submitting payment details:", error);
-      toast.error("Payment simulated, but failed to send data to CRM. Please try again.");
+      toast.error("Payment successful, but failed to send data to CRM. Please contact support.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const onClose = () => {
+    toast.info("Payment cancelled.");
+    setIsSubmitting(false);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (rating === 0) {
+      toast.error("Please rate our service before proceeding.");
+      return;
+    }
+
+    if (!agreed) {
+      toast.error("Please agree to the Terms and Privacy Policy");
+      return;
+    }
+    
+    setIsSubmitting(true);
+    initializePayment({ onSuccess: handleSuccess, onClose });
+  };
+
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+    <Dialog.Root open={open} onOpenChange={onOpenChange} modal={false}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-6 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto">
           <div className="flex justify-between items-center mb-6">
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900">
