@@ -6,7 +6,7 @@ export interface Property {
   description: string;
   bedrooms: number ;
   bathrooms: number | string;
-  type: string;
+  category: string;
   price: number;
   createdBy: number | string; 
   location: {
@@ -42,7 +42,7 @@ export interface PropertyStore {
   setSearchQuery: (query: string) => void;
   filterProperties: (filters: {
     location?: string;
-    propertyType?: string;
+    category?: string;
     priceRange?: string;
     rooms?: number;
     buildYear?: number;

@@ -36,11 +36,11 @@ function Studentarea() {
   const [selectedUniversity, setUniversity] = useState("");
 
   const { areaMaps, loading: areaLoading, fetchAreaMaps } = useAreaMapStore();
-  const [type, setType] = useState("");
+  const [category, setCategory] = useState("");
   const [bedrooms, setBedrooms] = useState("");
 
   const [preferedLocation, setPreferedLocation] = useState("");
-  const [preferedType, setPreferedType] = useState("");
+  const [preferedCategory, setPreferedCategory] = useState("");
   const [Budget, setBudget] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -70,7 +70,7 @@ function Studentarea() {
       note: message,
       customData: [
         { label: "Budget", value: Budget },
-        { label: "Property Type", value: preferedType },
+        { label: "Category", value: preferedCategory },
         { label: "Preferred Location", value: preferedLocation },
         { label: "Bedrooms", value: bedroomsContact },
         { label: "Preferred Contact", value: preferredContact },
@@ -85,7 +85,7 @@ function Studentarea() {
       setEmail("");
       setPhone("");
       setPreferedLocation("");
-      setPreferedType("");
+      setPreferedCategory("");
       setBedroomsContact("");
       setBudget("");
       setPreferredContact("");
@@ -152,7 +152,7 @@ function Studentarea() {
 
       const matchesLocation = location ? p.location.area === location : true;
 
-      const matchesType = type ? p.type === type : true;
+      const matchesType = category ? p.category === category : true;
       const matchesBedrooms = bedrooms ? p.bedrooms === Number(bedrooms) : true;
 
       const priceNum = Number(String(p.price).replace(/[^0-9]/g, ""));
@@ -173,7 +173,7 @@ function Studentarea() {
   }, [
     searchTerm,
     location,
-    type,
+    category,
     bedrooms,
     priceRange,
     properties,
@@ -310,23 +310,23 @@ function Studentarea() {
               </div>
             </div>
 
-            {/* Type */}
+            {/* Category */}
             <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-t-none">
               <div className="relative">
                 <FiHome className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
                   className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-t-none"
-                  value={type}
+                  value={category}
                   onChange={(e) => {
                     const val = e.target.value;
-                    setType(val === "__all__" ? "" : val);
+                    setCategory(val === "__all__" ? "" : val);
                   }}
                 >
                   <option value="" disabled hidden>
-                    Type
+                    Category
                   </option>
-                  <option value="__all__">Any Type</option>
+                  <option value="__all__">All Categories</option>
                   <option value="Self Contain">Self Contain</option>
                   <option value="Single Room">Single Room</option>
                   <option value="Mini Flat">Mini Flat</option>
@@ -551,17 +551,17 @@ function Studentarea() {
               />
             </div>
 
-            {/* Property Type */}
+            {/* Category */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">Property Type</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm">Category</label>
               <select
                 required
                 className="p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70"
-                value={preferedType}
-                onChange={(e) => setPreferedType(e.target.value)}
+                value={preferedCategory}
+                onChange={(e) => setPreferedCategory(e.target.value)}
               >
                 <option value="" disabled hidden>
-                  Property Type
+                  Category
                 </option>
                  <option value="Self Contain">Self Contain</option>
                   <option value="Studio Apartment">Studio Apartment</option>

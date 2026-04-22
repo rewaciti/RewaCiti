@@ -76,7 +76,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
         { label: "Booking Reference", value: reference.reference },
         { label: "Inspection Fee", value: `₦${amount.toLocaleString()}` },
         { label: "Agent ID", value: property.createdBy.toString() },
-        { label: "Property Type", value: property.type }
+        { label: "Category", value: property.category }
       ]
     };
 
@@ -210,7 +210,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
             <div className="p-3 bg-[#703BF7]/10 rounded-lg border border-[#703BF7]/30 space-y-2">
               <div className="border-b border-[#703BF7]/20 pb-2 mb-2">
                 <h4 className="font-semibold dark:text-white text-gray-900">{property.name}</h4>
-                <p className="text-xs dark:text-gray-400 text-gray-600">{property.type} • {property.bedrooms} Bedrooms</p>
+                <p className="text-xs dark:text-gray-400 text-gray-600">{property.category} • {property.bedrooms} Bedrooms</p>
               </div>
               <div className="flex items-start gap-2 text-sm dark:text-gray-300 text-gray-700">
                 <FiMapPin className="text-[#703BF7] mt-1 shrink-0" />

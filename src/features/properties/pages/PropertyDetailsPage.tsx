@@ -109,8 +109,8 @@ function PropertyDetails() {
           value: propertyUrl,
         },
         {
-          label: "Property Type",
-          value: property.type,
+          label: "Category",
+          value: property.category,
         },
         {
           label: "Preferred Location",
@@ -414,8 +414,8 @@ function PropertyDetails() {
             )}
 
              <div className={`flex flex-col px-2 ${(hasBedrooms || hasBathrooms) ? 'sm:border-l border-gray-600/30' : ''}`}>
-               <span className="text-gray-800 dark:text-gray-400 mt-1 flex  items-center gap-1"><FaHome/>Type</span>
-              <span className="text-xl font-semibold text-gray-900 dark:text-white">{property?.type}</span>
+               <span className="text-gray-800 dark:text-gray-400 mt-1 flex  items-center gap-1"><FaHome/>Category</span>
+              <span className="text-xl font-semibold text-gray-900 dark:text-white">{property?.category}</span>
             </div>
           </div>
 

@@ -107,7 +107,7 @@ function PropertyCard({ property }: PropertyCardProps) {
       }`}
     >
       <FaHome />
-      {property.type}
+      {property.category}
     </p>
   </div>
 

@@ -30,7 +30,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         description: item.description || "",
         bedrooms: item.customData?.bedrooms || 0,
         bathrooms: item.customData?.bathrooms || 0,
-        type: item.categoryId?.name || "Property",
+        category: item.categoryId?.name || "Property",
         price: item.price || 0,
         createdBy: item.createdBy || "",
         location: {
@@ -117,7 +117,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
   // --- New: Filter properties ---
   filterProperties: (filters: {
     location?: string;
-    propertyType?: string;
+    category?: string;
     priceRange?: string;
     rooms?: number;
     buildYear?: number;
@@ -146,7 +146,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
       return (
         locationMatch &&
         searchMatch &&
-        (!filters.propertyType || p.type === filters.propertyType) &&
+        (!filters.category || p.category === filters.category) &&
         (!filters.rooms || p.bedrooms === filters.rooms) &&
         // (!filters.buildYear || p.yearBuilt === filters.buildYear) &&
         (!filters.priceRange ||
