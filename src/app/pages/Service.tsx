@@ -1,6 +1,7 @@
 import Navbar from "../../shared/components/Layout/Navbar"
 import Footer from "../../shared/components/Layout/Footer";
 import useScrollToHash from "../../shared/hooks/useScrollToHash";
+import { Link } from "react-router";
 
 function Service() {
   useScrollToHash();
@@ -210,9 +211,11 @@ const services4 = [
                     Unlock the Value of Your Property Today
                   </h3>
 
-                  <button className="px-6 py-3 bg-[#703BF7] hover:bg-[#9677df] rounded-lg font-medium transition hidden md:block">
-                    Learn More
-                  </button>
+                  <Link to="/contact">
+                    <button className="px-6 py-3 bg-[#703BF7] hover:bg-[#9677df] rounded-lg font-medium transition hidden md:block">
+                      Learn More
+                    </button>
+                  </Link>
                 </div>
 
                 <p className="text-gray-100 max-w-2xl">
@@ -288,9 +291,11 @@ const services4 = [
                     Experience Effortless Property Management
                   </h3>
 
+               <Link to="/contact">
                   <button className="px-6 py-3 bg-[#703BF7] hover:bg-[#9677df] rounded-lg font-medium transition hidden md:block">
                     Learn More
                   </button>
+               </Link>
                 </div>
 
                 <p className="text-gray-100 max-w-2xl">
@@ -299,9 +304,11 @@ const services4 = [
                   enjoy the benefits of property ownership.
                 </p>
 
-                 <button className="px-6 py-3 bg-[#703BF7] hover:bg-[#9677df] rounded-lg font-medium transition w-full mt-2 md:hidden">
-                      Learn More
-                </button>
+                <Link to="/contact">
+                  <button className="px-6 py-3 bg-[#703BF7] hover:bg-[#9677df] rounded-lg font-medium transition w-full mt-2 md:hidden">
+                    Learn More
+                  </button>
+                </Link>
               </div>
             </div>
 
@@ -349,9 +356,11 @@ const services4 = [
                       the complexities while you enjoy the benefits of property ownership.
                     </p>
 
-                    <button className="px-6 py-3 bg-[#703BF7] hover:bg-[#9677df] rounded-lg font-medium transition w-full">
-                      Learn More
-                    </button>
+                   <Link to="/contact">
+                      <button className="px-6 py-3 bg-[#703BF7] hover:bg-[#9677df] rounded-lg font-medium transition w-full">
+                        Learn More
+                      </button>
+                   </Link>
                   </div>
                 </div>
               </div>
