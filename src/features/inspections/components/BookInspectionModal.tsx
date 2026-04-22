@@ -51,6 +51,9 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
     email: email,
     amount: amount * 100, // Paystack amount is in kobo
     publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
+    firstname: firstName,
+    lastname: lastName,
+    phone: phone,
   };
 
   const initializePayment = usePaystackPayment(config);
