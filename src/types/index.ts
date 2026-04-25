@@ -120,6 +120,7 @@ export interface TeamMember {
   role: string;
   image: string;
   email?: string;
+  linkedin?: string;
 }
 
 export interface AchievementItem {

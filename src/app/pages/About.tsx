@@ -100,31 +100,35 @@ const stepsData: Step[] = [
 const teamData: TeamMember[] = [
 {
     id: 1,
-    name: "John Williams",
-    role: "Founder & CEO",
+    name: "Arewa Tolulope",
+    role: "Frontend Engineer",
     image: "/team/member1.jpg",
-    email: "john@gmail.com"
+    email: "arewatolulope5@gmail.com",
+    linkedin: "https://www.linkedin.com/in/arewa-tolulope-1496a7238/"
   },
   {
     id: 2,
-    name: "Sarah Johnson",
-    role: "Chief Real Estate Officer",
+    name: "Oyeniyi Seun",
+    role: "Backend Engineer",
     image: "/team/member2.jpg",
-    email: "sarah@gmail.com"
+    email: "oyeniyi@gmail.com",
+    linkedin: "https://www.linkedin.com/in/oyeniyi-seun"
   },
   {
     id: 3,
-    name: "Michael Brown",
+    name: "Ekeshi Emmanuel",
     role: "Head of Property Management",
     image: "/team/member3.jpg",
-    email: "michael@gmail.com"
+    email: "emuzikchima@gmail.com",
+    linkedin: "https://www.linkedin.com/in/ekeshi-emmanuel"
   },
   {
     id: 4,
-    name: "Emily Carter",
-    role: "Legal Counsel",
+    name: "Isiah Olumide",
+    role: "Property Acquisition Specialist",
     image: "/team/member4.jpg",
-    email: "emily@gmail.com"
+    email: "Isaiahmusicgiantimgsznf@gmail.com",
+    linkedin: "https://www.linkedin.com/in/isaiah-olumide-7426a9273?utm_source=share_via&utm_content=profile&utm_medium=member_android"
   },
 ];
 
@@ -345,10 +349,15 @@ function About() {
                   className="w-full h-56 object-cover rounded-lg"
                 />
 
-                {/* Floating Twitter Icon */}
-                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-[#703BF7] p-1 rounded-full shadow-md cursor-pointer hover:bg-purple-600">
+                {/* Floating LinkedIn Icon */}
+                <a
+                  href={member.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-[#703BF7] p-1 rounded-full shadow-md cursor-pointer hover:bg-purple-600 transition-colors"
+                >
                   <FaLinkedin className="text-white w-7 h-7 p-1" />
-                </div>
+                </a>
               </div>
 
               {/* Name + Role */}
