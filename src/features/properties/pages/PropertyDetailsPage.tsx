@@ -15,6 +15,16 @@ import { toast } from "sonner";
 const slugify = (text: string) =>
   text.toLowerCase().replace(/\s+/g, "-");
 
+const formatCurrency = (amount: number) => {
+  if (amount >= 1000000000) {
+    return `${(amount / 1000000000).toFixed(1).replace(/\.0$/, "")}B`;
+  }
+  if (amount >= 1000000) {
+    return `${(amount / 1000000).toFixed(1).replace(/\.0$/, "")}M`;
+  }
+  return amount.toLocaleString();
+};
+
 function PropertyDetails() {
   const { name } = useParams();
   const { properties, fetchProperties, loading } = usePropertyStore();
@@ -92,13 +102,14 @@ function PropertyDetails() {
     const payload = {
       companyId: "69b4712ce95a2df514b1c789",
       pipelineId: "69b49c7541d35d158e336621",
-      title: `${fullName} interested in ${property.name} (₦${price.toLocaleString()})`,
+      title: `${fullName} interested in ${property.name} (₦${formatCurrency(price)})`,
       name: fullName,
-      amount: `(₦${price.toLocaleString()})`,
+      amount: price,
       email: email,
       phone: phone,
       address: `${property.location.area}, ${property.location.city}, ${property.location.state}`,
-      note: `${message}\n\nProperty Link: ${propertyUrl}`,
+      note: message,
+      ownerId: property.createdBy,
       customData: [
         {
           label: "Property",
@@ -113,8 +124,16 @@ function PropertyDetails() {
           value: property.category,
         },
         {
-          label: "Preferred Location",
+          label: "Location",
           value: `${property.location.area}, ${property.location.city}`,
+        },
+        {
+          label: "price",
+          value: price,
+        },
+        {
+          label: "Agent",
+          value: property.createdBy,
         }
       ]
     };
@@ -200,7 +219,7 @@ function PropertyDetails() {
             <div className="flex gap-4 items-center justify-between mt-4 md:mt-0">
               <div className="flex md:flex-col items-center md:items-start">
                 <p className="text-xs text-gray-800 dark:text-gray-400 hidden md:flex">Price</p>
-                <p className="text-2xl font-semibold text-gray-900 dark:text-white">₦{price.toLocaleString()}</p>
+                <p className="text-2xl font-semibold text-gray-900 dark:text-white">₦{formatCurrency(price)}</p>
               </div>
               
               <div className="relative" ref={dropdownRef}>

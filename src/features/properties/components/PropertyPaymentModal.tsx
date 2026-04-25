@@ -75,7 +75,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       pipelineId: "69b49c7541d35d158e336621",
       title: `PROPERTY PAYMENT: ${property.name} - ${fullName}`,
       name: fullName,
-      amount: `(₦${price.toLocaleString()})`,
+      amount: price, // Send as raw number
       email: email,
       phone: phone,
       address: `${property.location.area}, ${property.location.city}, ${property.location.state}`,
@@ -83,7 +83,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       customData: [
         { label: "Property Name", value: property.name },
         { label: "Property Link", value: propertyUrl },
-        { label: "Total Property Price", value: `₦${price.toLocaleString()}` },
+        { label: "Total Property Price", value: price }, // Send as raw number
         { label: "Payment Reference", value: reference.reference },
         { label: "Service Rating", value: `${rating} Stars` },
         { label: "Agent Fee", value: `₦${agentFee.toLocaleString()} (${agentPercentage}%)` },
