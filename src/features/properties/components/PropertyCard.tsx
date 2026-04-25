@@ -3,6 +3,7 @@ import type { Property } from "../../../types";
 import { NavLink } from "react-router";
 import { FaBed, FaBath, FaHome } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
+import { formatCurrency } from "../../../shared/lib/utils";
 
 interface PropertyCardProps {
   property: Property;
@@ -114,7 +115,7 @@ function PropertyCard({ property }: PropertyCardProps) {
   {/* Price + Button */}
   <div className="flex justify-between items-center">
     <span className="text-lg font-bold text-[#703BF7]">
-      ₦{price.toLocaleString()}
+      ₦{formatCurrency(price)}
     </span>
 
     <NavLink

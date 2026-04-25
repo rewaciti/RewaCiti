@@ -11,19 +11,10 @@ import PropertyPaymentModal from "../components/PropertyPaymentModal";
 import ReportAgentModal from "../components/ReportAgentModal";
 import { PropertyDetailsSkeleton } from "../../../shared/components/ui/Skeletons";
 import { toast } from "sonner";
+import { formatCurrency } from "../../../shared/lib/utils";
 
 const slugify = (text: string) =>
   text.toLowerCase().replace(/\s+/g, "-");
-
-const formatCurrency = (amount: number) => {
-  if (amount >= 1000000000) {
-    return `${(amount / 1000000000).toFixed(1).replace(/\.0$/, "")}B`;
-  }
-  if (amount >= 1000000) {
-    return `${(amount / 1000000).toFixed(1).replace(/\.0$/, "")}M`;
-  }
-  return amount.toLocaleString();
-};
 
 function PropertyDetails() {
   const { name } = useParams();

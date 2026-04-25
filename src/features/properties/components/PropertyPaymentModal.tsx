@@ -132,6 +132,13 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       toast.error("Please agree to the Terms and Privacy Policy");
       return;
     }
+
+    if (price > 5000000) {
+      toast.warning("For payments above ₦5,000,000, please contact our support team directly for secure bank transfer options.", {
+        duration: 6000,
+      });
+      return;
+    }
     
     setIsSubmitting(true);
     initializePayment({ onSuccess: handleSuccess, onClose });
@@ -153,6 +160,19 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
           </div>
 
           <p id="property-payment-description" className="sr-only">Complete your property payment securely using Paystack. All details are required for processing.</p>
+          
+          <div className="mb-6 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+            <h4 className="text-xs font-bold text-blue-500 uppercase mb-2 flex items-center gap-2">
+              <FiInfo /> Safety Tips & Payment Info
+            </h4>
+            <ul className="text-[11px] text-gray-600 dark:text-gray-400 space-y-1 list-disc pl-4">
+              <li>Ensure your daily transfer limit covers the total amount.</li>
+              <li>High-value transactions may require additional bank authorization.</li>
+              <li>Payments above ₦5M should be handled via direct bank transfer.</li>
+              <li>Screenshot your receipt after a successful transaction.</li>
+            </ul>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -199,14 +219,14 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 />
               </div>
             </div>
-           <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
+            <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
               <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
-                A verified agent will reach out within the next{" "}
-                <span className="font-semibold text-[#703BF7]">24 hours</span> to complete your property details and next steps.
+                Once your payment is confirmed, a verified agent will be assigned to you, and our team will contact you within{" "}
+                <span className="font-semibold text-[#703BF7]">24 hours</span> to schedule a meeting and finalize the next steps.
               </p>
 
               <p className="text-sm dark:text-gray-300 text-gray-700 text-center mt-1">
-                The Agent's Contact details will be shared once your payment has been successfully confirmed.
+                After scheduling, the agent’s contact details will be shared with you via email for the meeting and completion of your documentation.
               </p>
             </div>
 

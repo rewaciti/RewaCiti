@@ -79,7 +79,7 @@ const Terms = () => {
           </p>
         </section>
 
-        {/* 5 PROPERTY VISITS */}
+        {/* 5 PROPERTY VISITS & PAYMENTS */}
         <section className="bg-white/90 dark:bg-[#1A1A1A] border rounded-xl p-6 mb-4">
           <h2 className="text-xl font-semibold mb-2">
             5. Property Visits & Payments
@@ -91,13 +91,29 @@ const Terms = () => {
             displayed at the point of booking.
           </p>
 
-          <p className="mt-2">
-            <strong>
-              All payments must be processed exclusively through the platform.
-            </strong>{" "}
-            This includes visitation fees as well as any transaction relating to
-            the rental or purchase of a property.
+          <p className="mt-2 font-semibold text-blue-600 dark:text-blue-400">
+            Important Note on Large Transactions:
           </p>
+          <p className="mt-1 italic">
+            For security reasons, any single transaction exceeding{" "}
+            <strong>₦5,000,000 (Five Million Naira)</strong> cannot be processed
+            via our standard online payment gateway. Users intending to make
+            payments above this threshold must contact our support team
+            directly to arrange for a secure bank transfer and manual
+            validation.
+          </p>
+
+          <p className="mt-2 font-semibold">Payment Safety Guidelines:</p>
+          <ul className="list-disc ml-6 space-y-1">
+            <li>Always ensure your bank's daily transfer limit supports the transaction amount.</li>
+            <li>High-value transactions may trigger fraud alerts or require additional bank authorization.</li>
+            <li>Users are encouraged to download and save payment receipts immediately after a successful transaction.</li>
+            <li>
+              <strong>
+                All payments must be processed exclusively through the platform or verified official bank accounts provided by support.
+              </strong>
+            </li>
+          </ul>
 
           <p className="mt-2">
             Users are strongly advised against engaging in off-platform
@@ -119,7 +135,7 @@ const Terms = () => {
 
           <p className="mt-2">
             <strong>
-              Any attempt to bypass the platform’s payment system will result in
+              Any attempt to bypass the platform’s payment system or use unauthorized payment methods will result in
               immediate and permanent account termination.
             </strong>
           </p>
