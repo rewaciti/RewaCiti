@@ -98,13 +98,15 @@ const stepsData: Step[] = [
 ];
 
 const teamData: TeamMember[] = [
-{
-    id: 1,
-    name: "Arewa Tolulope",
-    role: "Frontend Engineer",
-    image: "/team/member1.jpg",
-    email: "arewatolulope5@gmail.com",
-    linkedin: "https://www.linkedin.com/in/arewa-tolulope-1496a7238/"
+
+ 
+  {
+    id: 3,
+    name: "Ekeshi Emmanuel",
+    role: "Head of Property Management",
+    image: "/team/member3.jpg",
+    email: "emuzikchima@gmail.com",
+    linkedin: "https://www.linkedin.com/in/ekeshi-emmanuel"
   },
   {
     id: 2,
@@ -115,12 +117,12 @@ const teamData: TeamMember[] = [
     linkedin: "https://www.linkedin.com/in/oyeniyi-seun"
   },
   {
-    id: 3,
-    name: "Ekeshi Emmanuel",
-    role: "Head of Property Management",
-    image: "/team/member3.jpg",
-    email: "emuzikchima@gmail.com",
-    linkedin: "https://www.linkedin.com/in/ekeshi-emmanuel"
+    id: 1,
+    name: "Arewa Tolulope",
+    role: "Frontend Engineer",
+    image: "/team/member1.jpg",
+    email: "arewatolulope5@gmail.com",
+    linkedin: "https://www.linkedin.com/in/arewa-tolulope-1496a7238/"
   },
   {
     id: 4,
