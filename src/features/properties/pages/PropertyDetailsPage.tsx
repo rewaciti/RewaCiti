@@ -123,8 +123,12 @@ function PropertyDetails() {
           value: price,
         },
         {
-          label: "Agent",
+          label: "Agent ID",
           value: property.createdBy,
+        },
+        {
+          label: "Property ID",
+          value: property.id,
         }
       ]
     };

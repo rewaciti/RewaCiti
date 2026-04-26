@@ -62,7 +62,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
     setIsSubmitting(true);
     const payload = {
       companyId: "69b4712ce95a2df514b1c789",
-      pipelineId: "69b49c7541d35d158e336621",
+      pipelineId: "69ed7a4ac09e9388ba096f1f",
       title: `VISIT BOOKING: ${property.name} - ${fullName}`,
       name: fullName,
       amount: `(₦${amount.toLocaleString()})`,
@@ -76,6 +76,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
         { label: "Booking Reference", value: reference.reference },
         { label: "Inspection Fee", value: `₦${amount.toLocaleString()}` },
         { label: "Agent ID", value: property.createdBy.toString() },
+        { label: "Property ID", value: property.id },
         { label: "Category", value: property.category }
       ]
     };

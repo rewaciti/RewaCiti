@@ -72,7 +72,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
     setIsSubmitting(true);
     const payload = {
       companyId: "69b4712ce95a2df514b1c789",
-      pipelineId: "69b49c7541d35d158e336621",
+      pipelineId: "69ed7a4ac09e9388ba096f1f",
       title: `PROPERTY PAYMENT: ${property.name} - ${fullName}`,
       name: fullName,
       amount: price, // Send as raw number
@@ -88,7 +88,8 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
         { label: "Service Rating", value: `${rating} Stars` },
         { label: "Agent Fee", value: `₦${agentFee.toLocaleString()} (${agentPercentage}%)` },
         { label: "House Fee", value: `₦${houseFee.toLocaleString()} (${houseFeePercentage}%)` },
-        { label: "Agent ID", value: property.createdBy.toString() }
+        { label: "Agent ID", value: property.createdBy.toString() },
+        { label: "Property ID", value: property.id }
       ]
     };
 
