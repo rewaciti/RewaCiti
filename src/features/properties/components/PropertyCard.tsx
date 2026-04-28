@@ -113,10 +113,17 @@ function PropertyCard({ property }: PropertyCardProps) {
   </div>
 
   {/* Price + Button */}
-  <div className="flex justify-between items-center">
-    <span className="text-lg font-bold text-[#703BF7]">
-      ₦{formatCurrency(price)}
-    </span>
+  <div className="flex justify-between items-end">
+    <div>
+      {property.duration && (
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          Total Price {property.duration}
+        </p>
+      )}
+      <span className="text-lg font-bold text-[#703BF7]">
+        ₦{formatCurrency(price)}
+      </span>
+    </div>
 
     <NavLink
       to={`/properties/${slugify(property.name)}`}

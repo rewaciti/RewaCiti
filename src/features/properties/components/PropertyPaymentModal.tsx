@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { FiX, FiInfo, FiStar } from "react-icons/fi";
 import type { Property } from "../../../types";
 import axios from "axios";
 import { Link } from "react-router";
-import { usePropertyStore } from "../store/usePropertyStore";
 import { toast } from "sonner";
 import { usePaystackPayment } from "react-paystack";
 
@@ -28,30 +27,9 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   const [feedback, setFeedback] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { fees, fetchPropertyFees } = usePropertyStore();
-
-  useEffect(() => {
-    if (!fees) {
-      fetchPropertyFees();
-    }
-  }, [fees, fetchPropertyFees]);
 
   const price = property.price || 0;
-
-  // Calculate agent fee based on range
-  const getAgentFeePercentage = () => {
-    if (!fees) return 8; // Default fallback
-    const range = fees.agent_fee_ranges.find(
-      (r) => price >= r.min && (r.max === null || price <= r.max)
-    );
-    return range ? range.percentage : 8;
-  };
-
-  const agentPercentage = getAgentFeePercentage();
-  const houseFeePercentage = 100 - agentPercentage;
-
-  const agentFee = price * (agentPercentage / 100);
-  const houseFee = price * (houseFeePercentage / 100);
+  const pricing = property.pricing;
 
   const fullName = `${firstName} ${lastName}`.trim();
   const propertyUrl = window.location.href;
@@ -86,8 +64,12 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
         { label: "Total Property Price", value: price }, // Send as raw number
         { label: "Payment Reference", value: reference.reference },
         { label: "Service Rating", value: `${rating} Stars` },
-        { label: "Agent Fee", value: `₦${agentFee.toLocaleString()} (${agentPercentage}%)` },
-        { label: "House Fee", value: `₦${houseFee.toLocaleString()} (${houseFeePercentage}%)` },
+        { label: "Property Cost", value: `₦${pricing.PropertyCost.toLocaleString()}` },
+        { label: "Legal Fee", value: `₦${pricing.LegalFee.toLocaleString()}` },
+        { label: "Agent Fee", value: `₦${pricing.AgentFee.toLocaleString()}` },
+        { label: "Service Fee", value: `₦${pricing.ServiceFee.toLocaleString()}` },
+        { label: "Caution Fee", value: `₦${pricing.CautionFee.toLocaleString()}` },
+
         { label: "Agent ID", value: property.createdBy.toString() },
         { label: "Property ID", value: property.id }
       ]
@@ -239,18 +221,24 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
               </h3>
               
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400">Property Price</span>
-                <span className="font-medium dark:text-white text-gray-900">₦{price.toLocaleString()}</span>
+                <span className="text-gray-600 dark:text-gray-400">Property Cost</span>
+                <span className="font-medium dark:text-white text-gray-900">₦{pricing.PropertyCost.toLocaleString()}</span>
               </div>
-              
-              <div className="flex justify-between text-sm border-t border-gray-600/20 pt-2">
-                <span className="text-gray-600 dark:text-gray-400">Agent Fee ({agentPercentage}%)</span>
-                <span className="font-medium dark:text-white text-gray-900">₦{agentFee.toLocaleString()}</span>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600 dark:text-gray-400">Legal Fee</span>
+                <span className="font-medium dark:text-white text-gray-900">₦{pricing.LegalFee.toLocaleString()}</span>
               </div>
-              
-              <div className="flex justify-between text-sm border-t border-gray-600/20 pt-2">
-                <span className="text-gray-600 dark:text-gray-400">House Fee ({houseFeePercentage}%)</span>
-                <span className="font-medium dark:text-white text-gray-900">₦{houseFee.toLocaleString()}</span>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600 dark:text-gray-400">Agent Fee</span>
+                <span className="font-medium dark:text-white text-gray-900">₦{pricing.AgentFee.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600 dark:text-gray-400">Service Fee</span>
+                <span className="font-medium dark:text-white text-gray-900">₦{pricing.ServiceFee.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600 dark:text-gray-400">Caution Fee</span>
+                <span className="font-medium dark:text-white text-gray-900">₦{pricing.CautionFee.toLocaleString()}</span>
               </div>
               
               <div className="flex justify-between text-lg font-bold border-t border-[#703BF7]/50 pt-2 text-[#703BF7]">

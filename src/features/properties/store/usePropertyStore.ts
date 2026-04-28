@@ -22,30 +22,53 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         `https://api.sabiflow.com/api/inventory/portal/rewacity/products?page=${apiPage}&limit=30`
       );
 
-      const properties: Property[] = res.data.data.map((item: SabiFlowProduct) => ({
-        id: item._id,
-        name: item.name,
-        img: item.thumbnail || item.images[0] || "",
-        images: item.images || [],
-        description: item.description || "",
-        bedrooms: item.customData?.bedrooms || 0,
-        bathrooms: item.customData?.bathrooms || 0,
-        category: item.categoryId?.name || "Property",
-        price: item.price || 0,
-        createdBy: item.createdBy || "",
-        location: {
-          area: item.customData?.location?.area || "",
-          city: item.customData?.location?.city || "",
-          state: item.customData?.location?.state || "",
-        },
-        yearBuilt: item.customData?.yearBuilt || 0,
-        keyFeatures: item.customData?.key_features_and_amenities || [],
-        attributes: [
-          ...(item.specifications ? Object.entries(item.specifications).map(([label, value]) => ({ label, value })) : []),
-          ...(item.customData?.attributes || [])
-        ],
-        videoUrl: item.videoUrl || "",
-      }));
+      const properties: Property[] = res.data.data.map((item: SabiFlowProduct) => {
+        const customData = item.customData;
+        const apiPricing = customData?.pricing;
+
+        const propertyCost = apiPricing?.property_cost || 0;
+        const agentFee = apiPricing?.agent_fee || 0;
+        const legalFee = apiPricing?.legal_fee || 0;
+        const serviceFee = apiPricing?.service_fee || 0;
+        const cautionFee = apiPricing?.caution_fee || 0;
+        
+        const totalPrice = propertyCost + agentFee + legalFee + serviceFee + cautionFee;
+
+        return {
+          id: item._id,
+          name: item.name,
+          img: item.thumbnail || item.images[0] || "",
+          images: item.images || [],
+          description: item.description || "",
+          bedrooms: customData?.bedrooms || 0,
+          bathrooms: customData?.bathrooms || 0,
+          category: item.categoryId?.name || "Property",
+          price: totalPrice || item.price || 0,
+          duration: customData?.duration || "",
+          rules: customData?.rules || [],
+          pricing: {
+            PropertyCost: propertyCost,
+            AgentFee: agentFee,
+            LegalFee: legalFee,
+            ServiceFee: serviceFee,
+            CautionFee: cautionFee,
+            TotalCost: totalPrice || item.price || 0
+          },
+          createdBy: item.createdBy || "",
+          location: {
+            area: customData?.location?.area || "",
+            city: customData?.location?.city || "",
+            state: customData?.location?.state || "",
+          },
+          yearBuilt: customData?.yearBuilt || 0,
+          keyFeatures: customData?.key_features_and_amenities || [],
+          attributes: [
+            ...(item.specifications ? Object.entries(item.specifications).map(([label, value]) => ({ label, value })) : []),
+            ...(customData?.attributes || [])
+          ],
+          videoUrl: item.videoUrl || "",
+        };
+      });
 
       const { searchQuery } = get();
       let filtered = properties;

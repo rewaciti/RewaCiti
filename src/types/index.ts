@@ -8,6 +8,15 @@ export interface Property {
   bathrooms: number | string;
   category: string;
   price: number;
+  duration?: string;
+  pricing: { 
+   LegalFee: number;
+   ServiceFee: number;
+   CautionFee: number;
+   PropertyCost: number;
+   AgentFee:number;
+   TotalCost: number;
+  };
   createdBy: number | string; 
   location: {
     area: string;
@@ -16,6 +25,7 @@ export interface Property {
   };
   yearBuilt: number; 
   keyFeatures: string[]; 
+  rules?: string[];
   attributes?: { label: string; value: string }[];
   videoUrl?: string; 
 }
@@ -154,6 +164,15 @@ export interface SabiFlowProduct {
     bedrooms?: number;
     bathrooms?: number|string;
     yearBuilt?: number;
+    duration?: string;
+    rules?: string[];
+    pricing?: {
+      agent_fee?: number;
+      legal_fee?: number;
+      service_fee?: number;
+      caution_fee?: number;
+      property_cost?: number;
+    };
     key_features_and_amenities?: string[];
     location?: {
       area?: string;
