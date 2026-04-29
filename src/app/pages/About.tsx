@@ -104,7 +104,7 @@ const teamData: TeamMember[] = [
     id: 3,
     name: "Ekeshi Emmanuel",
     role: "Head of Property Management",
-    image: "/team/member3.jpg",
+    image: "/logo/Team/WhatsApp Image 2026-04-28 at 1.43.17 PM.jpeg",
     email: "emuzikchima@gmail.com",
     linkedin: "https://www.linkedin.com/in/ekeshi-emmanuel"
   },
@@ -112,15 +112,15 @@ const teamData: TeamMember[] = [
     id: 2,
     name: "Oyeniyi Seun",
     role: "Backend Engineer",
-    image: "/team/member2.jpg",
-    email: "oyeniyi@gmail.com",
-    linkedin: "https://www.linkedin.com/in/oyeniyi-seun"
+    image: "/logo/Team/WhatsApp Image 2026-04-28 at 7.52.21 PM.jpeg",
+    email: "iamseunoyeniyi@gmail.com",
+    linkedin: "https://www.linkedin.com/in/seunoyeniyi"
   },
   {
     id: 1,
     name: "Arewa Tolulope",
     role: "Frontend Engineer",
-    image: "/team/member1.jpg",
+    image: "/logo/Team/WhatsApp Image 2026-04-07 at 10.01.32 AM.jpeg",
     email: "arewatolulope5@gmail.com",
     linkedin: "https://www.linkedin.com/in/arewa-tolulope-1496a7238/"
   },
@@ -128,7 +128,7 @@ const teamData: TeamMember[] = [
     id: 4,
     name: "Isiah Olumide",
     role: "Property Acquisition Specialist",
-    image: "/team/member4.jpg",
+    image: "/logo/Team/WhatsApp Image 2026-04-25 at 5.41.00 AM.jpeg",
     email: "Isaiahmusicgiantimgsznf@gmail.com",
     linkedin: "https://www.linkedin.com/in/isaiah-olumide-7426a9273?utm_source=share_via&utm_content=profile&utm_medium=member_android"
   },
@@ -348,7 +348,7 @@ function About() {
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-full h-56 object-cover rounded-lg"
+                  className="w-full h-100 rounded-lg"
                 />
 
                 {/* Floating LinkedIn Icon */}

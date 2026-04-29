@@ -145,7 +145,7 @@ function PropertySearchSection() {
       const matchesBedrooms = bedrooms ? p.bedrooms === Number(bedrooms) : true;
       const matchesArea = area ? p.location.area === area : true;
 
-      const priceNum = Number(String(p.price).replace(/[^0-9]/g, ""));
+      const priceNum = Number(String(p.pricing.TotalCost).replace(/[^0-9]/g, ""));
       const matchesPrice =
         priceNum >= priceRange[0] && priceNum <= priceRange[1];
 

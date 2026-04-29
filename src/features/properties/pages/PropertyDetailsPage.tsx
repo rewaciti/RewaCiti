@@ -21,7 +21,7 @@ function PropertyDetails() {
   const { properties, fetchProperties, loading } = usePropertyStore();
   const property = properties.find((p) => slugify(p.name) === name);
 
-  const price = property?.price ?? 0;
+  const price = property?.pricing.TotalCost ?? 0;
   const images = property?.images ?? [];
 
   const hasBedrooms = !!property && property.bedrooms !== 0;
@@ -119,10 +119,6 @@ function PropertyDetails() {
           value: `${property.location.area}, ${property.location.city}`,
         },
         {
-          label: "price",
-          value: price,
-        },
-        {
           label: "Agent ID",
           value: property.createdBy,
         },
@@ -188,15 +184,20 @@ function PropertyDetails() {
           <div className="md:flex justify-between md:items-center w-full mt-4 md:mt-0">
             {/* Location */}
             <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                property
-                  ? [
-                      property.location.area,
-                      property.location.city,
-                      property.location.state,
-                    ].join(", ")
-                  : ""
-              )}`}
+              href={
+                property?.geo_location?.lat !== 0 && property.geo_location?.lat !== null &&
+                property?.geo_location?.lng !== 0 && property?.geo_location?.lng !== null
+                  ? `https://www.google.com/maps/search/?api=1&query=${property.geo_location.lat},${property.geo_location.lng}`
+                  : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                      property
+                        ? [
+                            property.location.area,
+                            property.location.city,
+                            property.location.state,
+                          ].join(", ")
+                        : ""
+                    )}`
+              }
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm border dark:text-gray-400 text-gray-900 border-gray-600/30 rounded-sm px-2 py-1 inline-flex items-center gap-2 hover:text-[#703BF7] hover:border-[#703BF7] transition-colors"
@@ -213,7 +214,7 @@ function PropertyDetails() {
             {/* Price & Action */}
             <div className="flex gap-4 items-center justify-between mt-4 md:mt-0">
               <div className="flex flex-col items-start">
-                <p className="text-xs text-gray-800 dark:text-gray-400 flex">Total Price {property?.duration}</p>
+                <p className="text-xs text-gray-800 dark:text-gray-400 flex">Price ({property?.duration})</p>
                 <p className="text-2xl font-semibold text-gray-900 dark:text-white">₦{formatCurrency(price)}</p>
               </div>
               

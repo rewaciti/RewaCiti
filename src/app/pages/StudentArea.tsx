@@ -155,7 +155,7 @@ function Studentarea() {
       const matchesType = category ? p.category === category : true;
       const matchesBedrooms = bedrooms ? p.bedrooms === Number(bedrooms) : true;
 
-      const priceNum = Number(String(p.price).replace(/[^0-9]/g, ""));
+      const priceNum = Number(String(p.pricing.TotalCost).replace(/[^0-9]/g, ""));
       const matchesPrice = priceNum >= priceRange[0] && priceNum <= priceRange[1];
 
       return (

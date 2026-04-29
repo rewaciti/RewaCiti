@@ -21,7 +21,7 @@ function PropertyCard({ property }: PropertyCardProps) {
     return words.length <= limit ? text : words.slice(0, limit).join(" ");
   }
 
-  const price = property?.price ?? 0;
+  const price = property?.pricing.TotalCost ?? 0;
   
   const hasBedrooms = property.bedrooms !== undefined && property.bedrooms !== 0;
   const hasBathrooms = !!property.bathrooms && property.bathrooms !== 0 && property.bathrooms !== "0";
@@ -52,9 +52,14 @@ function PropertyCard({ property }: PropertyCardProps) {
 
   {/* Location */}
   <a
-    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      [property.location.area, property.location.city, property.location.state].join(", ")
-    )}`}
+    href={
+      property.geo_location?.lat !== 0 && property.geo_location?.lat !== null &&
+      property.geo_location?.lng !== 0 && property.geo_location?.lng !== null
+        ? `https://www.google.com/maps/search/?api=1&query=${property.geo_location.lat},${property.geo_location.lng}`
+        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+            [property.location.area, property.location.city, property.location.state].join(", ")
+          )}`
+    }
     target="_blank"
     rel="noopener noreferrer"
     className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 mb-2 hover:text-[#703BF7]  dark:hover:text-[#703BF7] transition-colors"
@@ -117,7 +122,7 @@ function PropertyCard({ property }: PropertyCardProps) {
     <div>
       {property.duration && (
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          Total Price {property.duration}
+          Price ({property.duration})
         </p>
       )}
       <span className="text-lg font-bold text-[#703BF7]">

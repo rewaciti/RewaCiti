@@ -7,7 +7,6 @@ export interface Property {
   bedrooms: number ;
   bathrooms: number | string;
   category: string;
-  price: number;
   duration?: string;
   pricing: { 
    LegalFee: number;
@@ -23,11 +22,17 @@ export interface Property {
     city: string;
     state: string;
   };
+  geo_location: {
+    lat: number;
+    lng: number;
+    address?: string;
+  };
   yearBuilt: number; 
   keyFeatures: string[]; 
   rules?: string[];
   attributes?: { label: string; value: string }[];
   videoUrl?: string; 
+  mapUrl?: string;
 }
 
 
@@ -178,6 +183,11 @@ export interface SabiFlowProduct {
       area?: string;
       city?: string;
       state?: string;
+    };
+    geo_location?: {
+      lat: number;
+      lng: number;
+      address?: string;
     };
     attributes?: { label: string; value: string }[];
   };

@@ -28,7 +28,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const price = property.price || 0;
+  const price = property.pricing.TotalCost || 0;
   const pricing = property.pricing;
 
   const fullName = `${firstName} ${lastName}`.trim();

@@ -43,7 +43,6 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
           bedrooms: customData?.bedrooms || 0,
           bathrooms: customData?.bathrooms || 0,
           category: item.categoryId?.name || "Property",
-          price: totalPrice || item.price || 0,
           duration: customData?.duration || "",
           rules: customData?.rules || [],
           pricing: {
@@ -59,6 +58,11 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
             area: customData?.location?.area || "",
             city: customData?.location?.city || "",
             state: customData?.location?.state || "",
+          },
+          geo_location: {
+            lat: customData?.geo_location?.lat || 0,
+            lng: customData?.geo_location?.lng || 0,
+            address: customData?.geo_location?.address || "",
           },
           yearBuilt: customData?.yearBuilt || 0,
           keyFeatures: customData?.key_features_and_amenities || [],
@@ -147,7 +151,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
   }) => {
     const { properties, searchQuery } = get();
     const filtered = properties.filter((p) => {
-      const priceNum = Number(String(p.price).replace(/[^0-9]/g, ""));
+      const priceNum = Number(String(p.pricing.TotalCost).replace(/[^0-9]/g, ""));
       const [minPrice, maxPrice] = filters.priceRange
         ? filters.priceRange.split("-").map(Number)
         : [0, Infinity];
@@ -171,7 +175,6 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         searchMatch &&
         (!filters.category || p.category === filters.category) &&
         (!filters.rooms || p.bedrooms === filters.rooms) &&
-        // (!filters.buildYear || p.yearBuilt === filters.buildYear) &&
         (!filters.priceRange ||
           (maxPrice
             ? priceNum >= minPrice && priceNum <= maxPrice
