@@ -394,7 +394,7 @@ function Contact() {
             {/* City */}
             <div className="flex items-center gap-3 text-gray-300 bg-black  px-4 rounded-full w-full border border-gray-600/70 h-11 md:w-fit justify-center ">
               <FiMapPin />
-              <span> parakin, ile-ife, Osun State, Nigeria</span>
+              <span> parakin, ile-ife, Osun State.</span>
             </div>
           </div>
 
