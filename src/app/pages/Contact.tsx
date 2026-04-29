@@ -359,14 +359,7 @@ function Contact() {
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
               Main Headquarters
             </h3>
-            <a
-              href="https://www.google.com/maps/search/?api=1&query=Adam+and+Eve+Hostel+Ibadan+Rd+Ile-ile-ife"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-800 dark:text-gray-400 text-sm hover:text-[#703BF7] transition-colors"
-            >
-              Adan and Eve Hostel,Ibadan Rd, energy filling station,camus gate, OAU, Ile-ile-ife.
-            </a>
+          
           </div>
 
           {/* Description */}
@@ -389,7 +382,7 @@ function Contact() {
 
             {/* Phone */}
             <a
-              href="tel:+11234567890"
+              href="tel:+2347065304417"
               className="flex items-center gap-3 text-gray-300 hover:text-[#703BF7] transition bg-black p-2 px-4 rounded-full w-full border border-gray-600/70 md:w-fit justify-center"
             >
               <FaPhone />
@@ -399,13 +392,13 @@ function Contact() {
             {/* City */}
             <div className="flex items-center gap-3 text-gray-300 bg-black  px-4 rounded-full w-full border border-gray-600/70 h-11 md:w-fit justify-center ">
               <FiMapPin />
-              <span>OAU, ile-ife</span>
+              <span>51, Ramon Adedoyin way, parakin, ile-ife, Osun State, Nigeria</span>
             </div>
           </div>
 
           {/* Action Button */}
           <a
-            href="https://www.google.com/maps/place/Adam+and+Eve+Hostel/@7.4947457,4.5248031,3a,75y,90t/data=!3m8!1e2!3m6!1sCIHM0ogKEICAgICcxreZKg!2e10!3e12!6shttps:%2F%2Flh3.googleusercontent.com%2Fgps-cs-s%2FAHVAwepfoA-TPS0YVlGhOaP24wuMT4wRE4bmRN8Nr_K9chUpKMqbpHs6C_JUKr5qvbwGRGV9dbvG2BGyoUgO9sm5-67AycS9427fDDcOureud3jqCAroqvcMgDLMYnUKKXFcdZD6xFk%3Dw203-h270-k-no!7i3120!8i4160!4m7!3m6!1s0x103837296ccb765b:0xa5dca41cd9bf8328!8m2!3d7.4948027!4d4.5246398!10e5!16s%2Fg%2F12ht2d5dw?entry=ttu&g_ep=EgoyMDI2MDMyMi4wIKXMDSoASAFQAw%3D%3Dogle.com/maps?q=Awolowo+Hall+OAU+Ile-ile-ifehttps://www.google.com/maps/place/Adam+and+Eve+Hostel/@7.4947457,4.5248031,3a,75y,90t/data=!3m8!1e2!3m6!1sCIHM0ogKEICAgICcxreZKg!2e10!3e12!6shttps:%2F%2Flh3.googleusercontent.com%2Fgps-cs-s%2FAHVAwepfoA-TPS0YVlGhOaP24wuMT4wRE4bmRN8Nr_K9chUpKMqbpHs6C_JUKr5qvbwGRGV9dbvG2BGyoUgO9sm5-67AycS9427fDDcOureud3jqCAroqvcMgDLMYnUKKXFcdZD6xFk%3Dw203-h270-k-no!7i3120!8i4160!4m9!3m8!1s0x103837296ccb765b:0xa5dca41cd9bf8328!8m2!3d7.4948027!4d4.5246398!10e5!14m1!1BCgIgAQ!16s%2Fg%2F12ht2d5dw?entry=ttu&g_ep=EgoyMDI2MDMyMi4wIKXMDSoASAFQAw%3D%3D"
+            href="https://www.google.com/maps/place/Phaim+Pharmacy/@7.4924076,4.5376797,241m/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-5 py-3 bg-[#703BF7] hover:bg-[#5c2fe0] transition rounded-lg text-white font-medium w-full justify-center mt-4 lg:w-fit"

@@ -7,10 +7,10 @@ export function cn(...inputs: ClassValue[]) {
 
 export const formatCurrency = (amount: number) => {
   if (amount >= 1000000000) {
-    return `${(amount / 1000000000).toFixed(1).replace(/\.0$/, "")}B`;
+    return `${(amount / 1000000000).toFixed(3).replace(/\.?0+$/, "")}B`;
   }
   if (amount >= 1000000) {
-    return `${(amount / 1000000).toFixed(1).replace(/\.0$/, "")}M`;
+    return `${(amount / 1000000).toFixed(3).replace(/\.?0+$/, "")}M`;
   }
   return amount.toLocaleString();
 };

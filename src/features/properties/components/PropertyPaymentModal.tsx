@@ -224,22 +224,30 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 <span className="text-gray-600 dark:text-gray-400">Property Cost</span>
                 <span className="font-medium dark:text-white text-gray-900">₦{pricing.PropertyCost.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400">Legal Fee</span>
-                <span className="font-medium dark:text-white text-gray-900">₦{pricing.LegalFee.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400">Agent Fee</span>
-                <span className="font-medium dark:text-white text-gray-900">₦{pricing.AgentFee.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400">Service Fee</span>
-                <span className="font-medium dark:text-white text-gray-900">₦{pricing.ServiceFee.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400">Caution Fee</span>
-                <span className="font-medium dark:text-white text-gray-900">₦{pricing.CautionFee.toLocaleString()}</span>
-              </div>
+              {pricing.LegalFee > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">Legal Fee</span>
+                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.LegalFee.toLocaleString()}</span>
+                </div>
+              )}
+              {pricing.AgentFee > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">Agent Fee</span>
+                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.AgentFee.toLocaleString()}</span>
+                </div>
+              )}
+              {pricing.ServiceFee > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">Service Fee</span>
+                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.ServiceFee.toLocaleString()}</span>
+                </div>
+              )}
+              {pricing.CautionFee > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">Caution Fee</span>
+                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.CautionFee.toLocaleString()}</span>
+                </div>
+              )}
               
               <div className="flex justify-between text-lg font-bold border-t border-[#703BF7]/50 pt-2 text-[#703BF7]">
                 <span>Total Due</span>

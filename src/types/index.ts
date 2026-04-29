@@ -32,7 +32,6 @@ export interface Property {
   rules?: string[];
   attributes?: { label: string; value: string }[];
   videoUrl?: string; 
-  mapUrl?: string;
 }
 
 
