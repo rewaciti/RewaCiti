@@ -359,7 +359,9 @@ function Contact() {
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
               Main Headquarters
             </h3>
-          
+            <a href="https://www.google.com/maps/place/Phaim+Pharmacy/@7.4924076,4.5376797,241m/" target="_blank" rel="noopener noreferrer">
+              <span>51, Ramon Adedoyin way, parakin, ile-ife, Osun State, Nigeria</span>
+            </a>
           </div>
 
           {/* Description */}
@@ -392,7 +394,7 @@ function Contact() {
             {/* City */}
             <div className="flex items-center gap-3 text-gray-300 bg-black  px-4 rounded-full w-full border border-gray-600/70 h-11 md:w-fit justify-center ">
               <FiMapPin />
-              <span>51, Ramon Adedoyin way, parakin, ile-ife, Osun State, Nigeria</span>
+              <span> parakin, ile-ife, Osun State, Nigeria</span>
             </div>
           </div>
 
