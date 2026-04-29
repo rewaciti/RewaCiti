@@ -130,7 +130,7 @@ const teamData: TeamMember[] = [
     role: "Property Acquisition Specialist",
     image: "/logo/Team/WhatsApp Image 2026-04-25 at 5.41.00 AM.jpeg",
     email: "Isaiahmusicgiantimgsznf@gmail.com",
-    linkedin: "https://www.linkedin.com/in/isaiah-olumide-7426a9273?utm_source=share_via&utm_content=profile&utm_medium=member_android"
+    linkedin: "https://www.linkedin.com/in/isaiah-olumide-7426a9273/"
   },
 ];
 
@@ -348,7 +348,7 @@ function About() {
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-full h-100 rounded-lg"
+                  className="w-full h-60 rounded-lg"
                 />
 
                 {/* Floating LinkedIn Icon */}
