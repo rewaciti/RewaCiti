@@ -106,7 +106,7 @@ const teamData: TeamMember[] = [
     role: "Head of Property Management",
     image: "/logo/Team/WhatsApp Image 2026-04-28 at 1.43.17 PM.jpeg",
     email: "emuzikchima@gmail.com",
-    linkedin: "https://www.linkedin.com/in/ekeshi-emmanuel"
+    linkedin: "https://www.linkedin.com/in/emmanuel-ekeshi-79332a2b9/"
   },
   {
     id: 2,
