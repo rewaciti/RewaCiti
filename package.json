@@ -11,8 +11,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@babel/plugin-transform-react-jsx-source": "^7.27.1",
-    "@emnapi/runtime": "^1.5.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-navigation-menu": "^1.2.14",
     "@radix-ui/react-slot": "^1.2.4",
@@ -33,6 +31,8 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@babel/plugin-transform-react-jsx-source": "^7.27.1",
+    "@emnapi/runtime": "^1.10.0",
     "@eslint/js": "^9.36.0",
     "@types/node": "^24.6.0",
     "@types/react": "^19.1.16",

@@ -100,6 +100,8 @@ function PropertySearchSection() {
     }
   };
 
+
+
   // NEW: Price range controlled through dropdown
   const [selectedPriceLabel, setSelectedPriceLabel] = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([
