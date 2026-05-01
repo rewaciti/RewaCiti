@@ -209,7 +209,15 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Payment flow error:", error);
-        toast.error(error.response?.data?.message || "An error occurred during the payment process.");
+        const errorMessage = error.response?.data?.message || "";
+        
+        if (errorMessage.toLowerCase().includes("stock") || errorMessage.toLowerCase().includes("available")) {
+          toast.error("This property is no longer available. Please check out our other listings.", {
+            duration: 6000,
+          });
+        } else {
+          toast.error(errorMessage || "An error occurred during the payment process.");
+        }
       } else {
         console.error("Unexpected error:", error);
         toast.error("An unexpected error occurred.");
