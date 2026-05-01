@@ -5,13 +5,17 @@ import type { Property } from "../../../types";
 import axios from "axios";
 import { Link } from "react-router";
 import { toast } from "sonner";
-import { usePaystackPayment } from "react-paystack";
+import PaystackPop from "@paystack/inline-js";
 
 interface PropertyPaymentModalProps {
   property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+const GATEWAY_ID = "69ed740cc09e9388ba096d02";
+const API_URL = import.meta.env.VITE_API_URL;
+const API_KEY = import.meta.env.VITE_SABIFLOW_API_KEY;
 
 const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   property,
@@ -33,78 +37,29 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
 
   const fullName = `${firstName} ${lastName}`.trim();
   const propertyUrl = window.location.href;
+  const propertyAddress = `${property.location.area}, ${property.location.city}, ${property.location.state}`;
 
-  const config = {
-    reference: `prop_${new Date().getTime().toString()}`,
-    email: email,
-    amount: price * 100, // Paystack amount is in kobo
-    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
-    firstname: firstName,
-    lastname: lastName,
-    phone: phone,
-  };
-
-  const initializePayment = usePaystackPayment(config);
-
-  const handleSuccess = async (reference: { reference: string }) => {
-    setIsSubmitting(true);
-    const payload = {
-      companyId: "69b4712ce95a2df514b1c789",
-      pipelineId: "69ed7a4ac09e9388ba096f1f",
-      title: `PROPERTY PAYMENT: ${property.name} - ${fullName}`,
-      name: fullName,
-      amount: price, // Send as raw number
-      email: email,
-      phone: phone,
-      address: `${property.location.area}, ${property.location.city}, ${property.location.state}`,
-      note: `Rating: ${rating}/5\nFeedback: ${feedback}\nPayment Reference: ${reference.reference}`,
-      customData: [
-        { label: "Property Name", value: property.name },
-        { label: "Property Link", value: propertyUrl },
-        { label: "Total Property Price", value: price }, // Send as raw number
-        { label: "Payment Reference", value: reference.reference },
-        { label: "Service Rating", value: `${rating} Stars` },
-        { label: "Property Cost", value: `₦${pricing.PropertyCost.toLocaleString()}` },
-        { label: "Legal Fee", value: `₦${pricing.LegalFee.toLocaleString()}` },
-        { label: "Agent Fee", value: `₦${pricing.AgentFee.toLocaleString()}` },
-        { label: "Service Fee", value: `₦${pricing.ServiceFee.toLocaleString()}` },
-        { label: "Caution Fee", value: `₦${pricing.CautionFee.toLocaleString()}` },
-
-        { label: "Agent ID", value: property.createdBy.toString() },
-        { label: "Property ID", value: property.id }
-      ]
-    };
-
+  const handleDownloadReceipt = async (saleId: string) => {
     try {
-      // Send to SabiFlow
-      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
-      
-      toast.success(`Payment successful!\nReference: ${reference.reference}\nInformation sent to our team.`, {
-        duration: 5000,
+      const response = await axios.get(`${API_URL}/sales/${saleId}/invoice/download?format=pdf`, {
+        headers: { "x-api-key": API_KEY },
+        responseType: 'blob'
       });
-      onOpenChange(false);
 
-      // Reset form
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPhone("");
-      setRating(0);
-      setFeedback("");
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `receipt-${saleId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
     } catch (error) {
-      console.error("Error submitting payment details:", error);
-      toast.error("Payment successful, but failed to send data to CRM. Please contact support.");
-    } finally {
-      setIsSubmitting(false);
+      console.error("Error downloading receipt:", error);
+      toast.error("Failed to download receipt. Please contact support.");
     }
   };
 
-  const onClose = () => {
-    toast.info("Payment cancelled.");
-    setIsSubmitting(false);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (rating === 0) {
       toast.error("Please rate our service before proceeding.");
@@ -122,12 +77,126 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       });
       return;
     }
-    
+
     setIsSubmitting(true);
-    initializePayment({ onSuccess: handleSuccess, onClose });
+
+    try {
+      // 1. Create Sale
+      const salePayload = {
+        initiateInvoice: true,
+        gatewayId: GATEWAY_ID,
+        items: [
+          {
+            description: `Property Payment: ${property.name}`,
+            quantity: 1,
+            unitPrice: price
+          }
+        ],
+        taxRate: 0,
+        notes: `Property Payment\nProperty Link: ${propertyUrl}`,
+        paymentMethod: "credit_card",
+        customerDetails: {
+          name: fullName,
+          email: email,
+          address: propertyAddress,
+          phone: phone
+        }
+      };
+
+      const saleResponse = await axios.post(`${API_URL}/sales`, salePayload, {
+        headers: { "x-api-key": API_KEY }
+      });
+
+      const saleId = saleResponse.data.id || saleResponse.data._id;
+
+      // 2. Initialize Payment
+      const initResponse = await axios.post(`${API_URL}/sales/${saleId}/payment/initiate`, {
+        gatewayId: GATEWAY_ID
+      }, {
+        headers: { "x-api-key": API_KEY }
+      });
+
+      const accessCode = initResponse.data.data.accessCode;
+
+      // 3. Open Paystack Modal
+      const paystack = new PaystackPop();
+      paystack.resumeTransaction(accessCode, {
+        onSuccess: async (transaction: any) => {
+          setIsSubmitting(true);
+          try {
+            // 4. Verify Payment - Including gatewayId in case it's required for verification
+            await axios.post(`${API_URL}/sales/${saleId}/payment/verify`, {
+              gatewayId: GATEWAY_ID
+            }, {
+              headers: { "x-api-key": API_KEY }
+            });
+
+            // 5. CRM Payload
+            const crmPayload = {
+              companyId: "69b4712ce95a2df514b1c789",
+              pipelineId: "69ed7a4ac09e9388ba096f1f",
+              title: `PROPERTY PAYMENT: ${property.name} - ${fullName}`,
+              name: fullName,
+              amount: price,
+              email: email,
+              phone: phone,
+              address: propertyAddress,
+              note: `Rating: ${rating}/5\nFeedback: ${feedback}\nPayment Reference: ${transaction.reference}\nSale ID: ${saleId}`,
+              customData: [
+                { label: "Property Name", value: property.name },
+                { label: "Property Link", value: propertyUrl },
+                { label: "Total Property Price", value: price },
+                { label: "Payment Reference", value: transaction.reference },
+                { label: "Service Rating", value: `${rating} Stars` },
+                { label: "Property Cost", value: `₦${pricing.PropertyCost.toLocaleString()}` },
+                { label: "Legal Fee", value: `₦${pricing.LegalFee.toLocaleString()}` },
+                { label: "Agent Fee", value: `₦${pricing.AgentFee.toLocaleString()}` },
+                { label: "Service Fee", value: `₦${pricing.ServiceFee.toLocaleString()}` },
+                { label: "Caution Fee", value: `₦${pricing.CautionFee.toLocaleString()}` },
+                { label: "Agent ID", value: property.createdBy.toString() },
+                { label: "Property ID", value: property.id },
+                { label: "Sale ID", value: saleId }
+              ]
+            };
+
+            await axios.post("https://api.sabiflow.com/api/crm/deals/guest", crmPayload);
+
+            toast.success(`Payment successful! Reference: ${transaction.reference}`, {
+              duration: 5000,
+            });
+
+            // 6. Download Receipt
+            await handleDownloadReceipt(saleId);
+
+            onOpenChange(false);
+            setFirstName("");
+            setLastName("");
+            setEmail("");
+            setPhone("");
+            setRating(0);
+            setFeedback("");
+          } catch (error) {
+            console.error("Verification/CRM error:", error);
+            toast.error("Payment successful, but verification failed. Please contact support.");
+          } finally {
+            setIsSubmitting(false);
+          }
+        },
+        onCancel: () => {
+          toast.info("Payment cancelled.");
+          setIsSubmitting(false);
+        }
+      });
+
+    } catch (error: any) {
+      console.error("Payment flow error:", error);
+      toast.error(error.response?.data?.message || "An error occurred during the payment process.");
+      setIsSubmitting(false);
+    }
   };
 
   return (
+
     <Dialog.Root open={open} onOpenChange={onOpenChange} modal={false}>
       <Dialog.Portal>
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-6 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto" aria-describedby="property-payment-description">

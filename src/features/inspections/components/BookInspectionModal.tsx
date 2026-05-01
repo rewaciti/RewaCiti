@@ -6,13 +6,17 @@ import { FiX, FiMapPin } from "react-icons/fi";
 import axios from "axios";
 import { Link } from "react-router";
 import { toast } from "sonner";
-import { usePaystackPayment } from "react-paystack";
+import PaystackPop from "@paystack/inline-js";
 
 interface BookInspectionModalProps {
   property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+const GATEWAY_ID = "69ed740cc09e9388ba096d02";
+const API_URL = import.meta.env.VITE_API_URL;
+const API_KEY = import.meta.env.VITE_SABIFLOW_API_KEY;
 
 const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   property,
@@ -46,85 +50,27 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const propertyAddress = `${property.location.area}, ${property.location.city}, ${property.location.state}`;
   const propertyUrl = window.location.href;
 
-  const config = {
-    reference: `visit_${new Date().getTime().toString()}`,
-    email: email,
-    amount: amount * 100, // Paystack amount is in kobo
-    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
-    firstname: firstName,
-    lastname: lastName,
-    phone: phone,
-  };
-
-  const initializePayment = usePaystackPayment(config);
-
-  const handleSuccess = async (reference: { reference: string }) => {
-    setIsSubmitting(true);
-    const payload = {
-      companyId: "69b4712ce95a2df514b1c789",
-      pipelineId: "69ed7a4ac09e9388ba096f1f",
-      title: `VISIT BOOKING: ${property.name} - ${fullName}`,
-      name: fullName,
-      amount: `(₦${amount.toLocaleString()})`,
-      email: email,
-      phone: phone,
-      address: propertyAddress,
-      note: `Reference: ${reference.reference}\nTask: Property Visit/Inspection\nProperty Link: ${propertyUrl}`,
-      customData: [
-        { label: "Property Name", value: property.name },
-        { label: "Property Link", value: propertyUrl },
-        { label: "Booking Reference", value: reference.reference },
-        { label: "Inspection Fee", value: `₦${amount.toLocaleString()}` },
-        { label: "Agent ID", value: property.createdBy.toString() },
-        { label: "Property ID", value: property.id },
-        { label: "Category", value: property.category }
-      ]
-    };
-
+  const handleDownloadReceipt = async (saleId: string) => {
     try {
-      // Send to SabiFlow CRM
-      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
-
-      // Add to local store for UI tracking
-      addInspection({
-        propertyId: property.id,
-        propertyName: property.name,
-        userName: fullName,
-        userEmail: email,
-        userPhone: phone,
-        date: new Date().toISOString().split('T')[0],
-        time: new Date().toLocaleTimeString(),
-        amount,
-        reference: reference.reference,
-        location: propertyAddress,
+      const response = await axios.get(`${API_URL}/sales/${saleId}/invoice/download?format=pdf`, {
+        headers: { "x-api-key": API_KEY },
+        responseType: 'blob'
       });
-
-      updatePaymentStatus(reference.reference, "paid");
       
-      toast.success(`Visit booked successfully!\nReference: ${reference.reference}\nOur team will contact you within 24 hours.`, {
-        duration: 5000,
-      });
-      onOpenChange(false);
-      
-      // Reset form
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPhone("");
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `receipt-${saleId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
     } catch (error) {
-      console.error("Error submitting visit booking:", error);
-      toast.error("Payment successful, but failed to submit booking details to CRM. Please contact support.");
-    } finally {
-      setIsSubmitting(false);
+      console.error("Error downloading receipt:", error);
+      toast.error("Failed to download receipt. Please contact support.");
     }
   };
 
-  const onClose = () => {
-    toast.info("Payment cancelled.");
-    setIsSubmitting(false);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!agreed) {
@@ -133,7 +79,130 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
     }
 
     setIsSubmitting(true);
-    initializePayment({ onSuccess: handleSuccess, onClose });
+
+    try {
+      // 1. Create Sale
+      const salePayload = {
+        initiateInvoice: true,
+        gatewayId: GATEWAY_ID,
+        items: [
+          {
+            description: `Inspection Fee: ${property.name}`,
+            quantity: 1,
+            unitPrice: amount
+          }
+        ],
+        taxRate: 0,
+        notes: `Property Visit/Inspection\nProperty Link: ${propertyUrl}`,
+        paymentMethod: "credit_card",
+        customerDetails: {
+          name: fullName,
+          email: email,
+          address: propertyAddress,
+          phone: phone
+        }
+      };
+
+      const saleResponse = await axios.post(`${API_URL}/sales`, salePayload, {
+        headers: { "x-api-key": API_KEY }
+      });
+
+      const saleId = saleResponse.data.id || saleResponse.data._id;
+
+      // 2. Initialize Payment
+      const initResponse = await axios.post(`${API_URL}/sales/${saleId}/payment/initiate`, {
+        gatewayId: GATEWAY_ID
+      }, {
+        headers: { "x-api-key": API_KEY }
+      });
+
+      const accessCode = initResponse.data.data.accessCode;
+
+      // 3. Open Paystack Modal
+      const paystack = new PaystackPop();
+      paystack.resumeTransaction(accessCode, {
+        onSuccess: async (transaction: any) => {
+          setIsSubmitting(true);
+          try {
+            // 4. Verify Payment - Including gatewayId in case it's required for verification
+            await axios.post(`${API_URL}/sales/${saleId}/payment/verify`, {
+              gatewayId: GATEWAY_ID
+            }, {
+              headers: { "x-api-key": API_KEY }
+            });
+
+            // 5. CRM and Local Store
+            const crmPayload = {
+              companyId: "69b4712ce95a2df514b1c789",
+              pipelineId: "69ed7a4ac09e9388ba096f1f",
+              title: `VISIT BOOKING: ${property.name} - ${fullName}`,
+              name: fullName,
+              amount: amount, // Changed from string to numeric amount
+              email: email,
+              phone: phone,
+              address: propertyAddress,
+              note: `Reference: ${transaction.reference}\nTask: Property Visit/Inspection\nProperty Link: ${propertyUrl}\nSale ID: ${saleId}`,
+              customData: [
+                { label: "Property Name", value: property.name },
+                { label: "Property Link", value: propertyUrl },
+                { label: "Booking Reference", value: transaction.reference },
+                { label: "Inspection Fee", value: `₦${amount.toLocaleString()}` },
+                { label: "Agent ID", value: property.createdBy.toString() },
+                { label: "Property ID", value: property.id },
+                { label: "Category", value: property.category },
+                { label: "Sale ID", value: saleId }
+              ]
+            };
+
+            console.log("Submitting CRM Payload:", crmPayload);
+            await axios.post("https://api.sabiflow.com/api/crm/deals/guest", crmPayload);
+            console.log("CRM submission successful");
+
+            addInspection({
+              propertyId: property.id,
+              propertyName: property.name,
+              userName: fullName,
+              userEmail: email,
+              userPhone: phone,
+              date: new Date().toISOString().split('T')[0],
+              time: new Date().toLocaleTimeString(),
+              amount,
+              reference: transaction.reference,
+              location: propertyAddress,
+            });
+
+            updatePaymentStatus(transaction.reference, "paid");
+            
+            toast.success(`Visit booked successfully! Reference: ${transaction.reference}`, {
+              duration: 5000,
+            });
+
+            // 6. Download Receipt
+            await handleDownloadReceipt(saleId);
+
+            onOpenChange(false);
+            setFirstName("");
+            setLastName("");
+            setEmail("");
+            setPhone("");
+          } catch (error) {
+            console.error("Verification/CRM error:", error);
+            toast.error("Payment successful, but verification failed. Please contact support.");
+          } finally {
+            setIsSubmitting(false);
+          }
+        },
+        onCancel: () => {
+          toast.info("Payment cancelled.");
+          setIsSubmitting(false);
+        }
+      });
+
+    } catch (error: any) {
+      console.error("Payment flow error:", error);
+      toast.error(error.response?.data?.message || "An error occurred during the payment process.");
+      setIsSubmitting(false);
+    }
   };
 
   return (
