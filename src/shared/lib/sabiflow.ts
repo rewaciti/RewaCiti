@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const SABIFLOW_BASE_URL = import.meta.env.VITE_SABIFLOW_BASE_URL;
-const SABIFLOW_API_KEY = import.meta.env.VITE_SABIFLOW_API_KEY;
-
+const SABIFLOW_BASE_URL = import.meta.env.VITE_SABIFLOW_BASE_URL || "https://api.sabiflow.com/api";
+const SABIFLOW_API_KEY = import.meta.env.VITE_SABIFLOW_API_KEY || "sk_live_a3dd9f88b7981065154a172f23eb4dbb826e40c21cf8d20c8da6cf74d1444597";
+export const DEFAULT_GATEWAY_ID = import.meta.env.VITE_PAYSTACK_GATEWAY_ID || "69ed740cc09e9388ba096d02";
 
 const sabiflowApi = axios.create({
   baseURL: SABIFLOW_BASE_URL,
@@ -41,8 +41,8 @@ export const createSale = async (payload: CreateSalePayload) => {
   try {
     const res = await sabiflowApi.post("/sales", payload);
     return res.data;
-  } catch (error: any) {
-    if (error.response) {
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
       console.error("Sabiflow API Error (Create Sale):", error.response.data);
     }
     throw error;
@@ -56,8 +56,8 @@ export const initiatePayment = async (saleId: string, gatewayId: string) => {
       gatewayId,
     });
     return res.data;
-  } catch (error: any) {
-    if (error.response) {
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
       console.error("Sabiflow API Error (Initiate Payment):", error.response.data);
     }
     throw error;

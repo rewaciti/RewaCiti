@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useInspectionStore } from "../store/useInspectionStore";
 import type { Property } from "../../../types";
@@ -15,6 +15,17 @@ interface BookInspectionModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
+interface PaystackConfig {
+  publicKey: string;
+  email: string;
+  amount: number;
+  reference: string;
+  access_code?: string;
+  firstname?: string;
+  lastname?: string;
+  phone?: string;
+}
+
 const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   property,
   open,
@@ -28,9 +39,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<"idle" | "pending" | "paid" | "failed">("idle");
   const [saleId, setSaleId] = useState<string | null>(null);
-  const [paystackConfig, setPaystackConfig] = useState<any>({
-    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
-  });
+  const [paystackConfig, setPaystackConfig] = useState<PaystackConfig | null>(null);
 
   const addInspection = useInspectionStore((state) => state.addInspection);
   const updatePaymentStatus = useInspectionStore((state) => state.updatePaymentStatus);
@@ -51,7 +60,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const fullName = `${firstName} ${lastName}`.trim();
   const propertyAddress = `${property.location.area}, ${property.location.city}, ${property.location.state}`;
 
-  const handlePaymentSuccess = async () => {
+  const handlePaymentSuccess = useCallback(async () => {
     if (!saleId) return;
     
     setIsSubmitting(true);
@@ -97,32 +106,31 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
 
       toast.success("Booking confirmed successfully!");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error verifying payment:", error);
       toast.error("Failed to verify payment. Please contact support.");
       setPaymentStatus("failed");
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [saleId, fullName, amount, email, phone, property, propertyAddress, addInspection, updatePaymentStatus]);
 
-  const handlePaystackClose = () => {
+  const handlePaystackClose = useCallback(() => {
     toast.info("Payment window closed.");
     setIsSubmitting(false);
     setPaymentStatus("idle");
-  };
+  }, []);
 
-  const initializePaystack = usePaystackPayment(paystackConfig);
+  const initializePaystack = usePaystackPayment(paystackConfig || { publicKey: "", email: "", amount: 0, reference: "" });
 
-  // Trigger Paystack when config is updated with accessCode
   useEffect(() => {
-    if (paystackConfig.access_code && paymentStatus === "pending") {
+    if (paystackConfig?.access_code && paymentStatus === "pending") {
       initializePaystack({
         onSuccess: handlePaymentSuccess,
         onClose: handlePaystackClose
       });
     }
-  }, [paystackConfig]);
+  }, [paystackConfig, paymentStatus, initializePaystack, handlePaymentSuccess, handlePaystackClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -139,13 +147,12 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
       // 1. Create Sale
       const saleResponse = await sabiflow.createSale({
         initiateInvoice: true,
-        gatewayId: import.meta.env.VITE_PAYSTACK_GATEWAY_ID,
+        gatewayId: sabiflow.DEFAULT_GATEWAY_ID,
         items: [
           {
             description: `${property.name} - Visit Booking`,
             quantity: 1,
             unitPrice: amount,
-            inventoryItemId: property.id
           }
         ],
         taxRate: 0,
@@ -163,7 +170,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
       setSaleId(currentSaleId);
 
       // 2. Initiate Payment
-      const initResponse = await sabiflow.initiatePayment(currentSaleId, import.meta.env.VITE_PAYSTACK_GATEWAY_ID);
+      const initResponse = await sabiflow.initiatePayment(currentSaleId, sabiflow.DEFAULT_GATEWAY_ID);
       
       const { accessCode, reference } = initResponse.data;
 
@@ -174,9 +181,12 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
         amount: amount * 100,
         reference,
         access_code: accessCode,
+        firstname: firstName,
+        lastname: lastName,
+        phone: phone,
       });
 
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error initiating booking process:", error);
       toast.error("Failed to initiate booking. Please try again.");
       setIsSubmitting(false);
@@ -189,7 +199,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
     try {
       await sabiflow.downloadReceipt(saleId);
       toast.success("Receipt downloading...");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error downloading receipt:", error);
       toast.error("Failed to download receipt.");
     }
