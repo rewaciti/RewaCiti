@@ -13,9 +13,9 @@ interface PropertyPaymentModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const GATEWAY_ID = "69ed740cc09e9388ba096d02";
 const API_URL = import.meta.env.VITE_API_URL;
 const API_KEY = import.meta.env.VITE_SABIFLOW_API_KEY;
+const GATEWAY_ID = import.meta.env.VITE_SABIFLOW_GATEWAY_ID;
 
 interface PaystackSuccessResponse {
   reference: string;
