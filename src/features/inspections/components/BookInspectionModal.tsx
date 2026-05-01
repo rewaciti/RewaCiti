@@ -258,26 +258,28 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               </div>
             </div>
 
-            <div>
-              <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Email</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Phone</label>
-              <input
-                type="tel"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
-              />
+            <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
+                  />
+                </div>
+    
+                <div>
+                  <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Phone</label>
+                  <input
+                    type="tel"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
+                  />
+                </div>
             </div>
              <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
               <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
