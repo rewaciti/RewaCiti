@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const SABIFLOW_BASE_URL = import.meta.env.VITE_SABIFLOW_BASE_URL || "https://api.sabiflow.com/api";
-const SABIFLOW_API_KEY = import.meta.env.VITE_SABIFLOW_API_KEY || "sk_live_a3dd9f88b7981065154a172f23eb4dbb826e40c21cf8d20c8da6cf74d1444597";
-export const DEFAULT_GATEWAY_ID = import.meta.env.VITE_PAYSTACK_GATEWAY_ID || "69ed740cc09e9388ba096d02";
+const SABIFLOW_BASE_URL = import.meta.env.VITE_SABIFLOW_BASE_URL
+const SABIFLOW_API_KEY = import.meta.env.VITE_SABIFLOW_API_KEY 
+export const DEFAULT_GATEWAY_ID = import.meta.env.VITE_PAYSTACK_GATEWAY_ID
 
 const sabiflowApi = axios.create({
   baseURL: SABIFLOW_BASE_URL,
