@@ -17,6 +17,14 @@ const GATEWAY_ID = "69ed740cc09e9388ba096d02";
 const API_URL = import.meta.env.VITE_API_URL;
 const API_KEY = import.meta.env.VITE_SABIFLOW_API_KEY;
 
+interface PaystackSuccessResponse {
+  reference: string;
+  status: string;
+  trans: string;
+  transaction: string;
+  message: string;
+}
+
 const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   property,
   open,
@@ -121,7 +129,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       // 3. Open Paystack Modal
       const paystack = new PaystackPop();
       paystack.resumeTransaction(accessCode, {
-        onSuccess: async (transaction: any) => {
+        onSuccess: async (transaction: PaystackSuccessResponse) => {
           setIsSubmitting(true);
           try {
             // 4. Verify Payment - Including gatewayId in case it's required for verification
@@ -188,9 +196,14 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
         }
       });
 
-    } catch (error: any) {
-      console.error("Payment flow error:", error);
-      toast.error(error.response?.data?.message || "An error occurred during the payment process.");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Payment flow error:", error);
+        toast.error(error.response?.data?.message || "An error occurred during the payment process.");
+      } else {
+        console.error("Unexpected error:", error);
+        toast.error("An unexpected error occurred.");
+      }
       setIsSubmitting(false);
     }
   };
