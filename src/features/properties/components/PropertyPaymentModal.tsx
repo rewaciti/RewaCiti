@@ -149,7 +149,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
               email: email,
               phone: phone,
               address: propertyAddress,
-              note: `Rating: ${rating}/5\nFeedback: ${feedback}\nPayment Reference: ${transaction.reference}\nSale ID: ${saleId}`,
+              note: `Rating: ${rating}/5\nFeedback: ${feedback}`,
               customData: [
                 { label: "Property Name", value: property.name },
                 { label: "Property Link", value: propertyUrl },
