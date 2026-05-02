@@ -95,13 +95,13 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
         gatewayId: GATEWAY_ID,
         items: [
           {
-            description: `Inspection Fee: ${property.name}`,
+            description: `Inspection Fee: ${property.name}, ${propertyAddress}`,
             quantity: 1,
             unitPrice: amount
           }
         ],
         taxRate: 0,
-        notes: `Property Visit/Inspection\nProperty Link: ${propertyUrl}`,
+        notes: `Property Visit/Inspection\nProperty Link: ${propertyUrl}\nProperty ID: ${property.id}\nagent ID: ${property.createdBy}\n`,
         paymentMethod: "credit_card",
         customerDetails: {
           name: fullName,

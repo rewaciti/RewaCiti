@@ -95,13 +95,13 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
         gatewayId: GATEWAY_ID,
         items: [
           {
-            description: `Property Payment: ${property.name}`,
+            description: `Property Payment: ${property.name}, ${propertyAddress}`,
             quantity: 1,
             unitPrice: price
           }
         ],
         taxRate: 0,
-        notes: `Property Payment\nProperty Link: ${propertyUrl}`,
+        notes: `Property Payment\nProperty Link: ${propertyUrl}\nProperty ID: ${property.id}\nagent ID: ${property.createdBy}`,
         paymentMethod: "credit_card",
         customerDetails: {
           name: fullName,
