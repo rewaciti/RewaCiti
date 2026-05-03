@@ -163,7 +163,9 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 { label: "Caution Fee", value: `₦${pricing.CautionFee.toLocaleString()}` },
                 { label: "Agent ID", value: property.createdBy.toString() },
                 { label: "Property ID", value: property.id },
-                { label: "Sale ID", value: saleId }
+                { label: "Sale ID", value: saleId },
+                ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
+                ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : [])
               ]
             };
 

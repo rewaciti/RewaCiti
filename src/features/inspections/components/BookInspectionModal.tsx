@@ -158,7 +158,9 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                 { label: "Agent ID", value: property.createdBy.toString() },
                 { label: "Property ID", value: property.id },
                 { label: "Category", value: property.category },
-                { label: "Sale ID", value: saleId }
+                { label: "Sale ID", value: saleId },
+                ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
+                ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : [])
               ]
             };
 

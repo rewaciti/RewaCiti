@@ -71,6 +71,10 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
             ...(customData?.attributes || [])
           ],
           videoUrl: item.videoUrl || "",
+          caretakerContact: customData?.care_taker_contact_optional ? {
+            whatsapp: customData.care_taker_contact_optional.wattsapp_contact,
+            phone: customData.care_taker_contact_optional.call_contact,
+          } : undefined,
         };
       });
 

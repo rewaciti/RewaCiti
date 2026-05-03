@@ -32,6 +32,10 @@ export interface Property {
   rules?: string[];
   attributes?: { label: string; value: string }[];
   videoUrl?: string; 
+  caretakerContact?: {
+    whatsapp?: string;
+    phone?: string;
+  };
 }
 
 
@@ -187,6 +191,10 @@ export interface SabiFlowProduct {
       lat: number;
       lng: number;
       address?: string;
+    };
+    care_taker_contact_optional?: {
+      wattsapp_contact?: string;
+      call_contact?: string;
     };
     attributes?: { label: string; value: string }[];
   };

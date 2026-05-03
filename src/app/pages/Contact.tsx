@@ -359,7 +359,7 @@ function Contact() {
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
               Main Headquarters
             </h3>
-            <a href="https://www.google.com/maps/place/Phaim+Pharmacy/@7.4924076,4.5376797,241m/" target="_blank" rel="noopener noreferrer">
+            <a href="https://maps.google.com/?q=7.492329,4.537698&entry=gps&g_st=awb" target="_blank" rel="noopener noreferrer">
               <span>51, Ramon Adedoyin way, parakin, ile-ife, Osun State, Nigeria</span>
             </a>
           </div>
@@ -400,7 +400,7 @@ function Contact() {
 
           {/* Action Button */}
           <a
-            href="https://www.google.com/maps/place/Phaim+Pharmacy/@7.4924076,4.5376797,241m/"
+            href="https://maps.google.com/?q=7.492329,4.537698&entry=gps&g_st=awb"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-5 py-3 bg-[#703BF7] hover:bg-[#5c2fe0] transition rounded-lg text-white font-medium w-full justify-center mt-4 lg:w-fit"

@@ -52,7 +52,9 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
         {
           label: "Report Reason",
           value: reason,
-        }
+        },
+        ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
+        ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : [])
       ]
     };
 
