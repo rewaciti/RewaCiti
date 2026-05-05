@@ -147,12 +147,6 @@ export interface AchievementItem {
   description: string;
 }
 
-export interface User {
-  uid: string;
-  email: string;
-  isAdmin: boolean;
-}
-
 export interface SabiFlowProduct {
   _id: string;
   name: string;
