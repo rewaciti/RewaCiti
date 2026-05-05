@@ -97,7 +97,8 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
           {
             description: `Property Payment: ${property.name}, ${propertyAddress}`,
             quantity: 1,
-            unitPrice: price
+            unitPrice: price,
+            inventoryItemId: property.id,
           }
         ],
         taxRate: 0,
@@ -143,6 +144,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
             const crmPayload = {
               companyId: "69b4712ce95a2df514b1c789",
               pipelineId: "69ed7a4ac09e9388ba096f1f",
+              inventoryItemId: property.id,
               title: `PROPERTY PAYMENT: ${property.name} - ${fullName}`,
               name: fullName,
               amount: price,
