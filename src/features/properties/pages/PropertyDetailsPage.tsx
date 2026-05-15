@@ -178,9 +178,9 @@ function PropertyDetails() {
         <>
           <div className="mx-auto">
             {/* Name, Location & Price Section */}
-            <div className="md:flex gap-3 items-center px-4 py-6 whitespace-nowrap">
+            <div className="md:flex gap-3 items-center px-4 py-6 md:whitespace-nowrap">
           <div className="flex flex-col">
-            <h1 className="text-2xl font-semibold mb-1 text-gray-900 dark:text-white max-w-[90%]">{property?.name}</h1>
+            <h1 className="text-2xl font-semibold mb-1 text-gray-900 dark:text-white max-w-[95%]">{property?.name}</h1>
           </div>
 
           <div className="md:flex justify-between md:items-center w-full mt-4 md:mt-0">
