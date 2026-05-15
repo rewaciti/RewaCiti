@@ -248,13 +248,13 @@ function PropertySearchSection() {
             <input
               type="text"
               placeholder="Search For A Property"
-              className="p-3 flex justify-center items-center dark:placeholder-gray-400 placeholder-gray-900/70 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border border-gray-600/70 w-full rounded-b-none"
+              className="p-3 flex justify-center items-center dark:placeholder-gray-400 placeholder-gray-900/70 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border border-gray-600/70 w-full rounded-b-none rounded-tr-none md:rounded-tr-lg"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white rounded-lg border border-gray-600 md:hidden"
+              className="flex items-center gap-2 px-4 py-2 dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white rounded-lg border border-gray-600 md:hidden rounded-tl-none rounded-b-none "
             >
               <FiFilter />
             </button>
@@ -270,12 +270,12 @@ function PropertySearchSection() {
                     md:block md:bg-transparent rounded-2xl md:rounded-none md:p-0 mb-6`}
           >
             {/* Location */}
-            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-tr-none">
+            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-tr-none">
               <div className="relative">
                 <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-tr-none"
+                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-tr-none"
                   value={location}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -297,12 +297,12 @@ function PropertySearchSection() {
             </div>
 
             {/* Area */}
-            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-t-none">
+            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
               <div className="relative">
                 <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-t-none"
+                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-t-none"
                   value={area}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -324,12 +324,12 @@ function PropertySearchSection() {
             </div>
 
             {/* Category */}
-            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-t-none">
+            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
               <div className="relative">
                 <FiHome className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-t-none"
+                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-t-none"
                   value={category}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -349,12 +349,12 @@ function PropertySearchSection() {
               </div>
             </div>
 
-            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-t-none">
+            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
               <div className="relative">
                 <IoBedOutline className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-t-none"
+                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-t-none"
                   value={bedrooms}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -376,9 +376,9 @@ function PropertySearchSection() {
 
 
             {/* PRICE RANGE - SELECT */}
-            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-tl-none">
+            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-tl-none">
               <select
-                className="p-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 rounded-tl-none"
+                className="p-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-tl-none"
                 value={selectedPriceLabel}
                 onChange={(e) => {
                   const label = e.target.value;
