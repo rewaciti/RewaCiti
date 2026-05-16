@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useInspectionStore } from "../store/useInspectionStore";
 import type { Property } from "../../../types";
@@ -40,19 +40,8 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
 
   const addInspection = useInspectionStore((state) => state.addInspection);
   const updatePaymentStatus = useInspectionStore((state) => state.updatePaymentStatus);
-  const fees = useInspectionStore((state) => state.fees);
-  const loading = useInspectionStore((state) => state.loading);
-  const fetchFees = useInspectionStore((state) => state.fetchFees);
 
-  useEffect(() => {
-    if (open && !fees) {
-      fetchFees();
-    }
-  }, [open, fees, fetchFees]);
-
-  const normalizedCity = property.location.city?.toLowerCase().replace(/\s+/g, "-") ?? "";
-  const normalizedState = property.location.state?.toLowerCase().replace(/\s+/g, "-") ?? "";
-  const amount = fees?.[normalizedState]?.[normalizedCity] ?? fees?.default ?? 5000;
+  const amount = property.visitationfee || 5000;
 
   const fullName = `${firstName} ${lastName}`.trim();
   const propertyAddress = `${property.location.area}, ${property.location.city}, ${property.location.state}`;
@@ -314,7 +303,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               <div className="flex justify-between items-center border-t border-[#703BF7]/20 pt-2">
                 <span className="text-sm font-medium dark:text-white text-gray-900">Inspection Fee</span>
                 <span className="text-lg font-bold text-[#703BF7]">
-                  {loading && !fees ? "Loading..." : `₦${amount.toLocaleString()}`}
+                  ₦{amount.toLocaleString()}
                 </span>
               </div>
             </div>
@@ -341,14 +330,14 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
 
             <button
               type="submit"
-              disabled={!agreed || isSubmitting || loading}
+              disabled={!agreed || isSubmitting}
               className={`w-full font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50 ${
-                agreed && !isSubmitting && !loading
+                agreed && !isSubmitting
                   ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white"
                   : "bg-gray-400 cursor-not-allowed text-gray-200"
               }`}
             >
-              {isSubmitting ? "Processing..." : loading ? "Loading fees..." : "Pay & Book a Visit"}
+              {isSubmitting ? "Processing..." : "Pay & Book a Visit"}
             </button>
           </form>
         </Dialog.Content>

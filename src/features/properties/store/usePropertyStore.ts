@@ -75,6 +75,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
             whatsapp: customData.care_taker_contact_optional.wattsapp_contact,
             phone: customData.care_taker_contact_optional.call_contact,
           } : undefined,
+          visitationfee: customData?.visitation_fee || 0,
         };
       });
 

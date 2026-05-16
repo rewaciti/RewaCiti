@@ -36,6 +36,7 @@ export interface Property {
     whatsapp?: string;
     phone?: string;
   };
+  visitationfee: number;
 }
 
 
@@ -190,6 +191,7 @@ export interface SabiFlowProduct {
       wattsapp_contact?: string;
       call_contact?: string;
     };
+    visitation_fee: number;
     attributes?: { label: string; value: string }[];
   };
   createdAt?: string;
@@ -212,17 +214,11 @@ export interface Inspection {
   location: string;
 }
 
-export type Fees = Record<string, Record<string, number>> & {
-  default: number;
-};
-
 export interface InspectionStore {
   inspections: Inspection[];
   loading: boolean;
-  fees: Fees | null;
   addInspection: (inspection: Omit<Inspection, "id" | "status" | "paymentStatus">) => void;
   updatePaymentStatus: (reference: string, status: "paid" | "failed") => void;
-  fetchFees: () => Promise<void>;
 }
 
 
