@@ -15,7 +15,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
   totalProperties: 0,
 
   fetchProperties: async (apiPage = 1) => {
-    set({ loading: true });
+    set({ loading: true, error: null });
 
     try {
       const res = await axios.get<{ data: SabiFlowProduct[]; total?: number }>(
