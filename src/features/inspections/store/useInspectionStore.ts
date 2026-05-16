@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import axios from "axios";
 import type { Inspection, InspectionStore } from "../../../types";
 
 export const useInspectionStore = create<InspectionStore>((set) => ({
