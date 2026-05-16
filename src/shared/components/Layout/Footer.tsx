@@ -71,8 +71,9 @@ function Footer() {
 
         <div className="py-8 px-4 lg:flex space-y-10 lg:space-y-0 justify-between">
           <div className="mr-[5%]  space-y-4">
-            <p className="flex items-center space-x-2 text-gray-800 text-[30px] font-bold dark:text-white">
-              <img src={logo} alt="logo" className="h-10 mr-1" /><span className="text-black dark:text-white">RewaCiti</span></p>
+              <Link to="/" className="flex items-center space-x-2 text-gray-800 text-[30px] font-bold dark:text-white">
+                <img src={logo} alt="logo" className="h-10 mr-1" /><span className="text-black dark:text-white">RewaCiti</span>
+              </Link>
               <div>
                 <div className="text-black dark:text-white">Get updates about new properties</div>
               </div>
