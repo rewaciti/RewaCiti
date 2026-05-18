@@ -415,9 +415,9 @@ function PropertyDetails() {
           </div>
   
           {/* Property Details */}
-          <div className="flex flex-wrap gap-6 border-t border-gray-600/30 pt-2 justify-between">
+          <div className="flex flex-wrap gap-6 gap-x-[20%] md:gap-x-[25%] xl:gap-x-[30%] border-t border-gray-600/30 pt-2 justify-start">
             {hasBedrooms && (
-              <div className="flex flex-col px-2 ">
+              <div className="flex flex-col px-2">
                 <span className="text-gray-800 dark:text-gray-400 mt-1 flex items-center gap-1"><FaBed/>Bedrooms</span>
                 <span className="text-xl font-semibold text-gray-900 dark:text-white">{property?.bedrooms}</span> 
               </div>
