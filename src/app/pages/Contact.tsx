@@ -228,7 +228,7 @@ function Contact() {
                 </option>
 
                 <option value="renting" className="">
-                  Renting
+                  Renting Property
                 </option>
 
                 <option value="management" className="">
@@ -239,7 +239,10 @@ function Contact() {
                   Investment
                 </option>
                 <option value="agent" className="">
-                  Be an Agent
+                  Listing Property
+                </option>
+                <option value="others" className="">
+                  others
                 </option>
               </select>
             </div>
