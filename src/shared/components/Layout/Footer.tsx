@@ -146,6 +146,12 @@ function Footer() {
                     <li>
                       <Link to="/Properties#Portfolio" className="hover:text-[#703BF7] text-black dark:text-white cursor-pointer dark:hover:text-[#703BF7]">Portfolio</Link>
                     </li>
+                     <li>
+                        <Link to="/StudentArea#StudentCategories" className="hover:text-[#703BF7] text-black dark:text-white cursor-pointer dark:hover:text-[#703BF7]">Student Categories</Link>
+                    </li>
+                    <li>
+                      <Link to="/StudentArea#StudentPortfolio" className="hover:text-[#703BF7] text-black dark:text-white cursor-pointer dark:hover:text-[#703BF7]">Student Portfolio</Link>
+                    </li>
                   </ul>
                   <hr className="my-4 dark:border-gray-400/30 border-gray-900/30 md:hidden" />
 

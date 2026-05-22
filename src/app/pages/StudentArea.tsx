@@ -208,7 +208,7 @@ function Studentarea() {
   return (
     <div>
       <Navbar />
-      <div className="relative" id="Categories">
+      <div className="relative" id="StudentCategories">
         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10 space-y-6 border-b border-gray-600">
           <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
             Find Student Accomodation
@@ -474,7 +474,7 @@ function Studentarea() {
         </div>
       </div>
 
-      <section className="bg-gray-300 dark:bg-black/30 py-2 px-4 pb-20" id="Portfolio">
+      <section className="bg-gray-300 dark:bg-black/30 py-2 px-4 pb-20" id="StudentPortfolio">
         <div className="  ">
           <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
             <img

@@ -87,7 +87,7 @@ function Contact() {
   return (
     <div className="">
       <Navbar />
-      <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10  space-y-6">
+      <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10  space-y-6" id="Contactinfo">
         <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
           Get in Touch with RewaCitty
         </h1>
@@ -103,7 +103,6 @@ function Contact() {
 
       <section
         className="px-4 py-2 bg-gray-300 dark:bg-black/30 border-t-5 border-b-5 border-gray-600/30"
-        id="Contactinfo"
       >
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {/* BOX ITEM */}
