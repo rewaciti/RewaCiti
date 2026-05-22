@@ -59,7 +59,7 @@ function PropertySection() {
           </div>
 
           <button
-            onClick={() => navigate("/AllProperties")}
+            onClick={() => navigate("/properties")}
             className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center hidden md:block"
           >
             View All
@@ -119,7 +119,7 @@ function PropertySection() {
           </p>
 
           <button
-            onClick={() => navigate("/AllProperties")}
+            onClick={() => navigate("/properties")}
             className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center w-[120px] md:hidden"
           >
             View All
