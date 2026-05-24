@@ -1,6 +1,6 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
 import { useParams, Link } from "react-router";
-import { FiMapPin, FiChevronLeft, FiChevronRight, FiChevronDown} from "react-icons/fi";
+import { FiMapPin, FiChevronLeft, FiChevronRight, FiChevronDown, FiPlus, FiShare2, FiCheck} from "react-icons/fi";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { useState, useEffect, useRef } from "react";
 import { FaBed, FaBath, FaHome, FaBolt  } from "react-icons/fa";
@@ -18,8 +18,38 @@ const slugify = (text: string) =>
 
 function PropertyDetails() {
   const { name } = useParams();
-  const { properties, fetchProperties, loading } = usePropertyStore();
+  const { properties, fetchProperties, loading, toggleShortlist, shortlistedProperties } = usePropertyStore();
   const property = properties.find((p) => slugify(p.name) === name);
+
+  const isShortlisted = property ? shortlistedProperties.some((p) => p.id === property.id) : false;
+
+  const handleShortlist = () => {
+    if (property) {
+      toggleShortlist(property);
+      toast.success(isShortlisted ? "Removed from shortlist" : "Added to shortlist");
+    }
+    setIsDropdownOpen(false);
+  };
+
+  const handleShare = async () => {
+    if (!property) return;
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: property.name,
+          text: property.description,
+          url: url,
+        });
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    } else {
+      navigator.clipboard.writeText(url);
+      toast.success("Link copied to clipboard!");
+    }
+    setIsDropdownOpen(false);
+  };
 
   const price = property?.pricing.TotalCost ?? 0;
   const images = property?.images ?? [];
@@ -237,11 +267,34 @@ function PropertyDetails() {
                   <div className="absolute right-0 top-9 mt-2 w-64 bg-white/95 dark:bg-[#1A1A1A]/95 backdrop-blur-md border border-gray-600/30 rounded-xl shadow-2xl z-100 overflow-hidden flex flex-col">
                     
                     <button
+                      onClick={handleShortlist}
+                      className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 group first:rounded-t-xl cursor-pointer"
+                    >
+                      <div className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-white group-hover:text-white">
+                        {isShortlisted ? <FiCheck className="text-green-500 group-hover:text-white" /> : <FiPlus />}
+                        {isShortlisted ? "Shortlisted" : "Add to Shortlist"}
+                      </div>
+                      <div className="text-[10px] text-gray-500 dark:text-gray-400 group-hover:text-white/80">
+                        {isShortlisted ? "Remove from your favorites" : "Save this property for later"}
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={handleShare}
+                      className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 border-t border-gray-600/30 group cursor-pointer"
+                    >
+                      <div className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-white group-hover:text-white">
+                        <FiShare2 /> Share Property
+                      </div>
+                      <div className="text-[10px] text-gray-500 dark:text-gray-400 group-hover:text-white/80">Share with friends or family</div>
+                    </button>
+
+                    <button
                       onClick={() => {
                         setIsPaymentModalOpen(true);
                         setIsDropdownOpen(false);
                       }}
-                      className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 group first:rounded-t-xl cursor-pointer"
+                      className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 border-t border-gray-600/30 group cursor-pointer"
                     >
                       <div className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-white group-hover:text-white">
                         <span>💳</span> Pay for Property

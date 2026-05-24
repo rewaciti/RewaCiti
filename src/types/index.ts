@@ -59,6 +59,8 @@ export interface PropertyStore {
   setPage: (page: number) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  shortlistedProperties: Property[];
+  toggleShortlist: (property: Property) => void;
   filterProperties: (filters: {
     location?: string;
     category?: string;

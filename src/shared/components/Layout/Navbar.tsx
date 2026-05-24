@@ -1,13 +1,21 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import logo from "/Symbol.png";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useThemeStore } from "../../store/useThemeStore";
-import { FiSun, FiMoon} from "react-icons/fi";
+import { FiSun, FiMoon, FiPlus, FiTrash2 } from "react-icons/fi";
+import { usePropertyStore } from "../../../features/properties/store/usePropertyStore";
+import { toast } from "sonner";
 
+const slugify = (text: string) =>
+  text.toLowerCase().replace(/\s+/g, "-");
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isShortlistOpen, setIsShortlistOpen] = useState(false);
+  const shortlistRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useThemeStore();
+  const { shortlistedProperties, toggleShortlist } = usePropertyStore();
+  const navigate = useNavigate();
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -15,6 +23,16 @@ const Navbar = () => {
     { name: "Properties", path: "/properties" },
     { name: "Services", path: "/Service" },
   ];
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (shortlistRef.current && !shortlistRef.current.contains(event.target as Node)) {
+        setIsShortlistOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div className="bg-gray-300 text-black dark:bg-[#1A1A1A] dark:text-white">
@@ -34,20 +52,114 @@ const Navbar = () => {
           </NavLink>
         </div>
 
-        <button
-          onClick={toggleTheme}
-          className="flex items-center gap-2 px-1 py-1 rounded-full bg-gray-200 dark:bg-gray-700 text-black dark:text-white transition-all duration-300"
-        >
-          {theme === "dark" ? (
-            <>
-              <FiSun size={20} />
-            </>
-          ) : (
-            <>
-              <FiMoon size={20} />
-            </>
-          )}
-      </button>
+        <div className="flex items-center gap-4">
+          {/* Shortlist Counter & Dropdown */}
+          <div className="relative" ref={shortlistRef}>
+            <button 
+              onClick={() => setIsShortlistOpen(!isShortlistOpen)}
+              className="flex items-center gap-1 text-gray-900 dark:text-white hover:text-[#703BF7] transition-colors relative group cursor-pointer"
+            >
+              <div className="relative">
+                <FiPlus size={20} />
+                {shortlistedProperties.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                    {shortlistedProperties.length}
+                  </span>
+                )}
+              </div>
+              <span className="text-xs hidden md:block">Shortlist</span>
+            </button>
+
+            {isShortlistOpen && (
+              <div className="absolute right-0 top-4 mt-2 w-72 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-100 overflow-hidden">
+                <div className="p-3 border-b border-gray-100 dark:border-gray-800 bg-gray-300/50 dark:bg-white/5 flex justify-between items-center">
+                  <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">Your Shortlist</h3>
+                  <span className="text-[10px] bg-[#703BF7]/10 text-[#703BF7] dark:bg-[#703BF7] dark:text-white px-2 py-0.5 rounded-full font-bold">
+                    {shortlistedProperties.length} items
+                  </span>
+                </div>
+                <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+                  {shortlistedProperties.length === 0 ? (
+                    <div className="p-8 text-center">
+                      <div className="text-gray-400 dark:text-gray-600 mb-2 flex justify-center">
+                        <FiPlus size={24} className="rotate-45" />
+                      </div>
+                      <p className="text-gray-500 dark:text-gray-400 text-xs">No properties shortlisted yet.</p>
+                    </div>
+                  ) : (
+                    shortlistedProperties.map((property) => (
+                      <div 
+                        key={property.id}
+                        className="p-3 hover:bg-gray-100 dark:hover:bg-white/5 flex items-center gap-3 group border-b border-gray-100 dark:border-gray-800 last:border-0 transition-colors"
+                      >
+                        <div className="relative overflow-hidden rounded-lg w-12 h-12 shrink-0">
+                          <img 
+                            src={property.img} 
+                            alt={property.name}
+                            className="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform duration-300"
+                            onClick={() => {
+                              navigate(`/properties/${slugify(property.name)}`);
+                              setIsShortlistOpen(false);
+                            }}
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p 
+                            className="text-xs font-semibold truncate cursor-pointer text-gray-900 dark:text-gray-200"
+                            onClick={() => {
+                              navigate(`/properties/${slugify(property.name)}`);
+                              setIsShortlistOpen(false);
+                            }}
+                          >
+                            {property.name}
+                          </p>
+                          <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate">
+                            {property.location.area}, {property.location.city}, {property.location.state} state.
+                          </p>
+                        </div>
+                        <button 
+                          onClick={() => {
+                            toggleShortlist(property);
+                            toast.success("Removed from shortlist");
+                          }}
+                          className="p-1.5 text-black hover:text-red-500 dark:text-white dark:hover:text-red-400 transition-colors cursor-pointer"
+                        >
+                          <FiTrash2 size={14} />
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+                {shortlistedProperties.length > 0 && (
+                  <div className="p-2 border-t border-gray-100 dark:border-gray-800 bg-gray-300/50 dark:bg-white/5 text-center">
+                    <NavLink 
+                      to="/properties" 
+                      onClick={() => setIsShortlistOpen(false)}
+                      className="text-[10px] text-[#703BF7] dark:text-white font-bold hover:underline"
+                    >
+                      Browse More Properties
+                    </NavLink>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-2 px-1 py-1 rounded-full bg-gray-200 dark:bg-gray-700 text-black dark:text-white transition-all duration-300"
+          >
+            {theme === "dark" ? (
+              <>
+                <FiSun size={20} />
+              </>
+            ) : (
+              <>
+                <FiMoon size={20} />
+              </>
+            )}
+          </button>
+        </div>
 
       </div>
       <hr className="h-px bg-gray-600 border-0 w-full" />

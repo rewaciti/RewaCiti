@@ -2,8 +2,10 @@ import { useState } from "react";
 import type { Property } from "../../../types";
 import { NavLink } from "react-router";
 import { FaBed, FaBath, FaHome } from "react-icons/fa";
-import { FiMapPin } from "react-icons/fi";
+import { FiMapPin, FiPlus, FiShare2, FiCheck } from "react-icons/fi";
 import { formatCurrency } from "../../../shared/lib/utils";
+import { usePropertyStore } from "../store/usePropertyStore";
+import { toast } from "sonner";
 
 interface PropertyCardProps {
   property: Property;
@@ -14,6 +16,36 @@ const slugify = (text: string) =>
 
 function PropertyCard({ property }: PropertyCardProps) {
   const [expanded, setExpanded] = useState(false);
+  const { toggleShortlist, shortlistedProperties } = usePropertyStore();
+
+  const isShortlisted = shortlistedProperties.some((p) => p.id === property.id);
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const url = `${window.location.origin}/properties/${slugify(property.name)}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: property.name,
+          text: property.description,
+          url: url,
+        });
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    } else {
+      navigator.clipboard.writeText(url);
+      toast.success("Link copied to clipboard!");
+    }
+  };
+
+  const handleShortlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleShortlist(property);
+    toast.success(isShortlisted ? "Removed from shortlist" : "Added to shortlist");
+  };
 
   // Word limiter
   function truncateWords(text: string, limit: number): string {
@@ -35,17 +67,42 @@ function PropertyCard({ property }: PropertyCardProps) {
   shadow-sm hover:shadow-lg
   transition-all duration-300
   rounded-xl p-2
+  relative
 "
 >
-  {/* Image */}
-  <img
-    src={property.img}
-    alt={property.name}
-    className="w-full h-70 object-cover rounded-lg mb-4"
-  />
+  {/* Image Container */}
+  <div className="relative group">
+    <img
+      src={property.img}
+      alt={property.name}
+      className="w-full h-70 object-cover rounded-lg mb-4"
+    />
+    
+    {/* Floating Action Buttons */}
+    <div className="absolute bottom-2 right-2 flex flex-col gap-2 transition-opacity duration-300">
+      <button
+        onClick={handleShortlist}
+        title={isShortlisted ? "Remove from shortlist" : "Add to shortlist"}
+        className={`p-2 rounded-full backdrop-blur-md border border-white/20 shadow-lg transition-all hover:scale-110 cursor-pointer ${
+          isShortlisted 
+            ? "bg-[#703BF7] text-white" 
+            : "bg-black/40 text-white hover:bg-[#703BF7]"
+        }`}
+      >
+        {isShortlisted ? <FiCheck size={18} /> : <FiPlus size={18} />}
+      </button>
+      <button
+        onClick={handleShare}
+        title="Share property"
+        className="p-2 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white shadow-lg transition-all hover:scale-110 hover:bg-[#703BF7] cursor-pointer"
+      >
+        <FiShare2 size={18} />
+      </button>
+    </div>
+    </div>
 
 
-  {/* Title */}
+    {/* Title */}
   <h3 className="text-lg font-semibold mb-1 whitespace-nowrap overflow-hidden text-ellipsis">
     {property.name}
   </h3>

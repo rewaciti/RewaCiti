@@ -146,6 +146,22 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
     }
   },
 
+  shortlistedProperties: [],
+  toggleShortlist: (property: Property) => {
+    set((state) => {
+      const isShortlisted = state.shortlistedProperties.some((p) => p.id === property.id);
+      if (isShortlisted) {
+        return {
+          shortlistedProperties: state.shortlistedProperties.filter((p) => p.id !== property.id),
+        };
+      } else {
+        return {
+          shortlistedProperties: [...state.shortlistedProperties, property],
+        };
+      }
+    });
+  },
+
   // --- New: Filter properties ---
   filterProperties: (filters: {
     location?: string;
