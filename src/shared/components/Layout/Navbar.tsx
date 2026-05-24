@@ -115,6 +115,10 @@ const Navbar = () => {
                           </p>
                           <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate">
                             {property.location.area}, {property.location.city}, {property.location.state} state.
+                             onClick={() => {
+                              navigate(`/properties/${slugify(property.name)}`);
+                              setIsShortlistOpen(false);
+                            }}
                           </p>
                         </div>
                         <button 
