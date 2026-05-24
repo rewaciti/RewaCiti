@@ -63,7 +63,7 @@ const stepsData: Step[] = [
     id: 1,
     step: "Step 01",
     title: "Discover a World of Possibilities",
-    description:"Your journey begins with exploring our carefully curated property listings. Use our intuitive search tools to filter properties based on your preferences, including location,"
+    description:"Your journey begins with exploring our carefully curated property listings. Use our intuitive search tools to filter properties based on your preferences."
   },
   {
     id: 2,
