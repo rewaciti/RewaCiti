@@ -132,13 +132,13 @@ function PropertySearchSection() {
     const results = properties.filter((p) => {
       const matchesSearch =
         p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.description.toLowerCase().includes(searchTerm.toLowerCase())||
-        p.location.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.location.city_town?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.location.area.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.location.state.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesLocation = location
-        ? `${p.location.state}, ${p.location.city}` === location
+        ? `${p.location.state}, ${p.location.city_town}` === location
         : true;
 
       const matchesType = category ? p.category === category : true;
@@ -199,7 +199,7 @@ function PropertySearchSection() {
   const uniqueLocations = Array.from(
     new Set(
       properties.map(
-        (p) => `${p.location.state}, ${p.location.city}`
+        (p) => `${p.location.state}, ${p.location.city_town}`
       )
     )
   );
@@ -214,7 +214,7 @@ function PropertySearchSection() {
       properties
         .filter((p) =>
           location
-            ? `${p.location.state}, ${p.location.city}` === location
+            ? `${p.location.state}, ${p.location.city_town}` === location
             : true
         )
         .map((p) => p.location.area)

@@ -20,6 +20,7 @@ export interface Property {
   location: {
     area: string;
     city: string;
+    city_town?: string;
     state: string;
   };
   geo_location: {
@@ -116,6 +117,7 @@ export interface AreaMap {
   id: string;
   name: string;
   city: string;
+  city_town?: string;
   state: string;
   areas: string[];
 }
@@ -182,6 +184,7 @@ export interface SabiFlowProduct {
     location?: {
       area?: string;
       city?: string;
+      city_town?: string;
       state?: string;
     };
     geo_location?: {

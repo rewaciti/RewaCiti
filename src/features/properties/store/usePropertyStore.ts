@@ -57,6 +57,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
           location: {
             area: customData?.location?.area || "",
             city: customData?.location?.city || "",
+            city_town: customData?.location?.city_town || "",
             state: customData?.location?.state || "",
           },
           geo_location: {
@@ -86,7 +87,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
           p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
           p.location.area.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.location.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.location.city_town?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           p.location.state.toLowerCase().includes(searchQuery.toLowerCase())
         );
       }
@@ -139,7 +140,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         p.name.toLowerCase().includes(query.toLowerCase()) ||
         p.description.toLowerCase().includes(query.toLowerCase()) ||
         p.location.area.toLowerCase().includes(query.toLowerCase()) ||
-        p.location.city.toLowerCase().includes(query.toLowerCase()) ||
+        p.location.city_town?.toLowerCase().includes(query.toLowerCase()) ||
         p.location.state.toLowerCase().includes(query.toLowerCase())
       );
       set({ filteredProperties: filtered, page: 0 });
@@ -180,7 +181,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
       const locationMatch =
         !filters.location ||
         (p.location &&
-          ([p.location.area, p.location.city, p.location.state] as string[]).some(
+          ([p.location.area, p.location.city_town, p.location.state] as (string | undefined)[]).some(
             (v) => v === filters.location
           ));
       
@@ -188,7 +189,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.location.area.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.location.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.location.city_town?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.location.state.toLowerCase().includes(searchQuery.toLowerCase());
 
       return (

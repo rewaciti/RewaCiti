@@ -44,7 +44,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const amount = property.visitationfee || 5000;
 
   const fullName = `${firstName} ${lastName}`.trim();
-  const propertyAddress = `${property.location.area}, ${property.location.city}, ${property.location.state}`;
+  const propertyAddress = `${property.location.area}, ${property.location.city_town}, ${property.location.state} + state.`;
   const propertyUrl = window.location.href;
 
   const handleDownloadReceipt = async (saleId: string) => {
@@ -298,7 +298,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               </div>
               <div className="flex items-start gap-2 text-sm dark:text-gray-300 text-gray-700">
                 <FiMapPin className="text-[#703BF7] mt-1 shrink-0" />
-                <span>{property.location.area}, {property.location.city}, {property.location.state}</span>
+                <span>{property.location.area}, {property.location.city_town}, {property.location.state} state.</span>
               </div>
               <div className="flex justify-between items-center border-t border-[#703BF7]/20 pt-2">
                 <span className="text-sm font-medium dark:text-white text-gray-900">Inspection Fee</span>

@@ -114,7 +114,7 @@ function PropertyCard({ property }: PropertyCardProps) {
       property.geo_location?.lng !== 0 && property.geo_location?.lng !== null
         ? `https://www.google.com/maps/search/?api=1&query=${property.geo_location.lat},${property.geo_location.lng}`
         : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-            [property.location.area, property.location.city, property.location.state].join(", ") + " state."
+            [property.location.area, property.location.city_town, property.location.state].join(", ") + " state."
           )}`
     }
     target="_blank"
@@ -122,7 +122,7 @@ function PropertyCard({ property }: PropertyCardProps) {
     className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 mb-2 hover:text-[#703BF7]  dark:hover:text-[#703BF7] transition-colors"
   >
     <FiMapPin size={12} />
-    {[property.location.area, property.location.city, property.location.state].join(", ") + " state."}
+    {[property.location.area, property.location.city_town, property.location.state].join(", ") + " state."}
   </a>
 
   {/* Description */}

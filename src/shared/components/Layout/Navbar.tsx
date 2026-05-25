@@ -118,7 +118,7 @@ const Navbar = () => {
                               navigate(`/properties/${slugify(property.name)}`);
                               setIsShortlistOpen(false);
                             }}>
-                            {property.location.area}, {property.location.city}, {property.location.state} state.
+                            {property.location.area}, {property.location.city_town}, {property.location.state} state.
                           </p>
                         </div>
                         <button 

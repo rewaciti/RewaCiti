@@ -140,7 +140,7 @@ function Studentarea() {
       const matchesSearch =
         p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.location.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.location.city_town?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.location.area.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.location.state.toLowerCase().includes(searchTerm.toLowerCase());
 

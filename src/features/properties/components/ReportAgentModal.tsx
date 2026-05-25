@@ -34,7 +34,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
       name: name,
       email: email,
       phone: phone,
-      address: `${property.location.area}, ${property.location.city}, ${property.location.state}`,
+      address: `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`,
       note: `Reason: ${reason}\n\nDescription: ${description}`,
       customData: [
         {

@@ -45,7 +45,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
 
   const fullName = `${firstName} ${lastName}`.trim();
   const propertyUrl = window.location.href;
-  const propertyAddress = `${property.location.area}, ${property.location.city}, ${property.location.state}`;
+  const propertyAddress = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
 
   const handleDownloadReceipt = async (saleId: string) => {
     try {
