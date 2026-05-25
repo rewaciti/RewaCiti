@@ -68,7 +68,6 @@ const Navbar = () => {
                   </span>
                 )}
               </div>
-              <span className="text-xs hidden md:block">Shortlist</span>
             </button>
 
             {isShortlistOpen && (
