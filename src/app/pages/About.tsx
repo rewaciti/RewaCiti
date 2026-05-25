@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import Navbar from "../../shared/components/Layout/Navbar"
 import hero from "/logo/Image (1).png"
 import { FaStar, FaUsers, FaShieldAlt,FaGraduationCap, FaLinkedin } from "react-icons/fa";
@@ -134,6 +135,46 @@ const teamData: TeamMember[] = [
   },
 ];
 
+
+
+const StepCard = ({ item }: { item: Step }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div className="mx-auto w-full">
+      <p className="text-gray-900 dark:text-white font-semibold text-sm border-l border-[#703BF7] p-2">
+        {item.step}
+      </p>
+
+      <div className="relative border dark:bg-[#121212] bg-white border-gray-700/40 p-4 rounded-md rounded-l-none rounded-b-md space-y-3 mx-auto justify-center flex flex-col">
+        {/* Top-left border accent */}
+        <div className="absolute top-0 left-0 w-25 h-px bg-[#703BF7]"></div>
+        <div className="absolute top-0 left-0 w-px h-10 bg-[#703BF7]"></div>
+
+        {/* Faint Purple Glow */}
+        <div className="absolute top-0 left-0 w-24 h-10 bg-linear-to-br dark:from-[#201a2f] from-[rgb(90,64,156)] via-purple-700/10 to-transparent pointer-events-none"></div>
+
+        <h3 className="text-gray-900 dark:text-white text-xl font-semibold">
+          {item.title}
+        </h3>
+
+        <p className="dark:text-gray-400 text-gray-600 text-sm leading-relaxed">
+          {isExpanded || item.description.length <= 80
+            ? item.description
+            : `${item.description.substring(0, 80)}... `}
+          {item.description.length > 80 && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-[#703BF7] text-xs font-semibold hover:underline inline-block ml-1 cursor-pointer"
+            >
+              {isExpanded ? "Show Less" : "Show More"}
+            </button>
+          )}
+        </p>
+      </div>
+    </div>
+  );
+};
 
 
 const iconMap = {
@@ -296,28 +337,7 @@ function About() {
 
          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2 mx-auto mt-8">
           {stepsData.map((item) => (
-              <div
-                key={item.id}
-                className="mx-auto">
-                  <p className="text-gray-900 dark:text-white font-semibold text-sm border-l border-[#703BF7] p-2">{item.step}</p>
-
-                  <div className="relative border dark:bg-[#121212] bg-white border-gray-700/40 p-4 rounded-md rounded-l-none rounded-b-md space-y-3 mx-auto justify-center">
-                    {/* Top-left border accent */}
-                    <div className="absolute top-0 left-0 w-25 h-px bg-[#703BF7]"></div>
-                    <div className="absolute top-0 left-0 w-px h-10 bg-[#703BF7]"></div>
-
-                    {/* Faint Purple Glow */}
-                    <div className="absolute top-0 left-0 w-24 h-10 bg-linear-to-br dark:from-[#201a2f] from-[rgb(90,64,156)] via-purple-700/10 to-transparent pointer-events-none"></div>
-
-                    <h3 className="text-gray-900 dark:text-white text-xl font-semibold">
-                      {item.title}
-                    </h3>
-
-                    <p className="dark:text-gray-400 text-gray-600 text-sm leading-relaxed">
-                      {item.description}
-                    </p>
-                  </div>
-              </div>
+              <StepCard key={item.id} item={item} />
           ))}
         </div>
       </section>
