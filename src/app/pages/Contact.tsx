@@ -361,9 +361,7 @@ function Contact() {
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
               Main Headquarters
             </h3>
-            <a href="https://maps.google.com/?q=7.492329,4.537698&entry=gps&g_st=awb" target="_blank" rel="noopener noreferrer">
               <span className="text-gray-800 dark:text-gray-400">51, Ramon Adedoyin way, parakin, ile-ife, Osun State, Nigeria</span>
-            </a>
           </div>
 
           {/* Description */}

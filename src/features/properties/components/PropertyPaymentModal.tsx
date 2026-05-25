@@ -107,7 +107,6 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
         customerDetails: {
           name: fullName,
           email: email,
-          address: propertyAddress,
           phone: phone
         }
       };

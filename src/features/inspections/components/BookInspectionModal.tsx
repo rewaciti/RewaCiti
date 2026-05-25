@@ -95,7 +95,6 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
         customerDetails: {
           name: fullName,
           email: email,
-          address: propertyAddress,
           phone: phone
         }
       };
