@@ -240,7 +240,7 @@ function PropertyDetails() {
                   property.location.area,
                   property.location.city,
                   property.location.state,
-                ].join(", ")}
+                ].join(", ") + " state."}
             </a>
 
             {/* Price & Action */}
@@ -617,7 +617,7 @@ function PropertyDetails() {
               <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300">Selected Property</label>
               <input
                 type="text"
-                value={`${property?.name}, ${property?.location?.area},${property?.location?.city},${property?.location?.state}`}
+                value={`${property?.name}, ${property?.location?.area}, ${property?.location?.city}, ${property?.location?.state} state.`}
                 readOnly
                 className="w-full border border-gray-600/30 rounded-md px-4 py-2 text-s focus:outline-none text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
               />
