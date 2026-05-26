@@ -25,7 +25,7 @@ function PropertyCard({ property }: PropertyCardProps) {
     e.stopPropagation();
     const url = `${window.location.origin}/properties/${slugify(property.name)}`;
     const address = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
-    const shareText = `Name: ${property.name}\nDescription: ${property.description}\nAddress: ${address}`;
+    const shareText = `Name: ${property.name}\nAddress: ${address}`;
     if (navigator.share) {
       try {
         await navigator.share({

@@ -35,7 +35,7 @@ function PropertyDetails() {
     if (!property) return;
     const url = window.location.href;
     const address = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
-    const shareText = `Name: ${property.name}\nDescription: ${property.description}\nAddress: ${address}`;
+    const shareText = `Name: ${property.name}\nAddress: ${address}`;
     if (navigator.share) {
       try {
         await navigator.share({
