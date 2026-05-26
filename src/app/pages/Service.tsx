@@ -222,9 +222,11 @@ const services4 = [
                  Ready to unlock the true value of your property? Explore our Property Selling Service categories and let us help you achieve the best deal possible for your valuable asset.
                 </p>
 
-                <button className="px-6 py-3 bg-[#703BF7] hover:bg-[#9677df] rounded-lg font-medium transition w-full mt-2 md:hidden">
-                    Learn More
-                </button>
+                <Link to="/contact">
+                  <button className="px-6 py-3 bg-[#703BF7] hover:bg-[#9677df] rounded-lg font-medium transition w-full mt-2 md:hidden">
+                      Learn More
+                  </button>
+                </Link>
               </div>
             </div>
              </div>
