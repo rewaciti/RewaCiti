@@ -107,7 +107,7 @@ const services4 = [
   return (
     <div>
         <Navbar />
-         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 px-10 space-y-6">
+         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10 space-y-6">
                 <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
                Elevate Your Real Estate Experience
             </h1>

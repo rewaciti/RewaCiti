@@ -62,7 +62,7 @@ function Footer() {
             </div>
     
              <button className="bg-[#703BF7] hover:bg-[#9677df] text-white px-3 py-2 rounded text-sm sm:w-[30%] w-full">
-               <Link to = "/AllProperties">Explore Properties</Link>
+               <Link to = "/properties">Explore Properties</Link>
             </button>
           </div>  
         </div>

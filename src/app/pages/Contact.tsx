@@ -89,7 +89,7 @@ function Contact() {
       <Navbar />
       <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10  space-y-6" id="Contactinfo">
         <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-          Get in Touch with RewaCitty
+          Get in Touch with RewaCiti
         </h1>
 
         <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
