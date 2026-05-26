@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Toaster } from "sonner";
 import { useThemeStore } from "../shared/store/useThemeStore";
 import Home from "./pages/Home";
-import AllProperties from "../features/properties/pages/AllPropertiesPage";
+
 import AllComments from "../features/comments/pages/AllCommentsPage";
 import AllFAQs from "../features/faq/pages/AllFAQPage";
 import About from "./pages/About";
@@ -53,7 +53,6 @@ function App() {
       />
       <Routes>
         <Route index path="/" element={<Home />} />
-        <Route path="/AllProperties" element={<AllProperties />} />
         <Route path="/AllComments" element={<AllComments />} />
         <Route path="/AllFAQs" element={<AllFAQs />} />
         <Route path="/About" element={<About />} />
