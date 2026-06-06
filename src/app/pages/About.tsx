@@ -44,8 +44,8 @@ const valuesData:ValueItem[] = [
 const Achievements = [
   {
     id: 1,
-    title: "3+ Years of Excellence",
-    description:"With over 3 years in the industry, we've amassed a wealth of knowledge and experience."
+    title: "5+ Years of Excellence",
+    description:"With over 5 years in the industry, we've amassed a wealth of knowledge and experience."
   },
   {
     id: 2,
