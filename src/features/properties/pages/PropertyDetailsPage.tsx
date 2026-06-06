@@ -1,6 +1,6 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
 import { useParams, Link } from "react-router";
-import { FiMapPin, FiChevronLeft, FiChevronRight, FiChevronDown, FiPlus, FiShare2, FiCheck} from "react-icons/fi";
+import { FiMapPin, FiChevronLeft, FiChevronRight, FiChevronDown, FiPlus, FiShare2, FiCheck, FiArrowLeft, FiArrowRight} from "react-icons/fi";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { useState, useEffect, useRef } from "react";
 import { FaBed, FaBath, FaHome, FaBolt  } from "react-icons/fa";
@@ -189,6 +189,38 @@ function PropertyDetails() {
 
 
 
+
+  const [relatedPage, setRelatedPage] = useState(0);
+  const RELATED_ITEMS_PER_PAGE = 3;
+
+  const relatedProperties = properties
+    .filter((p) => p.id !== property?.id)
+    .filter((p) => 
+      p.category === property?.category && (
+      p.location.state === property?.location.state ||
+      p.location.city_town === property?.location.city_town ||
+      p.location.area === property?.location.area
+      )
+    );
+
+  const totalRelatedPages = Math.ceil(relatedProperties.length / RELATED_ITEMS_PER_PAGE);
+
+  const currentRelatedProperties = relatedProperties.slice(
+    relatedPage * RELATED_ITEMS_PER_PAGE,
+    relatedPage * RELATED_ITEMS_PER_PAGE + RELATED_ITEMS_PER_PAGE
+  );
+
+  const handleRelatedNext = () => {
+    if (relatedPage < totalRelatedPages - 1) {
+      setRelatedPage((prev) => prev + 1);
+    }
+  };
+
+  const handleRelatedPrev = () => {
+    if (relatedPage > 0) {
+      setRelatedPage((prev) => prev - 1);
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -684,7 +716,7 @@ function PropertyDetails() {
 
       {/* Related Properties Section */}
       {property && (
-        <section className="px-4 py-10 border-t border-gray-600/30 mt-10">
+        <section className="p-4 border-t border-gray-600 mt-10">
           <div className="mb-8">
             <img
               src="/logo/Abstract Design (1).png"
@@ -697,24 +729,40 @@ function PropertyDetails() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties
-              .filter((p) => p.id !== property.id)
-              .filter((p) => 
-                p.category === property.category && (
-                p.location.state === property.location.state ||
-                p.location.city_town === property.location.city_town ||
-                p.location.area === property.location.area
-                )
-              )
-              .slice(0, 3)
-              .map((p) => (
-                <PropertyCard key={p.id} property={p} />
-              ))
-            }
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+            {currentRelatedProperties.map((p) => (
+              <PropertyCard key={p.id} property={p} />
+            ))}
           </div>
           
-          {properties.filter((p) => p.id !== property.id && p.category === property.category && (p.location.state === property.location.state || p.location.city_town === property.location.city_town || p.location.area === property.location.area)).length === 0 && (
+          <hr className="my-4 border-gray-600" />
+
+          {/* Pagination */}
+          <div className="flex justify-between items-center text-white">
+            <p className="text-sm text-black dark:text-white">
+              {relatedPage + 1} of {totalRelatedPages || 1}
+            </p>
+
+            <div className="flex gap-4">
+              <button
+                onClick={handleRelatedPrev}
+                disabled={relatedPage === 0}
+                className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
+              >
+                <FiArrowLeft size={20} />
+              </button>
+
+              <button
+                onClick={handleRelatedNext}
+                disabled={relatedPage >= totalRelatedPages - 1}
+                className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
+              >
+                <FiArrowRight size={20} />
+              </button>
+            </div>
+          </div>
+
+          {relatedProperties.length === 0 && (
             <p className="text-gray-500 italic">No related properties found at the moment.</p>
           )}
         </section>
