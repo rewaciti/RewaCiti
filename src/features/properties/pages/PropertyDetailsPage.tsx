@@ -337,6 +337,19 @@ function PropertyDetails() {
                       <div className="text-[10px] text-gray-500 dark:text-gray-400 group-hover:text-white/80">Share with friends or family</div>
                     </button>
 
+                     <button
+                      onClick={() => {
+                        setIsInspectionModalOpen(true);
+                        setIsDropdownOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 border-t border-gray-600/30 group cursor-pointer"
+                    >
+                      <div className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-white group-hover:text-white">
+                        <span>📅</span> Book a Visit
+                      </div>
+                      <div className="text-[10px] text-gray-500 dark:text-gray-400 group-hover:text-white/80">Non-refundable inspection fee applies</div>
+                    </button>
+
                     <button
                       onClick={() => {
                         setIsPaymentModalOpen(true);
@@ -348,19 +361,6 @@ function PropertyDetails() {
                         <span>💳</span> Pay for Property
                       </div>
                       <div className="text-[10px] text-gray-500 dark:text-gray-400 group-hover:text-white/80">Complete property purchase & rating</div>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setIsInspectionModalOpen(true);
-                        setIsDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 border-t border-gray-600/30 group cursor-pointer"
-                    >
-                      <div className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-white group-hover:text-white">
-                        <span>📅</span> Book a Visit
-                      </div>
-                      <div className="text-[10px] text-gray-500 dark:text-gray-400 group-hover:text-white/80">Non-refundable inspection fee applies</div>
                     </button>
 
                     <button

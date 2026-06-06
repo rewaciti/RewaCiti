@@ -171,9 +171,16 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
 
             updatePaymentStatus(transaction.reference, "paid");
             
-            toast.success(`Visit booked successfully! Reference: ${transaction.reference}`, {
-              duration: 5000,
-            });
+            toast.success(
+              <div className="whitespace-pre-wrap">
+                Payment successful! Reference: {transaction.reference}
+                <br />
+                A member of our team will contact you shortly.
+              </div>,
+              {
+                duration: 5000,
+              }
+            );
 
             // 6. Download Receipt
             await handleDownloadReceipt(saleId);
