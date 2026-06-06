@@ -96,7 +96,7 @@ function FAQSection() {
         )}
       </div>
 
-      <hr className="h-px bg-gray-600 border-0 w-full my-4" />
+      <hr className="h-px bg-gray-600/50 border-0 w-full my-4" />
 
       {/* Pagination */}
       <div className="flex justify-between items-center gap-4 text-white">

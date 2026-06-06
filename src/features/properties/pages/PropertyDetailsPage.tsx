@@ -170,7 +170,13 @@ function PropertyDetails() {
 
     try {
      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
-      toast.success("Message sent successfully!");
+      toast.success( 
+        <div className="whitespace-pre-wrap">
+            Message sent successfully!
+            <br />
+            A member of our team will get back to you soon.
+        </div>
+       );
       // reset form
       setFirstName("");
       setLastName("");

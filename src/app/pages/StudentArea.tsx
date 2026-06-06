@@ -79,7 +79,13 @@ function Studentarea() {
 
     try {
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
-      toast.success("Message sent successfully!");
+      toast.success( 
+        <div className="whitespace-pre-wrap">
+            Message sent successfully!
+            <br />
+          A member of our team will get back to you soon.
+        </div>
+       );
       // Reset form
       setName("");
       setEmail("");
@@ -215,10 +221,7 @@ function Studentarea() {
           </h1>
 
           <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-            Welcome to RewaCiti, where your dream property awaits in every
-            corner of our beautiful world. Explore our curated selection of
-            properties, each offering a unique story and a chance to redefine
-            your life. With categories to suit every dreamer, your journey
+            Welcome to RewaCiti, your trusted partner in finding comfortable and affordable student accommodation. Whether you're searching for a hostel, shared apartment, self-contained room and more, we've got options tailored to your needs. Use filters for university, budget, and amenities to discover places that fit your study needs and lifestyle.
           </p>
           <NavLink
             to="/Properties"
@@ -436,7 +439,7 @@ function Studentarea() {
             </div>
           </div>
 
-          <hr className="my-4 border-gray-600" />
+          <hr className="my-4 border-gray-600/50" />
 
           {/* Pagination */}
           <div className="flex justify-between items-center text-white">

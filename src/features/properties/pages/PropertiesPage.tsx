@@ -80,7 +80,13 @@ function PropertySearchSection() {
 
     try {
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
-      toast.success("Message sent successfully!");
+       toast.success( 
+        <div className="whitespace-pre-wrap">
+            Message sent successfully!
+            <br />
+            A member of our team will get back to you soon.
+        </div>
+       );
       // Reset form
       setName("");
       setEmail("");
@@ -453,7 +459,7 @@ function PropertySearchSection() {
             </div>
           </div>
           
-          <hr className="my-4 border-gray-600" />
+          <hr className="my-4 border-gray-600/50" />
 
           {/* Pagination */}
           <div className="flex justify-between items-center text-white">

@@ -109,7 +109,7 @@ function CommentSection() {
           ))
         )}
       </div>
-      <hr className="h-px bg-gray-600 border-0 w-full my-5" />
+      <hr className="h-px bg-gray-600/50 border-0 w-full my-5" />
 
       {/* Pagination */}
       <div className="flex justify-between items-center gap-4 text-white">

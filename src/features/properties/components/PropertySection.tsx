@@ -109,7 +109,7 @@ function PropertySection() {
           )}
         </div>
 
-        <hr className="my-4 h-px bg-gray-600 border-0 w-full" />
+        <hr className="my-4 h-px bg-gray-600/50 border-0 w-full" />
 
         {/* Pagination */}
         <div className="flex justify-between items-center  text-white ">
