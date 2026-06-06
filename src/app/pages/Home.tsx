@@ -88,17 +88,17 @@ function Home() {
           style={{
             backgroundImage: "url('/logo/Abstract Design.png')",
             backgroundPosition: "center",
-            backgroundSize: "cover",
+            backgroundSize: "cover ",
             
           }}
         >
           <img
             src={hero}
             alt="Hero"
-            className="w-full shadow-lg object-cover transition-all duration-300 ease-in-out rounded-2xl sm:rounded-none max-h-[500px] h-full"
+            className="w-full shadow-lg object-cover transition-all duration-300 ease-in-out min-h-[500px] h-full"
           />
           {/* CENTER LOGO for small screens: positioned at bottom-left of the image */}
-          <div className="sm:hidden absolute left-0 bottom-[-10%] z-20 ">
+          <div className="sm:hidden absolute left-0 bottom-[-7%] z-20 ">
             <img
               src={centerLogo}
               alt="Center Logo"
