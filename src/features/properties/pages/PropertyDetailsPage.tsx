@@ -744,7 +744,7 @@ function PropertyDetails() {
               )}
             </div>
             <p className="text-gray-800 dark:text-gray-400">
-              You might also be interested in these similar {property.category}s in {property.location.area}.
+              You might also be interested in these similar {property.category}s at {property.location.area}.
             </p>
           </div>
           
