@@ -235,6 +235,23 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
           </div>
 
           <p id="property-payment-description" className="sr-only">Complete your property payment securely using Paystack. All details are required for processing.</p>
+
+          <div className="mb-6 p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg">
+            <h4 className="text-sm font-semibold dark:text-white text-gray-900 mb-2">Property Details</h4>
+            <div className="space-y-1">
+              <p className="text-sm dark:text-gray-300 text-gray-700">
+                <span className="font-medium">Name:</span> {property.name}
+              </p>
+              <p className="text-sm dark:text-gray-300 text-gray-700">
+                <span className="font-medium">Location:</span> {propertyAddress}
+              </p>
+              {property.duration && (
+                <p className="text-sm dark:text-gray-300 text-gray-700">
+                  <span className="font-medium">Duration:</span> {property.duration}
+                </p>
+              )}
+            </div>
+          </div>
           
           <div className="mb-6 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
             <h4 className="text-xs font-bold text-blue-500 uppercase mb-2 flex items-center gap-2">
