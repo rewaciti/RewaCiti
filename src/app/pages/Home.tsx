@@ -38,7 +38,7 @@ function Home() {
       <section className="relative flex flex-col sm:flex-row" id= "hero">
 
         {/* CENTER FLOATING IMAGE */}
-        <div className="hidden sm:block fixed top-1/3 xl:left-[52%] lg:left-[52.5%] md:left-[53%] left-[54%] -translate-x-1/2 -translate-y-1/2 z-20">
+        <div className="hidden sm:block absolute lg:left-[52%] top-1/3 md:left-[54%] left-[54%] -translate-x-1/2 -translate-y-1/2 z-20">
           <img src={centerLogo} alt="Center Logo" className="w-23 h-auto" />
         </div>
 
@@ -80,6 +80,7 @@ function Home() {
                 </div>
               </div>
         </div>
+        
 
         {/* RIGHT SECTION */}
         <div
