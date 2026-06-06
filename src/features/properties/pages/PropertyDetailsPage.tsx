@@ -713,10 +713,10 @@ function PropertyDetails() {
           </form>
         </div>
       </section>
-
+             <hr className="my-2 border-gray-600/50 w-[98%] mx-auto" />
       {/* Related Properties Section */}
       {property && (
-        <section className="p-4 border-t border-gray-600 mt-10">
+        <section className="p-4 ">
           <div className="mb-8">
             <img
               src="/logo/Abstract Design (1).png"
@@ -735,7 +735,7 @@ function PropertyDetails() {
             ))}
           </div>
           
-          <hr className="my-4 border-gray-600" />
+          <hr className="my-4 border-gray-600/50" />
 
           {/* Pagination */}
           <div className="flex justify-between items-center text-white">
