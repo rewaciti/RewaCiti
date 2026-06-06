@@ -197,6 +197,7 @@ function PropertyDetails() {
 
 
   const [relatedPage, setRelatedPage] = useState(0);
+  const [showAllRelated, setShowAllRelated] = useState(false);
   const RELATED_ITEMS_PER_PAGE = 3;
 
   const relatedProperties = properties
@@ -211,10 +212,12 @@ function PropertyDetails() {
 
   const totalRelatedPages = Math.ceil(relatedProperties.length / RELATED_ITEMS_PER_PAGE);
 
-  const currentRelatedProperties = relatedProperties.slice(
-    relatedPage * RELATED_ITEMS_PER_PAGE,
-    relatedPage * RELATED_ITEMS_PER_PAGE + RELATED_ITEMS_PER_PAGE
-  );
+  const currentRelatedProperties = showAllRelated
+    ? relatedProperties
+    : relatedProperties.slice(
+        relatedPage * RELATED_ITEMS_PER_PAGE,
+        relatedPage * RELATED_ITEMS_PER_PAGE + RELATED_ITEMS_PER_PAGE
+      );
 
   const handleRelatedNext = () => {
     if (relatedPage < totalRelatedPages - 1) {
@@ -729,7 +732,17 @@ function PropertyDetails() {
               alt="Icon"
               className="w-13 h-13 object-contain"
             />
-            <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-2">Related Properties</h2>
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-3xl font-semibold text-gray-900 dark:text-white">Related Properties</h2>
+              {relatedProperties.length > RELATED_ITEMS_PER_PAGE && (
+                <button
+                  onClick={() => setShowAllRelated(!showAllRelated)}
+                  className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center shrink-0 hidden md:block"
+                >
+                  {showAllRelated ? "Show Less" : "View All"}
+                </button>
+              )}
+            </div>
             <p className="text-gray-800 dark:text-gray-400">
               You might also be interested in these similar {property.category}s in {property.location.area}.
             </p>
@@ -741,32 +754,43 @@ function PropertyDetails() {
             ))}
           </div>
           
-          <hr className="my-4 border-gray-600/50" />
+          {relatedProperties.length > RELATED_ITEMS_PER_PAGE && (
+            <>
+              <hr className="my-4 border-gray-600/50" />
 
-          {/* Pagination */}
-          <div className="flex justify-between items-center text-white">
-            <p className="text-sm text-black dark:text-white">
-              {relatedPage + 1} of {totalRelatedPages || 1}
-            </p>
+              {/* Pagination */}
+              <div className="flex justify-between items-center text-white">
+                <p className="text-sm text-black dark:text-white">
+                  {showAllRelated ? "All Properties" : `${relatedPage + 1} of ${totalRelatedPages || 1}`}
+                </p>
 
-            <div className="flex gap-4">
-              <button
-                onClick={handleRelatedPrev}
-                disabled={relatedPage === 0}
-                className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
-              >
-                <FiArrowLeft size={20} />
-              </button>
+                <button
+                  onClick={() => setShowAllRelated(!showAllRelated)}
+                  className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center w-[120px] md:hidden"
+                >
+                  {showAllRelated ? "View Less" : "View All"}
+                </button>
 
-              <button
-                onClick={handleRelatedNext}
-                disabled={relatedPage >= totalRelatedPages - 1}
-                className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
-              >
-                <FiArrowRight size={20} />
-              </button>
-            </div>
-          </div>
+                <div className="flex gap-4">
+                  <button
+                    onClick={handleRelatedPrev}
+                    disabled={showAllRelated || relatedPage === 0}
+                    className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
+                  >
+                    <FiArrowLeft size={20} />
+                  </button>
+
+                  <button
+                    onClick={handleRelatedNext}
+                    disabled={showAllRelated || relatedPage >= totalRelatedPages - 1}
+                    className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
+                  >
+                    <FiArrowRight size={20} />
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
 
           {relatedProperties.length === 0 && (
             <p className="text-gray-500 italic">No related properties found at the moment.</p>
