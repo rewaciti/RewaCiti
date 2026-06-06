@@ -9,6 +9,7 @@ import axios from "axios";
 import BookInspectionModal from "../../inspections/components/BookInspectionModal";
 import PropertyPaymentModal from "../components/PropertyPaymentModal";
 import ReportAgentModal from "../components/ReportAgentModal";
+import PropertyCard from "../components/PropertyCard";
 import { PropertyDetailsSkeleton } from "../../../shared/components/ui/Skeletons";
 import { toast } from "sonner";
 import { formatCurrency } from "../../../shared/lib/utils";
@@ -81,6 +82,10 @@ function PropertyDetails() {
       fetchProperties();
     }
   }, [properties.length, fetchProperties]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [name]);
 
   // FORM STATES
   const [firstName, setFirstName] = useState("");
@@ -676,6 +681,43 @@ function PropertyDetails() {
           </form>
         </div>
       </section>
+
+      {/* Related Properties Section */}
+      {property && (
+        <section className="px-4 py-10 border-t border-gray-600/30 mt-10">
+          <div className="mb-8">
+            <img
+              src="/logo/Abstract Design (1).png"
+              alt="Icon"
+              className="w-13 h-13 object-contain"
+            />
+            <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-2">Related Properties</h2>
+            <p className="text-gray-800 dark:text-gray-400">
+              You might also be interested in these properties in {property.location.area} or similar {property.category}s.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {properties
+              .filter((p) => p.id !== property.id)
+              .filter((p) => 
+                p.category === property.category || 
+                p.location.state === property.location.state ||
+                p.location.city_town === property.location.city_town ||
+                p.location.area === property.location.area
+              )
+              .slice(0, 3)
+              .map((p) => (
+                <PropertyCard key={p.id} property={p} />
+              ))
+            }
+          </div>
+          
+          {properties.filter((p) => p.id !== property.id && (p.category === property.category || p.location.state === property.location.state)).length === 0 && (
+            <p className="text-gray-500 italic">No related properties found at the moment.</p>
+          )}
+        </section>
+      )}
         </>
       )}
       <div className="pt-5"><Footer/></div>
