@@ -693,7 +693,7 @@ function PropertyDetails() {
             />
             <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-2">Related Properties</h2>
             <p className="text-gray-800 dark:text-gray-400">
-              You might also be interested in these properties in {property.location.area} or similar {property.category}s.
+              You might also be interested in these similar {property.category}s in {property.location.area}.
             </p>
           </div>
           
@@ -701,10 +701,11 @@ function PropertyDetails() {
             {properties
               .filter((p) => p.id !== property.id)
               .filter((p) => 
-                p.category === property.category || 
+                p.category === property.category && (
                 p.location.state === property.location.state ||
                 p.location.city_town === property.location.city_town ||
                 p.location.area === property.location.area
+                )
               )
               .slice(0, 3)
               .map((p) => (
@@ -713,7 +714,7 @@ function PropertyDetails() {
             }
           </div>
           
-          {properties.filter((p) => p.id !== property.id && (p.category === property.category || p.location.state === property.location.state)).length === 0 && (
+          {properties.filter((p) => p.id !== property.id && p.category === property.category && (p.location.state === property.location.state || p.location.city_town === property.location.city_town || p.location.area === property.location.area)).length === 0 && (
             <p className="text-gray-500 italic">No related properties found at the moment.</p>
           )}
         </section>
