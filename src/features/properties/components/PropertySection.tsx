@@ -3,12 +3,11 @@ import { usePropertyStore } from "../store/usePropertyStore";
 import type { Property } from "../../../types";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import PropertyCard from "./PropertyCard";
-import { useNavigate } from "react-router";
+import { Link } from "react-router";
 
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
 
 function PropertySection() {
-  const navigate = useNavigate();
   const {
     properties,
     loading,
@@ -58,12 +57,12 @@ function PropertySection() {
             </p>
           </div>
 
-          <button
-            onClick={() => navigate("/properties")}
+          <Link
+            to="/properties"
             className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center hidden md:block"
           >
             View All
-          </button>
+          </Link>
         </div>
       </div>
       <div className=" py-4">
@@ -118,12 +117,12 @@ function PropertySection() {
             {page + 1} of {totalPages || 1}
           </p>
 
-          <button
-            onClick={() => navigate("/properties")}
+          <Link
+            to="/properties"
             className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center w-[120px] md:hidden"
           >
             View All
-          </button>
+          </Link>
 
           <div className="flex gap-4">
             <button
