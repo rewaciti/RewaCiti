@@ -89,7 +89,7 @@ function PropertyDetails() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  },); // Dependencies to ensure current state is used
+  }, [currentIndex, images.length, step]); // Dependencies to ensure current state is used
 
   // Swipe navigation
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -488,15 +488,31 @@ function PropertyDetails() {
               </button>
   
               {/* Progress Indicators */}
-              <div className="flex gap-1">
-                {images.map((_, idx) => (
-                  <span
-                    key={idx}
-                    className={`w-3 h-0.5 border-t-3 ${
-                      idx === currentIndex ? "border-[#703BF7]" : "border-gray-400 border-t"
-                    }`}
-                  />
-                ))}
+              <div className="flex items-center gap-3">
+                {images.length <= 7 ? (
+                  <div className="flex gap-1">
+                    {images.map((_, idx) => (
+                      <span
+                        key={idx}
+                        className={`w-3 h-0.5 border-t-3 ${
+                          idx === currentIndex ? "border-[#703BF7]" : "border-gray-400 border-t"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-gray-400 font-medium whitespace-nowrap">
+                      {currentIndex + 1} / {images.length}
+                    </span>
+                    <div className="w-20 h-1 bg-gray-600 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-[#703BF7] transition-all duration-300"
+                        style={{ width: `${((currentIndex + 1) / images.length) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
   
               <button
