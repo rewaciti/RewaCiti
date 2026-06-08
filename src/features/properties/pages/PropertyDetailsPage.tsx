@@ -2,7 +2,7 @@ import Navbar from "../../../shared/components/Layout/Navbar";
 import { useParams, Link } from "react-router";
 import { FiMapPin, FiChevronLeft, FiChevronRight, FiChevronDown, FiPlus, FiShare2, FiCheck, FiArrowLeft, FiArrowRight} from "react-icons/fi";
 import { usePropertyStore } from "../store/usePropertyStore";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { FaBed, FaBath, FaHome, FaBolt  } from "react-icons/fa";
 import Footer from "../../../shared/components/Layout/Footer";
 import axios from "axios";
@@ -65,17 +65,17 @@ function PropertyDetails() {
 
   const visibleImages = images.slice(currentIndex, currentIndex + step);
 
-  const nextImages = () => {
+  const nextImages = useCallback(() => {
     if (currentIndex + step < images.length) {
       setCurrentIndex((prev) => prev + 1);
     }
-  };
+  }, [currentIndex, images.length, step]);
 
-  const prevImages = () => {
+  const prevImages = useCallback(() => {
     if (currentIndex > 0) {
       setCurrentIndex((prev) => prev - 1);
     }
-  };
+  }, [currentIndex]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -89,7 +89,7 @@ function PropertyDetails() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentIndex, images.length, step]); // Dependencies to ensure current state is used
+  }, [nextImages, prevImages]);
 
   // Swipe navigation
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -489,7 +489,7 @@ function PropertyDetails() {
   
               {/* Progress Indicators */}
               <div className="flex items-center gap-3">
-                {images.length <= 7 ? (
+                {images.length <= 5 ? (
                   <div className="flex gap-1">
                     {images.map((_, idx) => (
                       <span
