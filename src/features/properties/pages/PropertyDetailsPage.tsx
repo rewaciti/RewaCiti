@@ -89,7 +89,7 @@ function PropertyDetails() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentIndex, images.length, step]); // Dependencies to ensure current state is used
+  },); // Dependencies to ensure current state is used
 
   // Swipe navigation
   const [touchStart, setTouchStart] = useState<number | null>(null);
