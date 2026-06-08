@@ -389,13 +389,13 @@ function Studentarea() {
           </div>
 
           {/* Properties */}
-          <div>
+          <section>
             <div className="flex justify-between items-center mb-6">
               <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
                 <img
                   src="/logo/Abstract Design (1).png"
                   alt="Icon"
-                  className="w-13 h-13 object-contain"
+                  className="w-13 object-contain"
                 />
 
                 <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
@@ -437,7 +437,7 @@ function Studentarea() {
                 ))
               )}
             </div>
-          </div>
+          </section>
 
           <hr className="my-4 border-gray-600/50" />
 
@@ -483,7 +483,7 @@ function Studentarea() {
             <img
               src="/logo/Abstract Design (1).png"
               alt="Icon"
-              className="w-13 h-13 object-contain"
+              className="w-13 object-contain"
             />
 
             <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">

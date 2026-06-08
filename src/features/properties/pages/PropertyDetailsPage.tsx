@@ -592,7 +592,7 @@ function PropertyDetails() {
           <img
             src="/logo/Abstract Design (1).png"
             alt="Icon"
-            className="w-13 h-13 object-contain"
+            className="w-13 object-contain"
           />
 
           <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Inquire About {property?.name} </h1>
@@ -726,11 +726,11 @@ function PropertyDetails() {
       {/* Related Properties Section */}
       {property && (
         <section className="p-4 ">
-          <div className="mb-8">
+          <div className="mb-8 space-y-3">
             <img
               src="/logo/Abstract Design (1).png"
               alt="Icon"
-              className="w-13 h-13 object-contain"
+              className="w-13 object-contain"
             />
             <div className="flex justify-between items-center mb-2">
               <h2 className="text-3xl font-semibold text-gray-900 dark:text-white">Related Properties</h2>

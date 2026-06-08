@@ -378,7 +378,7 @@ const services4 = [
                      <img
                       src={service.image}
                       alt="Icon"
-                      className="w-13 h-13 object-contain"
+                      className="w-13 object-contain"
                     />
 
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white ">

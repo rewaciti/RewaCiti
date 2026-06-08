@@ -191,18 +191,20 @@ function About() {
         <Navbar />
         <section className="relative flex flex-col md:flex-row bg-gray-300 dark:bg-black/30 py-4 px-4 lg:gap-10 md:gap-3" id="Journey">
           <div className="flex-1  flex flex-col justify-center space-y-6 z-10 order-last md:order-first ">
-           <img
-              src="/logo/Abstract Design (1).png"
-              alt="Icon"
-              className="w-13 h-13 object-contain"
-            />
-          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-            Our Journey
-          </h1>
-
-          <p className="text-gray-600 dark:text-gray-400 text-[14px] max-w-[95%]">
-            Our story is one of continuous growth and evolution. We started as a small team with big dreams, determined to create a real estate platform that transcended the ordinary. Over the years, we've expanded our reach, forged valuable partnerships, and gained the trust of countless clients.
-          </p>
+          <div className="space-y-3 z-10">
+              <img
+                  src="/logo/Abstract Design (1).png"
+                  alt="Icon"
+                  className="w-13 object-contain"
+                />
+              <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
+                Our Journey
+              </h1>
+    
+              <p className="text-gray-600 dark:text-gray-400 text-[14px] max-w-[95%]">
+                Our story is one of continuous growth and evolution. We started as a small team with big dreams, determined to create a real estate platform that transcended the ordinary. Over the years, we've expanded our reach, forged valuable partnerships, and gained the trust of countless clients.
+              </p>
+          </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 items-center text-center md:text-left w-full">
                 <div className="bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-600/30 text-gray-900 dark:text-white px-4 py-3 rounded w-full">
@@ -243,11 +245,11 @@ function About() {
 
     <section className="bg-gray-300 dark:bg-black/30 py-3 px-4 lg:gap-12 flex flex-col md:flex-row gap-8 md:gap-0" id="Values">
         {/* LEFT SIDE — 1 PART WIDTH */}
-        <div className="flex-1 flex flex-col justify-center space-y-6 z-10 ">
+        <div className="flex-1 flex flex-col justify-center space-y-3 z-10 ">
           <img
             src="/logo/Abstract Design (1).png"
             alt="Icon"
-            className="w-13 h-13 object-contain"
+            className="w-13 object-contain"
           />
 
           <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Our Values</h1>
@@ -292,7 +294,7 @@ function About() {
           <img
             src="/logo/Abstract Design (1).png"
             alt="Icon"
-            className="w-13 h-13 object-contain"
+            className="w-13 object-contain"
           />
 
           <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Our Achievements</h1>
@@ -325,7 +327,7 @@ function About() {
           <img
             src="/logo/Abstract Design (1).png"
             alt="Icon"
-            className="w-13 h-13 object-contain"
+            className="w-13 object-contain"
           />
 
           <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Navigating the RewaCiti Experience</h1>
@@ -347,7 +349,7 @@ function About() {
           <img
             src="/logo/Abstract Design (1).png"
             alt="Icon"
-            className="w-13 h-13 object-contain"
+            className="w-13 object-contain"
           />
 
           <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Meet the RewaCiti Team</h1>

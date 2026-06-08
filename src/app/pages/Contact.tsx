@@ -145,7 +145,7 @@ function Contact() {
           <img
             src="/logo/Abstract Design (1).png"
             alt="Icon"
-            className="w-13 h-13 object-contain"
+            className="w-13 object-contain"
           />
 
           <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Let's Connect</h1>
@@ -346,7 +346,7 @@ function Contact() {
           <img
             src="/logo/Abstract Design (1).png"
             alt="Icon"
-            className="w-13 h-13 object-contain"
+            className="w-13 object-contain"
           />
 
           <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
