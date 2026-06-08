@@ -77,6 +77,48 @@ function PropertyDetails() {
     }
   };
 
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        nextImages();
+      } else if (e.key === "ArrowLeft") {
+        prevImages();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentIndex, images.length, step]); // Dependencies to ensure current state is used
+
+  // Swipe navigation
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextImages();
+    } else if (isRightSwipe) {
+      prevImages();
+    }
+  };
+
   useEffect(() => {
     if (properties.length === 0) {
       fetchProperties();
@@ -261,7 +303,7 @@ function PropertyDetails() {
             <h1 className="text-2xl font-semibold text-gray-900 dark:text-white max-w-[95%]">{property?.name}</h1>
           </div>
 
-          <div className="md:flex justify-between md:items-center w-full mt-4 md:mt-0">
+          <div className="md:flex justify-between md:items-center w-full mt-1 md:mt-0">
             {/* Location */}
             <a
               href={
@@ -419,7 +461,12 @@ function PropertyDetails() {
           </div>
   
           {/* Main Image Display */}
-          <div className="relative">
+          <div 
+            className="relative"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {visibleImages.map((img, index) => (
                 <img
