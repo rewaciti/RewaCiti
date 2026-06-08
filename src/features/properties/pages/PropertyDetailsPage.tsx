@@ -447,7 +447,7 @@ function PropertyDetails() {
       <section className="px-4 pb-10 ">
         <div className="p-2 border border-gray-600/30 rounded-xl">
           {/* Thumbnail Row */}
-          <div className={`flex gap-2 overflow-x-auto mb-6 p-1 border border-gray-600/30 rounded-xl bg-black/20 no-scrollbar ${images.length <= 5 ? "justify-center" : "justify-start"}`}>
+          <div className="flex gap-2 overflow-x-auto mb-6 p-1 border border-gray-600/30 rounded-xl bg-black/20 no-scrollbar">
             {images.map((img, index) => (
 
               <img
