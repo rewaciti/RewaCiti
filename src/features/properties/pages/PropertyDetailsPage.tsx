@@ -447,8 +447,9 @@ function PropertyDetails() {
       <section className="px-4 pb-10 ">
         <div className="p-2 border border-gray-600/30 rounded-xl">
           {/* Thumbnail Row */}
-          <div className="flex gap-2 overflow-x-auto mb-6 p-1 border border-gray-600/30 rounded-xl bg-black/20">
+          <div className={`flex gap-2 overflow-x-auto mb-6 p-1 border border-gray-600/30 rounded-xl bg-black/20 no-scrollbar ${images.length <= 5 ? "justify-center" : "justify-start"}`}>
             {images.map((img, index) => (
+
               <img
                 key={index}
                 src={img}
@@ -467,12 +468,14 @@ function PropertyDetails() {
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div className={`grid gap-2 ${visibleImages.length === 1 ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"}`}>
               {visibleImages.map((img, index) => (
                 <img
                   key={index}
                   src={img}
-                  className="w-full dark:bg-[#1A1A1A] bg-white h-[70vh] object-cover rounded-xl"
+                  className={`w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-xl ${
+                    visibleImages.length === 1 ? "h-[70vh]" : "h-[70vh]"
+                  }`}
                 />
               ))}
             </div>
