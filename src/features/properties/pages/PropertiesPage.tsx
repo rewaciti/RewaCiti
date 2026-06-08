@@ -494,7 +494,7 @@ function PropertySearchSection() {
         </div>
       </div>
 
-      <section className="bg-gray-300 dark:bg-black/30 pt-4 py-4 pb-20" id="Portfolio">
+      <section className="bg-gray-300 dark:bg-black/30 px-4 py-2 pt-4 pb-20" id="Portfolio">
         <div className="  ">
           <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
             <img
