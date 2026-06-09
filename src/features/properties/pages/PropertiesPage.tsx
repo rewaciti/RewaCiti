@@ -205,7 +205,7 @@ function PropertySearchSection() {
   const uniqueLocations = Array.from(
     new Set(
       properties.map(
-        (p) => `${p.location.state} state, ${p.location.city_town}`
+        (p) => `${p.location.city_town}, ${p.location.state} state.`
       )
     )
   );
