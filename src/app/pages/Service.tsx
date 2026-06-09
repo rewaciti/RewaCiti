@@ -151,7 +151,7 @@ const services4 = [
         </section>
 
         <section className="bg-gray-300 dark:bg-black/30 p-4 space-y-6" id="valuation">
-           <div className="space-y-3">
+           <div className="space-y-2">
                 <img
                   src="/logo/Abstract Design (1).png"
                   alt="Icon"
