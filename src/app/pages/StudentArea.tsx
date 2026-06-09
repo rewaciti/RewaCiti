@@ -390,7 +390,7 @@ function Studentarea() {
 
           {/* Properties */}
           <section>
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-6 pt-4">
               <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
                 <img
                   src="/logo/Abstract Design (1).png"
@@ -398,16 +398,17 @@ function Studentarea() {
                   className="w-13 object-contain"
                 />
 
-                <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-                  Discover a World of Possibilities
-                </h1>
-
                <div className="flex justify-between items-center">
-                  <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-                    Our portfolio of properties is as diverse as your dreams.
-                    Explore the following categories to find the perfect property
-                    that resonates with your vision of home
-                  </p>
+                  <div className="space-y-3">
+                    <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
+                      Discover a World of Possibilities
+                    </h1>
+                      <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
+                        Our portfolio of properties is as diverse as your dreams.
+                        Explore the following categories to find the perfect property
+                        that resonates with your vision of home
+                      </p>
+                  </div>
                   <button
                     onClick={() => setShowAll(!showAll)}
                     className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center hidden md:block shrink-0"
@@ -477,7 +478,7 @@ function Studentarea() {
         </div>
       </div>
 
-      <section className="bg-gray-300 dark:bg-black/30 py-2 px-4 pb-20" id="StudentPortfolio">
+      <section className="bg-gray-300 dark:bg-black/30 py-2 px-4 pt-4 pb-20" id="StudentPortfolio">
         <div className="  ">
           <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
             <img

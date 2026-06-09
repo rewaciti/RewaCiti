@@ -317,7 +317,7 @@ const services4 = [
           </div>
         </section>
 
-        <section className="bg-gray-300 dark:bg-black/30 p-4 space-y-6" id="marketing">
+        <section className="bg-gray-300 dark:bg-black/30 p-4 space-y-3" id="marketing">
            <img
                   src="/logo/Abstract Design (1).png"
                   alt="Icon"

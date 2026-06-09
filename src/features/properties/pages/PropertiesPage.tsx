@@ -412,16 +412,17 @@ function PropertySearchSection() {
                   className="w-13 object-contain"
                 />
 
-                <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-                  Discover a World of Possibilities
-                </h1>
-
                <div className="flex justify-between items-center">
-                  <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-                    Our portfolio of properties is as diverse as your dreams.
-                    Explore the following categories to find the perfect property
-                    that resonates with your vision of home
-                  </p>
+                  <div className="space-y-3">
+                    <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
+                      Discover a World of Possibilities
+                    </h1>
+                      <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
+                        Our portfolio of properties is as diverse as your dreams.
+                        Explore the following categories to find the perfect property
+                        that resonates with your vision of home
+                      </p>
+                  </div>
                   <button
                     onClick={() => setShowAll(!showAll)}
                     className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center shrink-0 hidden md:block"
