@@ -33,7 +33,7 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
     try { 
       const feedbackPayload = {
         companyId: "69b4712ce95a2df514b1c789",
-        pipelineId: "69ed7a4ac09e9388ba096f1f", // Keeping the same pipeline for now
+        pipelineId: "6a27f05df19944ca7f9a87dd",
         title: `FEEDBACK: ${property.name}`,
         note: `Rating: ${rating}/5\nFeedback: ${feedback}`,
         customData: [
