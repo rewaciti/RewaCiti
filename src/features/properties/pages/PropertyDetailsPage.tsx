@@ -8,6 +8,7 @@ import Footer from "../../../shared/components/Layout/Footer";
 import axios from "axios";
 import BookInspectionModal from "../../inspections/components/BookInspectionModal";
 import PropertyPaymentModal from "../components/PropertyPaymentModal";
+import ServiceRatingModal from "../components/ServiceRatingModal";
 import ReportAgentModal from "../components/ReportAgentModal";
 import PropertyCard from "../components/PropertyCard";
 import { PropertyDetailsSkeleton } from "../../../shared/components/ui/Skeletons";
@@ -139,6 +140,7 @@ function PropertyDetails() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isInspectionModalOpen, setIsInspectionModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -436,6 +438,13 @@ function PropertyDetails() {
         property={property}
         open={isPaymentModalOpen}
         onOpenChange={setIsPaymentModalOpen}
+        onPaymentSuccess={() => setIsRatingModalOpen(true)}
+      />
+
+      <ServiceRatingModal
+        property={property}
+        open={isRatingModalOpen}
+        onOpenChange={setIsRatingModalOpen}
       />
 
       <ReportAgentModal

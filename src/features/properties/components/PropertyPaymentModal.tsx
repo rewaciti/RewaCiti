@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { FiX, FiInfo, FiStar } from "react-icons/fi";
+import { FiX, FiInfo } from "react-icons/fi";
 import type { Property } from "../../../types";
 import axios from "axios";
 import { Link } from "react-router";
@@ -11,6 +11,7 @@ interface PropertyPaymentModalProps {
   property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onPaymentSuccess?: () => void;
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -29,14 +30,12 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   property,
   open,
   onOpenChange,
+  onPaymentSuccess,
 }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [feedback, setFeedback] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -69,10 +68,6 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (rating === 0) {
-      toast.error("Please rate our service before proceeding.");
-      return;
-    }
 
     if (!agreed) {
       toast.error("Please agree to the Terms and Privacy Policy");
@@ -150,13 +145,12 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
               email: email,
               phone: phone,
               address: propertyAddress,
-              note: `Rating: ${rating}/5\nFeedback: ${feedback}`,
+              note: `Property payment for ${property.name}`,
               customData: [
                 { label: "Property Name", value: property.name },
                 { label: "Property Link", value: propertyUrl },
                 { label: "Total Property Price", value: price },
                 { label: "Payment Reference", value: transaction.reference },
-                { label: "Service Rating", value: `${rating} Stars` },
                 { label: "Property Cost", value: `₦${pricing.PropertyCost.toLocaleString()}` },
                 { label: "Legal Fee", value: `₦${pricing.LegalFee.toLocaleString()}` },
                 { label: "Agent Fee", value: `₦${pricing.AgentFee.toLocaleString()}` },
@@ -191,8 +185,11 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
             setLastName("");
             setEmail("");
             setPhone("");
-            setRating(0);
-            setFeedback("");
+            
+            // Trigger Rating Modal
+            if (onPaymentSuccess) {
+              onPaymentSuccess();
+            }
           } catch (error) {
             console.error("Verification/CRM error:", error);
             toast.error("Payment successful, but verification failed. Please contact support.");
@@ -369,46 +366,6 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 <span>Total Due</span>
                 <span>₦{price.toLocaleString()}</span>
               </div>
-            </div>
-
-            {/* Rating Section */}
-            <div className="py-2 space-y-3">
-              <div>
-                <label className="text-sm dark:text-gray-300 text-gray-700 block mb-2">Rate Our Service</label>
-                <div className="flex gap-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      onClick={() => setRating(star)}
-                      onMouseEnter={() => setHoverRating(star)}
-                      onMouseLeave={() => setHoverRating(0)}
-                      className="focus:outline-none transition-colors"
-                    >
-                      <FiStar
-                        size={24}
-                        className={`${
-                          star <= (hoverRating || rating)
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "text-gray-400"
-                        }`}
-                      />
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
-              <div>
-                <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Tell us more about your experience</label>
-                <textarea
-                  rows={3}
-                  value={feedback}
-                  onChange={(e) => setFeedback(e.target.value)}
-                  placeholder="Your feedback helps us improve..."
-                  className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
-                ></textarea>
-              </div>
-              <p className="text-xs text-gray-500 italic">Your feedback helps us improve!</p>
             </div>
 
             <div className="flex items-center gap-3">
