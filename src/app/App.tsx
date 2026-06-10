@@ -15,6 +15,7 @@ import StudentHousing from "./pages/StudentArea";
 import NotFound from "./pages/NotFound";
 import Terms from "./pages/Terms";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import { BlogPage, BlogPostDetailsPage } from "../features/blog";
 
 
 
@@ -63,6 +64,8 @@ function App() {
         <Route path="/Studentarea" element={<StudentHousing />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug" element={<BlogPostDetailsPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

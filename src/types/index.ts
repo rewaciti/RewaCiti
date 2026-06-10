@@ -226,4 +226,29 @@ export interface InspectionStore {
   updatePaymentStatus: (reference: string, status: "paid" | "failed") => void;
 }
 
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  summary: string;
+  author: string;
+  date: string;
+  image: string;
+  category: string;
+  tags: string[];
+}
+
+export interface BlogStore {
+  posts: BlogPost[];
+  loading: boolean;
+  page: number;
+  ITEMS_PER_PAGE: number;
+  fetchPosts: () => Promise<void>;
+  getPostBySlug: (slug: string) => BlogPost | undefined;
+  nextPage: () => void;
+  prevPage: () => void;
+  setPage: (page: number) => void;
+}
+
 
