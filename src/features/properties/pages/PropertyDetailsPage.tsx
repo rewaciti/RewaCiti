@@ -564,7 +564,6 @@ function PropertyDetails() {
                     }
                     title="Property Video Tour"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                    allowFullScreen
                     className="w-full h-full"
                   ></iframe>
                 ) : (
