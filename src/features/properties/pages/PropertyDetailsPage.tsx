@@ -300,42 +300,42 @@ function PropertyDetails() {
         <>
           <div className="mx-auto">
             {/* Name, Location & Price Section */}
-            <div className="md:flex gap-3 items-center px-4 py-6 md:whitespace-nowrap">
-          <div className="flex flex-col">
-            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white max-w-[95%]">{property?.name}</h1>
-          </div>
+            <div className="sm:flex justify-between items-center px-4 py-6">
+              <div className="flex flex-col lg:flex-row gap-2">
+                <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                  {property?.name}
+                </h1>
+                {/* Location */}
+                <a
+                  href={
+                    property?.geo_location?.lat !== 0 && property.geo_location?.lat !== null &&
+                    property?.geo_location?.lng !== 0 && property?.geo_location?.lng !== null
+                      ? `https://www.google.com/maps/search/?api=1&query=${property.geo_location.lat},${property.geo_location.lng}`
+                      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                          property
+                            ? [
+                                property.location.area,
+                                property.location.city_town,
+                                property.location.state,
+                              ].join(", ") + " state."
+                            : ""
+                        )}`
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm border dark:text-gray-400 text-gray-900 border-gray-600/30 rounded-sm px-2 py-1 inline-flex items-center gap-2 hover:text-[#703BF7] hover:border-[#703BF7] transition-colors w-fit"
+                >
+                  <FiMapPin />
+                  {property &&
+                    [
+                      property.location.area,
+                      property.location.city_town,
+                      property.location.state,
+                    ].join(", ") + " state."}
+                </a>
+              </div>
 
-          <div className="md:flex justify-between md:items-center w-full mt-1 md:mt-0">
-            {/* Location */}
-            <a
-              href={
-                property?.geo_location?.lat !== 0 && property.geo_location?.lat !== null &&
-                property?.geo_location?.lng !== 0 && property?.geo_location?.lng !== null
-                  ? `https://www.google.com/maps/search/?api=1&query=${property.geo_location.lat},${property.geo_location.lng}`
-                  : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                      property
-                        ? [
-                            property.location.area,
-                            property.location.city_town,
-                            property.location.state,
-                          ].join(", ") + " state."
-                        : ""
-                    )}`
-              }
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm border dark:text-gray-400 text-gray-900 border-gray-600/30 rounded-sm px-2 py-1 inline-flex items-center gap-2 hover:text-[#703BF7] hover:border-[#703BF7] transition-colors"
-            >
-              <FiMapPin className="" />
-              {property &&
-                [
-                  property.location.area,
-                  property.location.city_town,
-                  property.location.state,
-                ].join(", ") + " state."}
-            </a>
-
-            {/* Price & Action */}
+              {/* Price & Action */}
             <div className="flex gap-4 items-center justify-between mt-4 md:mt-0">
               <div className="flex flex-col items-start">
                 <p className="text-xs text-gray-800 dark:text-gray-400 flex">Price ({property?.duration})</p>
@@ -426,7 +426,6 @@ function PropertyDetails() {
             </div>
           </div>
         </div>
-      </div>
 
       <BookInspectionModal
         property={property}
@@ -564,7 +563,7 @@ function PropertyDetails() {
                         : property.videoUrl
                     }
                     title="Property Video Tour"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                     allowFullScreen
                     className="w-full h-full"
                   ></iframe>
@@ -823,7 +822,7 @@ function PropertyDetails() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
             {currentRelatedProperties.map((p) => (
               <PropertyCard key={p.id} property={p} />
             ))}
