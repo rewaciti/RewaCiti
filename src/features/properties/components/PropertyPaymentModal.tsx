@@ -11,7 +11,7 @@ interface PropertyPaymentModalProps {
   property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onPaymentSuccess?: () => void;
+  onPaymentSuccess?: (userData: { name: string; email: string; phone: string }) => void;
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -188,7 +188,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
             
             // Trigger Rating Modal
             if (onPaymentSuccess) {
-              onPaymentSuccess();
+              onPaymentSuccess({ name: fullName, email: email, phone: phone });
             }
           } catch (error) {
             console.error("Verification/CRM error:", error);

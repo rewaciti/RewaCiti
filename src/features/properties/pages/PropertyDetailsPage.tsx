@@ -141,6 +141,7 @@ function PropertyDetails() {
   const [isInspectionModalOpen, setIsInspectionModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
+  const [paymentUserData, setPaymentUserData] = useState<{ name: string; email: string; phone: string } | undefined>(undefined);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -437,13 +438,17 @@ function PropertyDetails() {
         property={property}
         open={isPaymentModalOpen}
         onOpenChange={setIsPaymentModalOpen}
-        onPaymentSuccess={() => setIsRatingModalOpen(true)}
+        onPaymentSuccess={(userData) => {
+          setPaymentUserData(userData);
+          setIsRatingModalOpen(true);
+        }}
       />
 
       <ServiceRatingModal
         property={property}
         open={isRatingModalOpen}
         onOpenChange={setIsRatingModalOpen}
+        userData={paymentUserData}
       />
 
       <ReportAgentModal
@@ -564,7 +569,6 @@ function PropertyDetails() {
                     }
                     title="Property Video Tour"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                    allowFullScreen
                     className="w-full h-full"
                   ></iframe>
                 ) : (

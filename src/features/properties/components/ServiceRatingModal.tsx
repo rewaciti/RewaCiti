@@ -9,12 +9,18 @@ interface ServiceRatingModalProps {
   property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  userData?: {
+    name: string;
+    email: string;
+    phone: string;
+  };
 }
 
 const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
   property,
   open,
   onOpenChange,
+  userData,
 }) => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
@@ -34,12 +40,16 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
       const feedbackPayload = {
         companyId: "69b4712ce95a2df514b1c789",
         pipelineId: "6a27f05df19944ca7f9a87dd",
-        title: `FEEDBACK: ${property.name}`,
+        title: `FEEDBACK: ${property.name}${userData ? ` - ${userData.name}` : ""}`,
+        name: userData?.name || "Anonymous",
+        email: userData?.email || "",
+        phone: userData?.phone || "",
+        amount: 0,
         note: `Rating: ${rating}/5\nFeedback: ${feedback}`,
         customData: [
           { label: "Property Name", value: property.name },
           { label: "Service Rating", value: `${rating} Stars` },
-          { label: "Feedback", value: feedback },
+          { label: "Feedback", value: feedback|| "No additional feedback provided" },
           { label: "Property ID", value: property.id }
         ]
       };
@@ -52,6 +62,9 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
       setFeedback("");
     } catch (error) {
       console.error("Error submitting feedback:", error);
+      if (axios.isAxiosError(error)) {
+        console.error("API Error Details:", error.response?.data);
+      }
       toast.error("Failed to submit feedback. Thank you anyway!");
       onOpenChange(false);
     } finally {
