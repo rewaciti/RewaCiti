@@ -29,13 +29,13 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
 
     const payload = {
       companyId: "69b4712ce95a2df514b1c789",
-      pipelineId: "69b49c7541d35d158e336621", // You might want to use a different pipeline for reports if available
+      pipelineId: "6a2a0b1ff19944ca7f9aa4b9",
       title: `AGENT REPORT: ${property.name} - ${reason}`,
       name: name,
       email: email,
       phone: phone,
       address: `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`,
-      note: `Reason: ${reason}\n\nDescription: ${description}`,
+      note: `Description: ${description}`,
       customData: [
         {
           label: "Property Name",
