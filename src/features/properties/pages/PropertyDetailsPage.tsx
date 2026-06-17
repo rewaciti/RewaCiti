@@ -634,7 +634,7 @@ function PropertyDetails() {
               </div>
 
               {/* Counter */}
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white px-6 py-2 rounded-full text-sm font-semibold tracking-wider border border-gray-300 dark:border-white/10 backdrop-blur-md">
+              <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white px-6 py-2 rounded-full text-sm font-semibold tracking-wider border border-gray-300 dark:border-white/10 backdrop-blur-md">
                 {lightboxIndex + 1} / {images.length}
               </div>
             </div>
