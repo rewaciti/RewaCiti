@@ -26,7 +26,7 @@ const BlogPage = () => {
           <h1 className="text-gray-900 dark:text-white md:text-5xl text-3xl font-bold mb-4">
             RewaCiti Blog
           </h1>
-          <p className="text-gray-800 dark:text-gray-400 text-lg max-w-2xl">
+          <p className="text-gray-800 dark:text-gray-400 text-lg">
             Stay updated with the latest trends, tips, and insights in the Nigerian real estate market.
           </p>
         </div>

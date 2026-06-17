@@ -1,6 +1,7 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
 import { useParams, Link } from "react-router";
-import { FiMapPin, FiChevronLeft, FiChevronRight, FiChevronDown, FiPlus, FiShare2, FiCheck, FiArrowLeft, FiArrowRight} from "react-icons/fi";
+import { FiMapPin, FiChevronLeft, FiChevronRight, FiChevronDown, FiPlus, FiShare2, FiCheck, FiArrowLeft, FiArrowRight, FiX} from "react-icons/fi";
+import * as Dialog from "@radix-ui/react-dialog";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { FaBed, FaBath, FaHome, FaBolt  } from "react-icons/fa";
@@ -63,6 +64,8 @@ function PropertyDetails() {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [step, setStep] = useState(window.innerWidth < 768 ? 1 : 2);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   const visibleImages = images.slice(currentIndex, currentIndex + step);
 
@@ -78,19 +81,41 @@ function PropertyDetails() {
     }
   }, [currentIndex]);
 
+  const nextLightboxImage = useCallback(() => {
+    if (lightboxIndex < images.length - 1) {
+      setLightboxIndex((prev) => prev + 1);
+    }
+  }, [lightboxIndex, images.length]);
+
+  const prevLightboxImage = useCallback(() => {
+    if (lightboxIndex > 0) {
+      setLightboxIndex((prev) => prev - 1);
+    }
+  }, [lightboxIndex]);
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") {
-        nextImages();
-      } else if (e.key === "ArrowLeft") {
-        prevImages();
+      if (isLightboxOpen) {
+        if (e.key === "ArrowRight") {
+          nextLightboxImage();
+        } else if (e.key === "ArrowLeft") {
+          prevLightboxImage();
+        } else if (e.key === "Escape") {
+          setIsLightboxOpen(false);
+        }
+      } else {
+        if (e.key === "ArrowRight") {
+          nextImages();
+        } else if (e.key === "ArrowLeft") {
+          prevImages();
+        }
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [nextImages, prevImages]);
+  }, [nextImages, prevImages, nextLightboxImage, prevLightboxImage, isLightboxOpen]);
 
   // Swipe navigation
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -486,7 +511,11 @@ function PropertyDetails() {
                 <img
                   key={index}
                   src={img}
-                  className={`w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-xl ${
+                  onClick={() => {
+                    setLightboxIndex(currentIndex + index);
+                    setIsLightboxOpen(true);
+                  }}
+                  className={`w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-xl cursor-pointer ${
                     visibleImages.length === 1 ? "h-[70vh]" : "h-[70vh]"
                   }`}
                 />
@@ -542,6 +571,76 @@ function PropertyDetails() {
           </div>
         </div>
       </section>
+
+      {/* Lightbox Dialog */}
+      <Dialog.Root open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-white/95 dark:bg-black/95 z-50 backdrop-blur-sm" />
+          <Dialog.Content className="fixed inset-0 z-100 flex items-center justify-center outline-none">
+            <div className="relative w-full h-full flex items-center justify-center">
+              {/* Close Button */}
+              <Dialog.Close asChild>
+                <button 
+                  className="absolute top-6 right-6 z-50 p-3 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white rounded-full hover:bg-[#703BF7] hover:text-white transition-all shadow-xl cursor-pointer"
+                >
+                  <FiX size={24} />
+                </button>
+              </Dialog.Close>
+
+              {/* Navigation Arrows */}
+              <button
+                onClick={(e) => { e.stopPropagation(); prevLightboxImage(); }}
+                disabled={lightboxIndex === 0}
+                className="absolute left-6 z-50 p-4 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white rounded-full hover:bg-[#703BF7] hover:text-white disabled:opacity-10 transition-all shadow-xl cursor-pointer hidden md:flex"
+              >
+                <FiChevronLeft size={32} />
+              </button>
+
+              <button
+                onClick={(e) => { e.stopPropagation(); nextLightboxImage(); }}
+                disabled={lightboxIndex === images.length - 1}
+                className="absolute right-6 z-50 p-4 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white rounded-full hover:bg-[#703BF7] hover:text-white disabled:opacity-10 transition-all shadow-xl cursor-pointer hidden md:flex"
+              >
+                <FiChevronRight size={32} />
+              </button>
+
+              {/* Mobile Arrows */}
+               <div className="absolute bottom-10 flex gap-10 md:hidden z-50">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); prevLightboxImage(); }}
+                    disabled={lightboxIndex === 0}
+                    className="p-4 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white rounded-full hover:bg-[#703BF7] hover:text-white disabled:opacity-10 transition-all shadow-xl cursor-pointer"
+                  >
+                    <FiChevronLeft size={24} />
+                  </button>
+
+                  <button
+                    onClick={(e) => { e.stopPropagation(); nextLightboxImage(); }}
+                    disabled={lightboxIndex === images.length - 1}
+                    className="p-4 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white rounded-full hover:bg-[#703BF7] hover:text-white disabled:opacity-10 transition-all shadow-xl cursor-pointer"
+                  >
+                    <FiChevronRight size={24} />
+                  </button>
+               </div>
+
+              {/* Image Container */}
+              <div className="w-full h-full flex items-center justify-center p-4" onClick={() => setIsLightboxOpen(false)}>
+                <img
+                  src={images[lightboxIndex]}
+                  alt={`Property Image ${lightboxIndex + 1}`}
+                  className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl select-none"
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </div>
+
+              {/* Counter */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white px-6 py-2 rounded-full text-sm font-semibold tracking-wider border border-gray-300 dark:border-white/10 backdrop-blur-md">
+                {lightboxIndex + 1} / {images.length}
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
 
       <section>
         {/* Property Video Section */}
