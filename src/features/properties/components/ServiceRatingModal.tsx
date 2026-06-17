@@ -81,6 +81,9 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900">
               Rate Our Service
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Please share your experience with paying for {property.name}. Your feedback helps us improve our service.
+            </Dialog.Description>
             <Dialog.Close asChild>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600">
                 <FiX />

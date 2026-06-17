@@ -87,6 +87,9 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
               <FiAlertTriangle className="text-red-500" />
               Report Agent
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Report an agent for unprofessional behavior or suspected scams related to {property.name}.
+            </Dialog.Description>
             <Dialog.Close asChild>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600">
                 <FiX />

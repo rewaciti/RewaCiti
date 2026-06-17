@@ -231,6 +231,9 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900">
               Book a Visit
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Schedule a visit to {property.name} and pay the inspection fee securely.
+            </Dialog.Description>
             <Dialog.Close asChild>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600">
                 <FiX />

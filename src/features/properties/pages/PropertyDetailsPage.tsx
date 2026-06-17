@@ -587,6 +587,10 @@ function PropertyDetails() {
           <Dialog.Overlay className="fixed inset-0 bg-white/95 dark:bg-black/95 z-50 backdrop-blur-sm" />
           <Dialog.Content className="fixed inset-0 z-100 flex items-center justify-center outline-none">
             <div className="relative w-full h-full flex items-center justify-center">
+              <Dialog.Title className="sr-only">Property Image Gallery</Dialog.Title>
+              <Dialog.Description className="sr-only">
+                Full-screen view of {property.name} images. Use arrow keys or swipe to navigate.
+              </Dialog.Description>
               {/* Close Button */}
               <Dialog.Close asChild>
                 <button 
