@@ -7,6 +7,7 @@ import FAQSection from "../../features/faq/components/FAQSection";
 import Footer from "../../shared/components/Layout/Footer";
 import { Link } from "react-router";
 import useScrollToHash from "../../shared/hooks/useScrollToHash";
+import { Helmet } from "react-helmet-async";
 
 
 function Home() {
@@ -34,6 +35,15 @@ function Home() {
 
   return (
     <div className="">
+      <Helmet>
+        <title>RewaCiti | Best Real Estate & Student Housing in Ile-Ife & Osun State</title>
+        <meta name="description" content="RewaCiti is your number one platform for finding the best properties, student housing, and tourism guides in Ile-Ife and across Osun State, Nigeria." />
+        <meta property="og:title" content="RewaCiti - Discover Your Dream Property in Nigeria" />
+        <meta property="og:description" content="Find the best real estate listings, student accommodation, and cultural insights in Ile-Ife and Osun State." />
+        <meta property="og:image" content="https://rewaciti.com/logo/Image.png" />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://rewaciti.com/" />
+      </Helmet>
       <Navbar />
       <section className="relative flex flex-col sm:flex-row" id= "hero">
 

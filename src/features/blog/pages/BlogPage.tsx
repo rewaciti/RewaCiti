@@ -4,13 +4,13 @@ import Footer from "../../../shared/components/Layout/Footer";
 import { useBlogStore } from "../store/useBlogStore";
 import { Link } from "react-router";
 import { FiArrowLeft, FiArrowRight, FiCalendar, FiUser } from "react-icons/fi";
+import { Helmet } from "react-helmet-async";
 
 const BlogPage = () => {
   const { posts, loading, page, ITEMS_PER_PAGE, fetchPosts, nextPage, prevPage } = useBlogStore();
 
   useEffect(() => {
     fetchPosts();
-    document.title = "RewaCiti Blog - Real Estate Tips & Insights";
   }, [fetchPosts]);
 
   const totalPages = Math.ceil(posts.length / ITEMS_PER_PAGE);
@@ -18,6 +18,15 @@ const BlogPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-300 dark:bg-black/30">
+      <Helmet>
+        <title>RewaCiti Blog - Real Estate Tips, Tourism & Insights in Nigeria</title>
+        <meta name="description" content="Stay updated with the latest trends, tips, and insights in the Nigerian real estate market, tourism in Ile-Ife, and Osun State accommodation guides." />
+        <meta property="og:title" content="RewaCiti Blog - Real Estate & Lifestyle Insights" />
+        <meta property="og:description" content="Explore our blog for the best real estate tips and tourism guides in Nigeria." />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://rewaciti.com/blog" />
+      </Helmet>
+
       <Navbar />
       
       {/* Hero Section */}

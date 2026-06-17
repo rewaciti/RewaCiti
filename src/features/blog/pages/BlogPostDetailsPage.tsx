@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, Link } from "react-router";
 import Navbar from "../../../shared/components/Layout/Navbar";
 import Footer from "../../../shared/components/Layout/Footer";
 import { useBlogStore } from "../store/useBlogStore";
 import type { BlogPost } from "../../../types";
 import { FiArrowLeft, FiCalendar, FiUser, FiTag } from "react-icons/fi";
+import { Helmet } from "react-helmet-async";
 
 const BlogPostDetailsPage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { getPostBySlug, fetchPosts, loading } = useBlogStore();
+  const { getPostBySlug, fetchPosts, loading, posts } = useBlogStore();
   const [post, setPost] = useState<BlogPost | undefined>(undefined);
 
   useEffect(() => {
@@ -17,13 +18,18 @@ const BlogPostDetailsPage = () => {
       if (slug) {
         const foundPost = getPostBySlug(slug);
         setPost(foundPost);
-        if (foundPost) {
-          document.title = `${foundPost.title} - RewaCiti Blog`;
-        }
       }
     };
     loadPost();
   }, [slug, fetchPosts, getPostBySlug]);
+
+  // Related posts logic: same category, excluding current post
+  const relatedPosts = useMemo(() => {
+    if (!post) return [];
+    return posts
+      .filter((p) => p.category === post.category && p.id !== post.id)
+      .slice(0, 3);
+  }, [post, posts]);
 
   if (loading) {
     return (
@@ -51,6 +57,34 @@ const BlogPostDetailsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-300 dark:bg-black/30">
+      <Helmet>
+        <title>{post.title} | RewaCiti Blog</title>
+        <meta name="description" content={post.summary} />
+        <meta property="og:title" content={`${post.title} | RewaCiti`} />
+        <meta property="og:description" content={post.summary} />
+        <meta property="og:image" content={post.image} />
+        <meta property="og:type" content="article" />
+        <meta property="article:published_time" content={post.date} />
+        <meta property="article:author" content={post.author} />
+        <meta property="article:section" content={post.category} />
+        <link rel="canonical" href={`https://rewaciti.com/blog/${post.slug}`} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": post.title,
+            "image": [post.image],
+            "datePublished": post.date,
+            "author": [{
+                "@type": "Organization",
+                "name": post.author,
+                "url": "https://rewaciti.com"
+              }],
+            "description": post.summary
+          })}
+        </script>
+      </Helmet>
+
       <Navbar />
       
       <main className="max-w-4xl mx-auto px-4 py-12">
@@ -62,7 +96,7 @@ const BlogPostDetailsPage = () => {
           <img 
             src={post.image} 
             alt={post.title} 
-            className="w-full h-[400px] rounded-3xl mb-8 border border-gray-700/40"
+            className="w-full h-[400px] rounded-3xl mb-8 border border-gray-700/40 object-cover"
           />
 
           <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 dark:text-gray-400 mb-6">
@@ -113,6 +147,27 @@ const BlogPostDetailsPage = () => {
             </div>
           </div>
         </article>
+
+        {/* Related Posts Section */}
+        {relatedPosts.length > 0 && (
+          <section className="mt-20 pt-12 border-t border-gray-700/40">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Related Posts</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedPosts.map((related) => (
+                <Link key={related.id} to={`/blog/${related.slug}`} className="group">
+                  <div className="bg-white dark:bg-[#1A1A1A] rounded-2xl border border-gray-700/40 overflow-hidden hover:shadow-lg transition-shadow">
+                    <img src={related.image} alt={related.title} className="w-full h-40 object-cover" />
+                    <div className="p-4">
+                      <h3 className="text-sm font-bold text-gray-900 dark:text-white line-clamp-2 group-hover:text-[#703BF7] transition-colors">
+                        {related.title}
+                      </h3>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
 
       <Footer />
