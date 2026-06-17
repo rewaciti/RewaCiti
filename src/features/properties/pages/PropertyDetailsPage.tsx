@@ -581,7 +581,7 @@ function PropertyDetails() {
               {/* Close Button */}
               <Dialog.Close asChild>
                 <button 
-                  className="absolute top-6 right-6 z-50 p-3 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white rounded-full hover:bg-[#703BF7] hover:text-white transition-all shadow-xl cursor-pointer"
+                  className="absolute top-6 right-6 z-50 p-3 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white rounded-full hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all shadow-xl cursor-pointer"
                 >
                   <FiX size={24} />
                 </button>
@@ -591,7 +591,7 @@ function PropertyDetails() {
               <button
                 onClick={(e) => { e.stopPropagation(); prevLightboxImage(); }}
                 disabled={lightboxIndex === 0}
-                className="absolute left-6 z-50 p-4 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white rounded-full hover:bg-[#703BF7] hover:text-white disabled:opacity-10 transition-all shadow-xl cursor-pointer hidden md:flex"
+                className="absolute left-6 z-50 p-4 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white rounded-full hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white disabled:opacity-10 transition-all shadow-xl cursor-pointer hidden md:flex"
               >
                 <FiChevronLeft size={32} />
               </button>
@@ -609,7 +609,7 @@ function PropertyDetails() {
                   <button
                     onClick={(e) => { e.stopPropagation(); prevLightboxImage(); }}
                     disabled={lightboxIndex === 0}
-                    className="p-4 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white rounded-full hover:bg-[#703BF7] hover:text-white disabled:opacity-10 transition-all shadow-xl cursor-pointer"
+                    className="p-4 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white rounded-full hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white disabled:opacity-10 transition-all shadow-xl cursor-pointer"
                   >
                     <FiChevronLeft size={24} />
                   </button>
@@ -617,7 +617,7 @@ function PropertyDetails() {
                   <button
                     onClick={(e) => { e.stopPropagation(); nextLightboxImage(); }}
                     disabled={lightboxIndex === images.length - 1}
-                    className="p-4 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white rounded-full hover:bg-[#703BF7] hover:text-white disabled:opacity-10 transition-all shadow-xl cursor-pointer"
+                    className="p-4 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white rounded-full hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white disabled:opacity-10 transition-all shadow-xl cursor-pointer"
                   >
                     <FiChevronRight size={24} />
                   </button>
