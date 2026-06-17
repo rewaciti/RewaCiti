@@ -150,7 +150,7 @@ const BlogPostDetailsPage = () => {
 
         {/* Related Posts Section */}
         {relatedPosts.length > 0 && (
-          <section className="mt-20 pt-12 border-t border-gray-700/40">
+          <section className="mt-10 pt-7 border-t border-gray-700/40">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Related Posts</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedPosts.map((related) => (
