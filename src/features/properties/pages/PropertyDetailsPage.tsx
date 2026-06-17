@@ -139,11 +139,20 @@ function PropertyDetails() {
     const isRightSwipe = distance < -minSwipeDistance;
 
     if (isLeftSwipe) {
-      nextImages();
+      if (isLightboxOpen) {
+        nextLightboxImage();
+      } else {
+        nextImages();
+      }
     } else if (isRightSwipe) {
-      prevImages();
+      if (isLightboxOpen) {
+        prevLightboxImage();
+      } else {
+        prevImages();
+      }
     }
   };
+
 
   useEffect(() => {
     if (properties.length === 0) {
@@ -624,7 +633,13 @@ function PropertyDetails() {
                </div>
 
               {/* Image Container */}
-              <div className="w-full h-full flex items-center justify-center p-4" onClick={() => setIsLightboxOpen(false)}>
+              <div 
+                className="w-full h-full flex items-center justify-center p-4" 
+                onClick={() => setIsLightboxOpen(false)}
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
+              >
                 <img
                   src={images[lightboxIndex]}
                   alt={`Property Image ${lightboxIndex + 1}`}
