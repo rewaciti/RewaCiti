@@ -643,7 +643,7 @@ function PropertyDetails() {
                 <img
                   src={images[lightboxIndex]}
                   alt={`Property Image ${lightboxIndex + 1}`}
-                  className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl select-none"
+                  className="max-w-full md:max-h-[85vh] h-[80vh] object-contain rounded-lg shadow-2xl select-none"
                   onClick={(e) => e.stopPropagation()}
                 />
               </div>
