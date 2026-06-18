@@ -36,7 +36,7 @@ function Home() {
   return (
     <div className="">
       <Helmet>
-        <title>RewaCiti | Best Real Estate & Student Housing in Ile-Ife & Osun State</title>
+        <title>Best Real Estate platform in Ile-Ife | RewaCiti</title>
         <meta name="description" content="RewaCiti is your number one platform for finding the best properties, student housing, and tourism guides in Ile-Ife and across Osun State, Nigeria." />
         <meta property="og:title" content="RewaCiti - Discover Your Dream Property in Nigeria" />
         <meta property="og:description" content="Find the best real estate listings, student accommodation, and cultural insights in Ile-Ife and Osun State." />
