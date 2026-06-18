@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 import type { Property, PropertyStore, SabiFlowProduct, PropertyPaymentFees } from "../../../types";
+import { ensureHttps } from "../../../shared/lib/utils";
 
 export const usePropertyStore = create<PropertyStore>((set, get) => ({
   properties: [],
@@ -43,8 +44,8 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         return {
           id: item._id,
           name: item.name,
-          img: item.thumbnail || item.images[0] || "",
-          images: item.images || [],
+          img: ensureHttps(item.thumbnail || item.images[0] || ""),
+          images: (item.images || []).map(ensureHttps),
           description: item.description || "",
           bedrooms: customData?.bedrooms || 0,
           bathrooms: customData?.bathrooms || 0,
@@ -77,7 +78,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
             ...(item.specifications ? Object.entries(item.specifications).map(([label, value]) => ({ label, value })) : []),
             ...(customData?.attributes || [])
           ],
-          videoUrl: item.videoUrl || "",
+          videoUrl: ensureHttps(item.videoUrl || ""),
           caretakerContact: customData?.care_taker_contact_optional ? {
             whatsapp: customData.care_taker_contact_optional.wattsapp_contact,
             phone: customData.care_taker_contact_optional.call_contact,

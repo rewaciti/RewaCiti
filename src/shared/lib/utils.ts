@@ -14,3 +14,11 @@ export const formatCurrency = (amount: number) => {
   }
   return amount.toLocaleString();
 };
+
+export const ensureHttps = (url: string) => {
+  if (!url) return url;
+  if (url.startsWith("http://")) {
+    return url.replace("http://", "https://");
+  }
+  return url;
+};

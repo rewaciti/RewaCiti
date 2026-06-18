@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 import type { BlogPost, BlogStore } from "../../../types";
+import { ensureHttps } from "../../../shared/lib/utils";
 
 export const useBlogStore = create<BlogStore>((set, get) => ({
   posts: [],
@@ -12,7 +13,11 @@ export const useBlogStore = create<BlogStore>((set, get) => ({
     set({ loading: true });
     try {
       const res = await axios.get<BlogPost[]>("/data/Blog.json");
-      set({ posts: res.data, loading: false });
+      const sanitizedPosts = res.data.map(post => ({
+        ...post,
+        image: ensureHttps(post.image)
+      }));
+      set({ posts: sanitizedPosts, loading: false });
     } catch (err) {
       console.error("Failed to fetch blog posts", err);
       set({ loading: false });

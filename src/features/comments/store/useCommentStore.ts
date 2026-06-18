@@ -2,6 +2,7 @@
 import { create } from "zustand";
 import axios from "axios";
 import type { Comment, CommentStore } from "../../../types";
+import { ensureHttps } from "../../../shared/lib/utils";
 
 export const useCommentStore = create<CommentStore>((set) => ({
   comments: [],
@@ -13,7 +14,11 @@ export const useCommentStore = create<CommentStore>((set) => ({
     set({ loading: true });
     try {
       const res = await axios.get<Comment[]>("/data/Comments.json"); // Place your JSON file in /public/data
-      set({ comments: res.data, loading: false });
+      const sanitizedComments = res.data.map(comment => ({
+        ...comment,
+        img: ensureHttps(comment.img)
+      }));
+      set({ comments: sanitizedComments, loading: false });
     } catch (err) {
       console.error("Failed to fetch comments", err);
       set({ loading: false });
