@@ -35,7 +35,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
       email: email,
       phone: phone,
       address: `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`,
-      note: `Description: ${description}`,
+      note: `Description: ${description || "No additional details provided"}`,
       customData: [
         {
           label: "Property Name",
@@ -155,7 +155,6 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
             <div>
               <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Description</label>
               <textarea
-                required
                 rows={4}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
