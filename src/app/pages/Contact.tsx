@@ -39,7 +39,7 @@ function Contact() {
       name: fullName,
       email: email,
       phone: phone,
-      note: message,
+      note: message || "No additional message added",
       customData: [
         { label: "Inquiry Type", value: inquiryType },
         { label: "Source", value: source },
@@ -295,7 +295,6 @@ function Contact() {
             <label className=" text-gray-700 dark:text-gray-300 text-sm mb-1 block">Message</label>
             <textarea
               rows={4}
-              required
               placeholder="Enter your Message here..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}

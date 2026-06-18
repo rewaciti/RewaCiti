@@ -68,7 +68,7 @@ function PropertySearchSection() {
       email: email,
       phone: phone,
       address: preferedLocation,
-      note: message,
+      note: message || "No additional details added",
       customData: [
         { label: "Budget", value: Budget },
         { label: "Category", value: preferedCategory },
@@ -658,7 +658,6 @@ function PropertySearchSection() {
               <textarea
                 placeholder="Enter your Description here.."
                 rows={4}
-                required
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 resize-none"

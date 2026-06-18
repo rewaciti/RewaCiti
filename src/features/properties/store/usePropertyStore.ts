@@ -34,6 +34,12 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         
         const totalPrice = propertyCost + agentFee + legalFee + serviceFee + cautionFee;
 
+        const createdByValue = item.createdBy
+          ? typeof item.createdBy === "object"
+            ? item.createdBy._id || item.createdBy.id || ""
+            : item.createdBy
+          : "";
+
         return {
           id: item._id,
           name: item.name,
@@ -53,7 +59,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
             CautionFee: cautionFee,
             TotalCost: totalPrice || item.price || 0
           },
-          createdBy: item.createdBy || "",
+          createdBy: createdByValue,
           location: {
             area: customData?.location?.area || "",
             city: customData?.location?.city || "",

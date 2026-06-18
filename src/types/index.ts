@@ -164,9 +164,16 @@ export interface SabiFlowProduct {
   specifications?: Record<string, string>;
   productType?: string;
   categoryId?: {
+    _id?: string;
     name: string;
+    id?: string;
   };
-  createdBy?: string;
+  createdBy?:{
+    _id: string;
+    firstName: string;
+    lastName: string;
+    id: string;
+  };
   customData?: {
     bedrooms?: number;
     bathrooms?: number|string;
