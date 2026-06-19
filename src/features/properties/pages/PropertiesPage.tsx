@@ -1,6 +1,7 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Helmet } from "react-helmet-async";
 import { usePropertyStore } from "../store/usePropertyStore";
 import type { Property } from "../../../types";
 import {
@@ -229,6 +230,14 @@ function PropertySearchSection() {
 
   return (
     <div>
+      <Helmet>
+        <title>Properties | RewaCiti</title>
+        <meta name="description" content="Browse available properties on RewaCiti, including rentals and homes in Ile-Ife and surrounding areas." />
+        <meta property="og:title" content="Properties | RewaCiti" />
+        <meta property="og:description" content="Search top real estate listings, rentals, and student accommodations on RewaCiti." />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://rewaciti.com/properties" />
+      </Helmet>
       <Navbar />
       <div className="relative" id="Categories">
         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10  space-y-6 border-b border-gray-600">

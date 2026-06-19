@@ -11,6 +11,7 @@ import Footer from "../../shared/components/Layout/Footer";
 import { FiFilter } from "react-icons/fi";
 import useScrollToHash from "../../shared/hooks/useScrollToHash";
 import { Link, NavLink } from "react-router";
+import { Helmet } from "react-helmet-async";
 import { toast } from "sonner";
 
 import { PropertyCardSkeleton } from "../../shared/components/ui/Skeletons";
@@ -213,6 +214,17 @@ function Studentarea() {
 
   return (
     <div>
+      <Helmet>
+        <title>Student Housing in Ile-Ife | RewaCiti Student Area</title>
+        <meta name="description" content="Search student accommodation in Ile-Ife with RewaCiti, including hostels, shared apartments, and student-friendly housing options." />
+        <meta property="og:title" content="Student Housing in Ile-Ife | RewaCiti" />
+        <meta property="og:description" content="Find student-friendly housing, affordable rentals, and university area homes with RewaCiti." />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Student Housing in Ile-Ife | RewaCiti" />
+        <meta name="twitter:description" content="Explore student accommodation options around Ile-Ife and university areas with RewaCiti." />
+        <link rel="canonical" href="https://rewaciti.com/studentarea" />
+      </Helmet>
       <Navbar />
       <div className="relative" id="StudentCategories">
         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10 space-y-6 border-b border-gray-600">

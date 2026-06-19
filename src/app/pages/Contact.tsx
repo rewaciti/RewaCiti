@@ -3,6 +3,7 @@ import { FaEnvelope, FaPhone, FaDirections } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
 import Footer from "../../shared/components/Layout/Footer";
 import useScrollToHash from "../../shared/hooks/useScrollToHash";
+import { Helmet } from "react-helmet-async";
 import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router";
@@ -92,6 +93,17 @@ function Contact() {
   ];
   return (
     <div className="">
+      <Helmet>
+        <title>Contact RewaCiti | Real Estate Support in Ile-Ife</title>
+        <meta name="description" content="Get in touch with RewaCiti for property listings, student housing support, and real estate advisory services in Ile-Ife and Osun State." />
+        <meta property="og:title" content="Contact RewaCiti | Real Estate Support in Ile-Ife" />
+        <meta property="og:description" content="Contact RewaCiti to connect with our real estate experts, request property information, or book a housing consultation." />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Contact RewaCiti | Real Estate Support" />
+        <meta name="twitter:description" content="Reach out to RewaCiti for property, student housing, and investment support in Ile-Ife." />
+        <link rel="canonical" href="https://rewaciti.com/contact" />
+      </Helmet>
       <Navbar />
       <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10  space-y-6" id="Contactinfo">
         <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">

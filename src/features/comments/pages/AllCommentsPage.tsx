@@ -2,7 +2,8 @@ import Navbar from "../../../shared/components/Layout/Navbar";
 import { useEffect } from "react";
 import { useCommentStore } from "../store/useCommentStore";
 import type { Comment } from "../../../types";
-import  Footer from "../../../shared/components/Layout/Footer";
+import Footer from "../../../shared/components/Layout/Footer";
+import { Helmet } from "react-helmet-async";
 import { CommentCardSkeleton } from "../../../shared/components/ui/Skeletons";
 
 function AllComments() {
@@ -14,6 +15,14 @@ function AllComments() {
 
   return (
     <div className="bg-gray-300 dark:bg-black/30">
+      <Helmet>
+        <title>Customer Comments | RewaCiti</title>
+        <meta name="description" content="Read reviews and customer testimonials for RewaCiti's real estate and student housing services in Ile-Ife." />
+        <meta property="og:title" content="Customer Comments | RewaCiti" />
+        <meta property="og:description" content="See what clients say about RewaCiti's properties, student housing, and real estate support." />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://rewaciti.com/allcomments" />
+      </Helmet>
       <Navbar />
       <div className="w-[98%] mx-auto px-2 py-3">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">All Comments</h1>

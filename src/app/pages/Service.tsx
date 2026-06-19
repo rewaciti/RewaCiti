@@ -1,6 +1,7 @@
 import Navbar from "../../shared/components/Layout/Navbar"
 import Footer from "../../shared/components/Layout/Footer";
 import useScrollToHash from "../../shared/hooks/useScrollToHash";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router";
 
 function Service() {
@@ -106,6 +107,17 @@ const services4 = [
 ];
   return (
     <div>
+      <Helmet>
+        <title>Services | RewaCiti Real Estate & Property Management</title>
+        <meta name="description" content="Explore RewaCiti's real estate services for property sales, management, student housing, and investment guidance in Ile-Ife." />
+        <meta property="og:title" content="Services | RewaCiti Real Estate & Property Management" />
+        <meta property="og:description" content="Discover professional property services, valuations, management, and investment support from RewaCiti." />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="RewaCiti Services | Property Management & Investment" />
+        <meta name="twitter:description" content="Learn about RewaCiti's services for property sellers, landlords, investors and student accommodation seekers." />
+        <link rel="canonical" href="https://rewaciti.com/service" />
+      </Helmet>
         <Navbar />
          <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10 space-y-6">
                 <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">

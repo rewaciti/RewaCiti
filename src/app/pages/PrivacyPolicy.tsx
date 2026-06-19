@@ -1,9 +1,19 @@
 import Navbar from "../../shared/components/Layout/Navbar";
 import Footer from "../../shared/components/Layout/Footer";
+import { Helmet } from "react-helmet-async";
 
 const PrivacyPolicy = () => {
   return (
     <div className="bg-gray-100 dark:bg-black/30 min-h-screen">
+      <Helmet>
+        <title>Privacy Policy | RewaCiti</title>
+        <meta name="description" content="Read RewaCiti's Privacy Policy to learn how we collect, handle, and protect user data for property searches and housing services." />
+        <meta property="og:title" content="Privacy Policy | RewaCiti" />
+        <meta property="og:description" content="Learn how RewaCiti processes personal information and protects privacy on its real estate platform." />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="canonical" href="https://rewaciti.com/privacy-policy" />
+      </Helmet>
       <Navbar />
 
       <div className="max-w-4xl mx-auto px-4 py-8 text-gray-800 dark:text-gray-200">

@@ -2,7 +2,8 @@ import Navbar from "../../../shared/components/Layout/Navbar";
 import { useEffect } from "react";
 import { useFAQStore } from "../store/useFAQStore";
 import type { FAQ } from "../../../types";
-import  Footer from "../../../shared/components/Layout/Footer";
+import Footer from "../../../shared/components/Layout/Footer";
+import { Helmet } from "react-helmet-async";
 import { FAQCardSkeleton } from "../../../shared/components/ui/Skeletons";
 
 function AllFAQs() {
@@ -14,6 +15,14 @@ function AllFAQs() {
 
   return (
     <div className="bg-gray-300 dark:bg-black/30">
+      <Helmet>
+        <title>Frequently Asked Questions | RewaCiti</title>
+        <meta name="description" content="Find answers to common questions about RewaCiti's real estate listings, student housing, and property services in Ile-Ife." />
+        <meta property="og:title" content="Frequently Asked Questions | RewaCiti" />
+        <meta property="og:description" content="Explore RewaCiti's FAQ for guidance on property searches, housing options, and platform support." />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://rewaciti.com/allfaqs" />
+      </Helmet>
       <Navbar />
       <div className="w-[98%] mx-auto px-2 py-3">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Frequently Asked Questions</h1>

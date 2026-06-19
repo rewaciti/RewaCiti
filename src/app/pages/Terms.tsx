@@ -1,9 +1,19 @@
 import Navbar from "../../shared/components/Layout/Navbar";
 import Footer from "../../shared/components/Layout/Footer";
+import { Helmet } from "react-helmet-async";
 
 const Terms = () => {
   return (
     <div className="bg-gray-100 dark:bg-black/30 min-h-screen">
+      <Helmet>
+        <title>Terms of Use | RewaCiti</title>
+        <meta name="description" content="Read the RewaCiti Terms of Use for property listings, student housing services, and platform policies in Ile-Ife." />
+        <meta property="og:title" content="Terms of Use | RewaCiti" />
+        <meta property="og:description" content="Understand the rules and policies governing your use of the RewaCiti real estate platform." />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="canonical" href="https://rewaciti.com/terms" />
+      </Helmet>
       <Navbar />
 
       <div className="max-w-4xl mx-auto px-4 py-8 text-gray-800 dark:text-gray-200">

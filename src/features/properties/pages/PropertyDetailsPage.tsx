@@ -1,5 +1,6 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
 import { useParams, Link } from "react-router";
+import { Helmet } from "react-helmet-async";
 import { FiMapPin, FiChevronLeft, FiChevronRight, FiChevronDown, FiPlus, FiShare2, FiCheck, FiArrowLeft, FiArrowRight, FiX} from "react-icons/fi";
 import * as Dialog from "@radix-ui/react-dialog";
 import { usePropertyStore } from "../store/usePropertyStore";
@@ -320,6 +321,31 @@ function PropertyDetails() {
 
   return (
     <div className="bg-gray-300 dark:bg-black/30">
+      <Helmet>
+        <title>{property ? `${property.name} | RewaCiti` : "Property Details | RewaCiti"}</title>
+        <meta
+          name="description"
+          content={
+            property
+              ? `Explore ${property.name} with details on location, pricing, amenities, and contact support from RewaCiti.`
+              : "View property details on RewaCiti."
+          }
+        />
+        <meta
+          property="og:title"
+          content={property ? `${property.name} | RewaCiti` : "Property Details | RewaCiti"}
+        />
+        <meta
+          property="og:description"
+          content={
+            property
+              ? `Discover ${property.name} in ${property.location.area}, ${property.location.city_town}, ${property.location.state}.`
+              : "View property details on RewaCiti."
+          }
+        />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href={window.location.href} />
+      </Helmet>
       <Navbar />
 
       {loading && properties.length === 0 ? (

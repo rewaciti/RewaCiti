@@ -5,6 +5,7 @@ import { FaStar, FaUsers, FaShieldAlt,FaGraduationCap, FaLinkedin } from "react-
 import type { ValueItem,Step,TeamMember, AchievementItem } from "../../types";
 import Footer from "../../shared/components/Layout/Footer";
 import useScrollToHash from "../../shared/hooks/useScrollToHash";
+import { Helmet } from "react-helmet-async";
 import { Send } from "lucide-react";
 
 
@@ -188,6 +189,17 @@ function About() {
   useScrollToHash();
   return (
     <div>
+      <Helmet>
+        <title>About RewaCiti | Trusted Real Estate Platform in Ile-Ife</title>
+        <meta name="description" content="Learn how RewaCiti helps buyers, renters, and students find trusted real estate listings and housing in Ile-Ife and Osun State." />
+        <meta property="og:title" content="About RewaCiti | Trusted Real Estate Platform" />
+        <meta property="og:description" content="RewaCiti is a growing real estate platform for student housing, property sales, and investment guidance in Ile-Ife." />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About RewaCiti | Trusted Real Estate Platform" />
+        <meta name="twitter:description" content="Learn how RewaCiti helps buyers, renters, and students access trusted housing and property services in Ile-Ife." />
+        <link rel="canonical" href="https://rewaciti.com/about" />
+      </Helmet>
         <Navbar />
         <section className="relative flex flex-col md:flex-row bg-gray-300 dark:bg-black/30 py-4 px-4 lg:gap-10 md:gap-3" id="Journey">
           <div className="flex-1  flex flex-col justify-center space-y-6 z-10 order-last md:order-first ">
