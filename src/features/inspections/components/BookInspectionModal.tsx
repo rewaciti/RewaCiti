@@ -137,7 +137,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               email: email,
               phone: phone,
               address: propertyAddress,
-              note: `Reference: ${transaction.reference}\nTask: Property Visit/Inspection\nProperty Link: ${propertyUrl}\nSale ID: ${saleId}`,
+              note: `visit/inspection booking for ${property.name} at ${propertyAddress}. Property Link: ${propertyUrl}. Booking Reference: ${transaction.reference}`,
               customData: [
                 { label: "Property Name", value: property.name },
                 { label: "Property Link", value: propertyUrl },
