@@ -90,7 +90,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
           }
         ],
         taxRate: 0,
-        notes: `Property Visit/Inspection\nProperty Link: ${propertyUrl}\nProperty ID: ${property.id}\nagent ID: ${property.createdBy}\n`,
+        notes: `Inspection booking for ${property.name} at ${propertyAddress}. Property Link: ${propertyUrl}`,
         paymentMethod: "credit_card",
         customerDetails: {
           name: fullName,

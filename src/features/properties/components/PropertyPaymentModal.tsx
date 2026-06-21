@@ -97,7 +97,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
           }
         ],
         taxRate: 0,
-        notes: `Property Payment\nProperty Link: ${propertyUrl}\nProperty ID: ${property.id}\nagent ID: ${property.createdBy}`,
+        notes: `Payment for ${property.name} at ${propertyAddress}. Property Link: ${propertyUrl}`,
         paymentMethod: "credit_card",
         customerDetails: {
           name: fullName,
