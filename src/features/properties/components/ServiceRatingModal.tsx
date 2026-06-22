@@ -82,7 +82,7 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
               Rate Our Service
             </Dialog.Title>
             <Dialog.Description className="sr-only">
-              Please share your experience with paying for {property.name}. Your feedback helps us improve our service.
+              Please share your experience purchasing {property.name} on RewaCiti. Your feedback helps us improve our service.
             </Dialog.Description>
             <Dialog.Close asChild>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600">
@@ -94,7 +94,7 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-3">
               <label className="text-sm dark:text-gray-300 text-gray-700 block text-center">
-                How was your experience paying for this property?
+                How was your experience purchasing this property on RewaCiti?
               </label>
               <div className="flex justify-center gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (

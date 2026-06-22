@@ -145,11 +145,10 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
               email: email,
               phone: phone,
               address: propertyAddress,
-              note: `Property payment for ${property.name} at ${propertyAddress}. Property Link: ${propertyUrl}. Payment Reference: ${transaction.reference}`,
+              note: `Property payment for ${property.name} at ${propertyAddress}.\nProperty Link: ${propertyUrl}.\nPayment Reference: ${transaction.reference}`,
               customData: [
                 { label: "Property Name", value: property.name },
                 { label: "Property Link", value: propertyUrl },
-                { label: "Total Property Price", value: price },
                 { label: "Payment Reference", value: transaction.reference },
                 { label: "amount Paid", value: price },
                 { label: "Service Fee", value: `₦${pricing.ServiceFee.toLocaleString()}` },
@@ -165,9 +164,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
 
             toast.success(
               <div className="whitespace-pre-wrap">
-                Payment successful! Reference: {transaction.reference}
-                <br />
-                A member of our team will contact you shortly.
+                {`Payment successful! Reference: ${transaction.reference}\nA member of our team will contact you shortly.`}
               </div>,
               {
                 duration: 5000,

@@ -90,7 +90,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
           }
         ],
         taxRate: 0,
-        notes: `Inspection booking for ${property.name} at ${propertyAddress}. Property Link: ${propertyUrl}`,
+        notes: `Inspection booking for ${property.name} at ${propertyAddress}.\nProperty Link: ${propertyUrl}`,
         paymentMethod: "credit_card",
         customerDetails: {
           name: fullName,
@@ -137,7 +137,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               email: email,
               phone: phone,
               address: propertyAddress,
-              note: `visit/inspection booking for ${property.name} at ${propertyAddress}. Property Link: ${propertyUrl}. Booking Reference: ${transaction.reference}`,
+              note: `visit/inspection booking for ${property.name} at ${propertyAddress}.\nProperty Link: ${propertyUrl}.\nBooking Reference: ${transaction.reference}`,
               customData: [
                 { label: "Property Name", value: property.name },
                 { label: "Property Link", value: propertyUrl },
@@ -173,9 +173,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
             
             toast.success(
               <div className="whitespace-pre-wrap">
-                Payment successful! Reference: {transaction.reference}
-                <br />
-                A member of our team will contact you shortly.
+                {`Payment successful! Reference: ${transaction.reference}\nA member of our team will contact you shortly.`}
               </div>,
               {
                 duration: 5000,

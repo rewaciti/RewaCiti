@@ -30,9 +30,18 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         const propertyCost = apiPricing?.property_cost || 0;
         const agentFee = apiPricing?.agent_fee || 0;
         const legalFee = apiPricing?.legal_fee || 0;
-        const serviceFee = apiPricing?.service_fee || 0;
+        let serviceFee = apiPricing?.service_fee || 0;
         const cautionFee = apiPricing?.caution_fee || 0;
-        
+
+        const creatorClassification =
+          item.creatorClassification ||
+          (typeof item.createdBy === "object" ? item.createdBy.creatorClassification : undefined) ||
+          item.customData?.creatorClassification;
+
+        if (creatorClassification?.toLowerCase() === "agent") {
+          serviceFee += propertyCost * 0.05;
+        }
+
         const totalPrice = propertyCost + agentFee + legalFee + serviceFee + cautionFee;
 
         const createdByValue = item.createdBy

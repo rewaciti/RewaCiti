@@ -168,18 +168,21 @@ export interface SabiFlowProduct {
     name: string;
     id?: string;
   };
+  creatorClassification?: string;
   createdBy?:{
     _id: string;
     firstName: string;
     lastName: string;
     id: string;
-  };
+    creatorClassification?: string;
+  } | string;
   customData?: {
     bedrooms?: number;
     bathrooms?: number|string;
     yearBuilt?: number;
     duration?: string;
     rules?: string[];
+    creatorClassification?: string;
     pricing?: {
       agent_fee?: number;
       legal_fee?: number;
