@@ -52,6 +52,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
 
         return {
           id: item._id,
+          slug: item.slug,
           name: item.name,
           img: ensureHttps(item.thumbnail || item.images[0] || ""),
           images: (item.images || []).map(ensureHttps),

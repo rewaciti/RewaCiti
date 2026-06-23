@@ -17,13 +17,10 @@ import { PropertyDetailsSkeleton } from "../../../shared/components/ui/Skeletons
 import { toast } from "sonner";
 import { formatCurrency } from "../../../shared/lib/utils";
 
-const slugify = (text: string) =>
-  text.toLowerCase().replace(/\s+/g, "-");
-
 function PropertyDetails() {
-  const { name } = useParams();
+  const { slug } = useParams<{ slug: string }>();
   const { properties, fetchProperties, loading, toggleShortlist, shortlistedProperties } = usePropertyStore();
-  const property = properties.find((p) => slugify(p.name) === name);
+  const property = properties.find((p) => p.slug === slug);
 
   const isShortlisted = property ? shortlistedProperties.some((p) => p.id === property.id) : false;
 
@@ -163,7 +160,7 @@ function PropertyDetails() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [name]);
+  }, [slug]);
 
   // FORM STATES
   const [firstName, setFirstName] = useState("");

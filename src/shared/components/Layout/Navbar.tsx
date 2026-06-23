@@ -6,9 +6,6 @@ import { FiSun, FiMoon, FiPlus, FiTrash2 } from "react-icons/fi";
 import { usePropertyStore } from "../../../features/properties/store/usePropertyStore";
 import { toast } from "sonner";
 
-const slugify = (text: string) =>
-  text.toLowerCase().replace(/\s+/g, "-");
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isShortlistOpen, setIsShortlistOpen] = useState(false);
@@ -98,7 +95,7 @@ const Navbar = () => {
                             alt={property.name}
                             className="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform duration-300"
                             onClick={() => {
-                              navigate(`/properties/${slugify(property.name)}`);
+                              navigate(`/properties/${property.slug}`);
                               setIsShortlistOpen(false);
                             }}
                           />
@@ -107,7 +104,7 @@ const Navbar = () => {
                           <p 
                             className="text-xs font-semibold truncate cursor-pointer text-gray-900 dark:text-gray-200"
                             onClick={() => {
-                              navigate(`/properties/${slugify(property.name)}`);
+                              navigate(`/properties/${property.slug}`);
                               setIsShortlistOpen(false);
                             }}
                           >
@@ -115,7 +112,7 @@ const Navbar = () => {
                           </p>
                           <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate cursor-pointer"
                             onClick={() => {
-                              navigate(`/properties/${slugify(property.name)}`);
+                              navigate(`/properties/${property.slug}`);
                               setIsShortlistOpen(false);
                             }}>
                             {property.location.area}, {property.location.city_town}, {property.location.state} state.

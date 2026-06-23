@@ -11,19 +11,17 @@ interface PropertyCardProps {
   property: Property;
 }
 
-const slugify = (text: string) =>
-  text.toLowerCase().replace(/\s+/g, "-");
-
 function PropertyCard({ property }: PropertyCardProps) {
   const [expanded, setExpanded] = useState(false);
   const { toggleShortlist, shortlistedProperties } = usePropertyStore();
+  const propertySlug = property.slug;
 
   const isShortlisted = shortlistedProperties.some((p) => p.id === property.id);
 
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const url = `${window.location.origin}/properties/${slugify(property.name)}`;
+    const url = `${window.location.origin}/properties/${propertySlug}`;
     const address = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
     const shareText = `Name: ${property.name}\nAddress: ${address}`;
     if (navigator.share) {
@@ -190,7 +188,7 @@ function PropertyCard({ property }: PropertyCardProps) {
     </div>
 
     <NavLink
-      to={`/properties/${slugify(property.name)}`}
+      to={`/properties/${propertySlug}`}
       className="bg-[#703BF7] text-white px-4 py-1.5 rounded-lg text-sm shadow hover:bg-[#5d2fe0] hover:shadow-md transition"
     >
       View Property
