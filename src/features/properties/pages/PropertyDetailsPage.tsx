@@ -735,30 +735,46 @@ function PropertyDetails() {
           </div>
   
           {/* Property Details */}
-          <div className="flex flex-wrap gap-6 gap-x-[20%] md:gap-x-[25%] xl:gap-x-[30%] border-t border-gray-600/30 pt-2 justify-start">
-            {hasBedrooms && (
-              <div className="flex flex-col px-2">
-                <span className="text-gray-800 dark:text-gray-400 mt-1 flex items-center gap-1"><FaBed/>Bedrooms</span>
-                <span className="text-xl font-semibold text-gray-900 dark:text-white">{property?.bedrooms}</span> 
-              </div>
-            )}
-            
-            {hasBathrooms && (
-              <div className="flex flex-col border-l border-gray-600/30 px-2">
-                 <span className="text-gray-800 dark:text-gray-400 mt-1 flex items-center gap-1"><FaBath /> Bathrooms</span>
-                <span className="text-xl font-semibold text-gray-900 dark:text-white">{property?.bathrooms}</span>
-              </div>
-            )}
+          <div className="flex flex-col gap-4 border-t border-gray-600/30 pt-2">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-start sm:gap-[20%]">
+              {hasBedrooms && (
+                <div className="flex flex-col px-2">
+                  <span className="text-gray-800 dark:text-gray-400 mt-1 flex items-center gap-1"><FaBed/>Bedrooms</span>
+                  <span className="text-xl font-semibold text-gray-900 dark:text-white">{property?.bedrooms}</span>
+                </div>
+              )}
 
-             <div className={`flex flex-col px-2 ${(hasBedrooms || hasBathrooms) ? 'sm:border-l border-gray-600/30' : ''}`}>
-               <span className="text-gray-800 dark:text-gray-400 mt-1 flex  items-center gap-1"><FaHome/>Category</span>
-              <span className="text-xl font-semibold text-gray-900 dark:text-white">{property?.category}</span>
+              {hasBathrooms && (
+                <div className="flex flex-col border-l border-gray-600/30 px-2">
+                  <span className="text-gray-800 dark:text-gray-400 mt-1 flex items-center gap-1"><FaBath /> Bathrooms</span>
+                  <span className="text-xl font-semibold text-gray-900 dark:text-white">{property?.bathrooms}</span>
+                </div>
+              )}
+
+              <div className={`flex flex-col px-2 ${(hasBedrooms || hasBathrooms) ? 'sm:border-l border-gray-600/30' : ''}`}>
+                <span className="text-gray-800 dark:text-gray-400 mt-1 flex items-center gap-1"><FaHome/>Category</span>
+                <span className="text-xl font-semibold text-gray-900 dark:text-white">{property?.category}</span>
+              </div>
             </div>
+
+            {property?.rules && property.rules.length > 0 && (
+              <div className="mt-2 pt-8 border-t border-gray-600/30">
+                <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">Property Rules</h2>
+                <ul className="space-y-4">
+                  {property.rules.map((rule, index) => (
+                    <li key={index} className="flex items-center gap-2 border-red-500 border-l pl-2 bg-linear-to-r from-red-500/10 to-transparent p-2">
+                      <span className="text-red-500 font-bold">•</span>
+                      <span className="text-gray-700 dark:text-gray-300">{rule}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           {/* Specifications & Attributes */}
           {property?.attributes && property.attributes.length > 0 && (
-            <div className="mt-8 pt-8 border-t border-gray-600/30">
+            <div className="mt-2 pt-8 border-t border-gray-600/30">
               <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">Specifications</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {property.attributes.map((attr, index) => (
@@ -772,36 +788,18 @@ function PropertyDetails() {
           )}
       </div>
 
-      {/* Key Features & Rules */}
-      {( (property?.keyFeatures && property.keyFeatures.length > 0) || (property?.rules && property.rules.length > 0) ) && (
-        <div className="flex-1 px-4 py-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl space-y-6 h-fit">
-          {property?.keyFeatures && property.keyFeatures.length > 0 && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">Key Features and Amenities</h2>
-              <ul className="space-y-4">
-                {property.keyFeatures.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-2 border-[#703BF7] border-l pl-2 bg-linear-to-r from-black/20 to-neutral p-2">
-                    <span className="text-gray-700 dark:text-300"><FaBolt /></span>
-                    <span className="text-gray-700 dark:text-gray-300">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {property?.rules && property.rules.length > 0 && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">Property Rules</h2>
-              <ul className="space-y-4">
-                {property.rules.map((rule, index) => (
-                  <li key={index} className="flex items-center gap-2 border-red-500 border-l pl-2 bg-linear-to-r from-red-500/10 to-transparent p-2">
-                    <span className="text-red-500 font-bold">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">{rule}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+      {/* Key Features */}
+      {property?.keyFeatures && property.keyFeatures.length > 0 && (
+        <div className="flex-1 px-4 py-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl h-fit">
+          <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">Key Features and Amenities</h2>
+          <ul className="space-y-4">
+            {property.keyFeatures.map((feature, index) => (
+              <li key={index} className="flex items-center gap-2 border-[#703BF7] border-l pl-2 bg-linear-to-r from-black/20 to-neutral p-2">
+                <span className="text-gray-700 dark:text-300"><FaBolt /></span>
+                <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
       </section>
