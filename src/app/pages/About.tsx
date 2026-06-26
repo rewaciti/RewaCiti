@@ -201,7 +201,7 @@ function About() {
         <link rel="canonical" href="https://rewaciti.com/about" />
       </Helmet>
         <Navbar />
-        <section className="relative flex flex-col md:flex-row bg-gray-300 dark:bg-black/30 py-4 px-4 lg:gap-10 md:gap-3" id="Journey">
+        <section className="relative flex flex-col md:flex-row bg-gray-300 dark:bg-black/30 py-3 px-4 lg:gap-10 md:gap-3" id="Journey">
           <div className="flex-1  flex flex-col justify-center space-y-6 z-10 order-last md:order-first ">
           <div className="space-y-3 z-10">
               <img

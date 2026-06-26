@@ -538,7 +538,7 @@ function PropertyDetails() {
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
-            <div className={`grid gap-2 ${visibleImages.length === 1 ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"}`}>
+            <div className= "grid gap-2 grid-cols-1 md:grid-cols-2">
               {visibleImages.map((img, index) => (
                 <img
                   key={index}
@@ -547,7 +547,7 @@ function PropertyDetails() {
                     setLightboxIndex(currentIndex + index);
                     setIsLightboxOpen(true);
                   }}
-                  className={`w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-xl cursor-pointer ${
+                  className={`w-full dark:bg-[#1A1A1A] bg-white lg:object-cover rounded-xl cursor-pointer ${
                     visibleImages.length === 1 ? "h-[70vh]" : "h-[70vh]"
                   }`}
                 />
