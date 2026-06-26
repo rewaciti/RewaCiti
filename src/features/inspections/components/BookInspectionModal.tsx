@@ -44,7 +44,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const amount = property.visitationfee || 5000;
 
   const fullName = `${firstName} ${lastName}`.trim();
-  const propertyAddress = `${property.location.area}, ${property.location.city_town}, ${property.location.state} + state.`;
+  const propertyAddress = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
   const propertyUrl = window.location.href;
 
   const handleDownloadReceipt = async (saleId: string) => {
