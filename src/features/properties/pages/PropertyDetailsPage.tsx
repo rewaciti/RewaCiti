@@ -237,8 +237,8 @@ function PropertyDetails() {
           value: property.createdBy,
         },
         {
-          label: "Property ID",
-          value: property.id,
+          label: "Property SKU",
+          value: property.sku,
         },
         ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
         ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : [])
@@ -733,7 +733,6 @@ function PropertyDetails() {
             <p className="text-gray-800 dark:text-gray-400 leading-relaxed">
               {property?.description}</p>
           </div>
-  
           {/* Property Details */}
           <div className="flex flex-col gap-4 border-t border-gray-600/30 pt-2">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-start sm:gap-[20%]">
@@ -763,13 +762,28 @@ function PropertyDetails() {
                 <ul className="space-y-4">
                   {property.rules.map((rule, index) => (
                     <li key={index} className="flex items-center gap-2 border-red-500 border-l pl-2 bg-linear-to-r from-red-500/10 to-transparent p-2">
-                      <span className="text-red-500 font-bold">•</span>
+                      <span className="text-red-500 font-bold"><FaBolt /></span>
                       <span className="text-gray-700 dark:text-gray-300">{rule}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
+            
+            {property?.specialNotes && property.specialNotes.length > 0 && (
+              <div className="py-4 pb-0">
+                <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">Special Notes</h2>
+                <ul className="space-y-2">
+                  {property.specialNotes.map((note, index) => (
+                    <li key={index} className="flex items-center gap-2 border-[#703BF7] border-l bg-linear-to-r from-black/20 to-neutral p-2">
+                    <span className="text-[#703BF7]"><FaBolt /></span>
+                    <span className="text-gray-700 dark:text-gray-300">{note}</span>
+                  </li>
+                  ))}
+              </ul>
+            </div>
+          )}
+  
           </div>
 
       </div>
@@ -803,6 +817,7 @@ function PropertyDetails() {
               </div>
             </div>
           )}
+        
         </div>
       ) : null}
       </section>

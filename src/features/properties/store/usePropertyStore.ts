@@ -26,6 +26,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
       const properties: Property[] = res.data.data.map((item: SabiFlowProduct) => {
         const customData = item.customData;
         const apiPricing = customData?.pricing;
+        const itemSku = (item as SabiFlowProduct & { sku?: string }).sku;
 
         const propertyCost = apiPricing?.property_cost || 0;
         const agentFee = apiPricing?.agent_fee || 0;
@@ -52,6 +53,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
 
         return {
           id: item._id,
+          sku: itemSku,
           slug: item.slug,
           name: item.name,
           img: ensureHttps(item.thumbnail || item.images[0] || ""),
@@ -84,6 +86,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
           },
           yearBuilt: customData?.yearBuilt || 0,
           keyFeatures: customData?.key_features_and_amenities || [],
+          specialNotes: customData?.special_notes || [],
           attributes: [
             ...(item.specifications ? Object.entries(item.specifications).map(([label, value]) => ({ label, value })) : []),
             ...(customData?.attributes || [])

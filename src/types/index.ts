@@ -1,5 +1,6 @@
 export interface Property {
   id: string;
+  sku?: string;
   slug: string;
   name: string;
   img: string;
@@ -32,6 +33,7 @@ export interface Property {
   yearBuilt: number; 
   keyFeatures: string[]; 
   rules?: string[];
+  specialNotes?: string[];
   attributes?: { label: string; value: string }[];
   videoUrl?: string; 
   caretakerContact?: {
@@ -155,6 +157,7 @@ export interface AchievementItem {
 
 export interface SabiFlowProduct {
   _id: string;
+  sku?: string;
   name: string;
   slug: string;
   description: string;
@@ -208,6 +211,7 @@ export interface SabiFlowProduct {
       call_contact?: string;
     };
     visitation_fee: number;
+    special_notes?: string[];
     attributes?: { label: string; value: string }[];
   };
   createdAt?: string;
