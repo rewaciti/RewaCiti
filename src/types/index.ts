@@ -34,7 +34,7 @@ export interface Property {
   keyFeatures: string[]; 
   rules?: string[];
   specialNotes?: string[];
-  attributes?: { label: string; value: string }[];
+  specifications?: { label: string; value: string }[];
   videoUrl?: string; 
   caretakerContact?: {
     whatsapp?: string;
@@ -212,7 +212,7 @@ export interface SabiFlowProduct {
     };
     visitation_fee: number;
     special_notes?: string[];
-    attributes?: { label: string; value: string }[];
+    specifications?: { label: string; value: string }[];
   };
   createdAt?: string;
   updatedAt?: string;

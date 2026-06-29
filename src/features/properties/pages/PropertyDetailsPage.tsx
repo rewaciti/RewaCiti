@@ -756,6 +756,21 @@ function PropertyDetails() {
               </div>
             </div>
 
+            
+            {property?.specifications && property.specifications.length > 0 && (
+              <div className="pt-4 border-t border-gray-600/30">
+                <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">Specifications</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {property.specifications.map((spec, index) => (
+                    <div key={index} className="flex flex-col border-[#703BF7] border-l pl-3 py-1">
+                      <span className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">{spec.label}</span>
+                      <span className="text-gray-800 dark:text-gray-200 font-medium">{spec.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {property?.rules && property.rules.length > 0 && (
               <div className="mt-2 pt-8 border-t border-gray-600/30">
                 <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">Property Rules</h2>
@@ -770,25 +785,11 @@ function PropertyDetails() {
               </div>
             )}
             
-            {property?.specialNotes && property.specialNotes.length > 0 && (
-              <div className="py-4 pb-0">
-                <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">Special Notes</h2>
-                <ul className="space-y-2">
-                  {property.specialNotes.map((note, index) => (
-                    <li key={index} className="flex items-center gap-2 border-[#703BF7] border-l bg-linear-to-r from-black/20 to-neutral p-2">
-                    <span className="text-[#703BF7]"><FaBolt /></span>
-                    <span className="text-gray-700 dark:text-gray-300">{note}</span>
-                  </li>
-                  ))}
-              </ul>
-            </div>
-          )}
-  
           </div>
 
       </div>
 
-      {(property?.keyFeatures && property.keyFeatures.length > 0) || (property?.attributes && property.attributes.length > 0) ? (
+      {(property?.keyFeatures && property.keyFeatures.length > 0) || (property?.specialNotes && property.specialNotes.length > 0) ? (
         <div className="flex-1 px-4 py-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl h-fit space-y-6">
           {property?.keyFeatures && property.keyFeatures.length > 0 && (
             <div>
@@ -804,19 +805,19 @@ function PropertyDetails() {
             </div>
           )}
 
-          {property?.attributes && property.attributes.length > 0 && (
-            <div className="pt-4 border-t border-gray-600/30">
-              <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">Specifications</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {property.attributes.map((attr, index) => (
-                  <div key={index} className="flex flex-col border-[#703BF7] border-l pl-3 py-1">
-                    <span className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">{attr.label}</span>
-                    <span className="text-gray-800 dark:text-gray-200 font-medium">{attr.value}</span>
-                  </div>
-                ))}
+          {property?.specialNotes && property.specialNotes.length > 0 && (
+              <div className="py-4 pb-0">
+                <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">Special Notes</h2>
+                  <ul className="space-y-2">
+                    {property.specialNotes.map((note, index) => (
+                      <li key={index} className="flex items-center gap-2 border-[#703BF7] border-l bg-linear-to-r from-black/20 to-neutral p-2">
+                      <span className="text-gray-700 dark:text-300"><FaBolt /></span>
+                      <span className="text-gray-700 dark:text-gray-300">{note}</span>
+                    </li>
+                    ))}
+                </ul>
               </div>
-            </div>
-          )}
+            )}
         
         </div>
       ) : null}

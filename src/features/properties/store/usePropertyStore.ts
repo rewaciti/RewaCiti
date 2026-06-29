@@ -87,9 +87,9 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
           yearBuilt: customData?.yearBuilt || 0,
           keyFeatures: customData?.key_features_and_amenities || [],
           specialNotes: customData?.special_notes || [],
-          attributes: [
+          specifications: [
             ...(item.specifications ? Object.entries(item.specifications).map(([label, value]) => ({ label, value })) : []),
-            ...(customData?.attributes || [])
+            ...(customData?.specifications || [])
           ],
           videoUrl: ensureHttps(item.videoUrl || ""),
           caretakerContact: customData?.care_taker_contact_optional ? {
