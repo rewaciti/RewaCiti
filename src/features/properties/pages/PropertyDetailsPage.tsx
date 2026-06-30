@@ -735,7 +735,7 @@ function PropertyDetails() {
           </div>
           {/* Property Details */}
           <div className="flex flex-col gap-4 border-t border-gray-600/30 pt-2">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-start sm:gap-[20%]">
+            <div className="grid grid-cols-2 gap-4 sm:flex sm:flex-row sm:items-center sm:justify-start sm:gap-[20%]">
               {hasBedrooms && (
                 <div className="flex flex-col px-2">
                   <span className="text-gray-800 dark:text-gray-400 mt-1 flex items-center gap-1"><FaBed/>Bedrooms</span>
