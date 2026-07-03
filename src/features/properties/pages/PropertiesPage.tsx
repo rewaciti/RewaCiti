@@ -131,6 +131,8 @@ function PropertySearchSection() {
   ];
 
   const normalizeText = (value: string) => value.toLowerCase().trim();
+  const normalizeLocationKey = (value: string) =>
+    value.toLowerCase().replace(/[-\s]+/g, "");
 
   useEffect(() => {
     fetchProperties();
@@ -154,7 +156,7 @@ function PropertySearchSection() {
         normalizeText(propertyLocationString).includes(normalizedSearchTerm);
 
       const matchesLocation = location
-        ? normalizeText(propertyLocationString) === normalizeText(location)
+        ? normalizeLocationKey(propertyLocationString) === location
         : true;
 
       const matchesType = category ? p.category === category : true;
@@ -213,10 +215,14 @@ function PropertySearchSection() {
 
   // Dropdown unique options
   const uniqueLocations = Array.from(
-    new Set(
-      properties.map((p) => `${p.location.city_town}, ${p.location.state} state`)
-    )
-  );
+    new Map(
+      properties.map((p) => {
+        const label = `${p.location.city_town}, ${p.location.state} state`;
+        const value = normalizeLocationKey(label);
+        return [value, label] as const;
+      })
+    ).entries()
+  ).map(([value, label]) => ({ value, label }));
 
   const uniqueCategories = Array.from(new Set(properties.map((p) => p.category)));
   const uniqueBedrooms = Array.from(
@@ -232,7 +238,9 @@ function PropertySearchSection() {
       properties
         .filter((p) => {
           const locationString = `${p.location.city_town}, ${p.location.state} state`;
-          return location ? locationString === location : true;
+          return location
+            ? normalizeLocationKey(locationString) === location
+            : true;
         })
         .map((p) => p.location.area)
     )
@@ -310,8 +318,8 @@ function PropertySearchSection() {
                   </option>
                   <option value="__all__">All Locations</option>
                   {uniqueLocations.map((loc, idx) => (
-                    <option key={idx} value={loc}>
-                      {loc}
+                    <option key={idx} value={loc.value}>
+                      {loc.label}
                     </option>
                   ))}
                 </select>
