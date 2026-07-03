@@ -2,7 +2,7 @@
   {
     "id": "OAU",
     "name": "Obafemi Awolowo University",
-    "city": "Ile-ile-ife",
+    "city": "Ile-ife",
     "state": "Osun",
     "areas": [
       "Energy",
@@ -17,7 +17,8 @@
       "Eleyele",
       "Moremi Estate",
       "Road 7",
-      "Campus"
+      "Campus",
+      "oni layout"
     ]
   },
   {

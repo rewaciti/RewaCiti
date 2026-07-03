@@ -130,22 +130,31 @@ function PropertySearchSection() {
     { label: "Above ₦1M", range: [1000001, 999999999] },
   ];
 
+  const normalizeText = (value: string) => value.toLowerCase().trim();
+
   useEffect(() => {
     fetchProperties();
   }, [fetchProperties]);
 
   // Filtering
-   useEffect(() => {
+  useEffect(() => {
+    const normalizedSearchTerm = normalizeText(searchTerm);
+
     const results = properties.filter((p) => {
+      const cityTown = p.location.city_town ?? "";
+      const state = p.location.state ?? "";
+      const propertyLocationString = `${cityTown}, ${state} state`;
+
       const matchesSearch =
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.location.city_town?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.location.area.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.location.state.toLowerCase().includes(searchTerm.toLowerCase());
+        normalizeText(p.name).includes(normalizedSearchTerm) ||
+        normalizeText(p.description).includes(normalizedSearchTerm) ||
+        normalizeText(cityTown).includes(normalizedSearchTerm) ||
+        normalizeText(p.location.area).includes(normalizedSearchTerm) ||
+        normalizeText(state).includes(normalizedSearchTerm) ||
+        normalizeText(propertyLocationString).includes(normalizedSearchTerm);
 
       const matchesLocation = location
-        ? `${p.location.state}, ${p.location.city_town}` === location
+        ? normalizeText(propertyLocationString) === normalizeText(location)
         : true;
 
       const matchesType = category ? p.category === category : true;
@@ -205,25 +214,26 @@ function PropertySearchSection() {
   // Dropdown unique options
   const uniqueLocations = Array.from(
     new Set(
-      properties.map(
-        (p) => `${p.location.city_town}, ${p.location.state} state.`
-      )
+      properties.map((p) => `${p.location.city_town}, ${p.location.state} state`)
     )
   );
 
   const uniqueCategories = Array.from(new Set(properties.map((p) => p.category)));
   const uniqueBedrooms = Array.from(
-    new Set(properties.map((p) => p.bedrooms)),
+    new Set(
+      properties
+        .map((p) => Number(p.bedrooms))
+        .filter((b) => Number.isFinite(b) && b > 0)
+    )
   ).sort((a, b) => a - b);
 
   const uniqueAreas = Array.from(
     new Set(
       properties
-        .filter((p) =>
-          location
-            ? `${p.location.state}, ${p.location.city_town}` === location
-            : true
-        )
+        .filter((p) => {
+          const locationString = `${p.location.city_town}, ${p.location.state} state`;
+          return location ? locationString === location : true;
+        })
         .map((p) => p.location.area)
     )
   );
