@@ -41,7 +41,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const addInspection = useInspectionStore((state) => state.addInspection);
   const updatePaymentStatus = useInspectionStore((state) => state.updatePaymentStatus);
 
-  const amount = property.visitationfee || 5000;
+  const amount = property.visitationfee || 1500;
 
   const fullName = `${firstName} ${lastName}`.trim();
   const propertyAddress = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
