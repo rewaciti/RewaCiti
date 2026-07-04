@@ -41,7 +41,8 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const addInspection = useInspectionStore((state) => state.addInspection);
   const updatePaymentStatus = useInspectionStore((state) => state.updatePaymentStatus);
 
-  const amount = property.visitationfee || 1500;
+  const amount = property.visitationfee;
+  const feeDisplay = amount === 0 ? "inspection is free" : `₦${amount.toLocaleString()}`;
 
   const fullName = `${firstName} ${lastName}`.trim();
   const propertyAddress = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
@@ -310,7 +311,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               <div className="flex justify-between items-center border-t border-[#703BF7]/20 pt-2">
                 <span className="text-sm font-medium dark:text-white text-gray-900">Inspection Fee</span>
                 <span className="text-lg font-bold text-[#703BF7]">
-                  ₦{amount.toLocaleString()}
+                  {feeDisplay}
                 </span>
               </div>
             </div>
