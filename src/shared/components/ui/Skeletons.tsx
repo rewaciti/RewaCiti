@@ -2,22 +2,24 @@ import { Skeleton } from "./Skeleton";
 
 export function PropertyCardSkeleton() {
   return (
-    <div className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 rounded-xl p-2">
-      <Skeleton className="w-full h-70 rounded-lg mb-4" />
-      <Skeleton className="h-6 w-3/4 mb-2" />
-      <Skeleton className="h-4 w-1/2 mb-4" />
-      <div className="space-y-2 mb-4">
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-2/3" />
+    <div className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 rounded-lg p-2">
+      <Skeleton className="w-full h-44 rounded-md mb-3" />
+      <Skeleton className="h-5 w-3/4 mb-2" />
+      <Skeleton className="h-3 w-1/2 mb-3" />
+      <div className="space-y-2 mb-3">
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-2/3" />
       </div>
-      <div className="grid grid-cols-3 gap-2 mb-4">
-        <Skeleton className="h-8 rounded-2xl" />
-        <Skeleton className="h-8 rounded-2xl" />
-        <Skeleton className="h-8 rounded-2xl" />
+      <div className="grid grid-cols-2 gap-2 mb-3">
+        <Skeleton className="h-7 rounded-xl" />
+        <Skeleton className="h-7 rounded-xl" />
       </div>
       <div className="flex justify-between items-center">
-        <Skeleton className="h-8 w-24" />
-        <Skeleton className="h-8 w-32 rounded-lg" />
+        <div className="space-y-1">
+          <Skeleton className="h-3 w-16" />
+          <Skeleton className="h-5 w-20" />
+        </div>
+        <Skeleton className="h-8 w-24 rounded-md" />
       </div>
     </div>
   );
