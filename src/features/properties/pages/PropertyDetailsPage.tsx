@@ -275,17 +275,21 @@ function PropertyDetails() {
 
   const [relatedPage, setRelatedPage] = useState(0);
   const [showAllRelated, setShowAllRelated] = useState(false);
+  const [sameAgentOnly, setSameAgentOnly] = useState(false);
   const RELATED_ITEMS_PER_PAGE = 3;
 
   const relatedProperties = properties
     .filter((p) => p.id !== property?.id)
-    .filter((p) => 
-      p.category === property?.category && (
-      p.location.state === property?.location.state ||
-      p.location.city_town === property?.location.city_town ||
-      p.location.area === property?.location.area
-      )
-    );
+    .filter((p) => {
+      const matchesCategory = p.category === property?.category;
+      const matchesLocation =
+        p.location.state === property?.location.state ||
+        p.location.city_town === property?.location.city_town ||
+        p.location.area === property?.location.area;
+      const sameAgent = property?.createdBy ? p.createdBy === property.createdBy : false;
+
+      return matchesCategory && matchesLocation && (!sameAgentOnly || sameAgent);
+    });
 
   const totalRelatedPages = Math.ceil(relatedProperties.length / RELATED_ITEMS_PER_PAGE);
 
@@ -315,6 +319,11 @@ function PropertyDetails() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    setRelatedPage(0);
+    setShowAllRelated(false);
+  }, [sameAgentOnly]);
 
   return (
     <div className="bg-gray-300 dark:bg-black/30">
@@ -968,8 +977,22 @@ function PropertyDetails() {
               alt="Icon"
               className="w-13 object-contain"
             />
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex items-center justify-between mb-2">
               <h2 className="text-3xl font-semibold text-gray-900 dark:text-white">Related Properties</h2>
+              <div className="flex items-center gap-1 flex-col">
+                <span className={`text-sm font-medium ${sameAgentOnly ? "text-[#703BF7]" : "text-gray-700 dark:text-gray-400"}`}>
+                  Same agent
+                </span>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={sameAgentOnly}
+                  onClick={() => setSameAgentOnly((prev) => !prev)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${sameAgentOnly ? "bg-[#703BF7]" : "bg-gray-400 dark:bg-gray-600"}`}
+                >
+                  <span className={`inline-block h-5 w-5 transform rounded-full bg-white transition ${sameAgentOnly ? "translate-x-5" : "translate-x-1"}`} />
+                </button>
+              </div>
               {relatedProperties.length > RELATED_ITEMS_PER_PAGE && (
                 <button
                   onClick={() => setShowAllRelated(!showAllRelated)}
@@ -980,7 +1003,9 @@ function PropertyDetails() {
               )}
             </div>
             <p className="text-gray-800 dark:text-gray-400">
-              You might also be interested in these similar {property.category}s at {property.location.area}.
+              {sameAgentOnly
+                ? `These are other listings posted by the same agent as ${property.name}.`
+                : `You might also be interested in these similar ${property.category}s at ${property.location.area}.`}
             </p>
           </div>
           
@@ -1029,7 +1054,9 @@ function PropertyDetails() {
           )}
 
           {relatedProperties.length === 0 && (
-            <p className="text-gray-500 italic">No related properties found at the moment.</p>
+            <p className="text-gray-500 italic">
+              {sameAgentOnly ? "No properties from this agent were found." : "No related properties found at the moment."}
+            </p>
           )}
         </section>
       )}
