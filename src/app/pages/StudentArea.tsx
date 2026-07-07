@@ -579,12 +579,9 @@ function Studentarea() {
             {/* Category */}
             <div>
               <label className="text-gray-700 dark:text-gray-300 text-sm">Category</label>
-              <div className="relative">
-                <FiDollarSign className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
-
                 <select
                   required
-                  className="p-3 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 max-h-60 overflow-auto"
+                  className="p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 max-h-60 overflow-auto"
                   style={{ maxHeight: 240 }}
                   value={preferedCategory}
                   onChange={(e) => setPreferedCategory(e.target.value)}
@@ -614,7 +611,6 @@ function Studentarea() {
                   <option value="Uncompleted Building">Uncompleted Building</option>
               </select>
             </div>
-          </div>
 
             {/* Bedrooms */}
             <div>
@@ -633,9 +629,6 @@ function Studentarea() {
             {/* Budget */}
             <div>
               <label className="text-gray-700 dark:text-gray-300 text-sm">Budget</label>
-              <div className="relative">
-                <FiDollarSign className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
-
                 <select
                   required
                   className="p-3 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 max-h-60 overflow-auto"
@@ -653,7 +646,6 @@ function Studentarea() {
                 ))}
               </select>
             </div>
-          </div>
 
             {/* Preferred Contact */}
             <div>
