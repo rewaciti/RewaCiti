@@ -36,7 +36,9 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
 
         const creatorClassification =
           item.creatorClassification ||
-          (typeof item.createdBy === "object" ? item.createdBy.creatorClassification : undefined) ||
+          (typeof item.createdBy === "object" && item.createdBy !== null
+            ? item.createdBy.creatorClassification
+            : undefined) ||
           item.customData?.creatorClassification;
 
         if (creatorClassification?.toLowerCase() === "agent") {
@@ -50,6 +52,8 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
             ? item.createdBy._id || item.createdBy.id || ""
             : item.createdBy
           : "";
+
+        const normalizedCreatedBy = createdByValue || null;
 
         return {
           id: item._id,
@@ -72,7 +76,8 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
             CautionFee: cautionFee,
             TotalCost: totalPrice || item.price || 0
           },
-          createdBy: createdByValue,
+          createdBy: normalizedCreatedBy,
+          creatorClassification: creatorClassification || null,
           location: {
             area: customData?.location?.area || "",
             city: customData?.location?.city || "",

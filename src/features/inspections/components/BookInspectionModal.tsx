@@ -87,7 +87,9 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
           {
             description: `Inspection Fee: ${property.name}, ${propertyAddress}`,
             quantity: 1,
-            unitPrice: amount
+            unitPrice: amount,
+            inventoryItemId: property.id,
+            productId: property.id,
           }
         ],
         taxRate: 0,
@@ -144,7 +146,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                 { label: "Property Link", value: propertyUrl },
                 { label: "Booking Reference", value: transaction.reference },
                 { label: "Inspection Fee", value: `₦${amount.toLocaleString()}` },
-                { label: "Agent ID", value: property.createdBy.toString() },
+                { label: "Agent ID", value: property.createdBy?.toString() ?? "" },
                 { label: "Property ID", value: property.id },
                 { label: "Category", value: property.category},
                 { label: "Sale ID", value: saleId },

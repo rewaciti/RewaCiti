@@ -94,6 +94,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
             quantity: 1,
             unitPrice: price,
             inventoryItemId: property.id,
+            productId: property.id,
           }
         ],
         taxRate: 0,
@@ -152,7 +153,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 { label: "Payment Reference", value: transaction.reference },
                 { label: "amount Paid", value: price },
                 { label: "Service Fee", value: `₦${pricing.ServiceFee.toLocaleString()}` },
-                { label: "Agent ID", value: property.createdBy.toString() },
+                { label: "Agent ID", value: property.createdBy?.toString() ?? "" },
                 { label: "Property ID", value: property.id },
                 { label: "Sale ID", value: saleId },
                 ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),

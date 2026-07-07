@@ -214,7 +214,7 @@ function PropertyDetails() {
       phone: phone,
       address: `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`,
       note: message,
-      ownerId: property.createdBy,
+      ownerId: property.createdBy ?? "",
       customData: [
         {
           label: "Property",
@@ -234,7 +234,7 @@ function PropertyDetails() {
         },
         {
           label: "Agent ID",
-          value: property.createdBy,
+          value: property.createdBy ?? "",
         },
         {
           label: "Property SKU",
@@ -286,9 +286,11 @@ function PropertyDetails() {
         p.location.state === property?.location.state ||
         p.location.city_town === property?.location.city_town ||
         p.location.area === property?.location.area;
-      const sameAgent = property?.createdBy ? p.createdBy === property.createdBy : false;
+      const sameOwner = Boolean(
+        property?.createdBy && p.createdBy && p.createdBy === property.createdBy
+      );
 
-      return matchesCategory && matchesLocation && (!sameAgentOnly || sameAgent);
+      return matchesCategory && matchesLocation && (!sameAgentOnly || sameOwner);
     });
 
   const totalRelatedPages = Math.ceil(relatedProperties.length / RELATED_ITEMS_PER_PAGE);
