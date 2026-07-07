@@ -131,7 +131,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
             // 5. CRM and Local Store
             const crmPayload = {
               companyId: "69b4712ce95a2df514b1c789",
-              pipelineId: "69ed7a4ac09e9388ba096f1f",
+              pipelineId: "6a4c98cbeb058fac4420ea43",
               title: `VISIT BOOKING: ${property.name} - ${fullName}`,
               name: fullName,
               amount: amount, // Changed from string to numeric amount
