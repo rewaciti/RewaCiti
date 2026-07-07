@@ -4,7 +4,7 @@ import axios from "axios";
 import { usePropertyStore } from "../../features/properties/store/usePropertyStore";
 import { useAreaMapStore } from "../../features/map/store/useAreaMapStore";
 import type { Property } from "../../types";
-import {FiArrowLeft,FiArrowRight,FiMapPin,FiHome} from "react-icons/fi";
+import {FiArrowLeft,FiArrowRight,FiMapPin,FiHome,FiDollarSign} from "react-icons/fi";
 import { IoBedOutline } from "react-icons/io5";
 import PropertyCard from "../../features/properties/components/PropertyCard";
 import Footer from "../../shared/components/Layout/Footer";
@@ -274,7 +274,8 @@ function Studentarea() {
                 <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-tr-none"
+                  className="p-2 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-tr-none max-h-60 overflow-auto"
+                  style={{ maxHeight: 240 }}
                   value={selectedUniversity}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -302,7 +303,8 @@ function Studentarea() {
                 <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-t-none"
+                  className="p-2 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-t-none max-h-60 overflow-auto"
+                  style={{ maxHeight: 240 }}
                   value={location}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -331,7 +333,8 @@ function Studentarea() {
                 <FiHome className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-t-none"
+                  className="p-2 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-t-none max-h-60 overflow-auto"
+                  style={{ maxHeight: 240 }}
                   value={category}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -357,7 +360,8 @@ function Studentarea() {
                 <IoBedOutline className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
                 <select
-                  className="p-2 pl-10 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-t-none"
+                  className="p-2 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-t-none max-h-60 overflow-auto"
+                  style={{ maxHeight: 240 }}
                   value={bedrooms}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -378,25 +382,30 @@ function Studentarea() {
 
             {/* PRICE RANGE - SELECT */}
             <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-tl-none">
-              <select
-                className="p-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-tl-none"
-                value={selectedPriceLabel}
-                onChange={(e) => {
-                  const label = e.target.value;
-                  setSelectedPriceLabel(label);
-                  const opt = priceOptions.find((o) => o.label === label);
-                  if (opt) setPriceRange(opt.range as [number, number]);
-                }}
-              >
-                <option value="" disabled hidden>
-                  Budget
-                </option>
-                {priceOptions.map((opt, idx) => (
-                  <option key={idx} value={opt.label}>
-                    {opt.label}
+              <div className="relative">
+                <FiDollarSign className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
+
+                <select
+                  className="p-2 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-tl-none max-h-60 overflow-auto"
+                  style={{ maxHeight: 240 }}
+                  value={selectedPriceLabel}
+                  onChange={(e) => {
+                    const label = e.target.value;
+                    setSelectedPriceLabel(label);
+                    const opt = priceOptions.find((o) => o.label === label);
+                    if (opt) setPriceRange(opt.range as [number, number]);
+                  }}
+                >
+                  <option value="" disabled hidden>
+                    Budget
                   </option>
-                ))}
-              </select>
+                  {priceOptions.map((opt, idx) => (
+                    <option key={idx} value={opt.label}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
 
@@ -570,12 +579,16 @@ function Studentarea() {
             {/* Category */}
             <div>
               <label className="text-gray-700 dark:text-gray-300 text-sm">Category</label>
-              <select
-                required
-                className="p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70"
-                value={preferedCategory}
-                onChange={(e) => setPreferedCategory(e.target.value)}
-              >
+              <div className="relative">
+                <FiDollarSign className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
+
+                <select
+                  required
+                  className="p-3 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 max-h-60 overflow-auto"
+                  style={{ maxHeight: 240 }}
+                  value={preferedCategory}
+                  onChange={(e) => setPreferedCategory(e.target.value)}
+                >
                 <option value="" disabled hidden>
                   Category
                 </option>
@@ -601,6 +614,7 @@ function Studentarea() {
                   <option value="Uncompleted Building">Uncompleted Building</option>
               </select>
             </div>
+          </div>
 
             {/* Bedrooms */}
             <div>
@@ -619,12 +633,16 @@ function Studentarea() {
             {/* Budget */}
             <div>
               <label className="text-gray-700 dark:text-gray-300 text-sm">Budget</label>
-              <select
-                required
-                className="p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70"
-                value={Budget}
-                onChange={(e) => setBudget(e.target.value)}
-              >
+              <div className="relative">
+                <FiDollarSign className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
+
+                <select
+                  required
+                  className="p-3 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 max-h-60 overflow-auto"
+                  style={{ maxHeight: 240 }}
+                  value={Budget}
+                  onChange={(e) => setBudget(e.target.value)}
+                >
                 <option value="" disabled hidden>
                   Price Range
                 </option>
@@ -635,6 +653,7 @@ function Studentarea() {
                 ))}
               </select>
             </div>
+          </div>
 
             {/* Preferred Contact */}
             <div>
