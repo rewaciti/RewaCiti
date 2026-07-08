@@ -237,8 +237,8 @@ function PropertyDetails() {
           value: property.createdBy ?? "",
         },
         {
-          label: "Property SKU",
-          value: property.sku,
+          label: "Property ID",
+          value: property.id,
         },
         ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
         ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : [])
