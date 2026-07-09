@@ -17,6 +17,10 @@ import NotFound from "./pages/NotFound";
 import Terms from "./pages/Terms";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { BlogPage, BlogPostDetailsPage } from "../features/blog";
+import Login from "../features/auth/pages/Login";
+import VerifyEmail from "../features/auth/pages/VerifyEmail";
+import ForgotPassword from "../features/auth/pages/ForgotPassword";
+import ResetPassword from "../features/auth/pages/ResetPassword";
 
 
 
@@ -56,6 +60,10 @@ function App() {
         />
         <Routes>
           <Route index path="/" element={<Home />} />
+          <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/verify-email" element={<VerifyEmail />} />
+          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+          <Route path="/auth/reset-password" element={<ResetPassword />} />
           <Route path="/AllComments" element={<AllComments />} />
           <Route path="/AllFAQs" element={<AllFAQs />} />
           <Route path="/About" element={<About />} />
