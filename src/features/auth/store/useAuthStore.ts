@@ -24,7 +24,7 @@ interface AuthStore {
   logout: () => void;
 }
 
-const COMPANY_ID = "69f539b994273e659bef4dc4";
+const COMPANY_ID = "69b4712ce95a2df514b1c789";
 
 export const useAuthStore = create<AuthStore>()(
   persist(

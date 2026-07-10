@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import { authAPI } from "../services/authAPI";
 import { useAuthStore } from "../store/useAuthStore";
 import Navbar from "../../../shared/components/Layout/Navbar";
-// import Footer from "../../../shared/components/Layout/Footer";
 import { Helmet } from "react-helmet-async";
 import { FiArrowLeft } from "react-icons/fi";
 
@@ -302,7 +301,6 @@ const VerifyEmail = () => {
         </div>
       </div>
 
-      {/* <Footer /> */}
     </div>
   );
 };

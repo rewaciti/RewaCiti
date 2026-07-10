@@ -196,6 +196,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
           } catch (error) {
             console.error("Verification/CRM error:", error);
             toast.error("Payment successful, but verification failed. Please contact support.");
+            navigate("/properties");
           } finally {
             setIsSubmitting(false);
           }
