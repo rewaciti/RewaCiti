@@ -62,8 +62,9 @@ export interface PropertyStore {
   page: number;
   apiPage: number;
   totalProperties: number;
+  filters: Record<string, string | number | undefined>;
 
-  fetchProperties: (apiPage?: number) => Promise<void>;
+  fetchProperties: (apiPage?: number, filters?: Record<string, string | number | undefined>) => Promise<void>;
   fetchPropertyFees: () => Promise<void>;
   nextPage: () => void;
   prevPage: () => void;

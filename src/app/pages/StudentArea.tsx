@@ -3,7 +3,6 @@ import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { usePropertyStore } from "../../features/properties/store/usePropertyStore";
 import { useAreaMapStore } from "../../features/map/store/useAreaMapStore";
-import type { Property } from "../../types";
 import {FiArrowLeft,FiArrowRight,FiMapPin,FiHome,FiDollarSign} from "react-icons/fi";
 import { IoBedOutline } from "react-icons/io5";
 import PropertyCard from "../../features/properties/components/PropertyCard";
@@ -21,12 +20,10 @@ function Studentarea() {
   const {
     properties,
     loading,
-    page,
     ITEMS_PER_PAGE,
     fetchProperties,
     nextPage,
     prevPage,
-    setPage,
     apiPage,
     totalProperties,
   } = usePropertyStore();
@@ -113,9 +110,7 @@ function Studentarea() {
   ]);
 
   const [showFilters, setShowFilters] = useState(false);
-  const [filtered, setFiltered] = useState<Property[]>([]);
   const [agreed, setAgreed] = useState(false);
-  const [showAll, setShowAll] = useState(false);
 
   const priceOptions = [
     { label: "Budget", range: [0, 999999999] },
@@ -127,11 +122,17 @@ function Studentarea() {
   ];
 
   useEffect(() => {
-    fetchProperties();
+    fetchProperties(1, {
+      search: searchTerm || undefined,
+      location: location || undefined,
+      category: category || undefined,
+      bedrooms: bedrooms ? Number(bedrooms) : undefined,
+      minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
+      maxPrice: priceRange[1] < 999999999 ? priceRange[1] : undefined,
+    });
     fetchAreaMaps();
-  }, [fetchProperties, fetchAreaMaps]);
+  }, [searchTerm, location, category, bedrooms, priceRange, fetchProperties, fetchAreaMaps]);
 
-  // Filter areaMaps to only include universities and areas that have properties
   const availableUniversities = useMemo(() => {
     return areaMaps
       .filter((u) => u.areas.some((area) => properties.some((p) => p.location.area === area)))
@@ -141,73 +142,17 @@ function Studentarea() {
       }));
   }, [areaMaps, properties]);
 
-  // Filtering
-  useEffect(() => {
-    const results = properties.filter((p) => {
-      const matchesSearch =
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.location.city_town?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.location.area.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.location.state.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesUniversity = selectedUniversity
-        ? availableUniversities
-            .find((u) => u.id === selectedUniversity)
-            ?.areas.includes(p.location.area)
-        : true;
-
-      const matchesLocation = location ? p.location.area === location : true;
-
-      const matchesType = category ? p.category === category : true;
-      const matchesBedrooms = bedrooms ? p.bedrooms === Number(bedrooms) : true;
-
-      const priceNum = Number(String(p.pricing.TotalCost).replace(/[^0-9]/g, ""));
-      const matchesPrice = priceNum >= priceRange[0] && priceNum <= priceRange[1];
-
-      return (
-        matchesSearch &&
-        matchesUniversity &&
-        matchesLocation &&
-        matchesType &&
-        matchesBedrooms &&
-        matchesPrice
-      );
-    });
-
-    setFiltered(results);
-    setPage(0);
-  }, [
-    searchTerm,
-    location,
-    category,
-    bedrooms,
-    priceRange,
-    properties,
-    setPage,
-    availableUniversities,
-    selectedUniversity,
-  ]);
-
-  // Pagination
-  const totalApiPages = Math.ceil(totalProperties / 30);
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const currentProperties = showAll 
-    ? filtered 
-    : filtered.slice(page * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE + ITEMS_PER_PAGE);
+  const totalApiPages = Math.max(1, Math.ceil(totalProperties / ITEMS_PER_PAGE));
+  const currentProperties = properties;
 
   const handleNext = () => {
-    if (showAll) {
-      if (apiPage < totalApiPages) fetchProperties(apiPage + 1);
-    } else {
+    if (apiPage < totalApiPages) {
       nextPage();
     }
   };
 
   const handlePrev = () => {
-    if (showAll) {
-      if (apiPage > 1) fetchProperties(apiPage - 1);
-    } else {
+    if (apiPage > 1) {
       prevPage();
     }
   };
@@ -430,12 +375,6 @@ function Studentarea() {
                         that resonates with your vision of home
                       </p>
                   </div>
-                  <button
-                    onClick={() => setShowAll(!showAll)}
-                    className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center hidden md:block shrink-0"
-                  >
-                    {showAll ? "Show Less" : "View All"}
-                  </button>
                </div>
 
               </div>
@@ -466,22 +405,13 @@ function Studentarea() {
           {/* Pagination */}
           <div className="flex justify-between items-center text-white">
             <p className="text-sm text-black dark:text-white">
-              {showAll 
-                ? `Page ${apiPage} of ${totalApiPages || 1}` 
-                : `${page + 1} of ${totalPages || 1}`}
+              Page {apiPage} of {totalApiPages}
             </p>
-
-            <button
-              onClick={() => setShowAll(!showAll)}
-              className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center w-[120px] md:hidden"
-            >
-              {showAll ? "View Less" : "View All"}
-            </button>
 
             <div className="flex gap-4">
               <button
                 onClick={handlePrev}
-                disabled={showAll ? apiPage === 1 : page === 0}
+                disabled={apiPage === 1}
                 className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
               >
                 <FiArrowLeft size={20} />
@@ -489,7 +419,7 @@ function Studentarea() {
 
               <button
                 onClick={handleNext}
-                disabled={showAll ? apiPage >= totalApiPages : page >= totalPages - 1}
+                disabled={apiPage >= totalApiPages}
                 className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
               >
                 <FiArrowRight size={20} />

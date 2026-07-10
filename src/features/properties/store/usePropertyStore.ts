@@ -5,22 +5,36 @@ import { ensureHttps } from "../../../shared/lib/utils";
 
 export const usePropertyStore = create<PropertyStore>((set, get) => ({
   properties: [],
-  filteredProperties: [], // new: filtered list
+  filteredProperties: [],
   loading: false,
   error: null,
   fees: null,
 
-  ITEMS_PER_PAGE: 3,
+  ITEMS_PER_PAGE: 30,
   page: 0,
   apiPage: 1,
   totalProperties: 0,
+  filters: {},
 
-  fetchProperties: async (apiPage = 1) => {
+  fetchProperties: async (apiPage = 1, filters?: Record<string, string | number | undefined>) => {
     set({ loading: true, error: null });
 
     try {
+      const resolvedFilters = filters ?? get().filters;
+      const params = Object.entries(resolvedFilters).reduce<Record<string, string>>((acc, [key, value]) => {
+        if (value === undefined || value === null || value === "") {
+          return acc;
+        }
+
+        acc[key] = String(value);
+        return acc;
+      }, {});
+
       const res = await axios.get<{ data: SabiFlowProduct[]; total?: number }>(
-        `https://api.sabiflow.com/api/inventory/portal/rewacity/products?page=${apiPage}&limit=30`
+        "https://api.sabiflow.com/api/inventory/portal/rewacity/products",
+        {
+          params: { page: apiPage, limit: 30, ...params },
+        }
       );
 
       const properties: Property[] = res.data.data.map((item: SabiFlowProduct) => {
@@ -77,7 +91,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
             LegalFee: legalFee,
             ServiceFee: serviceFee,
             CautionFee: cautionFee,
-            TotalCost: totalPrice || item.price || 0
+            TotalCost: totalPrice || item.price || 0,
           },
           createdBy: normalizedCreatedBy,
           creatorClassification: creatorClassification || null,
@@ -97,35 +111,27 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
           specialNotes: customData?.special_notes || [],
           specifications: [
             ...(item.specifications ? Object.entries(item.specifications).map(([label, value]) => ({ label, value })) : []),
-            ...(customData?.specifications || [])
+            ...(customData?.specifications || []),
           ],
           videoUrl: ensureHttps(item.videoUrl || ""),
-          caretakerContact: customData?.care_taker_contact_optional ? {
-            whatsapp: customData.care_taker_contact_optional.wattsapp_contact,
-            phone: customData.care_taker_contact_optional.call_contact,
-          } : undefined,
+          caretakerContact: customData?.care_taker_contact_optional
+            ? {
+                whatsapp: customData.care_taker_contact_optional.wattsapp_contact,
+                phone: customData.care_taker_contact_optional.call_contact,
+              }
+            : undefined,
           visitationfee: customData?.visitation_fee || 0,
         };
       });
 
-      const { searchQuery } = get();
-      let filtered = properties;
-      if (searchQuery) {
-        filtered = properties.filter((p) =>
-          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.location.area.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.location.city_town?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.location.state.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-      }
-
       set({
-        properties: properties,
-        filteredProperties: filtered,
+        properties,
+        filteredProperties: properties,
         loading: false,
-        apiPage: apiPage,
+        apiPage,
+        page: apiPage - 1,
         totalProperties: res.data.total || properties.length,
+        filters: resolvedFilters,
       });
     } catch (err) {
       console.error(err);
@@ -142,20 +148,28 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
     }
   },
 
-  nextPage: () =>
-    set((state) => {
-      const maxPage =
-        Math.ceil(state.filteredProperties.length / state.ITEMS_PER_PAGE) - 1;
+  nextPage: () => {
+    const { apiPage, totalProperties, ITEMS_PER_PAGE, fetchProperties, filters } = get();
+    const maxPage = Math.max(1, Math.ceil(totalProperties / ITEMS_PER_PAGE));
+    const nextPageNumber = Math.min(apiPage + 1, maxPage);
 
-      return { page: Math.min(state.page + 1, maxPage) };
-    }),
+    if (nextPageNumber > apiPage) {
+      set({ page: nextPageNumber - 1, apiPage: nextPageNumber });
+      void fetchProperties(nextPageNumber, filters);
+    }
+  },
 
-  prevPage: () =>
-    set((state) => {
-      return { page: Math.max(state.page - 1, 0) };
-    }),
+  prevPage: () => {
+    const { apiPage, fetchProperties, filters } = get();
+    const prevPageNumber = Math.max(apiPage - 1, 1);
 
-  setPage: (page: number) => set({ page }),
+    if (prevPageNumber < apiPage) {
+      set({ page: prevPageNumber - 1, apiPage: prevPageNumber });
+      void fetchProperties(prevPageNumber, filters);
+    }
+  },
+
+  setPage: (page: number) => set({ page, apiPage: page + 1 }),
 
   searchQuery: "",
   setSearchQuery: (query: string) => {
@@ -164,7 +178,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
     if (!query) {
       set({ filteredProperties: properties });
     } else {
-      const filtered = properties.filter((p) => 
+      const filtered = properties.filter((p) =>
         p.name.toLowerCase().includes(query.toLowerCase()) ||
         p.description.toLowerCase().includes(query.toLowerCase()) ||
         p.location.area.toLowerCase().includes(query.toLowerCase()) ||
@@ -183,15 +197,14 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         return {
           shortlistedProperties: state.shortlistedProperties.filter((p) => p.id !== property.id),
         };
-      } else {
-        return {
-          shortlistedProperties: [...state.shortlistedProperties, property],
-        };
       }
+
+      return {
+        shortlistedProperties: [...state.shortlistedProperties, property],
+      };
     });
   },
 
-  // --- New: Filter properties ---
   filterProperties: (filters: {
     location?: string;
     category?: string;
@@ -212,8 +225,8 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
           ([p.location.area, p.location.city_town, p.location.state] as (string | undefined)[]).some(
             (v) => v === filters.location
           ));
-      
-      const searchMatch = !searchQuery || 
+
+      const searchMatch = !searchQuery ||
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.location.area.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -232,6 +245,6 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
       );
     });
 
-    set({ filteredProperties: filtered, page: 0 }); // reset page to 0
+    set({ filteredProperties: filtered, page: 0 });
   },
 }));
