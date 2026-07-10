@@ -37,7 +37,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         const creatorClassification =
           item.creatorClassification ||
           (typeof item.createdBy === "object" && item.createdBy !== null
-            ? item.createdBy.creatorClassification
+            ? item.createdBy.classification
             : undefined) ||
           item.customData?.creatorClassification;
 
@@ -47,13 +47,16 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
 
         const totalPrice = propertyCost + agentFee + legalFee + serviceFee + cautionFee;
 
-        const createdByValue = item.createdBy
-          ? typeof item.createdBy === "object"
-            ? item.createdBy._id || item.createdBy.id || ""
-            : item.createdBy
-          : "";
-
-        const normalizedCreatedBy = createdByValue || null;
+        const normalizedCreatedBy =
+          item.createdBy && typeof item.createdBy === "object"
+            ? {
+                _id: item.createdBy._id ?? "",
+                id: item.createdBy.id ?? item.createdBy._id ?? "",
+                firstName: item.createdBy.firstName ?? "",
+                lastName: item.createdBy.lastName ?? "",
+                classification: item.createdBy.classification ?? null,
+              }
+            : null;
 
         return {
           id: item._id,

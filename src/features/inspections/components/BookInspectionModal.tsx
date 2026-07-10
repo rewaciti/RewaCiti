@@ -147,7 +147,14 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                 { label: "Property Link", value: propertyUrl },
                 { label: "Booking Reference", value: transaction.reference },
                 { label: "Inspection Fee", value: `₦${amount.toLocaleString()}` },
-                { label: "Agent ID", value: property.createdBy?.toString() ?? "" },
+                ...(property.createdBy?._id || property.createdBy?.id
+                    ? [
+                        {
+                          label: "Agent ID",
+                          value: property.createdBy._id ?? property.createdBy.id,
+                        },
+                      ]
+                : []),
                 { label: "Property ID", value: property.id },
                 { label: "Category", value: property.category},
                 { label: "Sale ID", value: saleId },

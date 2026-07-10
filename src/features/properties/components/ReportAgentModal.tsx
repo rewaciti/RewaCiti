@@ -43,7 +43,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
         },
         {
           label: "Agent ID",
-          value: property.createdBy?.toString() ?? "",
+          value: property.createdBy?._id ?? property.createdBy?.id ?? "",
         },
         {
           label: "Property ID",

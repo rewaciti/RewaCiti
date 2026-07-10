@@ -18,7 +18,13 @@ export interface Property {
    AgentFee:number;
    TotalCost: number;
   };
-  createdBy: string | null;
+  createdBy?: {
+    _id: string;
+    id: string;
+    firstName: string;
+    lastName: string;
+    classification: string | null;
+  } | null;
   creatorClassification?: string | null;
   location: {
     area: string;
@@ -179,7 +185,7 @@ export interface SabiFlowProduct {
     firstName: string;
     lastName: string;
     id: string;
-    creatorClassification?: string;
+    classification?: string;
   } | string | null;
   customData?: {
     bedrooms?: number;

@@ -154,14 +154,22 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 { label: "Payment Reference", value: transaction.reference },
                 { label: "amount Paid", value: price },
                 { label: "Service Fee", value: `₦${pricing.ServiceFee.toLocaleString()}` },
-                { label: "Agent ID", value: property.createdBy?.toString() ?? "" },
+                ...(property.createdBy?._id || property.createdBy?.id
+                    ? [
+                        {
+                          label: "Agent ID",
+                          value: property.createdBy._id ?? property.createdBy.id,
+                        },
+                      ]
+                : []),
                 { label: "Property ID", value: property.id },
                 { label: "Sale ID", value: saleId },
                 ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
                 ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : [])
               ]
             };
-
+          
+            console.log("Submitting CRM Payload:", crmPayload);
             await axios.post("https://api.sabiflow.com/api/crm/deals/guest", crmPayload);
 
             toast.success(

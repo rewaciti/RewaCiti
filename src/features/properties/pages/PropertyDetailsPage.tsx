@@ -214,7 +214,7 @@ function PropertyDetails() {
       phone: phone,
       address: `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`,
       note: message,
-      ownerId: property.createdBy ?? "",
+      ownerId: property.createdBy?._id ?? property.createdBy?.id ?? "",
       customData: [
         {
           label: "Property",
@@ -234,7 +234,7 @@ function PropertyDetails() {
         },
         {
           label: "Agent ID",
-          value: property.createdBy ?? "",
+          value: property.createdBy?._id ?? property.createdBy?.id ?? "",
         },
         {
           label: "Property ID",
@@ -287,7 +287,9 @@ function PropertyDetails() {
         p.location.city_town === property?.location.city_town ||
         p.location.area === property?.location.area;
       const sameOwner = Boolean(
-        property?.createdBy && p.createdBy && p.createdBy === property.createdBy
+        property?.createdBy && p.createdBy &&
+        ((p.createdBy._id && property.createdBy._id && p.createdBy._id === property.createdBy._id) ||
+         (p.createdBy.id && property.createdBy.id && p.createdBy.id === property.createdBy.id))
       );
 
       return matchesCategory && matchesLocation && (!sameAgentOnly || sameOwner);
