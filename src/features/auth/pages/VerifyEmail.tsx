@@ -6,6 +6,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import Navbar from "../../../shared/components/Layout/Navbar";
 // import Footer from "../../../shared/components/Layout/Footer";
 import { Helmet } from "react-helmet-async";
+import { FiArrowLeft } from "react-icons/fi";
 
 interface PendingVerification {
   email: string;
@@ -51,7 +52,7 @@ const VerifyEmail = () => {
 
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [timeLeft, setTimeLeft] = useState(900); // 15 minutes
   const [canResend, setCanResend] = useState(false);
 
   const [pendingData, setPendingData] = useState<PendingVerification | null>(
@@ -202,6 +203,14 @@ const VerifyEmail = () => {
 
       <div className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-lg bg-white dark:bg-[#1A1A1A] rounded-xl p-10 shadow-lg border border-gray-600/30">
+          <button
+            onClick={() => navigate("/auth/login")}
+            className="flex items-center gap-2 text-[#703BF7] hover:underline text-sm font-medium mb-6"
+          >
+            <FiArrowLeft size={16} />
+            Back to Login
+          </button>
+
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
               Verify Your Email
