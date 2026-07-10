@@ -3,6 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { FiX, FiStar } from "react-icons/fi";
 import { toast } from "sonner";
 import axios from "axios";
+import { useNavigate } from "react-router";
 import type { Property } from "../../../types";
 
 interface ServiceRatingModalProps {
@@ -26,6 +27,14 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
   const [hoverRating, setHoverRating] = useState(0);
   const [feedback, setFeedback] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+
+  const handleClose = (nextOpen: boolean) => {
+    onOpenChange(nextOpen);
+    if (!nextOpen) {
+      navigate("/properties");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +66,7 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", feedbackPayload);
 
       toast.success("Thank you for your feedback!");
-      onOpenChange(false);
+      handleClose(false);
       setRating(0);
       setFeedback("");
     } catch (error) {
@@ -66,14 +75,14 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
         console.error("API Error Details:", error.response?.data);
       }
       toast.error("Failed to submit feedback. Thank you anyway!");
-      onOpenChange(false);
+      handleClose(false);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+    <Dialog.Root open={open} onOpenChange={handleClose}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm" />
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-6 rounded-xl shadow-2xl z-50">
@@ -135,7 +144,7 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
             <div className="flex gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => onOpenChange(false)}
+                onClick={() => handleClose(false)}
                 className="flex-1 px-4 py-2 border border-gray-600/30 rounded-md text-sm font-medium dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
                 Cancel
