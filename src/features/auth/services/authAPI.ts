@@ -66,6 +66,7 @@ interface SignUpResponse {
   success: boolean;
   message: string;
   email: string;
+  companyId?: string;
 }
 
 interface VerifyEmailResponse {
@@ -106,7 +107,7 @@ export const authAPI = {
 
   // Sign Up
   signUp: async (payload: SignUpPayload): Promise<SignUpResponse> => {
-    const response = await axios.post(`${API_URL}/customers/sign-up`, payload);
+    const response = await axios.post(`${API_URL}/customers/register`, payload);
     return response.data;
   },
 

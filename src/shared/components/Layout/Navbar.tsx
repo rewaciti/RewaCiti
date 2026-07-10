@@ -2,8 +2,9 @@ import { NavLink, useNavigate } from "react-router";
 import logo from "/Symbol.png";
 import { useState, useRef, useEffect } from "react";
 import { useThemeStore } from "../../store/useThemeStore";
-import { FiSun, FiMoon, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiSun, FiMoon, FiPlus, FiTrash2, FiUser } from "react-icons/fi";
 import { usePropertyStore } from "../../../features/properties/store/usePropertyStore";
+import { useAuthStore } from "../../../features/auth/store/useAuthStore";
 import { toast } from "sonner";
 
 const Navbar = () => {
@@ -12,11 +13,12 @@ const Navbar = () => {
   const shortlistRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useThemeStore();
   const { shortlistedProperties, toggleShortlist } = usePropertyStore();
+  const { isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
 
   const navItems = [
     { name: "Home", path: "/" },
-    { name: "About Us", path: "/About" },
+    { name: "About", path: "/About" },
     { name: "Properties", path: "/properties" },
     { name: "Services", path: "/Service" },
   ];
@@ -193,8 +195,8 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Desktop Contact Button */}
-         <div className="hidden md:block">
+          {/* Desktop Action Buttons */}
+          <div className="hidden md:flex items-center gap-2">
             <NavLink to="/Contact">
               {({ isActive }) => (
                 <button
@@ -206,15 +208,52 @@ const Navbar = () => {
                     }
                   `}
                 >
-                  Contact Us
+                  Contact
                 </button>
               )}
             </NavLink>
+
+            {isAuthenticated ? (
+              <button
+                type="button"
+                title="Profile"
+                onClick={() => navigate("/")}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-gray-100 text-gray-800 transition hover:bg-[#9677df] hover:text-white dark:border-gray-600 dark:bg-black/30 dark:text-white"
+              >
+                <FiUser size={18} />
+              </button>
+            ) : (
+              <NavLink to="/auth/login">
+                {({ isActive }) => (
+                  <button
+                    className={`py-2 px-4 rounded-md border transition
+                      ${
+                        isActive
+                          ? 'bg-[#703BF7] text-white border-[#703BF7]'
+                          : 'bg-gray-100 text-gray-800 border-gray-200 dark:hover:bg-[#9677df] hover:bg-[#9677df] hover:text-white hover:border-[#703BF7] dark:bg-black/30 dark:text-white'
+                      }
+                    `}
+                  >
+                    Login
+                  </button>
+                )}
+              </NavLink>
+            )}
           </div>
 
-
           {/* MOBILE MENU BUTTON */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center gap-2">
+            {isAuthenticated && (
+              <button
+                type="button"
+                title="Profile"
+                onClick={() => navigate("/")}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-gray-100 text-gray-800 transition hover:bg-[#9677df] hover:text-white dark:border-gray-600 dark:bg-black/30 dark:text-white"
+              >
+                <FiUser size={16} />
+              </button>
+            )}
+
             <button onClick={() => setIsOpen(!isOpen)}>
                <svg
                   className="w-7 h-7"
@@ -260,21 +299,31 @@ const Navbar = () => {
                 </NavLink>
               ))}
 
-              {/* Purple Contact Button */}
-              <NavLink to="/Contact">
-              {({ isActive }) => (
-                <button
-                  className={`
-                    ${
-                      isActive
-                        ? "text-[#703BF7] font-semibold"
-                        : ""
-                    }
-                  `}
-                >
-                  Contact Us
-                </button>
-              )}
+              {/* Mobile Action Links */}
+
+              <NavLink to="/Contact" onClick={() => setIsOpen(false)}>
+                {({ isActive }) => (
+                  <button
+                    className={`
+                      ${
+                        isActive
+                          ? "text-[#703BF7] font-semibold"
+                          : ""
+                      }
+                    `}
+                  >
+                    Contact
+                  </button>
+                )}
+              </NavLink>
+              <NavLink to="/auth/login" onClick={() => setIsOpen(false)}>
+                {({ isActive }) => (
+                  <button
+                    className={`$${isActive ? "text-[#703BF7] font-semibold" : ""}`}
+                  >
+                    Login
+                  </button>
+                )}
             </NavLink>
             </div>
           </div>

@@ -16,15 +16,30 @@ interface PendingVerification {
 const getErrorMessage = (error: unknown, fallback: string) => {
   if (typeof error === "object" && error !== null) {
     const errorWithMessage = error as {
-      response?: { data?: { message?: string } };
+      response?: {
+        data?: {
+          message?: string;
+          error?: string;
+        };
+        status?: number;
+      };
       message?: string;
+      code?: string;
     };
 
-    return (
+    const serverMessage =
       errorWithMessage.response?.data?.message ||
-      errorWithMessage.message ||
-      fallback
-    );
+      errorWithMessage.response?.data?.error;
+
+    if (serverMessage) {
+      return serverMessage;
+    }
+
+    if (errorWithMessage.response?.status) {
+      return `${fallback} (Status ${errorWithMessage.response.status})`;
+    }
+
+    return errorWithMessage.message || fallback;
   }
 
   return fallback;
@@ -32,7 +47,7 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
-  const { setToken, setCustomer, companyId } = useAuthStore();
+  const { setToken, setCustomer, setCompanyId, companyId } = useAuthStore();
 
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
@@ -102,6 +117,11 @@ const VerifyEmail = () => {
       return;
     }
 
+    if (!pendingData?.email) {
+      toast.error("We could not find the email for verification.");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const response = await authAPI.verifyEmail({
@@ -113,6 +133,7 @@ const VerifyEmail = () => {
       if (response.token && response.customer) {
         setToken(response.token);
         setCustomer(response.customer);
+        setCompanyId(response.customer.companyId);
         toast.success("Email verified successfully!");
         sessionStorage.removeItem("pendingVerification");
         navigate("/");
@@ -134,15 +155,17 @@ const VerifyEmail = () => {
 
     setIsLoading(true);
     try {
-      await authAPI.resendOTP({
+      const response = await authAPI.resendOTP({
         companyId,
         email: pendingData.email,
       });
 
-      toast.success("OTP resent to your email!");
-      setOtp(["", "", "", "", "", ""]);
-      setTimeLeft(300);
-      setCanResend(false);
+      if (response.success) {
+        toast.success(response.message || "OTP resent to your email!");
+        setOtp(["", "", "", "", "", ""]);
+        setTimeLeft(300);
+        setCanResend(false);
+      }
     } catch (error: unknown) {
       const errorMessage = getErrorMessage(
         error,
@@ -254,11 +277,9 @@ const VerifyEmail = () => {
             </p>
             <button
               onClick={handleResendOtp}
-              disabled={!canResend || isLoading}
+              disabled={isLoading}
               className={`text-[#703BF7] font-semibold hover:underline ${
-                !canResend || isLoading
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
+                isLoading ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
               {isLoading ? "Sending..." : "Resend Code"}

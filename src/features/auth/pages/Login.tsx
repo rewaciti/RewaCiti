@@ -1,12 +1,10 @@
 import { useState } from "react";
-// import { FaGoogle, FaApple } from "react-icons/fa";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate, Link } from "react-router";
 import { toast } from "sonner";
 import { authAPI } from "../services/authAPI";
 import { useAuthStore } from "../store/useAuthStore";
 import Navbar from "../../../shared/components/Layout/Navbar";
-// import Footer from "../../../shared/components/Layout/Footer";
 import { Helmet } from "react-helmet-async";
 
 const getErrorMessage = (error: unknown, fallback: string) => {
@@ -28,7 +26,7 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setToken, setCustomer, companyId } = useAuthStore();
+  const { setToken, setCustomer, setCompanyId, companyId } = useAuthStore();
 
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -79,6 +77,7 @@ const Login = () => {
       if (response.success && response.token) {
         setToken(response.token);
         setCustomer(response.customer);
+        setCompanyId(response.customer.companyId);
         toast.success("Login successful!");
         navigate("/");
       }
@@ -112,6 +111,9 @@ const Login = () => {
       });
 
       if (response.success) {
+        if (response.companyId) {
+          setCompanyId(response.companyId);
+        }
         toast.success("OTP sent to your email!");
         // Store signup data for verification
         sessionStorage.setItem(
@@ -359,25 +361,6 @@ const Login = () => {
               </button>
             </div>
           </form>
-
-          {/* Social Login */}
-          {/* <div className="mt-8 flex flex-col sm:flex-row gap-3 mx-auto justify-center items-center">
-            <button
-              type="button"
-              className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-600/30 dark:border-gray-600/30 rounded-lg text-gray-900 dark:text-white hover:bg-[#703BF7] hover:text-white hover:border-[#703BF7] transition text-sm"
-            >
-              <FaGoogle />
-              {isSignUp ? "Sign up with Google" : "Sign in with Google"}
-            </button>
-
-            <button
-              type="button"
-              className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-600/30 dark:border-gray-600/30 rounded-lg text-gray-900 dark:text-white hover:bg-[#703BF7] hover:text-white hover:border-[#703BF7] transition text-sm"
-            >
-              <FaApple />
-              {isSignUp ? "Sign up with Apple" : "Sign in with Apple"}
-            </button>
-          </div> */}
 
           {/* Switch Mode */}
           <p className="text-sm text-gray-600 dark:text-gray-400 text-center pt-6">
