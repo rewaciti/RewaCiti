@@ -4,7 +4,7 @@ import { useInspectionStore } from "../store/useInspectionStore";
 import type { Property } from "../../../types";
 import { FiX, FiMapPin } from "react-icons/fi";
 import axios from "axios";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import PaystackPop from "@paystack/inline-js";
 
@@ -37,6 +37,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const [phone, setPhone] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const addInspection = useInspectionStore((state) => state.addInspection);
   const updatePaymentStatus = useInspectionStore((state) => state.updatePaymentStatus);
@@ -191,6 +192,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
             setLastName("");
             setEmail("");
             setPhone("");
+            navigate("/properties");
           } catch (error) {
             console.error("Verification/CRM error:", error);
             toast.error("Payment successful, but verification failed. Please contact support.");

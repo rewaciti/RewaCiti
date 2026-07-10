@@ -3,7 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { FiX, FiInfo } from "react-icons/fi";
 import type { Property } from "../../../types";
 import axios from "axios";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import PaystackPop from "@paystack/inline-js";
 
@@ -38,6 +38,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   const [phone, setPhone] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const price = property.pricing.TotalCost || 0;
   const pricing = property.pricing;
@@ -180,6 +181,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
             setLastName("");
             setEmail("");
             setPhone("");
+            navigate("/properties");
             
             // Trigger Rating Modal
             if (onPaymentSuccess) {
