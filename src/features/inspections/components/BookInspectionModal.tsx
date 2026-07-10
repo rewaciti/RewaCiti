@@ -89,8 +89,8 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
             description: `Inspection Fee: ${property.name}, ${propertyAddress}`,
             quantity: 1,
             unitPrice: amount,
-            inventoryItemId: property.id,
-            productId: property.id,
+            inventoryItemId: undefined,
+            productId: undefined,
           }
         ],
         taxRate: 0,
