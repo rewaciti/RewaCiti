@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { usePropertyStore } from "../store/usePropertyStore";
 import PropertyCard from "./PropertyCard";
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
-import { Link } from "react-router";
+import { NavLink } from "react-router";
 
 function PropertySection() {
   const {
@@ -36,12 +36,12 @@ function PropertySection() {
             </p>
           </div>
 
-          <Link
+          <NavLink
             to="/properties"
-            className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center hidden md:block"
+            className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center hidden sm:block"
           >
             View All
-          </Link>
+          </NavLink>
         </div>
       </div>
       <div className=" py-4">
@@ -88,6 +88,14 @@ function PropertySection() {
         </div>
 
         <hr className="my-4 h-px bg-gray-600/50 border-0 w-full" />
+        <div className="flex justify-center items-center gap-4 text-white">
+             <NavLink
+                to="/properties"
+                className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center sm:hidden"
+              >
+            View All
+          </NavLink>
+       </div>
       </div>
     </div>
   );

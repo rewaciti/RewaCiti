@@ -52,7 +52,7 @@ export default function CustomDropdown({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full h-12 px-3 flex items-center justify-between rounded-lg border border-gray-600/70 bg-gray-300 dark:bg-black/70 text-gray-900 dark:text-white rounded-t-none"
+        className="w-full h-12 px-3 flex items-center justify-between rounded-lg border border-gray-600/70 bg-gray-300 dark:bg-black/70 text-gray-900 dark:text-white md:rounded-t-none"
       >
         <div className="flex items-center gap-2 min-w-0 flex-1">
           {icon}

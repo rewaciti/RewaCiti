@@ -145,7 +145,7 @@ function Studentarea() {
 
   const universityOptions = [
     {
-      label: "All Universities",
+      label: "Universities",
       value: "",
     },
     ...availableUniversities.map((u) => ({
@@ -407,6 +407,9 @@ const priceDropdownOptions = [
                   </h3>
                   <p className="text-gray-800 dark:text-gray-400 text-sm">
                     Try adjusting your search or filters
+                  </p>
+                  <p className="text-gray-800 dark:text-gray-400 text-sm">
+                    Make sure your connection is stable
                   </p>
                 </div>
               ) : (

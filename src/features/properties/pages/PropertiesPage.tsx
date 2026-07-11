@@ -395,6 +395,9 @@ function PropertySearchSection() {
                   <p className="text-gray-800 dark:text-gray-400 text-sm">
                     Try adjusting your search or filters
                   </p>
+                  <p className="text-gray-800 dark:text-gray-400 text-sm">
+                    Make sure your connection is stable
+                  </p>
                 </div>
               ) : (
                 currentProperties.map((item) => (
