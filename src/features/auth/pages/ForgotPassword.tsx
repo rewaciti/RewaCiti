@@ -108,7 +108,7 @@ const ForgotPassword = () => {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-white dark:text-white focus:outline-none focus:border-[#703BF7] placeholder:text-[12px] placeholder:text-gray-400"
+                    className="w-full px-4 py-2 border border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#703BF7] placeholder:text-[12px] dark:placeholder:text-gray-400 placeholder:text-gray-600"
                     required
                   />
                 </div>
@@ -118,7 +118,7 @@ const ForgotPassword = () => {
                   disabled={!isEmailValid || isLoading}
                   className={`w-full px-4 py-3 rounded-lg font-medium transition ${
                     !isEmailValid || isLoading
-                      ? "bg-gray-400 cursor-not-allowed text-gray-200"
+                      ? "bg-gray-400 cursor-not-allowed text-gray-700"
                       : "bg-[#703BF7] text-white hover:bg-[#5c2fe0]"
                   }`}
                 >
