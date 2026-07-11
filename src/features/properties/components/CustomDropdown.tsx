@@ -67,7 +67,7 @@ export default function CustomDropdown({
       </button>
 
       {open && (
-        <div className="absolute z-50 mt-2 min-w-full rounded-xl border border-gray-700 bg-white dark:bg-neutral-900 shadow-xl overflow-hidden">
+        <div className="absolute z-50 mt-2 min-w-full rounded-xl border border-gray-700 bg-gray-300 dark:bg-neutral-900 shadow-xl overflow-hidden">
           <div className="max-h-72 overflow-y-auto overflow-x-auto">
             {options.map((option) => (
               <button
