@@ -382,7 +382,7 @@ function Studentarea() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
               {loading || areaLoading ? (
-                [...Array(3)].map((_, i) => <PropertyCardSkeleton key={i} />)
+                [...Array(6)].map((_, i) => <PropertyCardSkeleton key={i} />)
               ) : currentProperties.length === 0 ? (
                 <div className="col-span-full text-center py-10">
                   <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">

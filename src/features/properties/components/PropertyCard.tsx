@@ -5,6 +5,7 @@ import { FaBed, FaBath, FaHome } from "react-icons/fa";
 import { FiMapPin, FiPlus, FiShare2, FiCheck } from "react-icons/fi";
 import { formatCurrency } from "../../../shared/lib/utils";
 import { usePropertyStore } from "../store/usePropertyStore";
+import {useNavigate} from "react-router";
 import { toast } from "sonner";
 
 interface PropertyCardProps {
@@ -17,6 +18,7 @@ function PropertyCard({ property }: PropertyCardProps) {
   const propertySlug = property.slug;
 
   const isShortlisted = shortlistedProperties.some((p) => p.id === property.id);
+  const navigate = useNavigate();
 
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -59,17 +61,8 @@ function PropertyCard({ property }: PropertyCardProps) {
   const hasBathrooms = !!property.bathrooms && property.bathrooms !== 0 && property.bathrooms !== "0";
 
   return (
-    <div
-  className="
-  bg-white/90 dark:bg-[#1A1A1A]
-  border border-purple-100 dark:border-gray-600/30
-  text-gray-900 dark:text-white
-  shadow-sm hover:shadow-lg
-  transition-all duration-300
-  rounded-lg p-2
-  relative
-"
->
+    <div className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 text-gray-900 dark:text-white shadow-sm hover:shadow-lg transition-all duration-300 rounded-lg p-2 relative hover:cursor-pointer"
+   onClick={() => navigate(`/properties/${propertySlug}`)}>
   {/* Image Container */}
   <div className="relative group">
     <img
@@ -119,7 +112,8 @@ function PropertyCard({ property }: PropertyCardProps) {
     }
     target="_blank"
     rel="noopener noreferrer"
-    className="text-[11px] text-gray-500 dark:text-gray-400 flex items-center gap-1 mb-2 hover:text-[#703BF7]  dark:hover:text-[#703BF7] transition-colors"
+    className="text-[11px] text-gray-500 dark:text-gray-400 flex items-center gap-1 mb-2 hover:text-[#703BF7]  dark:hover:text-[#703BF7] transition-colors w-fit"
+    onClick={(e) => e.stopPropagation()}
   >
     <FiMapPin size={12} />
     {[property.location.area, property.location.city_town, property.location.state].join(", ") + " state."}
@@ -133,7 +127,10 @@ function PropertyCard({ property }: PropertyCardProps) {
 
     {property.description.split(" ").length > 8 && (
       <button
-        onClick={() => setExpanded(!expanded)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setExpanded(!expanded)
+        }}
         className="text-[#703BF7] ml-2 font-medium hover:underline"
       >
         {expanded ? "Show less" : "... Read more"}
