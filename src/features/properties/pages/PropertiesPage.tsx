@@ -18,6 +18,7 @@ import useScrollToHash from "../../../shared/hooks/useScrollToHash";
 import { Link, NavLink } from "react-router";
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
 import { toast } from "sonner";
+import CustomDropdown from "../../../features/properties/components/CustomDropdown.tsx";
 
 function PropertySearchSection() {
   useScrollToHash();
@@ -115,7 +116,7 @@ function PropertySearchSection() {
   const [agreed, setAgreed] = useState(false);
 
   const priceOptions = [
-    { label: "Any Price", range: [0, 999999999] },
+    { label: "All Price", range: [0, 999999999] },
     { label: "Below ₦100k", range: [0, 100000] },
     { label: "₦100k - ₦200k", range: [100001, 200000] },
     { label: "₦200k - ₦300k", range: [200001, 300000] },
@@ -189,6 +190,47 @@ function PropertySearchSection() {
     )
   );
 
+  const categoryOptions = [
+    { label: "Categories", value: "" },
+    ...uniqueCategories.map((c) => ({
+      label: c,
+      value: c,
+    })),
+  ];
+
+  const locationOptions = [
+    { label: "Locations", value: "" },
+    ...uniqueLocations,
+  ];
+
+  const bedroomOptions = [
+    { label: "Bedrooms", value: "" },
+    ...uniqueBedrooms.map((b) => ({
+      label: `${b} Bedroom${b > 1 ? "s" : ""}`,
+      value: String(b),
+    })),
+  ];
+
+  const areaOptions = [
+    { label: "Areas", value: "" },
+    ...uniqueAreas.map((a) => ({
+      label: a,
+      value: a,
+    })),
+  ];
+
+  const priceDropdownOptions = [
+    { label: "Budget", value: "" },
+    ...priceOptions
+      .filter((option) => option.label !== "All Price")
+      .map((option) => ({
+        label: option.label,
+        value: option.label,
+      })),
+  ];
+
+
+
   return (
     <div>
       <Helmet>
@@ -243,141 +285,73 @@ function PropertySearchSection() {
                     md:block md:bg-transparent rounded-2xl md:rounded-none md:p-0 mb-6`}
           >
             {/* Location */}
-            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-tr-none">
-              <div className="relative">
-                <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
-
-                <select
-                  className="p-2 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-tr-none max-h-60 overflow-auto"
-                  style={{ maxHeight: 240 }}
-                  value={location}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setLocation(val === "__all__" ? "" : val);
+            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
+            <CustomDropdown
+                icon={<FiMapPin />}
+                placeholder="Location"
+                value={location}
+                options={locationOptions}
+                onChange={(value) => {
+                    setLocation(value);
                     setArea("");
-                  }}
-                >
-                  <option value="" disabled hidden>
-                    Location
-                  </option>
-                  <option value="__all__">All Locations</option>
-                  {uniqueLocations.map((loc, idx) => (
-                    <option key={idx} value={loc.value}>
-                      {loc.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                }}
+            />
             </div>
 
             {/* Area */}
             <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
-              <div className="relative">
-                <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
-
-                <select
-                  className="p-2 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-t-none max-h-60 overflow-auto"
-                  style={{ maxHeight: 240 }}
-                  value={area}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setArea(val === "__all__" ? "" : val);
-                  }}
-                  disabled={!location}
-                >
-                  <option value="" disabled hidden>
-                    Area
-                  </option>
-                  <option value="__all__">All Areas</option>
-                  {uniqueAreas.map((a, idx) => (
-                    <option key={idx} value={a}>
-                      {a}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <CustomDropdown
+                icon={<FiMapPin />}
+                placeholder={location ? "Area" : "Choose Location First"}
+                value={area}
+                options={areaOptions}
+                disabled={!location}
+                onChange={setArea}
+              />
             </div>
 
             {/* Category */}
             <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
-              <div className="relative">
-                <FiHome className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
-
-                <select
-                  className="p-2 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-t-none max-h-60 overflow-auto"
-                  style={{ maxHeight: 240 }}
-                  value={category}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setCategory(val === "__all__" ? "" : val);
-                  }}
-                >
-                  <option value="" disabled hidden>
-                    Category
-                  </option>
-                  <option value="__all__">All Categories</option>
-                  {uniqueCategories.map((t, idx) => (
-                    <option key={idx} value={t}>
-                      {t}
-                    </option>
-                  ))}
-                </select>
-              </div>
+               <CustomDropdown
+                    icon={<FiHome />}
+                    placeholder="Category"
+                    value={category}
+                    options={categoryOptions}
+                    onChange={setCategory}
+                />
             </div>
 
             <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
-              <div className="relative">
-                <IoBedOutline className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
 
-                <select
-                  className="p-2 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-t-none max-h-60 overflow-auto"
-                  style={{ maxHeight: 240 }}
-                  value={bedrooms}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setBedrooms(val === "__all__" ? "" : val);
-                  }}
-                >
-                  <option value="" disabled hidden>
-                    Rooms
-                  </option>
-                  <option value="__all__">All Bedrooms</option>
-                  {uniqueBedrooms.map((b, idx) => (
-                    <option key={idx} value={b}>
-                      {b}
-                    </option>
-                  ))}
-                </select>
-              </div>
+               <CustomDropdown
+                    icon={<IoBedOutline />}
+                    placeholder="Bedrooms"
+                    value={bedrooms}
+                    options={bedroomOptions}
+                    onChange={setBedrooms}
+                />
             </div>
 
 
             {/* PRICE RANGE - SELECT */}
-            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-tl-none">
-              <div className="relative">
-                <FiDollarSign className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-900 pointer-events-none" />
+            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
+             <CustomDropdown
+                icon={<FiDollarSign />}
+                placeholder="Budget"
+                value={selectedPriceLabel}
+                options={priceDropdownOptions}
+                onChange={(label) => {
+                  setSelectedPriceLabel(label);
 
-                <select
-                  className="p-2 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 md:rounded-tl-none max-h-60 overflow-auto"
-                  style={{ maxHeight: 240 }}
-                  value={selectedPriceLabel}
-                  onChange={(e) => {
-                    const label = e.target.value;
-                    setSelectedPriceLabel(label);
-                    const opt = priceOptions.find((o) => o.label === label);
-                    if (opt) setPriceRange(opt.range as [number, number]);
-                  }}
-                >
-                  <option value="" disabled hidden>
-                    Budget
-                  </option>
-                  {priceOptions.map((opt, idx) => (
-                    <option key={idx} value={opt.label}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  const option = priceOptions.find(
+                    (item) => item.label === label
+                  );
+
+                  if (option) {
+                    setPriceRange(option.range as [number, number]);
+                  }
+                }}
+              />
             </div>
           </div>
 

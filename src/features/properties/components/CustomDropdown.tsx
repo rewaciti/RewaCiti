@@ -52,11 +52,11 @@ export default function CustomDropdown({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full h-12 px-3 flex items-center justify-between rounded-lg border border-gray-600/70 bg-gray-300 dark:bg-black/70 text-gray-900 dark:text-white"
+        className="w-full h-12 px-3 flex items-center justify-between rounded-lg border border-gray-600/70 bg-gray-300 dark:bg-black/70 text-gray-900 dark:text-white rounded-t-none"
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
           {icon}
-          <span>{selected}</span>
+          <span className="truncate whitespace-nowrap">{selected}</span>
         </div>
 
         <FiChevronDown
@@ -67,8 +67,8 @@ export default function CustomDropdown({
       </button>
 
       {open && (
-        <div className="absolute z-50 mt-2 w-full rounded-xl border border-gray-700 bg-white dark:bg-neutral-900 shadow-xl overflow-hidden">
-          <div className="max-h-72 overflow-y-auto">
+        <div className="absolute z-50 mt-2 min-w-full rounded-xl border border-gray-700 bg-white dark:bg-neutral-900 shadow-xl overflow-hidden">
+          <div className="max-h-72 overflow-y-auto overflow-x-auto">
             {options.map((option) => (
               <button
                 key={option.value}
@@ -77,7 +77,7 @@ export default function CustomDropdown({
                   onChange(option.value);
                   setOpen(false);
                 }}
-                className={`w-full px-4 py-3 text-left transition
+                className={`block w-full px-4 py-3 text-left whitespace-nowrap transition
                 ${
                   value === option.value
                     ? "bg-[#703BF7] text-white"
