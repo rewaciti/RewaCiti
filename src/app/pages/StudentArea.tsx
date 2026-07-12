@@ -221,7 +221,7 @@ const bedroomOptions = [
 const priceDropdownOptions = [
   {
     label: "Budget",
-    value: "",
+    value: "All Price",
   },
   ...priceOptions
     .filter((item) => item.label !== "All Price")

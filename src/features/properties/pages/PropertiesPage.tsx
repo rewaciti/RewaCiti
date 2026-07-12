@@ -220,7 +220,7 @@ function PropertySearchSection() {
   ];
 
   const priceDropdownOptions = [
-    { label: "Budget", value: "" },
+    { label: "Budget", value: "All Price" },
     ...priceOptions
       .filter((option) => option.label !== "All Price")
       .map((option) => ({
