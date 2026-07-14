@@ -1,11 +1,15 @@
 import { create } from "zustand";
 import axios from "axios";
-import type { Property, PropertyStore, SabiFlowProduct, PropertyPaymentFees } from "../../../types";
+import type { Property, PropertyStore, SabiFlowProduct, PropertyPaymentFees, Category, InventoryFilters } from "../../../types";
 import { ensureHttps } from "../../../shared/lib/utils";
 
 export const usePropertyStore = create<PropertyStore>((set, get) => ({
   properties: [],
   filteredProperties: [],
+  categories: [],
+  categoriesLoading: false,
+  filtersData: null as InventoryFilters | null,
+  filtersLoading: false,
   loading: false,
   error: null,
   fees: null,
@@ -18,6 +22,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
 
   fetchProperties: async (apiPage = 1, filters?: Record<string, string | number | undefined>) => {
     set({ loading: true, error: null });
+    console.log("Fetching properties with filters:", filters, "and apiPage:", apiPage);
 
     try {
       const resolvedFilters = filters ?? get().filters;
@@ -29,6 +34,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         acc[key] = String(value);
         return acc;
       }, {});
+      
 
       const res = await axios.get<{ data: SabiFlowProduct[]; total?: number }>(
         "https://api.sabiflow.com/api/inventory/portal/rewacity/products",
@@ -100,6 +106,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
             city: customData?.location?.city || "",
             city_town: customData?.location?.city_town || "",
             state: customData?.location?.state || "",
+            nearest_university: customData?.location?.nearest_university || "",
           },
           geo_location: {
             lat: customData?.geo_location?.lat || 0,
@@ -145,6 +152,46 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
       set({ fees: res.data });
     } catch (err) {
       console.error("Failed to fetch property payment fees", err);
+    }
+  },
+
+  fetchCategories: async () => {
+  try {
+    set({ categoriesLoading: true });
+
+    const res = await axios.get<Category[]>(
+      "https://api.sabiflow.com/api/inventory/portal/rewacity/categories"
+    );
+
+    set({
+      categories: res.data,
+      categoriesLoading: false,
+    });
+  } catch (error) {
+    console.error(error);
+
+    set({
+      categoriesLoading: false,
+    });
+  }
+},
+
+ fetchFilters: async () => {
+    try {
+      set({ filtersLoading: true });
+
+      const res = await axios.get(
+        "https://api.sabiflow.com/api/inventory/portal/rewacity/filters"
+      );
+      console.log("Fetched filters data:", res.data);
+      set({
+        filtersData: res.data,
+        filtersLoading: false,
+      });
+      
+    } catch (err) {
+      console.error(err);
+      set({ filtersLoading: false });
     }
   },
 
@@ -247,4 +294,5 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
 
     set({ filteredProperties: filtered, page: 0 });
   },
+
 }));

@@ -221,7 +221,7 @@ const bedroomOptions = [
 const priceDropdownOptions = [
   {
     label: "Budget",
-    value: "All Price",
+    value: "",
   },
   ...priceOptions
     .filter((item) => item.label !== "All Price")
@@ -356,18 +356,23 @@ const priceDropdownOptions = [
                 placeholder="Budget"
                 value={selectedPriceLabel}
                 options={priceDropdownOptions}
-                onChange={(value) => {
-                  setSelectedPriceLabel(value);
+                onChange={(label) => {
+                    setSelectedPriceLabel(label);
 
-                  const option = priceOptions.find(
-                    (item) => item.label === value
-                  );
+                    if (!label) {
+                      setPriceRange([0, 999999999]);
+                      return;
+                    }
 
-                  if (option) {
-                    setPriceRange(option.range as [number, number]);
-                  }
-                }}
-              />
+                    const option = priceOptions.find(
+                      item => item.label === label
+                    );
+
+                    if (option) {
+                      setPriceRange(option.range as [number, number]);
+                    }
+                  }}
+                 />
              </div> 
           </div>
 
