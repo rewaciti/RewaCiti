@@ -3,13 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import { usePropertyStore } from "../store/usePropertyStore";
-import {
-  FiArrowLeft,
-  FiArrowRight,
-  FiMapPin,
-  FiHome,
-  FiDollarSign,
-} from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiMapPin, FiHome, FiDollarSign} from "react-icons/fi";
 import { IoBedOutline } from "react-icons/io5";
 import PropertyCard from "../components/PropertyCard";
 import Footer from "../../../shared/components/Layout/Footer";
@@ -23,14 +17,7 @@ import CustomDropdown from "../../../features/properties/components/CustomDropdo
 function PropertySearchSection() {
   useScrollToHash();
   const {
-    properties,
-    loading,
-    ITEMS_PER_PAGE,
-    fetchProperties,
-    nextPage,
-    prevPage,
-    apiPage,
-    totalProperties,
+    properties, loading, ITEMS_PER_PAGE, fetchProperties, nextPage, prevPage, apiPage, totalProperties, categories, fetchCategories, fetchFilters, filtersData
   } = usePropertyStore();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -111,6 +98,7 @@ function PropertySearchSection() {
   const [priceRange, setPriceRange] = useState<[number, number]>([
     0, 999999999,
   ]);
+   const [selectedBedroomLabel, setSelectedBedroomLabel] = useState("");
 
   const [showFilters, setShowFilters] = useState(false);
   const [agreed, setAgreed] = useState(false);
@@ -127,20 +115,35 @@ function PropertySearchSection() {
     { label: "Above ₦1M", range: [1000001, 999999999] },
   ];
 
-  const normalizeLocationKey = (value: string) =>
-    value.toLowerCase().replace(/[-\s]+/g, "");
+  const bedroomOptions = [
+  { label: "All Bedrooms", value: "" },
+  {label:"shared room", value: "shared"},
+  { label: "1 Bedroom", value: "1" },
+  { label: "2 Bedrooms", value: "2" },
+  { label: "3 Bedrooms", value: "3" },
+  { label: "4 Bedrooms", value: "4" },
+  { label: "5 Bedrooms", value: "5" },
+  {label: "6 Bedrooms", value: "6" },
+  {label: "7 Bedrooms", value: "7" },
+];
+
+    useEffect(() => {
+      fetchCategories();
+       fetchFilters();
+    }, [fetchCategories, fetchFilters]);
 
   useEffect(() => {
     fetchProperties(1, {
       search: searchTerm || undefined,
       location: location || undefined,
       area: area || undefined,
-      category: category || undefined,
-      bedrooms: bedrooms ? Number(bedrooms) : undefined,
+      categoryId: category || undefined,
+      "customData.bedrooms": bedrooms || undefined,
       minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
       maxPrice: priceRange[1] < 999999999 ? priceRange[1] : undefined,
     });
-  }, [searchTerm, location, category, bedrooms, area, priceRange, fetchProperties]);
+    
+  }, [searchTerm, category, bedrooms, area, priceRange, fetchProperties, location]);
 
   const totalApiPages = Math.max(1, Math.ceil(totalProperties / ITEMS_PER_PAGE));
   const currentProperties = properties;
@@ -158,69 +161,55 @@ function PropertySearchSection() {
   };
 
   // Dropdown unique options
-  const uniqueLocations = Array.from(
-    new Map(
-      properties.map((p) => {
-        const label = `${p.location.city_town}, ${p.location.state} state`;
-        const value = normalizeLocationKey(label);
-        return [value, label] as const;
-      })
-    ).entries()
-  ).map(([value, label]) => ({ value, label }));
-
-  const uniqueCategories = Array.from(new Set(properties.map((p) => p.category)));
-  const uniqueBedrooms = Array.from(
-    new Set(
-      properties
-        .map((p) => Number(p.bedrooms))
-        .filter((b) => Number.isFinite(b) && b > 0)
-    )
-  ).sort((a, b) => a - b);
-
-  const uniqueAreas = Array.from(
-    new Set(
-      properties
-        .filter((p) => {
-          const locationString = `${p.location.city_town}, ${p.location.state} state`;
-          return location
-            ? normalizeLocationKey(locationString) === location
-            : true;
-        })
-        .map((p) => p.location.area)
-    )
+  const stateFilter = filtersData?.customFields?.find(
+    (f) => f.key === "location.state"
   );
 
-  const categoryOptions = [
+  const cityFilter = filtersData?.customFields?.find(
+    (f) => f.key === "location.city_town"
+  );
+
+  const areaFilter = filtersData?.customFields?.find(
+    (f) => f.key === "location.area"
+  );
+
+const bedroomDropdownOptions = [
+  { label: "Bedrooms", value: "" },
+  ...bedroomOptions
+    .filter(option => option.label !== "All Bedrooms")
+    .map(option => ({
+      label: option.label,
+      value: option.label,
+    })),
+];
+
+ const categoryOptions = [
     { label: "Categories", value: "" },
-    ...uniqueCategories.map((c) => ({
-      label: c,
-      value: c,
+    ...categories.map(category => ({
+        label: category.name,
+        value: category.id,
     })),
-  ];
+];
 
-  const locationOptions = [
-    { label: "Locations", value: "" },
-    ...uniqueLocations,
-  ];
+const locationOptions = [
+  { label: "Location", value: "" },
 
-  const bedroomOptions = [
-    { label: "Bedrooms", value: "" },
-    ...uniqueBedrooms.map((b) => ({
-      label: `${b} Bedroom${b > 1 ? "s" : ""}`,
-      value: String(b),
-    })),
-  ];
+  ...(cityFilter?.options?.map((city: string, index: number) => ({
+    label: `${city}, ${stateFilter?.options?.[index] ?? ""}`,
+    value: `${city}, ${stateFilter?.options?.[index] ?? ""}`,
+  })) ?? []),
+];
 
-  const areaOptions = [
-    { label: "Areas", value: "" },
-    ...uniqueAreas.map((a) => ({
-      label: a,
-      value: a,
-    })),
-  ];
+const areaOptions = [
+  { label: "Areas", value: "" },
+  ...(areaFilter?.options?.map((area: string) => ({
+    label: area,
+    value: area,
+  })) ?? []),
+];
 
   const priceDropdownOptions = [
-    { label: "Budget", value: "All Price" },
+    { label: "Budget", value: "" },
     ...priceOptions
       .filter((option) => option.label !== "All Price")
       .map((option) => ({
@@ -313,23 +302,38 @@ function PropertySearchSection() {
             {/* Category */}
             <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
                <CustomDropdown
-                    icon={<FiHome />}
-                    placeholder="Category"
-                    value={category}
-                    options={categoryOptions}
-                    onChange={setCategory}
-                />
+                  icon={<FiHome />}
+                  placeholder="Category"
+                  value={category}
+                  options={categoryOptions}
+                  onChange={setCategory}
+              />
             </div>
 
             <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
 
-               <CustomDropdown
-                    icon={<IoBedOutline />}
-                    placeholder="Bedrooms"
-                    value={bedrooms}
-                    options={bedroomOptions}
-                    onChange={setBedrooms}
-                />
+              <CustomDropdown
+                icon={<IoBedOutline />}
+                placeholder="Bedrooms"
+                value={selectedBedroomLabel}
+                options={bedroomDropdownOptions}
+                onChange={(label) => {
+                  setSelectedBedroomLabel(label);
+
+                  if (!label) {
+                    setBedrooms("");
+                    return;
+                  }
+
+                  const option = bedroomOptions.find(
+                    item => item.label === label
+                  );
+
+                  if (option) {
+                    setBedrooms(String(option.value));
+                  }
+                }}
+              /> 
             </div>
 
 
@@ -343,8 +347,13 @@ function PropertySearchSection() {
                 onChange={(label) => {
                   setSelectedPriceLabel(label);
 
+                  if (!label) {
+                    setPriceRange([0, 999999999]);
+                    return;
+                  }
+
                   const option = priceOptions.find(
-                    (item) => item.label === label
+                    item => item.label === label
                   );
 
                   if (option) {

@@ -195,6 +195,39 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
     }
   },
 
+  getRelatedProperties: (
+  property: Property,
+  sameAgentOnly?: boolean
+) => {
+  const { properties } = get();
+
+  return properties
+    .filter((p) => p.id !== property.id)
+    .filter((p) => {
+      const sameCategory = p.category === property.category;
+
+      const sameState =
+        p.location.state === property.location.state;
+
+      const sameCity =
+        p.location.city_town === property.location.city_town;
+
+  
+      const sameAgent =
+        p.createdBy?.id === property.createdBy?.id;
+
+      if (sameAgentOnly) {
+        return sameAgent;
+      }
+
+      return (
+        sameCategory &&
+        sameState &&
+        (sameCity)
+      );
+    });
+},
+
   nextPage: () => {
     const { apiPage, totalProperties, ITEMS_PER_PAGE, fetchProperties, filters } = get();
     const maxPage = Math.max(1, Math.ceil(totalProperties / ITEMS_PER_PAGE));
@@ -257,7 +290,6 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
     category?: string;
     priceRange?: string;
     rooms?: number;
-    buildYear?: number;
   }) => {
     const { properties, searchQuery } = get();
     const filtered = properties.filter((p) => {

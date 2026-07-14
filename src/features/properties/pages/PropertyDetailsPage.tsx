@@ -738,7 +738,7 @@ function PropertyDetails() {
         )}
       </section>
 
-      <section className="md:flex justify-between gap-6 px-4 mb-10 md:flex-row flex-col space-y-6 md:space-y-0">
+      <section className="md:flex justify-between md:gap-6  px-4 mb-10 md:flex-row flex-col space-y-6 md:space-y-0">
       <div className="px-4 py-10 border border-gray-600/30 rounded-xl flex-1 h-fit dark:bg-[#1A1A1A] bg-white">
           {/* Description */}
           <div className="mb-8">
@@ -748,7 +748,7 @@ function PropertyDetails() {
           </div>
           {/* Property Details */}
           <div className="flex flex-col gap-4 border-t border-gray-600/30 pt-2">
-            <div className="grid grid-cols-2 gap-4 sm:flex sm:flex-row sm:items-center sm:justify-start sm:gap-[20%]">
+            <div className="grid grid-cols-2 gap-4 sm:flex sm:flex-row sm:items-center sm:justify-start sm:gap-[20%] md:gap-[3%] lg:gap-[15%] xl:*:gap-[20%]">
               {hasBedrooms && (
                 <div className="flex flex-col px-2">
                   <span className="text-gray-800 dark:text-gray-400 mt-1 flex items-center gap-1"><FaBed/>Bedrooms</span>

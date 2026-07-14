@@ -31,6 +31,7 @@ export interface Property {
     city: string;
     city_town?: string;
     state: string;
+    nearest_university?: string;
   };
   geo_location: {
     lat: number;
@@ -80,6 +81,20 @@ export interface PropertyStore {
     rooms?: number;
     buildYear?: number;
   }) => void;
+  
+  categories: Category[];
+  categoriesLoading: boolean;
+  fetchCategories: () => Promise<void>;
+
+  filtersData: InventoryFilters | null;
+  filtersLoading: boolean;
+  fetchFilters: () => Promise<void>;
+
+    getRelatedProperties: (
+    property: Property,
+    sameAgentOnly?: boolean
+  ) => Property[];
+
 }
 
 export interface PropertyPaymentFees {
@@ -208,6 +223,7 @@ export interface SabiFlowProduct {
       city?: string;
       city_town?: string;
       state?: string;
+      nearest_university?: string;
     };
     geo_location?: {
       lat: number;
@@ -274,4 +290,32 @@ export interface BlogStore {
   setPage: (page: number) => void;
 }
 
+export interface Category {
+  _id: string;
+  id: string;
+  name: string;
+  slug: string;
+}
 
+export interface InventoryFilters {
+  creators: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    classification: string;
+  }[];
+
+  vendorTracking: {
+    enabled: boolean;
+    classifications: string[];
+  };
+
+  customFields: {
+    key: string;
+    name: string;
+    type: string;
+    options: string[] | null;
+    queryParam: string;
+    operators: string[];
+  }[];
+}
