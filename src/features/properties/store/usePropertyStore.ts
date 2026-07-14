@@ -3,6 +3,95 @@ import axios from "axios";
 import type { Property, PropertyStore, SabiFlowProduct, PropertyPaymentFees, Category, InventoryFilters } from "../../../types";
 import { ensureHttps } from "../../../shared/lib/utils";
 
+const mapSabiFlowProductsToProperties = (items: SabiFlowProduct[]): Property[] =>
+  items.map((item: SabiFlowProduct) => {
+    const customData = item.customData;
+    const apiPricing = customData?.pricing;
+    const itemSku = (item as SabiFlowProduct & { sku?: string }).sku;
+
+    const propertyCost = apiPricing?.property_cost || 0;
+    const agentFee = apiPricing?.agent_fee || 0;
+    const legalFee = apiPricing?.legal_fee || 0;
+    let serviceFee = apiPricing?.service_fee || 0;
+    const cautionFee = apiPricing?.caution_fee || 0;
+
+    const creatorClassification =
+      item.creatorClassification ||
+      (typeof item.createdBy === "object" && item.createdBy !== null
+        ? item.createdBy.classification
+        : undefined) ||
+      item.customData?.creatorClassification;
+
+    if (creatorClassification?.toLowerCase() === "agent") {
+      serviceFee += propertyCost * 0.05;
+    }
+
+    const totalPrice = propertyCost + agentFee + legalFee + serviceFee + cautionFee;
+
+    const normalizedCreatedBy =
+      item.createdBy && typeof item.createdBy === "object"
+        ? {
+            _id: item.createdBy._id ?? "",
+            id: item.createdBy.id ?? item.createdBy._id ?? "",
+            firstName: item.createdBy.firstName ?? "",
+            lastName: item.createdBy.lastName ?? "",
+            classification: item.createdBy.classification ?? null,
+          }
+        : null;
+
+    return {
+      id: item._id,
+      sku: itemSku,
+      slug: item.slug,
+      name: item.name,
+      img: ensureHttps(item.thumbnail || item.images[0] || ""),
+      images: (item.images || []).map(ensureHttps),
+      description: item.description || "",
+      bedrooms: customData?.bedrooms || 0,
+      bathrooms: customData?.bathrooms || 0,
+      category: item.categoryId?.name || "Property",
+      duration: customData?.duration || "",
+      rules: customData?.rules || [],
+      pricing: {
+        PropertyCost: propertyCost,
+        AgentFee: agentFee,
+        LegalFee: legalFee,
+        ServiceFee: serviceFee,
+        CautionFee: cautionFee,
+        TotalCost: totalPrice || item.price || 0,
+      },
+      createdBy: normalizedCreatedBy,
+      creatorClassification: creatorClassification || null,
+      location: {
+        area: customData?.location?.area || "",
+        city: customData?.location?.city || "",
+        city_town: customData?.location?.city_town || "",
+        state: customData?.location?.state || "",
+        nearest_university: customData?.location?.nearest_university || "",
+      },
+      geo_location: {
+        lat: customData?.geo_location?.lat || 0,
+        lng: customData?.geo_location?.lng || 0,
+        address: customData?.geo_location?.address || "",
+      },
+      yearBuilt: customData?.yearBuilt || 0,
+      keyFeatures: customData?.key_features_and_amenities || [],
+      specialNotes: customData?.special_notes || [],
+      specifications: [
+        ...(item.specifications ? Object.entries(item.specifications).map(([label, value]) => ({ label, value })) : []),
+        ...(customData?.specifications || []),
+      ],
+      videoUrl: ensureHttps(item.videoUrl || ""),
+      caretakerContact: customData?.care_taker_contact_optional
+        ? {
+            whatsapp: customData.care_taker_contact_optional.wattsapp_contact,
+            phone: customData.care_taker_contact_optional.call_contact,
+          }
+        : undefined,
+      visitationfee: customData?.visitation_fee || 0,
+    };
+  });
+
 export const usePropertyStore = create<PropertyStore>((set, get) => ({
   properties: [],
   filteredProperties: [],
@@ -10,6 +99,8 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
   categoriesLoading: false,
   filtersData: null as InventoryFilters | null,
   filtersLoading: false,
+  relatedProperties: [],
+  relatedPropertiesLoading: false,
   loading: false,
   error: null,
   fees: null,
@@ -43,93 +134,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         }
       );
 
-      const properties: Property[] = res.data.data.map((item: SabiFlowProduct) => {
-        const customData = item.customData;
-        const apiPricing = customData?.pricing;
-        const itemSku = (item as SabiFlowProduct & { sku?: string }).sku;
-
-        const propertyCost = apiPricing?.property_cost || 0;
-        const agentFee = apiPricing?.agent_fee || 0;
-        const legalFee = apiPricing?.legal_fee || 0;
-        let serviceFee = apiPricing?.service_fee || 0;
-        const cautionFee = apiPricing?.caution_fee || 0;
-
-        const creatorClassification =
-          item.creatorClassification ||
-          (typeof item.createdBy === "object" && item.createdBy !== null
-            ? item.createdBy.classification
-            : undefined) ||
-          item.customData?.creatorClassification;
-
-        if (creatorClassification?.toLowerCase() === "agent") {
-          serviceFee += propertyCost * 0.05;
-        }
-
-        const totalPrice = propertyCost + agentFee + legalFee + serviceFee + cautionFee;
-
-        const normalizedCreatedBy =
-          item.createdBy && typeof item.createdBy === "object"
-            ? {
-                _id: item.createdBy._id ?? "",
-                id: item.createdBy.id ?? item.createdBy._id ?? "",
-                firstName: item.createdBy.firstName ?? "",
-                lastName: item.createdBy.lastName ?? "",
-                classification: item.createdBy.classification ?? null,
-              }
-            : null;
-
-        return {
-          id: item._id,
-          sku: itemSku,
-          slug: item.slug,
-          name: item.name,
-          img: ensureHttps(item.thumbnail || item.images[0] || ""),
-          images: (item.images || []).map(ensureHttps),
-          description: item.description || "",
-          bedrooms: customData?.bedrooms || 0,
-          bathrooms: customData?.bathrooms || 0,
-          category: item.categoryId?.name || "Property",
-          duration: customData?.duration || "",
-          rules: customData?.rules || [],
-          pricing: {
-            PropertyCost: propertyCost,
-            AgentFee: agentFee,
-            LegalFee: legalFee,
-            ServiceFee: serviceFee,
-            CautionFee: cautionFee,
-            TotalCost: totalPrice || item.price || 0,
-          },
-          createdBy: normalizedCreatedBy,
-          creatorClassification: creatorClassification || null,
-          location: {
-            area: customData?.location?.area || "",
-            city: customData?.location?.city || "",
-            city_town: customData?.location?.city_town || "",
-            state: customData?.location?.state || "",
-            nearest_university: customData?.location?.nearest_university || "",
-          },
-          geo_location: {
-            lat: customData?.geo_location?.lat || 0,
-            lng: customData?.geo_location?.lng || 0,
-            address: customData?.geo_location?.address || "",
-          },
-          yearBuilt: customData?.yearBuilt || 0,
-          keyFeatures: customData?.key_features_and_amenities || [],
-          specialNotes: customData?.special_notes || [],
-          specifications: [
-            ...(item.specifications ? Object.entries(item.specifications).map(([label, value]) => ({ label, value })) : []),
-            ...(customData?.specifications || []),
-          ],
-          videoUrl: ensureHttps(item.videoUrl || ""),
-          caretakerContact: customData?.care_taker_contact_optional
-            ? {
-                whatsapp: customData.care_taker_contact_optional.wattsapp_contact,
-                phone: customData.care_taker_contact_optional.call_contact,
-              }
-            : undefined,
-          visitationfee: customData?.visitation_fee || 0,
-        };
-      });
+      const properties = mapSabiFlowProductsToProperties(res.data.data);
 
       set({
         properties,
@@ -195,37 +200,87 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
     }
   },
 
-  getRelatedProperties: (
+fetchRelatedProperties: async (
   property: Property,
-  sameAgentOnly?: boolean
+  sameAgentOnly = false
 ) => {
-  const { properties } = get();
+  set({ relatedPropertiesLoading: true });
 
-  return properties
-    .filter((p) => p.id !== property.id)
-    .filter((p) => {
-      const sameCategory = p.category === property.category;
+  try {
+    let { categories } = get();
 
-      const sameState =
-        p.location.state === property.location.state;
+    // Load categories if needed
+    if (!categories.length) {
+      await get().fetchCategories();
+      categories = get().categories;
+    }
 
-      const sameCity =
-        p.location.city_town === property.location.city_town;
+    // Find the category id
+    const categoryId = categories.find(
+      (c) =>
+        c.name.trim().toLowerCase() ===
+        property.category.trim().toLowerCase()
+    )?.id;
 
-  
-      const sameAgent =
-        p.createdBy?.id === property.createdBy?.id;
+    const agentId =
+      property.createdBy?._id || property.createdBy?.id;
 
-      if (sameAgentOnly) {
-        return sameAgent;
+    const params: Record<string, string | number> = {
+      page: 1,
+      limit: 30,
+    };
+
+    if (categoryId) {
+      params.categoryId = categoryId;
+    }
+
+    if (property.location.state) {
+      params["customData.location.state"] =
+        property.location.state;
+    }
+
+    // IMPORTANT:
+    // use whichever field your backend actually stores.
+    // If your database stores city_town, replace city below.
+    if (property.location.city) {
+      params["customData.location.city"] =
+        property.location.city;
+    }
+
+    if (sameAgentOnly && agentId) {
+      params.createdBy = agentId;
+    }
+
+    console.log("Related Properties Params:", params);
+
+    const res = await axios.get<{
+      data: SabiFlowProduct[];
+      total?: number;
+    }>(
+      "https://api.sabiflow.com/api/inventory/portal/rewacity/products",
+      {
+        params,
       }
+    );
 
-      return (
-        sameCategory &&
-        sameState &&
-        (sameCity)
-      );
+    console.log("Related Properties Response:", res.data);
+
+    const relatedProperties = mapSabiFlowProductsToProperties(
+      res.data.data
+    ).filter((p) => p.id !== property.id);
+
+    set({
+      relatedProperties,
+      relatedPropertiesLoading: false,
     });
+  } catch (err) {
+    console.error("Failed to fetch related properties:", err);
+
+    set({
+      relatedProperties: [],
+      relatedPropertiesLoading: false,
+    });
+  }
 },
 
   nextPage: () => {

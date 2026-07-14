@@ -90,10 +90,9 @@ export interface PropertyStore {
   filtersLoading: boolean;
   fetchFilters: () => Promise<void>;
 
-    getRelatedProperties: (
-    property: Property,
-    sameAgentOnly?: boolean
-  ) => Property[];
+  relatedProperties: Property[];
+  relatedPropertiesLoading: boolean;
+  fetchRelatedProperties: (property: Property, sameAgentOnly?: boolean) => Promise<void>;
 
 }
 

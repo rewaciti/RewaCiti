@@ -13,13 +13,22 @@ import PropertyPaymentModal from "../components/PropertyPaymentModal";
 import ServiceRatingModal from "../components/ServiceRatingModal";
 import ReportAgentModal from "../components/ReportAgentModal";
 import PropertyCard from "../components/PropertyCard";
-import { PropertyDetailsSkeleton } from "../../../shared/components/ui/Skeletons";
+import { PropertyDetailsSkeleton, PropertyCardSkeleton} from "../../../shared/components/ui/Skeletons";
 import { toast } from "sonner";
 import { formatCurrency } from "../../../shared/lib/utils";
 
 function PropertyDetails() {
   const { slug } = useParams<{ slug: string }>();
-  const { properties, fetchProperties, loading, toggleShortlist, shortlistedProperties } = usePropertyStore();
+  const {
+    properties,
+    fetchProperties,
+    loading,
+    toggleShortlist,
+    shortlistedProperties,
+    relatedProperties,
+    fetchRelatedProperties,
+    fetchCategories,
+  } = usePropertyStore();
   const property = properties.find((p) => p.slug === slug);
 
   const isShortlisted = property ? shortlistedProperties.some((p) => p.id === property.id) : false;
@@ -159,6 +168,10 @@ function PropertyDetails() {
   }, [properties.length, fetchProperties]);
 
   useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, [slug]);
 
@@ -278,23 +291,6 @@ function PropertyDetails() {
   const [sameAgentOnly, setSameAgentOnly] = useState(false);
   const RELATED_ITEMS_PER_PAGE = 3;
 
-  const relatedProperties = properties
-    .filter((p) => p.id !== property?.id)
-    .filter((p) => {
-      const matchesCategory = p.category === property?.category;
-      const matchesLocation =
-        p.location.state === property?.location.state ||
-        p.location.city_town === property?.location.city_town ||
-        p.location.area === property?.location.area;
-      const sameOwner = Boolean(
-        property?.createdBy && p.createdBy &&
-        ((p.createdBy._id && property.createdBy._id && p.createdBy._id === property.createdBy._id) ||
-         (p.createdBy.id && property.createdBy.id && p.createdBy.id === property.createdBy.id))
-      );
-
-      return matchesCategory && matchesLocation && (!sameAgentOnly || sameOwner);
-    });
-
   const totalRelatedPages = Math.ceil(relatedProperties.length / RELATED_ITEMS_PER_PAGE);
 
   const currentRelatedProperties = showAllRelated
@@ -315,6 +311,12 @@ function PropertyDetails() {
       setRelatedPage((prev) => prev - 1);
     }
   };
+
+  useEffect(() => {
+    if (property) {
+      fetchRelatedProperties(property, sameAgentOnly);
+    }
+  }, [property, sameAgentOnly, fetchRelatedProperties]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -1014,13 +1016,20 @@ function PropertyDetails() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-            {currentRelatedProperties.map((p) => (
-              <PropertyCard key={p.id} property={p} />
-            ))}
+            {loading ? (
+              Array.from({ length: 3 }).map((_, index) => (
+                <PropertyCardSkeleton key={index} />
+              ))
+            ) : (
+              currentRelatedProperties.map((p) => (
+                <PropertyCard key={p.id} property={p} />
+              ))
+            )}
           </div>
           
-          {relatedProperties.length > RELATED_ITEMS_PER_PAGE && (
-            <>
+          {!loading &&
+             relatedProperties.length > RELATED_ITEMS_PER_PAGE &&  (
+             <>
               <hr className="my-4 border-gray-600/50" />
 
               {/* Pagination */}
@@ -1057,9 +1066,11 @@ function PropertyDetails() {
             </>
           )}
 
-          {relatedProperties.length === 0 && (
+         {!loading && relatedProperties.length === 0 && (
             <p className="text-gray-500 italic">
-              {sameAgentOnly ? "No properties from this agent were found." : "No related properties found at the moment."}
+              {sameAgentOnly
+                ? "No properties from this agent were found."
+                : "No related properties found at the moment."}
             </p>
           )}
         </section>
