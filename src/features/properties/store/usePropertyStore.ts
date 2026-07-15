@@ -227,7 +227,7 @@ fetchRelatedProperties: async (
 
     const params: Record<string, string | number> = {
       page: 1,
-      limit: 30,
+      limit: 30 // This is just a placeholder; the API might not need this
     };
 
     if (categoryId) {
@@ -239,9 +239,6 @@ fetchRelatedProperties: async (
         property.location.state;
     }
 
-    // IMPORTANT:
-    // use whichever field your backend actually stores.
-    // If your database stores city_town, replace city below.
     if (property.location.city) {
       params["customData.location.city"] =
         property.location.city;
