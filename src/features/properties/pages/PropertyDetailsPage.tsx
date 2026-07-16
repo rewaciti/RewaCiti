@@ -1006,7 +1006,7 @@ function PropertyDetails() {
                 <p className="text-gray-800 dark:text-gray-400">
                   {sameAgentOnly
                     ? `These are other listings posted by the same agent as ${property.name}.`
-                    : `You might also be interested in these similar ${property.category}s at ${property.location.area}.`}
+                    : `You might also be interested in these similar ${property.category}s at ${property.location.city_town} .`}
                 </p>
               </div>
 
