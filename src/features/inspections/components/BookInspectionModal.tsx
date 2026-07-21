@@ -7,8 +7,10 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import PaystackPop from "@paystack/inline-js";
+import { COMPANY_ID } from "../../auth/store/useAuthStore";
 
 interface BookInspectionModalProps {
+
   property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -133,7 +135,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
 
             // 5. CRM and Local Store
             const crmPayload = {
-              companyId: "69b4712ce95a2df514b1c789",
+              companyId: COMPANY_ID,
               pipelineId: "6a4c98cbeb058fac4420ea43",
               title: `VISIT BOOKING: ${property.name} - ${fullName}`,
               name: fullName,

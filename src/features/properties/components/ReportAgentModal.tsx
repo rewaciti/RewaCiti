@@ -4,8 +4,12 @@ import { FiX, FiAlertTriangle } from "react-icons/fi";
 import type { Property } from "../../../types";
 import axios from "axios";
 import { toast } from "sonner";
+import { COMPANY_ID } from "../../auth/store/useAuthStore";
+import CustomDropdown from "./CustomDropdown";
 
 interface ReportAgentModalProps {
+
+
   property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -28,7 +32,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
     setIsSubmitting(true);
 
     const payload = {
-      companyId: "69b4712ce95a2df514b1c789",
+      companyId: COMPANY_ID,
       pipelineId: "6a2a0b1ff19944ca7f9aa4b9",
       title: `AGENT REPORT: ${property.name} - ${reason}`,
       name: name,
@@ -137,19 +141,18 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
 
             <div>
               <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Reason for Reporting</label>
-              <select
-                required
+              <CustomDropdown
+                placeholder="Select a reason"
                 value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
-              >
-                <option value="" disabled className="dark:bg-[#1A1A1A]">Select a reason</option>
-                <option value="unprofessional" className="dark:bg-[#1A1A1A]">Unprofessional Behavior</option>
-                <option value="misleading" className="dark:bg-[#1A1A1A]">Misleading Information</option>
-                <option value="no-show" className="dark:bg-[#1A1A1A]">Agent No-show</option>
-                <option value="scam" className="dark:bg-[#1A1A1A]">Suspected Scam</option>
-                <option value="other" className="dark:bg-[#1A1A1A]">Other</option>
-              </select>
+                options={[
+                  { label: "Unprofessional Behavior", value: "unprofessional" },
+                  { label: "Misleading Information", value: "misleading" },
+                  { label: "Agent No-show", value: "no-show" },
+                  { label: "Suspected Scam", value: "scam" },
+                  { label: "Other", value: "other" },
+                ]}
+                onChange={(val) => setReason(val)}
+              />
             </div>
 
             <div>

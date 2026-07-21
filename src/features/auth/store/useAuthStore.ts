@@ -24,7 +24,8 @@ interface AuthStore {
   logout: () => void;
 }
 
-const COMPANY_ID = "69b4712ce95a2df514b1c789";
+export const COMPANY_ID = import.meta.env.VITE_COMPANY_ID;
+
 
 export const useAuthStore = create<AuthStore>()(
   persist(

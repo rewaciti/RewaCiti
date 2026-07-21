@@ -5,8 +5,10 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import type { Property } from "../../../types";
+import { COMPANY_ID } from "../../auth/store/useAuthStore";
 
 interface ServiceRatingModalProps {
+
   property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -47,7 +49,7 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
 
     try { 
       const feedbackPayload = {
-        companyId: "69b4712ce95a2df514b1c789",
+        companyId: COMPANY_ID,
         pipelineId: "6a27f05df19944ca7f9a87dd",
         title: `FEEDBACK: ${property.name}${userData ? ` - ${userData.name}` : ""}`,
         name: userData?.name || "Anonymous",

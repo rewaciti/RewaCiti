@@ -13,8 +13,10 @@ import { Link, NavLink } from "react-router";
 import { Helmet } from "react-helmet-async";
 import { toast } from "sonner";
 import CustomDropdown from "../../features/properties/components/CustomDropdown";
+import { COMPANY_ID } from "../../features/auth/store/useAuthStore";
 
 import { PropertyCardSkeleton } from "../../shared/components/ui/Skeletons";
+
 
 function Studentarea() {
   useScrollToHash();
@@ -59,7 +61,7 @@ function Studentarea() {
     setIsSubmitting(true);
 
     const payload = {
-      companyId: "69b4712ce95a2df514b1c789",
+      companyId: COMPANY_ID,
       pipelineId: "69b49c7541d35d158e336621",
       title: `Student Inquiry from ${name}`,
       name: name,
@@ -533,38 +535,30 @@ const priceDropdownOptions = [
 
             {/* Category */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">Category</label>
-                <select
-                  required
-                  className="p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 max-h-60 overflow-auto"
-                  style={{ maxHeight: 240 }}
-                  value={preferedCategory}
-                  onChange={(e) => setPreferedCategory(e.target.value)}
-                >
-                <option value="" disabled hidden>
-                  Category
-                </option>
-                 <option value="Self Contain">Self Contain</option>
-                  <option value="Studio Apartment">Studio Apartment</option>
-                  <option value="Mini Flat">Mini Flat</option>
-                  <option value="Flat">Flat</option>
-                  <option value="Bungalow">Bungalow</option>
-                  <option value="Duplex">Duplex</option>
-                  <option value="Mansion">Mansion</option>
-                  <option value="Villa">Villa</option>
-                  <option value="Smart Home">Smart Home</option>
-                  <option value="Single Room (Shared)">Single Room</option>
-                  <option value="Shared Room">Shared Room</option>
-                  <option value="Furnished Apartment">Furnished Apartment</option>
-                  <option value="Hostel">Hostel</option>
-
-                  {/* Land */}
-                  <option value="Land">Land</option>
-
-                  {/* Special */}
-                  <option value="Mixed-Use Property">Mixed-Use Property</option>
-                  <option value="Uncompleted Building">Uncompleted Building</option>
-              </select>
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Category</label>
+              <CustomDropdown
+                placeholder="Category"
+                value={preferedCategory}
+                options={[
+                  { label: "Self Contain", value: "Self Contain" },
+                  { label: "Studio Apartment", value: "Studio Apartment" },
+                  { label: "Mini Flat", value: "Mini Flat" },
+                  { label: "Flat", value: "Flat" },
+                  { label: "Bungalow", value: "Bungalow" },
+                  { label: "Duplex", value: "Duplex" },
+                  { label: "Mansion", value: "Mansion" },
+                  { label: "Villa", value: "Villa" },
+                  { label: "Smart Home", value: "Smart Home" },
+                  { label: "Single Room", value: "Single Room (Shared)" },
+                  { label: "Shared Room", value: "Shared Room" },
+                  { label: "Furnished Apartment", value: "Furnished Apartment" },
+                  { label: "Hostel", value: "Hostel" },
+                  { label: "Land", value: "Land" },
+                  { label: "Mixed-Use Property", value: "Mixed-Use Property" },
+                  { label: "Uncompleted Building", value: "Uncompleted Building" },
+                ]}
+                onChange={(val) => setPreferedCategory(val)}
+              />
             </div>
 
             {/* Bedrooms */}
@@ -583,42 +577,32 @@ const priceDropdownOptions = [
 
             {/* Budget */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">Budget</label>
-                <select
-                  required
-                  className="p-3 pl-7 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border w-full border-gray-600/70 max-h-60 overflow-auto"
-                  style={{ maxHeight: 240 }}
-                  value={Budget}
-                  onChange={(e) => setBudget(e.target.value)}
-                >
-                <option value="" disabled hidden>
-                  Price Range
-                </option>
-                {priceOptions.map((opt, idx) => (
-                  <option key={idx} value={opt.label}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Budget</label>
+              <CustomDropdown
+                placeholder="Price Range"
+                value={Budget}
+                options={priceOptions.map((opt) => ({
+                  label: opt.label,
+                  value: opt.label,
+                }))}
+                onChange={(val) => setBudget(val)}
+              />
             </div>
 
             {/* Preferred Contact */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
                 Preferred Contact Method
               </label>
-              <select
-                required
+              <CustomDropdown
+                placeholder="Select Method"
                 value={preferredContact}
-                onChange={(e) => setPreferredContact(e.target.value)}
-                className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none"
-              >
-                <option value="" hidden>
-                  Select Method
-                </option>
-                <option>Phone</option>
-                <option>Email</option>
-              </select>
+                options={[
+                  { label: "Phone", value: "Phone" },
+                  { label: "Email", value: "Email" },
+                ]}
+                onChange={(val) => setPreferredContact(val)}
+              />
             </div>
 
             {/* Message */}

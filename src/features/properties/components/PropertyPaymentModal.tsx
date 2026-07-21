@@ -6,8 +6,10 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import PaystackPop from "@paystack/inline-js";
+import { COMPANY_ID } from "../../auth/store/useAuthStore";
 
 interface PropertyPaymentModalProps {
+
   property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -138,7 +140,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
 
             // 5. CRM Payload
             const crmPayload = {
-              companyId: "69b4712ce95a2df514b1c789",
+              companyId: COMPANY_ID,
               pipelineId: "69ed7a4ac09e9388ba096f1f",
               inventoryItemId: property.id,
               title: `PROPERTY PAYMENT: ${property.name} - ${fullName}`,

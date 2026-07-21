@@ -8,8 +8,12 @@ import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router";
 import { toast } from "sonner";
+import { COMPANY_ID } from "../../features/auth/store/useAuthStore";
+import CustomDropdown from "../../features/properties/components/CustomDropdown";
 
 function Contact() {
+
+
   const [agreed, setAgreed] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -34,7 +38,7 @@ function Contact() {
     const fullName = `${firstName} ${lastName}`.trim();
 
     const payload = {
-      companyId: "69b4712ce95a2df514b1c789",
+      companyId: COMPANY_ID,
       pipelineId: "69cec9f3dd40685bfe20adb2",
       title: `Contact Inquiry from ${fullName}`,
       name: fullName,
@@ -226,42 +230,20 @@ function Contact() {
             <div>
               <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Inquiry Type</label>
 
-              <select 
-                required 
+              <CustomDropdown
+                placeholder="Select Inquiry Type"
                 value={inquiryType}
-                onChange={(e) => setInquiryType(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-3 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-              >
-                <option value="" hidden className=" ">
-                  Select Inquiry Type
-                </option>
-
-                <option value="buying" className="">
-                  Buy Property
-                </option>
-
-                <option value="selling" className="">
-                  Sell Property
-                </option>
-
-                <option value="renting" className="">
-                  Rent Property
-                </option>
-
-                <option value="management" className="">
-                  Property Management
-                </option>
-
-                <option value="investment" className="">
-                  Investment
-                </option>
-                <option value="agent" className="">
-                  List Property
-                </option>
-                <option value="others" className="">
-                  others
-                </option>
-              </select>
+                options={[
+                  { label: "Buy Property", value: "buying" },
+                  { label: "Sell Property", value: "selling" },
+                  { label: "Rent Property", value: "renting" },
+                  { label: "Property Management", value: "management" },
+                  { label: "Investment", value: "investment" },
+                  { label: "List Property", value: "agent" },
+                  { label: "Others", value: "others" },
+                ]}
+                onChange={(val) => setInquiryType(val)}
+              />
             </div>
 
             <div>
@@ -269,36 +251,18 @@ function Contact() {
                 How Did You Hear About Us?
               </label>
 
-              <select 
-                required 
+              <CustomDropdown
+                placeholder="Select Option"
                 value={source}
-                onChange={(e) => setSource(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 dark:text-white text-gray-900 border border-gray-600/70 rounded-md px-4 py-3 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
-              >
-                <option value="" hidden className=" ">
-                  Select Option
-                </option>
-
-                <option value="social" className="">
-                  Social Media
-                </option>
-
-                <option value="google" className="">
-                  Google Search
-                </option>
-
-                <option value="friend" className="">
-                  Friend / Referral
-                </option>
-
-                <option value="ads" className="">
-                  Online Ads
-                </option>
-
-                <option value="other" className="">
-                  Other
-                </option>
-              </select>
+                options={[
+                  { label: "Social Media", value: "social" },
+                  { label: "Google Search", value: "google" },
+                  { label: "Friend / Referral", value: "friend" },
+                  { label: "Online Ads", value: "ads" },
+                  { label: "Other", value: "other" },
+                ]}
+                onChange={(val) => setSource(val)}
+              />
             </div>
           </div>
 

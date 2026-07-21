@@ -17,7 +17,10 @@ import { PropertyDetailsSkeleton, PropertyCardSkeleton } from "../../../shared/c
 import { toast } from "sonner";
 import { formatCurrency } from "../../../shared/lib/utils";
 
+import { COMPANY_ID } from "../../auth/store/useAuthStore";
+
 function PropertyDetails() {
+
   const { slug } = useParams<{ slug: string }>();
   const {
     properties,
@@ -220,7 +223,7 @@ function PropertyDetails() {
     const propertyUrl = window.location.href;
 
     const payload = {
-      companyId: "69b4712ce95a2df514b1c789",
+      companyId: COMPANY_ID,
       pipelineId: "69b49c7541d35d158e336621",
       title: `${fullName} interested in ${property.name} (₦${formatCurrency(price)})`,
       name: fullName,

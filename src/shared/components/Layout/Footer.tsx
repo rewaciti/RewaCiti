@@ -6,6 +6,7 @@ import { Link } from "react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
+import { COMPANY_ID } from "../../../features/auth/store/useAuthStore";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -23,7 +24,8 @@ function Footer() {
     setIsSubmitting(true);
 
     const payload = {
-      companyId: "69b4712ce95a2df514b1c789",
+      companyId: COMPANY_ID,
+
       pipelineId: "69cec882dd40685bfe20ad43",
       title: `Newsletter Subscription: ${email}`,
       name: "Newsletter Subscriber",
