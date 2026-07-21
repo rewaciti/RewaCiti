@@ -92,7 +92,13 @@ export interface PropertyStore {
 
   relatedProperties: Property[];
   relatedPropertiesLoading: boolean;
-  fetchRelatedProperties: (property: Property, sameAgentOnly?: boolean) => Promise<void>;
+  totalRelatedProperties: number;
+  fetchRelatedProperties: (
+    property: Property,
+    sameAgentOnly?: boolean,
+    page?: number,
+    limit?: number
+  ) => Promise<void>;
 
 }
 

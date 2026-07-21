@@ -31,12 +31,12 @@ const mapSabiFlowProductsToProperties = (items: SabiFlowProduct[]): Property[] =
     const normalizedCreatedBy =
       item.createdBy && typeof item.createdBy === "object"
         ? {
-            _id: item.createdBy._id ?? "",
-            id: item.createdBy.id ?? item.createdBy._id ?? "",
-            firstName: item.createdBy.firstName ?? "",
-            lastName: item.createdBy.lastName ?? "",
-            classification: item.createdBy.classification ?? null,
-          }
+          _id: item.createdBy._id ?? "",
+          id: item.createdBy.id ?? item.createdBy._id ?? "",
+          firstName: item.createdBy.firstName ?? "",
+          lastName: item.createdBy.lastName ?? "",
+          classification: item.createdBy.classification ?? null,
+        }
         : null;
 
     return {
@@ -84,9 +84,9 @@ const mapSabiFlowProductsToProperties = (items: SabiFlowProduct[]): Property[] =
       videoUrl: ensureHttps(item.videoUrl || ""),
       caretakerContact: customData?.care_taker_contact_optional
         ? {
-            whatsapp: customData.care_taker_contact_optional.wattsapp_contact,
-            phone: customData.care_taker_contact_optional.call_contact,
-          }
+          whatsapp: customData.care_taker_contact_optional.wattsapp_contact,
+          phone: customData.care_taker_contact_optional.call_contact,
+        }
         : undefined,
       visitationfee: customData?.visitation_fee || 0,
     };
@@ -101,6 +101,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
   filtersLoading: false,
   relatedProperties: [],
   relatedPropertiesLoading: false,
+  totalRelatedProperties: 0,
   loading: false,
   error: null,
   fees: null,
@@ -125,7 +126,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         acc[key] = String(value);
         return acc;
       }, {});
-      
+
 
       const res = await axios.get<{ data: SabiFlowProduct[]; total?: number }>(
         "https://api.sabiflow.com/api/inventory/portal/rewacity/products",
@@ -161,27 +162,27 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
   },
 
   fetchCategories: async () => {
-  try {
-    set({ categoriesLoading: true });
+    try {
+      set({ categoriesLoading: true });
 
-    const res = await axios.get<Category[]>(
-      "https://api.sabiflow.com/api/inventory/portal/rewacity/categories"
-    );
+      const res = await axios.get<Category[]>(
+        "https://api.sabiflow.com/api/inventory/portal/rewacity/categories"
+      );
 
-    set({
-      categories: res.data,
-      categoriesLoading: false,
-    });
-  } catch (error) {
-    console.error(error);
+      set({
+        categories: res.data,
+        categoriesLoading: false,
+      });
+    } catch (error) {
+      console.error(error);
 
-    set({
-      categoriesLoading: false,
-    });
-  }
-},
+      set({
+        categoriesLoading: false,
+      });
+    }
+  },
 
- fetchFilters: async () => {
+  fetchFilters: async () => {
     try {
       set({ filtersLoading: true });
 
@@ -193,92 +194,96 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         filtersData: res.data,
         filtersLoading: false,
       });
-      
+
     } catch (err) {
       console.error(err);
       set({ filtersLoading: false });
     }
   },
 
-fetchRelatedProperties: async (
-  property: Property,
-  sameAgentOnly = false
-) => {
-  set({ relatedPropertiesLoading: true });
+  fetchRelatedProperties: async (
+    property: Property,
+    sameAgentOnly = false,
+    page = 1,
+    limit = 30
+  ) => {
+    set({ relatedPropertiesLoading: true });
 
-  try {
-    let { categories } = get();
+    try {
+      let { categories } = get();
 
-    // Load categories if needed
-    if (!categories.length) {
-      await get().fetchCategories();
-      categories = get().categories;
-    }
+      // Load categories if needed
+      if (!categories.length) {
+        await get().fetchCategories();
+        categories = get().categories;
+      }
 
-    // Find the category id
-    const categoryId = categories.find(
-      (c) =>
-        c.name.trim().toLowerCase() ===
-        property.category.trim().toLowerCase()
-    )?.id;
+      // Find the category id
+      const categoryId = categories.find(
+        (c) =>
+          c.name.trim().toLowerCase() ===
+          property.category.trim().toLowerCase()
+      )?.id;
 
-    const agentId =
-      property.createdBy?._id || property.createdBy?.id;
+      const agentId =
+        property.createdBy?._id || property.createdBy?.id;
 
-    const params: Record<string, string | number> = {
-      page: 1,
-      limit: 30 // This is just a placeholder; the API might not need this
-    };
+      const params: Record<string, string | number> = {
+        page,
+        limit
+      };
 
-    if (categoryId) {
-      params.categoryId = categoryId;
-    }
+      if (categoryId) {
+        params.categoryId = categoryId;
+      }
 
-    if (property.location.state) {
-      params["customData.location.state"] =
-        property.location.state;
-    }
+      if (property.location.state) {
+        params["customData.location.state"] =
+          property.location.state;
+      }
 
     if (property.location.city) {
       params["customData.location.city"] =
         property.location.city;
     }
 
-    if (sameAgentOnly && agentId) {
-      params.createdBy = agentId;
-    }
-
-    console.log("Related Properties Params:", params);
-
-    const res = await axios.get<{
-      data: SabiFlowProduct[];
-      total?: number;
-    }>(
-      "https://api.sabiflow.com/api/inventory/portal/rewacity/products",
-      {
-        params,
+      if (sameAgentOnly && agentId) {
+        params.createdBy = agentId;
       }
-    );
 
-    console.log("Related Properties Response:", res.data);
+      console.log("Related Properties Params:", params);
 
-    const relatedProperties = mapSabiFlowProductsToProperties(
-      res.data.data
-    ).filter((p) => p.id !== property.id);
+      const res = await axios.get<{
+        data: SabiFlowProduct[];
+        total?: number;
+      }>(
+        "https://api.sabiflow.com/api/inventory/portal/rewacity/products",
+        {
+          params,
+        }
+      );
 
-    set({
-      relatedProperties,
-      relatedPropertiesLoading: false,
-    });
-  } catch (err) {
-    console.error("Failed to fetch related properties:", err);
+      console.log("Related Properties Response:", res.data);
 
-    set({
-      relatedProperties: [],
-      relatedPropertiesLoading: false,
-    });
-  }
-},
+      const mappedProperties = mapSabiFlowProductsToProperties(res.data.data);
+      const relatedProperties = mappedProperties.filter((p) => p.id !== property.id);
+      const total = res.data.total !== undefined ? res.data.total : mappedProperties.length;
+
+      set({
+        relatedProperties,
+        totalRelatedProperties: total,
+        relatedPropertiesLoading: false,
+      });
+    } catch (err) {
+      console.error("Failed to fetch related properties:", err);
+
+      set({
+        relatedProperties: [],
+        totalRelatedProperties: 0,
+        relatedPropertiesLoading: false,
+      });
+    }
+  },
 
   nextPage: () => {
     const { apiPage, totalProperties, ITEMS_PER_PAGE, fetchProperties, filters } = get();

@@ -229,7 +229,7 @@ const VerifyEmail = () => {
                 Enter 6-digit code
               </label>
 
-              <div className="flex gap-2 justify-between">
+              <div className="flex gap-1 justify-between">
                 {otp.map((digit, index) => (
                   <input
                     key={index}
@@ -242,7 +242,7 @@ const VerifyEmail = () => {
                       handleOtpChange(index, e.target.value)
                     }
                     onKeyDown={(e) => handleKeyDown(index, e)}
-                    className="w-12 h-12 text-center text-2xl font-bold border-2 border-gray-600/30 dark:border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-900 dark:text-white focus:outline-none focus:border-[#703BF7]"
+                    className="w-10 h-10 text-center text-2xl font-bold border-2 border-gray-600/30 dark:border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-900 dark:text-white focus:outline-none focus:border-[#703BF7]"
                   />
                 ))}
               </div>
