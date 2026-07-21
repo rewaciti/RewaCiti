@@ -242,10 +242,10 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
           property.location.state;
       }
 
-    if (property.location.city) {
-      params["customData.location.city"] =
-        property.location.city;
-    }
+      if (property.location.city_town) {
+        params["customData.location.city_town"] =
+          property.location.city_town;
+      }
 
       if (sameAgentOnly && agentId) {
         params.createdBy = agentId;
