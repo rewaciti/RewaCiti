@@ -47,14 +47,13 @@ export default function CustomDropdown({
   const selectedLabel = selectedOption ? selectedOption.label : placeholder;
   const isSelected = !!selectedOption;
 
-  const defaultButtonClass = "w-full h-12 px-3 flex items-center justify-between rounded-lg border border-gray-600/70 bg-gray-300 dark:bg-black/70 text-gray-900 dark:text-white";
+  const defaultButtonClass = "w-full h-12 px-3 flex items-center justify-between rounded-lg border border-gray-600/70 bg-gray-300 dark:bg-black/70 text-gray-900 dark:text-white md:rounded-t-none";
 
   return (
     <div
       ref={ref}
-      className={`relative ${
-        disabled ? "opacity-50 pointer-events-none" : ""
-      } ${className}`}
+      className={`relative ${disabled ? "opacity-50 pointer-events-none" : ""
+        } ${className}`}
     >
       <button
         type="button"
@@ -69,9 +68,8 @@ export default function CustomDropdown({
         </div>
 
         <FiChevronDown
-          className={`transition ml-2 shrink-0 ${
-            open ? "rotate-180" : ""
-          }`}
+          className={`transition ml-2 shrink-0 ${open ? "rotate-180" : ""
+            }`}
         />
       </button>
 
@@ -87,11 +85,10 @@ export default function CustomDropdown({
                   setOpen(false);
                 }}
                 className={`block w-full px-4 py-3 text-left whitespace-nowrap transition text-sm
-                ${
-                  value === option.value
+                ${value === option.value
                     ? "bg-[#703BF7] text-white font-medium"
                     : "hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-900 dark:text-white"
-                }`}
+                  }`}
               >
                 {option.label}
               </button>
@@ -101,4 +98,4 @@ export default function CustomDropdown({
       )}
     </div>
   );
-}
+}
