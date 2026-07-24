@@ -202,7 +202,7 @@ const ProfileDropdown = ({ isOpen, onClose, isMobile }: ProfileDropdownProps) =>
     logout();
     toast.success("Logged out successfully.");
     onClose();
-    navigate("/auth/login");
+    navigate("/");
   };
 
   if (!isOpen) return null;
@@ -210,7 +210,7 @@ const ProfileDropdown = ({ isOpen, onClose, isMobile }: ProfileDropdownProps) =>
   return (
     <div
       className={`absolute top-12 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-100 p-4 max-h-[80vh] overflow-y-auto scrollbar-thin text-black dark:text-white
-        ${isMobile ? "right-[-1.5rem] w-[calc(100vw-2rem)]" : "right-0 w-[420px]"}`}
+        ${isMobile ? "-right-6 w-[calc(100vw-2rem)]" : "right-0 w-[420px]"}`}
     >
       {isLoading ? (
         <ProfileDropdownSkeleton />
@@ -282,7 +282,7 @@ const ProfileDropdown = ({ isOpen, onClose, isMobile }: ProfileDropdownProps) =>
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1 flex items-center gap-1">
+                  <label className="text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1 flex items-center gap-1">
                     <FiPhone size={10} /> Phone
                   </label>
                   <input
@@ -293,7 +293,7 @@ const ProfileDropdown = ({ isOpen, onClose, isMobile }: ProfileDropdownProps) =>
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1 flex items-center gap-1">
+                  <label className="text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1 flex items-center gap-1">
                     <FiCalendar size={10} /> DOB
                   </label>
                   <input
