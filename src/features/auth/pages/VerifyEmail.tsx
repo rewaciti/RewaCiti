@@ -160,7 +160,7 @@ const VerifyEmail = () => {
         email: pendingData.email,
       });
 
-      if (response.success) {
+      if (response) {
         toast.success(response.message || "OTP resent to your email!");
         setOtp(["", "", "", "", "", ""]);
         setTimeLeft(300);

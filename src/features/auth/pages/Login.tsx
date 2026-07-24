@@ -74,7 +74,7 @@ const Login = () => {
         password,
       });
 
-      if (response.success && response.token) {
+      if (response.token) {
         setToken(response.token);
         setCustomer(response.customer);
         setCompanyId(response.customer.companyId);
@@ -110,7 +110,7 @@ const Login = () => {
         password,
       });
 
-      if (response.success) {
+      if (response) {
         if (response.companyId) {
           setCompanyId(response.companyId);
         }
