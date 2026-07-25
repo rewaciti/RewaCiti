@@ -5,7 +5,7 @@ import { authAPI } from "../services/authAPI";
 import type { ProfileResponse } from "../services/authAPI";
 import { useAuthStore } from "../store/useAuthStore";
 import { ProfileDropdownSkeleton } from "../../../shared/components/ui/Skeletons";
-import { FiUser, FiLock, FiLogOut, FiSave, FiPhone, FiCalendar } from "react-icons/fi";
+import { FiUser, FiLock, FiLogOut, FiSave, FiPhone, FiCalendar, FiX } from "react-icons/fi";
 
 const getErrorMessage = (error: unknown, fallback: string) => {
   if (typeof error === "object" && error !== null) {
@@ -231,6 +231,13 @@ const ProfileDropdown = ({ isOpen, onClose, isMobile }: ProfileDropdownProps) =>
               </h4>
               <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{profile?.email}</p>
             </div>
+            <button
+              onClick={onClose}
+              aria-label="Close profile menu"
+              className="absolute top-3 right-3 p-1.5 rounded-full text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition cursor-pointer"
+            >
+              <FiX size={18} />
+            </button>
           </div>
 
           {/* Tab buttons */}
@@ -440,12 +447,6 @@ const ProfileDropdown = ({ isOpen, onClose, isMobile }: ProfileDropdownProps) =>
             >
               <FiLogOut size={14} />
               Logout
-            </button>
-            <button
-              onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-xs cursor-pointer"
-            >
-              Close
             </button>
           </div>
         </div>

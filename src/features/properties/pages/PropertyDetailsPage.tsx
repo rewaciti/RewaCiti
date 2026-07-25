@@ -206,6 +206,30 @@ function PropertyDetails() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+    useEffect(() => {
+    if (isInspectionModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isInspectionModalOpen]);
+
+   useEffect(() => {
+    if (isPaymentModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isPaymentModalOpen]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -322,7 +346,7 @@ function PropertyDetails() {
 
   useEffect(() => {
     const handleResize = () => {
-      setStep(window.innerWidth < 768 ? 1 : 2);
+      setStep(window.innerWidth > 640 ? 2 : 1);
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -553,7 +577,7 @@ function PropertyDetails() {
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
               >
-                <div className="grid gap-2 grid-cols-1 md:grid-cols-2">
+                <div className="grid gap-2 grid-cols-1 sm:grid-cols-2">
                   {visibleImages.map((img, index) => (
                     <img
                       key={index}
