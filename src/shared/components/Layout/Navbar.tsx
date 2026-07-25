@@ -19,6 +19,7 @@ const Navbar = () => {
   const { theme, toggleTheme } = useThemeStore();
   const { shortlistedProperties, toggleShortlist } = usePropertyStore();
   const { isAuthenticated } = useAuthStore();
+  const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   const navItems = [
@@ -54,6 +55,24 @@ const Navbar = () => {
       document.body.style.overflow = "";
     };
   }, [isOpen]);
+
+  useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      isOpen &&
+      menuRef.current &&
+      !menuRef.current.contains(event.target as Node)
+    ) {
+      setIsOpen(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, [isOpen]);
 
   
   useEffect(() => {
@@ -308,6 +327,7 @@ const Navbar = () => {
           {/* MOBILE MENU */}
           {isOpen && (
             <div
+              ref={menuRef}
               className={`fixed top-10.5 right-0 w-[55%] bg-gray-200/90 dark:bg-[#1A1A1A] backdrop-blur-lx 
             text-gray-800 dark:text-white p-6 rounded-xl shadow-xl z-50 
             flex flex-col items-start space-y-4 transition duration-300`}
