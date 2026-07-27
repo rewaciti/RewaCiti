@@ -275,7 +275,7 @@ const Navbar = () => {
                 >
                   <FiUser size={18} />
                 </button>
-                <ProfileDropdown isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+                <ProfileDropdown isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)}  isMobile={false}/>
               </div>
             ) : (
               <NavLink to="/auth/login">
@@ -307,7 +307,7 @@ const Navbar = () => {
                 >
                   <FiUser size={16} />
                 </button>
-                <ProfileDropdown isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} isMobile />
+                <ProfileDropdown isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} isMobile={true}/>
               </div>
             )}
 
@@ -328,10 +328,7 @@ const Navbar = () => {
           {isOpen && (
             <div
               ref={menuRef}
-              className={`fixed top-10.5 right-0 w-[55%] bg-gray-200/90 dark:bg-[#1A1A1A] backdrop-blur-lx 
-            text-gray-800 dark:text-white p-6 rounded-xl shadow-xl z-50 
-            flex flex-col items-start space-y-4 transition duration-300`}
-            >
+              className={`fixed top-10.5 right-0 w-50 bg-gray-200/90 dark:bg-[#1A1A1A] backdrop-blur-xl text-gray-800 dark:text-white p-6 rounded-bl-xl shadow-xl z-50 flex flex-col items-start space-y-4 transition duration-300`}>
               {/* Close Button */}
               <button
                 onClick={() => setIsOpen(false)}
@@ -372,7 +369,9 @@ const Navbar = () => {
                     </button>
                   )}
                 </NavLink>
-                <NavLink to="/auth/login" onClick={() => setIsOpen(false)}>
+
+                {!isAuthenticated && 
+                 <NavLink to="/auth/login" onClick={() => setIsOpen(false)}>
                   {({ isActive }) => (
                     <button
                       className={`$${isActive ? "text-[#703BF7] font-semibold" : ""}`}
@@ -380,7 +379,8 @@ const Navbar = () => {
                       Login
                     </button>
                   )}
-                </NavLink>
+                </NavLink>}
+               
               </div>
             </div>
           )}

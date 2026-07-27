@@ -21,6 +21,7 @@ import Login from "../features/auth/pages/Login";
 import VerifyEmail from "../features/auth/pages/VerifyEmail";
 import ForgotPassword from "../features/auth/pages/ForgotPassword";
 import ResetPassword from "../features/auth/pages/ResetPassword";
+import Profile from "../features/auth/pages/Profile";
 
 
 
@@ -64,6 +65,7 @@ function App() {
           <Route path="/auth/verify-email" element={<VerifyEmail />} />
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
           <Route path="/auth/reset-password" element={<ResetPassword />} />
+          <Route path="/auth/profile" element={<Profile />} />
           <Route path="/AllComments" element={<AllComments />} />
           <Route path="/AllFAQs" element={<AllFAQs />} />
           <Route path="/About" element={<About />} />
