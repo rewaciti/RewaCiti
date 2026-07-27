@@ -1,12 +1,12 @@
-import Navbar from "../../../shared/components/Layout/Navbar"
+import Navbar from "../../../shared/components/Layout/Navbar";
 import Footer from "../../../shared/components/Layout/Footer";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { authAPI } from "../services/authAPI";
 import type { ProfileResponse } from "../services/authAPI";
 import { useAuthStore } from "../store/useAuthStore";
 import { ProfileDropdownSkeleton } from "../../../shared/components/ui/Skeletons";
-import { FiUser, FiLock, FiSave, FiPhone, FiCalendar } from "react-icons/fi";
+import {FiUser, FiMapPin, FiEdit2, FiMail, FiSave, FiX, FiLock, FiCamera} from "react-icons/fi";
 
 const getErrorMessage = (error: unknown, fallback: string) => {
   if (typeof error === "object" && error !== null) {
@@ -33,7 +33,7 @@ const formatDateForInput = (dateStr?: string) => {
   try {
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return "";
-    return d.toISOString().split('T')[0];
+    return d.toISOString().split("T")[0];
   } catch {
     return "";
   }
@@ -48,60 +48,84 @@ const formatDateForPayload = (dateStr: string) => {
   return dateStr;
 };
 
+const formatDateForDisplay = (dateStr?: string) => {
+  if (!dateStr) return "";
+  const iso = formatDateForInput(dateStr);
+  if (!iso) return dateStr;
+  const [y, m, d] = iso.split("-");
+  return `${d}-${m}-${y}`;
+};
+
+type Section = "personal" | "address";
+
 const Profile = () => {
-  const {setCustomer, setCompanyId } = useAuthStore();
+  const { setCustomer, setCompanyId } = useAuthStore();
   const [activeTab, setActiveTab] = useState<"info" | "security">("info");
   const [isLoading, setIsLoading] = useState(true);
-  const [isSavingProfile, setIsSavingProfile] = useState(false);
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
 
-  // Profile Form States
+  // Which section (if any) is currently in edit mode
+  const [editingSection, setEditingSection] = useState<Section | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Personal Information fields
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
+
+  // Address fields
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [country, setCountry] = useState("");
   const [postalCode, setPostalCode] = useState("");
+
   const [profilePicture, setProfilePicture] = useState("");
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Password Form States
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   const inputStyle =
-    "w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-gray-600/30 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#703BF7] placeholder:text-[11px] dark:placeholder:text-gray-400 placeholder:text-gray-600 text-xs";
+    "w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#703BF7] placeholder:text-[11px] dark:placeholder:text-gray-500 placeholder:text-gray-600 text-xs";
+
+  const loadFromProfile = (data: ProfileResponse) => {
+    setProfile(data);
+    setFirstName(data.firstName || "");
+    setLastName(data.lastName || "");
+    setPhoneNumber(data.phoneNumber || "");
+    setDateOfBirth(formatDateForInput(data.dateOfBirth));
+
+    if (data.addresses && data.addresses.length > 0) {
+      const defaultAddr =
+        data.addresses.find((a) => a.isDefault) || data.addresses[0];
+      setAddress(defaultAddr.street || "");
+      setCity(defaultAddr.city || "");
+      setState(defaultAddr.state || "");
+      setCountry(defaultAddr.country || "");
+      setPostalCode(defaultAddr.postalCode || "");
+    } else {
+      setAddress(data.address || "");
+      setCity(data.city || "");
+      setState(data.state || "");
+      setCountry(data.country || "");
+      setPostalCode(data.postalCode || "");
+    }
+
+    setProfilePicture(data.profilePicture || "");
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
       setIsLoading(true);
       try {
         const data = await authAPI.getProfile();
-        setProfile(data);
-        setFirstName(data.firstName || "");
-        setLastName(data.lastName || "");
-        setPhoneNumber(data.phoneNumber || "");
-        setDateOfBirth(formatDateForInput(data.dateOfBirth));
-
-        if (data.addresses && data.addresses.length > 0) {
-          const defaultAddr = data.addresses.find((a) => a.isDefault) || data.addresses[0];
-          setAddress(defaultAddr.street || "");
-          setCity(defaultAddr.city || "");
-          setState(defaultAddr.state || "");
-          setCountry(defaultAddr.country || "");
-          setPostalCode(defaultAddr.postalCode || "");
-        } else {
-          setAddress(data.address || "");
-          setCity(data.city || "");
-          setState(data.state || "");
-          setCountry(data.country || "");
-          setPostalCode(data.postalCode || "");
-        }
-        setProfilePicture(data.profilePicture || "");
+        loadFromProfile(data);
       } catch (error) {
         console.error("Failed to load profile:", error);
         toast.error("Failed to load profile details.");
@@ -113,33 +137,37 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
-  const handleUpdateProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!firstName || !lastName) {
+  const cancelEdit = () => {
+    if (profile) loadFromProfile(profile);
+    setEditingSection(null);
+  };
+
+  const handleSaveSection = async (section: Section) => {
+    if (section === "personal" && (!firstName || !lastName)) {
       toast.error("First and Last name are required.");
       return;
     }
 
-    setIsSavingProfile(true);
+    setIsSaving(true);
     try {
       const payload = {
         firstName,
         lastName,
         phoneNumber,
+        dateOfBirth: formatDateForPayload(dateOfBirth),
         address,
         city,
         state,
         country,
         postalCode,
         profilePicture,
-        dateOfBirth: formatDateForPayload(dateOfBirth),
       };
 
       const response = await authAPI.updateProfile(payload);
       toast.success(response.message || "Profile updated successfully!");
 
       if (response.customer) {
-        setProfile(response.customer);
+        loadFromProfile(response.customer);
         setCustomer({
           id: response.customer.id,
           email: response.customer.email,
@@ -152,11 +180,12 @@ const Profile = () => {
         });
         setCompanyId(response.customer.companyId);
       }
+      setEditingSection(null);
     } catch (error) {
       const errorMessage = getErrorMessage(error, "Failed to update profile.");
       toast.error(errorMessage);
     } finally {
-      setIsSavingProfile(false);
+      setIsSaving(false);
     }
   };
 
@@ -177,249 +206,432 @@ const Profile = () => {
 
     setIsChangingPassword(true);
     try {
-      const response = await authAPI.changePassword({ currentPassword, newPassword });
+      const response = await authAPI.changePassword({
+        currentPassword,
+        newPassword,
+      });
       toast.success(response.message || "Password changed successfully!");
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch (error) {
-      const errorMessage = getErrorMessage(error, "Failed to change password.");
+      const errorMessage = getErrorMessage(
+        error,
+        "Failed to change password."
+      );
       toast.error(errorMessage);
     } finally {
       setIsChangingPassword(false);
     }
   };
 
+  const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // allow re-selecting the same file later
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be smaller than 5MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataUrl = reader.result as string;
+      setProfilePicture(dataUrl); // instant preview
+
+      setIsUploadingPhoto(true);
+      try {
+        const response = await authAPI.updateProfile({
+          firstName,
+          lastName,
+          phoneNumber,
+          dateOfBirth: formatDateForPayload(dateOfBirth),
+          address,
+          city,
+          state,
+          country,
+          postalCode,
+          profilePicture: dataUrl,
+        });
+        toast.success("Profile photo updated!");
+        if (response.customer) {
+          loadFromProfile(response.customer);
+        }
+      } catch (error) {
+        const errorMessage = getErrorMessage(
+          error,
+          "Failed to upload photo."
+        );
+        toast.error(errorMessage);
+      } finally {
+        setIsUploadingPhoto(false);
+      }
+    };
+    reader.onerror = () => toast.error("Couldn't read that image.");
+    reader.readAsDataURL(file);
+  };
+
+  // ---------- small display helpers ----------
+
+  const Field = ({ label, value }: { label: string; value?: string }) => (
+    <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800/60 last:border-0">
+      <span className="text-xs text-gray-500 dark:text-gray-400">{label}</span>
+      {value ? (
+        <span className="text-xs font-semibold text-gray-800 dark:text-gray-100">
+          {value}
+        </span>
+      ) : (
+        <span className="text-xs italic text-gray-400 dark:text-gray-600">
+          Not set
+        </span>
+      )}
+    </div>
+  );
+
+  const SectionCard = ({
+    icon,
+    title,
+    section,
+    children,
+    onSubmit,
+  }: {
+    icon: React.ReactNode;
+    title: string;
+    section: Section;
+    children: React.ReactNode;
+    onSubmit: () => void;
+  }) => {
+    const isEditing = editingSection === section;
+    return (
+      <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4">
+        <div className="flex items-center justify-between pb-3 mb-3 border-b border-gray-100 dark:border-gray-800">
+          <div className="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white">
+            {icon}
+            {title}
+          </div>
+          {isEditing ? (
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={cancelEdit}
+                className="flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer"
+              >
+                <FiX size={12} /> Cancel
+              </button>
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={onSubmit}
+                className="flex items-center gap-1 text-xs font-semibold text-[#703BF7] hover:text-[#5c2fe0] disabled:opacity-50 cursor-pointer"
+              >
+                <FiSave size={12} /> {isSaving ? "Saving..." : "Save"}
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setEditingSection(section)}
+              className="flex items-center gap-1 text-xs font-semibold text-[#703BF7] hover:text-[#5c2fe0] cursor-pointer"
+            >
+              <FiEdit2 size={12} /> Edit
+            </button>
+          )}
+        </div>
+        {children}
+      </div>
+    );
+  };
+
+  const LabeledInput = ({
+    label,
+    value,
+    onChange,
+    type = "text",
+  }: {
+    label: string;
+    value: string;
+    onChange: (v: string) => void;
+    type?: string;
+  }) => (
+    <div>
+      <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1">
+        {label}
+      </label>
+      <input
+        type={type}
+        className={inputStyle}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
+  );
+
+  // Left column: avatar (with upload), basic info, avatar URL.
+  // Rendered once and shared by both the "info" and "security" tabs.
+  const LeftColumn = (
+    <div className="space-y-4">
+      <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex flex-col items-center text-center">
+        <div className="relative w-16 h-16 mb-2">
+          <div className="w-16 h-16 rounded-full bg-[#703BF7]/10 border border-[#703BF7]/40 text-[#703BF7] dark:text-white flex items-center justify-center text-lg font-bold overflow-hidden">
+            {profilePicture ? (
+              <img
+                src={profilePicture}
+                alt="Avatar"
+                className="w-full h-full rounded-full object-cover"
+              />
+            ) : (
+              `${firstName?.charAt(0) || ""}${
+                lastName?.charAt(0) || ""
+              }`.toUpperCase() || <FiUser />
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploadingPhoto}
+            title="Upload photo"
+            className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#703BF7] text-white flex items-center justify-center border-2 border-white dark:border-[#141414] hover:bg-[#5c2fe0] disabled:opacity-50 cursor-pointer"
+          >
+            <FiCamera size={11} />
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handlePhotoSelect}
+          />
+        </div>
+        {isUploadingPhoto && (
+          <p className="text-[10px] text-gray-400 mb-1">Uploading...</p>
+        )}
+        <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+          {firstName} {lastName}
+        </h4>
+      </div>
+
+      <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4">
+        <p className="text-[10px] font-bold tracking-wide text-gray-500 dark:text-gray-400 mb-2">
+          BASIC INFO
+        </p>
+        <div className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-200">
+          <FiMail size={12} className="text-gray-400" />
+          {profile?.email}
+        </div>
+      </div>
+
+      {/* Avatar URL edit lives here since it isn't part of either card below */}
+      <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4">
+        <LabeledInput
+          label="Avatar URL"
+          value={profilePicture}
+          onChange={setProfilePicture}
+          type="url"
+        />
+        <p className="text-[10px] text-gray-400 mt-1">
+          Or use the camera icon on your avatar to upload an image instead.
+        </p>
+      </div>
+    </div>
+  );
+
   return (
     <div>
       <Navbar />
-      <div
-        className = "bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-100 p-4 max-h-[80vh] overflow-y-auto scrollbar-thin text-black dark:text-white"
-      >
+      <div className="mx-auto p-4 bg-gray-300 dark:bg-[#1A1A1A]">
+        {/* Tab buttons */}
+        <div className="flex w-full max-w-xs bg-gray-100 dark:bg-black/20 p-1 rounded-lg mb-4">
+          <button
+            onClick={() => setActiveTab("info")}
+            className={`flex-1 flex items-center justify-center gap-2 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer ${
+              activeTab === "info"
+                ? "bg-[#703BF7] text-white shadow-sm"
+                : "text-gray-700 dark:text-gray-300 hover:text-[#703BF7]"
+            }`}
+          >
+            <FiUser size={14} /> Profile
+          </button>
+          <button
+            onClick={() => setActiveTab("security")}
+            className={`flex-1 flex items-center justify-center gap-2 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer ${
+              activeTab === "security"
+                ? "bg-[#703BF7] text-white shadow-sm"
+                : "text-gray-700 dark:text-gray-300 hover:text-[#703BF7]"
+            }`}
+          >
+            <FiLock size={14} /> Security
+          </button>
+        </div>
+
         {isLoading ? (
           <ProfileDropdownSkeleton />
         ) : (
-          <div className="space-y-4">
-            {/* Header */}
-            <div className="flex items-center gap-3 pb-3 border-b border-gray-100 dark:border-gray-800">
-              <div className="w-12 h-12 rounded-full bg-[#703BF7] text-white flex items-center justify-center text-lg font-bold shadow-inner animate-fade-in">
-                {profilePicture ? (
-                  <img src={profilePicture} alt="Avatar" className="w-full h-full rounded-full object-cover" />
-                ) : (
-                  `${firstName?.charAt(0) || ""}${lastName?.charAt(0) || ""}`.toUpperCase() || <FiUser />
-                )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <h4 className="text-sm font-bold text-gray-900 dark:text-white truncate">
-                  {firstName} {lastName}
-                </h4>
-                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{profile?.email}</p>
-              </div>
-            </div>
-  
-            {/* Tab buttons */}
-            <div className="flex bg-gray-100 dark:bg-black/20 p-1 rounded-lg">
-              <button
-                onClick={() => setActiveTab("info")}
-                className={`flex-1 flex items-center justify-center gap-2 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer ${activeTab === "info"
-                    ? "bg-[#703BF7] text-white shadow-sm"
-                    : "text-gray-700 dark:text-gray-300 hover:text-[#703BF7]"
-                  }`}
-              >
-                <FiUser size={14} />
-                Details
-              </button>
-              <button
-                onClick={() => setActiveTab("security")}
-                className={`flex-1 flex items-center justify-center gap-2 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer ${activeTab === "security"
-                    ? "bg-[#703BF7] text-white shadow-sm"
-                    : "text-gray-700 dark:text-gray-300 hover:text-[#703BF7]"
-                  }`}
-              >
-                <FiLock size={14} />
-                Security
-              </button>
-            </div>
-  
-            {/* Tab content */}
-            {activeTab === "info" ? (
-              <form onSubmit={handleUpdateProfile} className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1">First Name</label>
-                    <input
-                      type="text"
-                      className={inputStyle}
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1">Last Name</label>
-                    <input
-                      type="text"
-                      className={inputStyle}
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1 flex items-center gap-1">
-                      <FiPhone size={10} /> Phone
-                    </label>
-                    <input
-                      type="tel"
-                      className={inputStyle}
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1 flex items-center gap-1">
-                      <FiCalendar size={10} /> DOB
-                    </label>
-                    <input
-                      type="date"
-                      className={inputStyle}
-                      value={dateOfBirth}
-                      onChange={(e) => setDateOfBirth(e.target.value)}
-                    />
-                  </div>
-                </div>
-  
-                <div>
-                  <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1">Street Address</label>
-                  <input
-                    type="text"
-                    className={inputStyle}
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Street"
-                  />
-                </div>
-  
-                <div className="grid grid-cols-3 gap-2">
-                  <div>
-                    <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1">City</label>
-                    <input
-                      type="text"
-                      className={inputStyle}
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1">State</label>
-                    <input
-                      type="text"
-                      className={inputStyle}
-                      value={state}
-                      onChange={(e) => setState(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1">Zip Code</label>
-                    <input
-                      type="text"
-                      className={inputStyle}
-                      value={postalCode}
-                      onChange={(e) => setPostalCode(e.target.value)}
-                    />
-                  </div>
-                </div>
-  
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1">Country</label>
-                    <input
-                      type="text"
-                      className={inputStyle}
-                      value={country}
-                      onChange={(e) => setCountry(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1">Avatar URL</label>
-                    <input
-                      type="url"
-                      className={inputStyle}
-                      value={profilePicture}
-                      onChange={(e) => setProfilePicture(e.target.value)}
-                    />
-                  </div>
-                </div>
-  
-                <div className="flex justify-end pt-2">
-                  <button
-                    type="submit"
-                    disabled={isSavingProfile}
-                    className="flex items-center justify-center gap-1.5 bg-[#703BF7] text-white hover:bg-[#5c2fe0] px-4 py-1.5 rounded-lg text-xs font-semibold transition disabled:opacity-50 cursor-pointer"
+          <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-4 items-start">
+            {/* Left column — shared by both tabs */}
+            {LeftColumn}
+
+            {/* Right column */}
+            <div className="space-y-4">
+              {activeTab === "info" ? (
+                <>
+                  {/* Personal Information */}
+                  <SectionCard
+                    icon={<FiUser size={14} />}
+                    title="Personal Information"
+                    section="personal"
+                    onSubmit={() => handleSaveSection("personal")}
                   >
-                    <FiSave size={14} />
-                    {isSavingProfile ? "Saving..." : "Save Details"}
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <form onSubmit={handleChangePassword} className="space-y-3">
-                <div>
-                  <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1">Current Password</label>
-                  <input
-                    type="password"
-                    className={inputStyle}
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    required
-                  />
-                </div>
-  
-                <div>
-                  <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1">New Password</label>
-                  <input
-                    type="password"
-                    className={inputStyle}
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    required
-                  />
-                  {newPassword && newPassword.length < 8 && (
-                    <p className="text-red-500 text-[9px] mt-0.5">Min. 8 characters</p>
-                  )}
-                </div>
-  
-                <div>
-                  <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1">Confirm Password</label>
-                  <input
-                    type="password"
-                    className={inputStyle}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                  />
-                  {confirmPassword && newPassword !== confirmPassword && (
-                    <p className="text-red-500 text-[9px] mt-0.5">Passwords do not match</p>
-                  )}
-                </div>
-  
-                <div className="flex justify-end pt-2">
-                  <button
-                    type="submit"
-                    disabled={isChangingPassword || !currentPassword || !newPassword || newPassword !== confirmPassword || newPassword.length < 8}
-                    className="flex items-center justify-center gap-1.5 bg-[#703BF7] text-white hover:bg-[#5c2fe0] px-4 py-1.5 rounded-lg text-xs font-semibold transition disabled:opacity-50 cursor-pointer"
+                    {editingSection === "personal" ? (
+                      <div className="grid grid-cols-2 gap-3">
+                        <LabeledInput
+                          label="First Name"
+                          value={firstName}
+                          onChange={setFirstName}
+                        />
+                        <LabeledInput
+                          label="Last Name"
+                          value={lastName}
+                          onChange={setLastName}
+                        />
+                        <LabeledInput
+                          label="Phone"
+                          value={phoneNumber}
+                          onChange={setPhoneNumber}
+                        />
+                        <LabeledInput
+                          label="Date of Birth"
+                          value={dateOfBirth}
+                          onChange={setDateOfBirth}
+                          type="date"
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <Field label="First Name" value={firstName} />
+                        <Field label="Last Name" value={lastName} />
+                        <Field label="Email" value={profile?.email} />
+                        <Field label="Phone" value={phoneNumber} />
+                        <Field
+                          label="Date of Birth"
+                          value={formatDateForDisplay(dateOfBirth)}
+                        />
+                      </div>
+                    )}
+                  </SectionCard>
+
+                  {/* Address */}
+                  <SectionCard
+                    icon={<FiMapPin size={14} />}
+                    title="Address"
+                    section="address"
+                    onSubmit={() => handleSaveSection("address")}
                   >
-                    <FiLock size={14} />
-                    {isChangingPassword ? "Updating..." : "Change Password"}
-                  </button>
+                    {editingSection === "address" ? (
+                      <div className="space-y-3">
+                        <LabeledInput
+                          label="Street"
+                          value={address}
+                          onChange={setAddress}
+                        />
+                        <div className="grid grid-cols-2 gap-3">
+                          <LabeledInput
+                            label="City"
+                            value={city}
+                            onChange={setCity}
+                          />
+                          <LabeledInput
+                            label="State"
+                            value={state}
+                            onChange={setState}
+                          />
+                          <LabeledInput
+                            label="Postal Code"
+                            value={postalCode}
+                            onChange={setPostalCode}
+                          />
+                          <LabeledInput
+                            label="Country"
+                            value={country}
+                            onChange={setCountry}
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <Field label="Street" value={address} />
+                        <Field label="City" value={city} />
+                        <Field label="State" value={state} />
+                        <Field label="Postal Code" value={postalCode} />
+                        <Field label="Country" value={country} />
+                      </div>
+                    )}
+                  </SectionCard>
+                </>
+              ) : (
+                <div className="max-w-md">
+                  <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4">
+                    <form onSubmit={handleChangePassword} className="space-y-3">
+                      <LabeledInput
+                        label="Current Password"
+                        value={currentPassword}
+                        onChange={setCurrentPassword}
+                        type="password"
+                      />
+                      <LabeledInput
+                        label="New Password"
+                        value={newPassword}
+                        onChange={setNewPassword}
+                        type="password"
+                      />
+                      {newPassword && newPassword.length < 8 && (
+                        <p className="text-red-500 text-[9px] mt-0.5">
+                          Min. 8 characters
+                        </p>
+                      )}
+                      <LabeledInput
+                        label="Confirm Password"
+                        value={confirmPassword}
+                        onChange={setConfirmPassword}
+                        type="password"
+                      />
+                      {confirmPassword && newPassword !== confirmPassword && (
+                        <p className="text-red-500 text-[9px] mt-0.5">
+                          Passwords do not match
+                        </p>
+                      )}
+                      <div className="flex justify-end pt-2">
+                        <button
+                          type="submit"
+                          disabled={
+                            isChangingPassword ||
+                            !currentPassword ||
+                            !newPassword ||
+                            newPassword !== confirmPassword ||
+                            newPassword.length < 8
+                          }
+                          className="flex items-center justify-center gap-1.5 bg-[#703BF7] text-white hover:bg-[#5c2fe0] px-4 py-1.5 rounded-lg text-xs font-semibold transition disabled:opacity-50 cursor-pointer"
+                        >
+                          <FiLock size={14} />
+                          {isChangingPassword ? "Updating..." : "Change Password"}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
-              </form>
-            )}
-  
+              )}
+            </div>
           </div>
         )}
       </div>
-      <Footer/>
+      <section className="bg-gray-300 dark:bg-black/30">
+        <Footer/>
+      </section> 
     </div>
   );
 };

@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { FiUser, FiLogOut, FiSun, FiMoon, FiChevronRight } from "react-icons/fi";
 import { useAuthStore } from "../store/useAuthStore";
 import { useThemeStore } from "../../../shared/store/useThemeStore";
+import { useNavigate } from "react-router";
 import { useState } from "react";
 
 interface ProfileDropdownProps {
@@ -14,6 +15,7 @@ function ProfileDropdown({isOpen,onClose, isMobile}: ProfileDropdownProps) {
   const { customer, logout } = useAuthStore();
   const { theme, setTheme } = useThemeStore();
   const [showThemeMenu, setShowThemeMenu] = useState(false);
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
@@ -27,6 +29,7 @@ function ProfileDropdown({isOpen,onClose, isMobile}: ProfileDropdownProps) {
   const handleLogout = () => {
     logout();
     onClose();
+       navigate("/");
   };
 
 
