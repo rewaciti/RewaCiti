@@ -10,6 +10,7 @@ interface Customer {
   enabledModules: string[];
   emailVerified: boolean;
   status: string;
+  phoneNumber?: string;
 }
 
 interface AuthStore {

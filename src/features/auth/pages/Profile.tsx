@@ -5,8 +5,8 @@ import { toast } from "sonner";
 import { authAPI } from "../services/authAPI";
 import type { ProfileResponse } from "../services/authAPI";
 import { useAuthStore } from "../store/useAuthStore";
-import { ProfileDropdownSkeleton } from "../../../shared/components/ui/Skeletons";
-import {FiUser, FiMapPin, FiEdit2, FiMail, FiSave, FiX, FiLock, FiCamera} from "react-icons/fi";
+import { ProfilePageSkeleton } from "../../../shared/components/ui/Skeletons";
+import {FiUser, FiMapPin, FiEdit2, FiMail, FiSave, FiX, FiLock, FiCamera, FiPhone} from "react-icons/fi";
 
 const getErrorMessage = (error: unknown, fallback: string) => {
   if (typeof error === "object" && error !== null) {
@@ -58,6 +58,118 @@ const formatDateForDisplay = (dateStr?: string) => {
 
 type Section = "personal" | "address";
 
+// ---------- Helper Components ----------
+
+interface FieldProps {
+  label: string;
+  value?: string;
+}
+
+const Field = ({ label, value }: FieldProps) => (
+  <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800/60 last:border-0">
+    <span className="text-xs text-gray-500 dark:text-gray-400">{label}</span>
+    {value ? (
+      <span className="text-xs font-semibold text-gray-800 dark:text-gray-100">
+        {value}
+      </span>
+    ) : (
+      <span className="text-xs italic text-gray-400 dark:text-gray-600">
+        Not set
+      </span>
+    )}
+  </div>
+);
+
+interface SectionCardProps {
+  icon: React.ReactNode;
+  title: string;
+  section: Section;
+  editingSection: Section | null;
+  isSaving: boolean;
+  cancelEdit: () => void;
+  setEditingSection: (section: Section | null) => void;
+  onSubmit: () => void;
+  children: React.ReactNode;
+}
+
+const SectionCard = ({
+  icon,
+  title,
+  section,
+  editingSection,
+  isSaving,
+  cancelEdit,
+  setEditingSection,
+  onSubmit,
+  children,
+}: SectionCardProps) => {
+  const isEditing = editingSection === section;
+  return (
+    <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4">
+      <div className="flex items-center justify-between pb-3 mb-3 border-b border-gray-100 dark:border-gray-800">
+        <div className="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white">
+          {icon}
+          {title}
+        </div>
+        {isEditing ? (
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={cancelEdit}
+              className="flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer"
+            >
+              <FiX size={12} /> Cancel
+            </button>
+            <button
+              type="button"
+              disabled={isSaving}
+              onClick={onSubmit}
+              className="flex items-center gap-1 text-xs font-semibold text-[#703BF7] hover:text-[#5c2fe0] disabled:opacity-50 cursor-pointer"
+            >
+              <FiSave size={12} /> {isSaving ? "Saving..." : "Save"}
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setEditingSection(section)}
+            className="flex items-center gap-1 text-xs font-semibold text-[#703BF7] hover:text-[#5c2fe0] cursor-pointer"
+          >
+            <FiEdit2 size={12} /> Edit
+          </button>
+        )}
+      </div>
+      {children}
+    </div>
+  );
+};
+
+interface LabeledInputProps {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+}
+
+const LabeledInput = ({
+  label,
+  value,
+  onChange,
+  type = "text",
+}: LabeledInputProps) => (
+  <div>
+    <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1">
+      {label}
+    </label>
+    <input
+      type={type}
+      className="w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#703BF7] placeholder:text-[11px] dark:placeholder:text-gray-500 placeholder:text-gray-600 text-xs"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    />
+  </div>
+);
+
 const Profile = () => {
   const { setCustomer, setCompanyId } = useAuthStore();
   const [activeTab, setActiveTab] = useState<"info" | "security">("info");
@@ -90,9 +202,6 @@ const Profile = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isChangingPassword, setIsChangingPassword] = useState(false);
-
-  const inputStyle =
-    "w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#703BF7] placeholder:text-[11px] dark:placeholder:text-gray-500 placeholder:text-gray-600 text-xs";
 
   const loadFromProfile = (data: ProfileResponse) => {
     setProfile(data);
@@ -177,6 +286,7 @@ const Profile = () => {
           enabledModules: response.customer.enabledModules,
           emailVerified: response.customer.emailVerified,
           status: response.customer.status,
+          phoneNumber: response.customer.phoneNumber,
         });
         setCompanyId(response.customer.companyId);
       }
@@ -276,171 +386,6 @@ const Profile = () => {
     reader.readAsDataURL(file);
   };
 
-  // ---------- small display helpers ----------
-
-  const Field = ({ label, value }: { label: string; value?: string }) => (
-    <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800/60 last:border-0">
-      <span className="text-xs text-gray-500 dark:text-gray-400">{label}</span>
-      {value ? (
-        <span className="text-xs font-semibold text-gray-800 dark:text-gray-100">
-          {value}
-        </span>
-      ) : (
-        <span className="text-xs italic text-gray-400 dark:text-gray-600">
-          Not set
-        </span>
-      )}
-    </div>
-  );
-
-  const SectionCard = ({
-    icon,
-    title,
-    section,
-    children,
-    onSubmit,
-  }: {
-    icon: React.ReactNode;
-    title: string;
-    section: Section;
-    children: React.ReactNode;
-    onSubmit: () => void;
-  }) => {
-    const isEditing = editingSection === section;
-    return (
-      <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4">
-        <div className="flex items-center justify-between pb-3 mb-3 border-b border-gray-100 dark:border-gray-800">
-          <div className="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white">
-            {icon}
-            {title}
-          </div>
-          {isEditing ? (
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={cancelEdit}
-                className="flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer"
-              >
-                <FiX size={12} /> Cancel
-              </button>
-              <button
-                type="button"
-                disabled={isSaving}
-                onClick={onSubmit}
-                className="flex items-center gap-1 text-xs font-semibold text-[#703BF7] hover:text-[#5c2fe0] disabled:opacity-50 cursor-pointer"
-              >
-                <FiSave size={12} /> {isSaving ? "Saving..." : "Save"}
-              </button>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setEditingSection(section)}
-              className="flex items-center gap-1 text-xs font-semibold text-[#703BF7] hover:text-[#5c2fe0] cursor-pointer"
-            >
-              <FiEdit2 size={12} /> Edit
-            </button>
-          )}
-        </div>
-        {children}
-      </div>
-    );
-  };
-
-  const LabeledInput = ({
-    label,
-    value,
-    onChange,
-    type = "text",
-  }: {
-    label: string;
-    value: string;
-    onChange: (v: string) => void;
-    type?: string;
-  }) => (
-    <div>
-      <label className="block text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1">
-        {label}
-      </label>
-      <input
-        type={type}
-        className={inputStyle}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    </div>
-  );
-
-  // Left column: avatar (with upload), basic info, avatar URL.
-  // Rendered once and shared by both the "info" and "security" tabs.
-  const LeftColumn = (
-    <div className="space-y-4">
-      <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex flex-col items-center text-center">
-        <div className="relative w-16 h-16 mb-2">
-          <div className="w-16 h-16 rounded-full bg-[#703BF7]/10 border border-[#703BF7]/40 text-[#703BF7] dark:text-white flex items-center justify-center text-lg font-bold overflow-hidden">
-            {profilePicture ? (
-              <img
-                src={profilePicture}
-                alt="Avatar"
-                className="w-full h-full rounded-full object-cover"
-              />
-            ) : (
-              `${firstName?.charAt(0) || ""}${
-                lastName?.charAt(0) || ""
-              }`.toUpperCase() || <FiUser />
-            )}
-          </div>
-
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={isUploadingPhoto}
-            title="Upload photo"
-            className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#703BF7] text-white flex items-center justify-center border-2 border-white dark:border-[#141414] hover:bg-[#5c2fe0] disabled:opacity-50 cursor-pointer"
-          >
-            <FiCamera size={11} />
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handlePhotoSelect}
-          />
-        </div>
-        {isUploadingPhoto && (
-          <p className="text-[10px] text-gray-400 mb-1">Uploading...</p>
-        )}
-        <h4 className="text-sm font-bold text-gray-900 dark:text-white">
-          {firstName} {lastName}
-        </h4>
-      </div>
-
-      <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4">
-        <p className="text-[10px] font-bold tracking-wide text-gray-500 dark:text-gray-400 mb-2">
-          BASIC INFO
-        </p>
-        <div className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-200">
-          <FiMail size={12} className="text-gray-400" />
-          {profile?.email}
-        </div>
-      </div>
-
-      {/* Avatar URL edit lives here since it isn't part of either card below */}
-      <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4">
-        <LabeledInput
-          label="Avatar URL"
-          value={profilePicture}
-          onChange={setProfilePicture}
-          type="url"
-        />
-        <p className="text-[10px] text-gray-400 mt-1">
-          Or use the camera icon on your avatar to upload an image instead.
-        </p>
-      </div>
-    </div>
-  );
-
   return (
     <div>
       <Navbar />
@@ -470,11 +415,68 @@ const Profile = () => {
         </div>
 
         {isLoading ? (
-          <ProfileDropdownSkeleton />
+          <ProfilePageSkeleton />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-4 items-start">
             {/* Left column — shared by both tabs */}
-            {LeftColumn}
+            <div className="space-y-4">
+              <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex flex-col items-center text-center">
+                <div className="relative w-16 h-16 mb-2">
+                  <div className="w-16 h-16 rounded-full bg-[#703BF7]/10 border border-[#703BF7]/40 text-[#703BF7] dark:text-white flex items-center justify-center text-lg font-bold overflow-hidden">
+                    {profilePicture ? (
+                      <img
+                        src={profilePicture}
+                        alt="Avatar"
+                        className="w-full h-full rounded-full object-cover"
+                      />
+                    ) : (
+                      `${firstName?.charAt(0) || ""}${
+                        lastName?.charAt(0) || ""
+                      }`.toUpperCase() || <FiUser />
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploadingPhoto}
+                    title="Upload photo"
+                    className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#703BF7] text-white flex items-center justify-center border-2 border-white dark:border-[#141414] hover:bg-[#5c2fe0] disabled:opacity-50 cursor-pointer"
+                  >
+                    <FiCamera size={11} />
+                  </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handlePhotoSelect}
+                  />
+                </div>
+                {isUploadingPhoto && (
+                  <p className="text-[10px] text-gray-400 mb-1">Uploading...</p>
+                )}
+                <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+                  {firstName} {lastName}
+                </h4>
+              </div>
+
+              <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4">
+                <p className="text-[10px] font-bold tracking-wide text-gray-500 dark:text-gray-400 mb-2 uppercase">
+                  Basic Info
+                </p>
+                <div className="flex flex-col gap-2 text-xs text-gray-700 dark:text-gray-200">
+                  <div className="flex items-center gap-2">
+                    <FiMail size={12} className="text-gray-400 flex-shrink-0" />
+                    <span className="truncate">{profile?.email}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FiPhone size={12} className="text-gray-400 flex-shrink-0" />
+                    <span>{phoneNumber || "No phone number"}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {/* Right column */}
             <div className="space-y-4">
@@ -485,6 +487,10 @@ const Profile = () => {
                     icon={<FiUser size={14} />}
                     title="Personal Information"
                     section="personal"
+                    editingSection={editingSection}
+                    isSaving={isSaving}
+                    cancelEdit={cancelEdit}
+                    setEditingSection={setEditingSection}
                     onSubmit={() => handleSaveSection("personal")}
                   >
                     {editingSection === "personal" ? (
@@ -530,6 +536,10 @@ const Profile = () => {
                     icon={<FiMapPin size={14} />}
                     title="Address"
                     section="address"
+                    editingSection={editingSection}
+                    isSaving={isSaving}
+                    cancelEdit={cancelEdit}
+                    setEditingSection={setEditingSection}
                     onSubmit={() => handleSaveSection("address")}
                   >
                     {editingSection === "address" ? (

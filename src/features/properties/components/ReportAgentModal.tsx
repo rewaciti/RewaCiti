@@ -4,8 +4,10 @@ import { FiX, FiAlertTriangle } from "react-icons/fi";
 import type { Property } from "../../../types";
 import axios from "axios";
 import { toast } from "sonner";
-import { COMPANY_ID } from "../../auth/store/useAuthStore";
+import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
 import CustomDropdown from "./CustomDropdown";
+import { useNavigate } from "react-router";
+import { authAPI } from "../../auth/services/authAPI";
 
 interface ReportAgentModalProps {
 
@@ -20,12 +22,39 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
   open,
   onOpenChange,
 }) => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const { isAuthenticated, customer } = useAuthStore();
+  const navigate = useNavigate();
   const [reason, setReason] = useState("");
   const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [profilePhone, setProfilePhone] = useState("");
+
+  const name = customer ? `${customer.firstName} ${customer.lastName}`.trim() : "";
+  const email = customer?.email ?? "";
+  const phone = profilePhone || customer?.phoneNumber || "";
+
+  React.useEffect(() => {
+    if (open && isAuthenticated) {
+      const fetchProfile = async () => {
+        try {
+          const profileData = await authAPI.getProfile();
+          const latestPhone = profileData.phoneNumber || "";
+          setProfilePhone(latestPhone);
+          
+          const currentCustomer = useAuthStore.getState().customer;
+          if (currentCustomer && currentCustomer.phoneNumber !== latestPhone) {
+            useAuthStore.getState().setCustomer({
+              ...currentCustomer,
+              phoneNumber: latestPhone,
+            });
+          }
+        } catch (error) {
+          console.error("Failed to fetch profile in report modal:", error);
+        }
+      };
+      fetchProfile();
+    }
+  }, [open, isAuthenticated]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,9 +96,6 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
       toast.success("Report submitted successfully. We will investigate this agent.");
       onOpenChange(false);
       // Reset form
-      setName("");
-      setEmail("");
-      setPhone("");
       setReason("");
       setDescription("");
     } catch (error) {
@@ -101,83 +127,78 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
             </Dialog.Close>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Your Full Name</label>
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your name"
-                className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
-              />
+          {!isAuthenticated || !customer ? (
+            <div className="text-center py-6">
+              <p className="text-sm dark:text-gray-300 text-gray-700 mb-4">
+                You must be logged in to report an agent.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  onOpenChange(false);
+                  navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+                }}
+                className="w-full bg-[#703BF7] hover:bg-[#5c2fe0] text-white font-medium py-3 rounded-md transition-colors text-sm font-semibold"
+              >
+                Log In / Register
+              </button>
             </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* User Details Card (Read-only) */}
+              <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-2">
+                <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Your Details</h4>
+                <div className="text-sm dark:text-gray-300 text-gray-700 space-y-1">
+                  <p><span className="font-semibold">Name:</span> {name}</p>
+                  <p><span className="font-semibold">Email:</span> {email}</p>
+                  <p><span className="font-semibold">Phone:</span> {phone || <span className="italic text-red-500">No phone number listed in profile</span>}</p>
+                </div>
+              </div>
 
-            <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Email</label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Your email"
+                <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Reason for Reporting</label>
+                <CustomDropdown
+                  placeholder="Select a reason"
+                  value={reason}
+                  options={[
+                    { label: "Unprofessional Behavior", value: "unprofessional" },
+                    { label: "Misleading Information", value: "misleading" },
+                    { label: "Agent No-show", value: "no-show" },
+                    { label: "Suspected Scam", value: "scam" },
+                    { label: "Other", value: "other" },
+                  ]}
+                  onChange={(val) => setReason(val)}
+                />
+              </div>
+
+              <div>
+                <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Description</label>
+                <textarea
+                  rows={4}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Please provide more details..."
                   className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
                 />
               </div>
-              <div>
-                <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Phone</label>
-                <input
-                  type="tel"
-                  required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="Your phone"
-                  className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
-                />
+
+              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-xs text-red-500">
+                Reporting an agent is a serious matter. We will review your report and take appropriate action.
               </div>
-            </div>
 
-            <div>
-              <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Reason for Reporting</label>
-              <CustomDropdown
-                placeholder="Select a reason"
-                value={reason}
-                options={[
-                  { label: "Unprofessional Behavior", value: "unprofessional" },
-                  { label: "Misleading Information", value: "misleading" },
-                  { label: "Agent No-show", value: "no-show" },
-                  { label: "Suspected Scam", value: "scam" },
-                  { label: "Other", value: "other" },
-                ]}
-                onChange={(val) => setReason(val)}
-              />
-            </div>
-
-            <div>
-              <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Description</label>
-              <textarea
-                rows={4}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Please provide more details..."
-                className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
-              />
-            </div>
-
-            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-xs text-red-500">
-              Reporting an agent is a serious matter. We will review your report and take appropriate action.
-            </div>
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50"
-            >
-              {isSubmitting ? "Submitting..." : "Submit Report"}
-            </button>
-          </form>
+              <button
+                type="submit"
+                disabled={isSubmitting || !phone}
+                className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50"
+              >
+                {!phone
+                  ? "Update Profile with Phone Number to Report"
+                  : isSubmitting
+                  ? "Submitting..."
+                  : "Submit Report"}
+              </button>
+            </form>
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

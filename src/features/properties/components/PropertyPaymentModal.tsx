@@ -3,10 +3,11 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { FiX, FiInfo } from "react-icons/fi";
 import type { Property } from "../../../types";
 import axios from "axios";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import PaystackPop from "@paystack/inline-js";
-import { COMPANY_ID } from "../../auth/store/useAuthStore";
+import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
+import { authAPI } from "../../auth/services/authAPI";
 
 interface PropertyPaymentModalProps {
 
@@ -34,18 +35,41 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   onOpenChange,
   onPaymentSuccess,
 }) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [agreed, setAgreed] = useState(false);
+  const { isAuthenticated, customer } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [profilePhone, setProfilePhone] = useState("");
   const navigate = useNavigate();
+
+  const fullName = customer ? `${customer.firstName} ${customer.lastName}`.trim() : "";
+  const email = customer?.email ?? "";
+  const phone = profilePhone || customer?.phoneNumber || "";
+
+  React.useEffect(() => {
+    if (open && isAuthenticated) {
+      const fetchProfile = async () => {
+        try {
+          const profileData = await authAPI.getProfile();
+          const latestPhone = profileData.phoneNumber || "";
+          setProfilePhone(latestPhone);
+          
+          const currentCustomer = useAuthStore.getState().customer;
+          if (currentCustomer && currentCustomer.phoneNumber !== latestPhone) {
+            useAuthStore.getState().setCustomer({
+              ...currentCustomer,
+              phoneNumber: latestPhone,
+            });
+          }
+        } catch (error) {
+          console.error("Failed to fetch profile in payment modal:", error);
+        }
+      };
+      fetchProfile();
+    }
+  }, [open, isAuthenticated]);
 
   const price = property.pricing.TotalCost || 0;
   const pricing = property.pricing;
 
-  const fullName = `${firstName} ${lastName}`.trim();
   const propertyUrl = window.location.href;
   const propertyAddress = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
 
@@ -72,8 +96,8 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!agreed) {
-      toast.error("Please agree to the Terms and Privacy Policy");
+    if (!isAuthenticated) {
+      navigate("/auth/login");
       return;
     }
 
@@ -118,7 +142,8 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
 
       // 2. Initialize Payment
       const initResponse = await axios.post(`${API_URL}/sales/${saleId}/payment/initiate`, {
-        gatewayId: GATEWAY_ID
+        gatewayId: GATEWAY_ID,
+         initiateGateway: true,
       }, {
         headers: { "x-api-key": API_KEY }
       });
@@ -187,10 +212,6 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
             await handleDownloadReceipt(saleId);
 
             onOpenChange(false);
-            setFirstName("");
-            setLastName("");
-            setEmail("");
-            setPhone("");
             
             // Trigger Rating Modal
             if (onPaymentSuccess) {
@@ -279,137 +300,98 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
             </ul>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">First Name</label>
-                <input
-                  type="text"
-                  required
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
-                />
-              </div>
-              <div>
-                <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Last Name</label>
-                <input
-                  type="text"
-                  required
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Email</label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
-                />
-              </div>
-              <div>
-                <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Phone</label>
-                <input
-                  type="tel"
-                  required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
-                />
-              </div>
-            </div>
-            <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
-              <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
-                Once your payment is confirmed, a verified agent will be assigned to you, and our team will contact you within{" "}
-                <span className="font-semibold text-[#703BF7]">24 hours</span> to schedule a meeting and finalize the next steps.
-              </p>
-
-              <p className="text-sm dark:text-gray-300 text-gray-700 text-center mt-1">
-                After scheduling, the agent’s contact details will be shared with you via email for the meeting and completion of your documentation.
-              </p>
-            </div>
-
-            {/* Breakdown Section */}
-            <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-3">
-              <h3 className="text-sm font-semibold dark:text-white text-gray-900 flex items-center gap-2">
-                <FiInfo className="text-[#703BF7]" />
-                Payment Breakdown
-              </h3>
-              
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400">Property Cost</span>
-                <span className="font-medium dark:text-white text-gray-900">₦{pricing.PropertyCost.toLocaleString()}</span>
-              </div>
-              {pricing.LegalFee > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Legal Fee</span>
-                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.LegalFee.toLocaleString()}</span>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Billing Information Card (Read-only) - Only shown when logged in */}
+              {isAuthenticated && customer && (
+                <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-2">
+                  <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Billing Information</h4>
+                  <div className="text-sm dark:text-gray-300 text-gray-700 space-y-1">
+                    <p><span className="font-semibold">Name:</span> {fullName}</p>
+                    <p><span className="font-semibold">Email:</span> {email}</p>
+                    <p><span className="font-semibold">Phone:</span> {phone || <span className="italic text-red-500">No phone number listed in profile</span>}</p>
+                  </div>
                 </div>
               )}
-              {pricing.AgentFee > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Agent Fee</span>
-                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.AgentFee.toLocaleString()}</span>
-                </div>
-              )}
-              {pricing.ServiceFee > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Service Fee</span>
-                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.ServiceFee.toLocaleString()}</span>
-                </div>
-              )}
-              {pricing.CautionFee > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Caution Fee</span>
-                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.CautionFee.toLocaleString()}</span>
-                </div>
-              )}
-              
-              <div className="flex justify-between text-lg font-bold border-t border-[#703BF7]/50 pt-2 text-[#703BF7]">
-                <span>Total Due</span>
-                <span>₦{price.toLocaleString()}</span>
+
+              <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
+                <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
+                  Once your payment is confirmed, a verified agent will be assigned to you, and our team will contact you within{" "}
+                  <span className="font-semibold text-[#703BF7]">24 hours</span> to schedule a meeting and finalize the next steps.
+                </p>
+
+                <p className="text-sm dark:text-gray-300 text-gray-700 text-center mt-1">
+                  After scheduling, the agent’s contact details will be shared with you via email for the meeting and completion of your documentation.
+                </p>
               </div>
-            </div>
 
-            <div className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                className="mt-0.5"
-                checked={agreed}
-                onChange={(e) => setAgreed(e.target.checked)}
-                required
-              />
-              <p className="dark:text-white text-gray-900 text-sm">
-                I agree with the{" "}
-                <Link to="/terms" className="hover:text-[#703BF7] text-[#703BF7] underline">
-                  Terms
-                </Link>{" "}
-                and{" "}
-                <Link to="/privacy-policy" className="hover:text-[#703BF7] text-[#703BF7] underline">
-                  Privacy Policy
-                </Link>
-              </p>
-            </div>
+              {/* Breakdown Section */}
+              <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-3">
+                <h3 className="text-sm font-semibold dark:text-white text-gray-900 flex items-center gap-2">
+                  <FiInfo className="text-[#703BF7]" />
+                  Payment Breakdown
+                </h3>
+                
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">Property Cost</span>
+                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.PropertyCost.toLocaleString()}</span>
+                </div>
+                {pricing.LegalFee > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Legal Fee</span>
+                    <span className="font-medium dark:text-white text-gray-900">₦{pricing.LegalFee.toLocaleString()}</span>
+                  </div>
+                )}
+                {pricing.AgentFee > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Agent Fee</span>
+                    <span className="font-medium dark:text-white text-gray-900">₦{pricing.AgentFee.toLocaleString()}</span>
+                  </div>
+                )}
+                {pricing.ServiceFee > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Service Fee</span>
+                    <span className="font-medium dark:text-white text-gray-900">₦{pricing.ServiceFee.toLocaleString()}</span>
+                  </div>
+                )}
+                {pricing.CautionFee > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Caution Fee</span>
+                    <span className="font-medium dark:text-white text-gray-900">₦{pricing.CautionFee.toLocaleString()}</span>
+                  </div>
+                )}
+                
+                <div className="flex justify-between text-lg font-bold border-t border-[#703BF7]/50 pt-2 text-[#703BF7]">
+                  <span>Total Due</span>
+                  <span>₦{price.toLocaleString()}</span>
+                </div>
+              </div>
 
-            <button
-              type="submit"
-              disabled={!agreed || isSubmitting}
-              className={`w-full font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50 ${
-                agreed && !isSubmitting
-                  ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white"
-                  : "bg-gray-400 cursor-not-allowed text-gray-200"
-              }`}
-            >
-              {isSubmitting ? "Processing..." : `Pay Total: ₦${price.toLocaleString()}`}
-            </button>
-          </form>
+              <button
+                type={isAuthenticated ? "submit" : "button"}
+                onClick={
+                  !isAuthenticated
+                    ? () => {
+                        onOpenChange(false);
+                        navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+                      }
+                    : undefined
+                }
+                disabled={isAuthenticated && (isSubmitting || !phone)}
+                className={`w-full font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50 ${
+                  (!isAuthenticated || (isSubmitting === false && phone))
+                    ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
+                    : "bg-gray-400 cursor-not-allowed text-gray-200"
+                }`}
+              >
+                {!isAuthenticated
+                  ? "Log In to Pay for Property"
+                  : !phone
+                  ? "Update Profile with Phone Number to Pay"
+                  : isSubmitting
+                  ? "Processing..."
+                  : `Pay Total: ₦${price.toLocaleString()}`}
+              </button>
+            </form>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

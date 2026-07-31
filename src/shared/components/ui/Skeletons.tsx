@@ -222,3 +222,68 @@ export function ProfileDropdownSkeleton() {
     </div>
   );
 }
+
+export function ProfilePageSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-4 items-start animate-pulse">
+      {/* Left column */}
+      <div className="space-y-4">
+        {/* Profile Card */}
+        <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-6 flex flex-col items-center text-center">
+          <Skeleton className="w-16 h-16 rounded-full mb-3" />
+          <Skeleton className="h-4 w-32 mb-1" />
+        </div>
+
+        {/* Basic Info Card */}
+        <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4 space-y-3">
+          <Skeleton className="h-3 w-16 mb-2" />
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Skeleton className="w-4 h-4 rounded" />
+              <Skeleton className="h-3 w-3/4" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Skeleton className="w-4 h-4 rounded" />
+              <Skeleton className="h-3 w-2/3" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right column */}
+      <div className="space-y-4">
+        {/* Personal Information Card */}
+        <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4 space-y-4">
+          <div className="flex justify-between items-center border-b border-gray-100 dark:border-gray-800 pb-3">
+            <Skeleton className="h-4 w-36" />
+            <Skeleton className="h-4 w-12" />
+          </div>
+          <div className="space-y-3">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex justify-between items-center border-b border-gray-100 dark:border-gray-800/60 pb-2 last:border-0">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-3 w-32" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Address Card */}
+        <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4 space-y-4">
+          <div className="flex justify-between items-center border-b border-gray-100 dark:border-gray-800 pb-3">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-12" />
+          </div>
+          <div className="space-y-3">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex justify-between items-center border-b border-gray-100 dark:border-gray-800/60 pb-2 last:border-0">
+                <Skeleton className="h-3 w-16" />
+                <Skeleton className="h-3 w-40" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

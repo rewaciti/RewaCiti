@@ -60,6 +60,7 @@ interface LoginResponse {
     enabledModules: string[];
     emailVerified: boolean;
     status: string;
+    phoneNumber?: string;
   };
 }
 
@@ -82,6 +83,7 @@ interface VerifyEmailResponse {
     enabledModules: string[];
     emailVerified: boolean;
     status: string;
+    phoneNumber?: string;
   };
 }
 

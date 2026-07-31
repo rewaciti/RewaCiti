@@ -1,9 +1,7 @@
 import { Link } from "react-router";
-import { FiUser, FiLogOut, FiSun, FiMoon, FiChevronRight } from "react-icons/fi";
+import { FiUser, FiLogOut } from "react-icons/fi";
 import { useAuthStore } from "../store/useAuthStore";
-import { useThemeStore } from "../../../shared/store/useThemeStore";
 import { useNavigate } from "react-router";
-import { useState } from "react";
 
 interface ProfileDropdownProps {
   isOpen: boolean;
@@ -11,10 +9,8 @@ interface ProfileDropdownProps {
   isMobile?: boolean;
 }
 
-function ProfileDropdown({isOpen,onClose, isMobile}: ProfileDropdownProps) {
+function ProfileDropdown({isOpen,onClose}: ProfileDropdownProps) {
   const { customer, logout } = useAuthStore();
-  const { theme, setTheme } = useThemeStore();
-  const [showThemeMenu, setShowThemeMenu] = useState(false);
   const navigate = useNavigate();
 
   if (!isOpen) return null;
@@ -61,95 +57,6 @@ function ProfileDropdown({isOpen,onClose, isMobile}: ProfileDropdownProps) {
         <FiUser size={18} />
         <span>View Profile</span>
       </Link>
-
-      {/* Theme */}
-      {isMobile ? (
-        <div>
-          {/* Mobile Theme Toggle */}
-          <button
-            onClick={() => setShowThemeMenu(!showThemeMenu)}
-            className="flex w-full items-center justify-between px-4 py-3 text-sm text-gray-800 transition hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-white/10"
-          >
-            <div className="flex items-center gap-3">
-              {theme === "dark" ? <FiMoon size={18} /> : <FiSun size={18} />}
-              <span>Theme</span>
-            </div>
-
-            <FiChevronRight
-              size={16}
-              className={`transition-transform duration-200 ${
-                showThemeMenu ? "rotate-90" : ""
-              }`}
-            />
-          </button>
-
-          {showThemeMenu && (
-            <div className="ml-8 border-l border-gray-600/50 dark:border-gray-700">
-              <button
-                onClick={() => setTheme("light")}
-                className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm hover:bg-gray-100 dark:hover:bg-white/10 ${
-                  theme === "light"
-                    ? "text-violet-600 dark:text-violet-400"
-                    : "text-gray-700 dark:text-gray-200"
-                }`}
-              >
-                <FiSun size={16} />
-                Light
-              </button>
-
-              <button
-                onClick={() => setTheme("dark")}
-                className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm hover:bg-gray-100 dark:hover:bg-white/10 ${
-                  theme === "dark"
-                    ? "text-violet-600 dark:text-violet-400"
-                    : "text-gray-700 dark:text-gray-200"
-                }`}
-              >
-                <FiMoon size={16} />
-                Dark
-              </button>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="relative group">
-          {/* Desktop Theme */}
-          <div className="flex cursor-pointer items-center justify-between px-4 py-3 text-sm text-gray-800 transition hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-white/10">
-            <div className="flex items-center gap-3">
-              {theme === "dark" ? <FiMoon size={18} /> : <FiSun size={18} />}
-              <span>Theme</span>
-            </div>
-
-            <FiChevronRight size={16} />
-          </div>
-
-          <div className="absolute right-full top-0 mr-1 hidden w-44 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg group-hover:block dark:border-gray-700 dark:bg-[#1A1A1A]">
-            <button
-              onClick={() => setTheme("light")}
-              className={`flex w-full items-center gap-3 rounded-t-lg px-4 py-3 text-left text-sm transition hover:bg-gray-200 dark:hover:bg-white/10 ${
-                theme === "light"
-                  ? "bg-violet-50 text-violet-600 dark:bg-violet-500/20 dark:text-violet-400"
-                  : "text-gray-700 dark:text-gray-200"
-              }`}
-            >
-              <FiSun size={16} />
-              Light
-            </button>
-
-            <button
-              onClick={() => setTheme("dark")}
-              className={`flex w-full items-center gap-3 rounded-b-lg px-4 py-3 text-left text-sm transition hover:bg-gray-200 dark:hover:bg-white/10 ${
-                theme === "dark"
-                  ? "bg-violet-50 text-violet-600 dark:bg-violet-500/20 dark:text-violet-400"
-                  : "text-gray-700 dark:text-gray-200"
-              }`}
-            >
-              <FiMoon size={16} />
-              Dark
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Logout */}
       <button
