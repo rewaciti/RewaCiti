@@ -416,9 +416,64 @@ const Profile = () => {
 
         {isLoading ? (
           <ProfilePageSkeleton />
+        ) : activeTab === "security" ? (
+          /* Security tab: no left column at all — password form centered, full width */
+          <div className="flex justify-center">
+            <div className="w-full max-w-md">
+              <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4">
+                <form onSubmit={handleChangePassword} className="space-y-3">
+                  <LabeledInput
+                    label="Current Password"
+                    value={currentPassword}
+                    onChange={setCurrentPassword}
+                    type="password"
+                  />
+                  <LabeledInput
+                    label="New Password"
+                    value={newPassword}
+                    onChange={setNewPassword}
+                    type="password"
+                  />
+                  {newPassword && newPassword.length < 8 && (
+                    <p className="text-red-500 text-[9px] mt-0.5">
+                      Min. 8 characters
+                    </p>
+                  )}
+                  <LabeledInput
+                    label="Confirm Password"
+                    value={confirmPassword}
+                    onChange={setConfirmPassword}
+                    type="password"
+                  />
+                  {confirmPassword && newPassword !== confirmPassword && (
+                    <p className="text-red-500 text-[9px] mt-0.5">
+                      Passwords do not match
+                    </p>
+                  )}
+                  <div className="flex justify-end pt-2">
+                    <button
+                      type="submit"
+                      disabled={
+                        isChangingPassword ||
+                        !currentPassword ||
+                        !newPassword ||
+                        newPassword !== confirmPassword ||
+                        newPassword.length < 8
+                      }
+                      className="flex items-center justify-center gap-1.5 bg-[#703BF7] text-white hover:bg-[#5c2fe0] px-4 py-1.5 rounded-lg text-xs font-semibold transition disabled:opacity-50 cursor-pointer"
+                    >
+                      <FiLock size={14} />
+                      {isChangingPassword ? "Updating..." : "Change Password"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-4 items-start">
-            {/* Left column — shared by both tabs */}
+          /* Profile tab: left column (avatar + basic info) + right column */
+          <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-4 justify-center items-start">
+            {/* Left column — only rendered on the Profile tab */}
             <div className="space-y-4">
               <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex flex-col items-center text-center">
                 <div className="relative w-16 h-16 mb-2">
@@ -467,11 +522,11 @@ const Profile = () => {
                 </p>
                 <div className="flex flex-col gap-2 text-xs text-gray-700 dark:text-gray-200">
                   <div className="flex items-center gap-2">
-                    <FiMail size={12} className="text-gray-400 flex-shrink-0" />
+                    <FiMail size={12} className="text-gray-400 shrink-0" />
                     <span className="truncate">{profile?.email}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <FiPhone size={12} className="text-gray-400 flex-shrink-0" />
+                    <FiPhone size={12} className="text-gray-400 shrink-0" />
                     <span>{phoneNumber || "No phone number"}</span>
                   </div>
                 </div>
@@ -480,161 +535,106 @@ const Profile = () => {
 
             {/* Right column */}
             <div className="space-y-4">
-              {activeTab === "info" ? (
-                <>
-                  {/* Personal Information */}
-                  <SectionCard
-                    icon={<FiUser size={14} />}
-                    title="Personal Information"
-                    section="personal"
-                    editingSection={editingSection}
-                    isSaving={isSaving}
-                    cancelEdit={cancelEdit}
-                    setEditingSection={setEditingSection}
-                    onSubmit={() => handleSaveSection("personal")}
-                  >
-                    {editingSection === "personal" ? (
-                      <div className="grid grid-cols-2 gap-3">
-                        <LabeledInput
-                          label="First Name"
-                          value={firstName}
-                          onChange={setFirstName}
-                        />
-                        <LabeledInput
-                          label="Last Name"
-                          value={lastName}
-                          onChange={setLastName}
-                        />
-                        <LabeledInput
-                          label="Phone"
-                          value={phoneNumber}
-                          onChange={setPhoneNumber}
-                        />
-                        <LabeledInput
-                          label="Date of Birth"
-                          value={dateOfBirth}
-                          onChange={setDateOfBirth}
-                          type="date"
-                        />
-                      </div>
-                    ) : (
-                      <div>
-                        <Field label="First Name" value={firstName} />
-                        <Field label="Last Name" value={lastName} />
-                        <Field label="Email" value={profile?.email} />
-                        <Field label="Phone" value={phoneNumber} />
-                        <Field
-                          label="Date of Birth"
-                          value={formatDateForDisplay(dateOfBirth)}
-                        />
-                      </div>
-                    )}
-                  </SectionCard>
-
-                  {/* Address */}
-                  <SectionCard
-                    icon={<FiMapPin size={14} />}
-                    title="Address"
-                    section="address"
-                    editingSection={editingSection}
-                    isSaving={isSaving}
-                    cancelEdit={cancelEdit}
-                    setEditingSection={setEditingSection}
-                    onSubmit={() => handleSaveSection("address")}
-                  >
-                    {editingSection === "address" ? (
-                      <div className="space-y-3">
-                        <LabeledInput
-                          label="Street"
-                          value={address}
-                          onChange={setAddress}
-                        />
-                        <div className="grid grid-cols-2 gap-3">
-                          <LabeledInput
-                            label="City"
-                            value={city}
-                            onChange={setCity}
-                          />
-                          <LabeledInput
-                            label="State"
-                            value={state}
-                            onChange={setState}
-                          />
-                          <LabeledInput
-                            label="Postal Code"
-                            value={postalCode}
-                            onChange={setPostalCode}
-                          />
-                          <LabeledInput
-                            label="Country"
-                            value={country}
-                            onChange={setCountry}
-                          />
-                        </div>
-                      </div>
-                    ) : (
-                      <div>
-                        <Field label="Street" value={address} />
-                        <Field label="City" value={city} />
-                        <Field label="State" value={state} />
-                        <Field label="Postal Code" value={postalCode} />
-                        <Field label="Country" value={country} />
-                      </div>
-                    )}
-                  </SectionCard>
-                </>
-              ) : (
-                <div className="max-w-md">
-                  <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4">
-                    <form onSubmit={handleChangePassword} className="space-y-3">
-                      <LabeledInput
-                        label="Current Password"
-                        value={currentPassword}
-                        onChange={setCurrentPassword}
-                        type="password"
-                      />
-                      <LabeledInput
-                        label="New Password"
-                        value={newPassword}
-                        onChange={setNewPassword}
-                        type="password"
-                      />
-                      {newPassword && newPassword.length < 8 && (
-                        <p className="text-red-500 text-[9px] mt-0.5">
-                          Min. 8 characters
-                        </p>
-                      )}
-                      <LabeledInput
-                        label="Confirm Password"
-                        value={confirmPassword}
-                        onChange={setConfirmPassword}
-                        type="password"
-                      />
-                      {confirmPassword && newPassword !== confirmPassword && (
-                        <p className="text-red-500 text-[9px] mt-0.5">
-                          Passwords do not match
-                        </p>
-                      )}
-                      <div className="flex justify-end pt-2">
-                        <button
-                          type="submit"
-                          disabled={
-                            isChangingPassword ||
-                            !currentPassword ||
-                            !newPassword ||
-                            newPassword !== confirmPassword ||
-                            newPassword.length < 8
-                          }
-                          className="flex items-center justify-center gap-1.5 bg-[#703BF7] text-white hover:bg-[#5c2fe0] px-4 py-1.5 rounded-lg text-xs font-semibold transition disabled:opacity-50 cursor-pointer"
-                        >
-                          <FiLock size={14} />
-                          {isChangingPassword ? "Updating..." : "Change Password"}
-                        </button>
-                      </div>
-                    </form>
+              {/* Personal Information */}
+              <SectionCard
+                icon={<FiUser size={14} />}
+                title="Personal Information"
+                section="personal"
+                editingSection={editingSection}
+                isSaving={isSaving}
+                cancelEdit={cancelEdit}
+                setEditingSection={setEditingSection}
+                onSubmit={() => handleSaveSection("personal")}
+              >
+                {editingSection === "personal" ? (
+                  <div className="grid grid-cols-2 gap-3">
+                    <LabeledInput
+                      label="First Name"
+                      value={firstName}
+                      onChange={setFirstName}
+                    />
+                    <LabeledInput
+                      label="Last Name"
+                      value={lastName}
+                      onChange={setLastName}
+                    />
+                    <LabeledInput
+                      label="Phone"
+                      value={phoneNumber}
+                      onChange={setPhoneNumber}
+                    />
+                    <LabeledInput
+                      label="Date of Birth"
+                      value={dateOfBirth}
+                      onChange={setDateOfBirth}
+                      type="date"
+                    />
                   </div>
-                </div>
-              )}
+                ) : (
+                  <div>
+                    <Field label="First Name" value={firstName} />
+                    <Field label="Last Name" value={lastName} />
+                    <Field label="Email" value={profile?.email} />
+                    <Field label="Phone" value={phoneNumber} />
+                    <Field
+                      label="Date of Birth"
+                      value={formatDateForDisplay(dateOfBirth)}
+                    />
+                  </div>
+                )}
+              </SectionCard>
+
+              {/* Address */}
+              <SectionCard
+                icon={<FiMapPin size={14} />}
+                title="Address"
+                section="address"
+                editingSection={editingSection}
+                isSaving={isSaving}
+                cancelEdit={cancelEdit}
+                setEditingSection={setEditingSection}
+                onSubmit={() => handleSaveSection("address")}
+              >
+                {editingSection === "address" ? (
+                  <div className="space-y-3">
+                    <LabeledInput
+                      label="Street"
+                      value={address}
+                      onChange={setAddress}
+                    />
+                    <div className="grid grid-cols-2 gap-3">
+                      <LabeledInput
+                        label="City"
+                        value={city}
+                        onChange={setCity}
+                      />
+                      <LabeledInput
+                        label="State"
+                        value={state}
+                        onChange={setState}
+                      />
+                      <LabeledInput
+                        label="Postal Code"
+                        value={postalCode}
+                        onChange={setPostalCode}
+                      />
+                      <LabeledInput
+                        label="Country"
+                        value={country}
+                        onChange={setCountry}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <Field label="Street" value={address} />
+                    <Field label="City" value={city} />
+                    <Field label="State" value={state} />
+                    <Field label="Postal Code" value={postalCode} />
+                    <Field label="Country" value={country} />
+                  </div>
+                )}
+              </SectionCard>
             </div>
           </div>
         )}

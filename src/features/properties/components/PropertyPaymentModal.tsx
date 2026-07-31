@@ -179,7 +179,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 { label: "Property Name", value: property.name },
                 { label: "Property Link", value: propertyUrl },
                 { label: "Payment Reference", value: transaction.reference },
-                { label: "amount Paid", value: price },
+                { label: "amount Paid", value: `₦${price.toLocaleString()}` },
                 { label: "Service Fee", value: `₦${pricing.ServiceFee.toLocaleString()}` },
                 ...(property.createdBy?._id || property.createdBy?.id
                     ? [

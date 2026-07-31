@@ -25,19 +25,18 @@ function PropertyCard({ property }: PropertyCardProps) {
     e.stopPropagation();
     const url = `${window.location.origin}/properties/${propertySlug}`;
     const address = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
-    const shareText = `Name: ${property.name}\nAddress: ${address}`;
+    const shareText = `Name: ${property.name}\nAddress: ${address}\nCategory: ${property.category}\nURL: ${url}`;
     if (navigator.share) {
       try {
         await navigator.share({
           title: property.name,
           text: shareText,
-          url: url,
         });
       } catch (err) {
         console.error("Error sharing:", err);
       }
     } else {
-      navigator.clipboard.writeText(`${shareText}\n${url}`);
+      navigator.clipboard.writeText(`${shareText}`);
       toast.success("Link copied to clipboard!");
     }
   };
