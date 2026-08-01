@@ -92,17 +92,7 @@ interface SectionCardProps {
   children: React.ReactNode;
 }
 
-const SectionCard = ({
-  icon,
-  title,
-  section,
-  editingSection,
-  isSaving,
-  cancelEdit,
-  setEditingSection,
-  onSubmit,
-  children,
-}: SectionCardProps) => {
+const SectionCard = ({icon, title, section, editingSection, isSaving, cancelEdit, setEditingSection, onSubmit, children}: SectionCardProps) => {
   const isEditing = editingSection === section;
   return (
     <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4">
@@ -418,7 +408,7 @@ const Profile = () => {
           <ProfilePageSkeleton />
         ) : activeTab === "security" ? (
           /* Security tab: no left column at all — password form centered, full width */
-          <div className="flex justify-center">
+          <div className="flex justify-center min-h-[50vh] items-center">
             <div className="w-full max-w-md">
               <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4">
                 <form onSubmit={handleChangePassword} className="space-y-3">
