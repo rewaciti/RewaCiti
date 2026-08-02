@@ -325,6 +325,7 @@ function PropertyDetails() {
     const fullName = `${firstName} ${lastName}`.trim();
 
     const propertyUrl = window.location.href;
+    const ownerId = property.createdBy?._id ?? property.createdBy?.id;
 
     const payload = {
       companyId: COMPANY_ID,
@@ -332,11 +333,11 @@ function PropertyDetails() {
       title: `${fullName} interested in ${property.name} (₦${formatCurrency(price)})`,
       name: fullName,
       amount: price,
-      email: email,
-      phone: phone,
+      email,
+      phone,
       address: `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`,
       note: message,
-      ownerId: property.createdBy?._id ?? property.createdBy?.id ?? "",
+      ...(ownerId ? { ownerId } : {}),
       customData: [
         {
           label: "Property",
@@ -354,17 +355,11 @@ function PropertyDetails() {
           label: "Location",
           value: `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`,
         },
-        {
-          label: "Agent ID",
-          value: property.createdBy?._id ?? property.createdBy?.id ?? "",
-        },
-        {
-          label: "Property ID",
-          value: property.id,
-        },
+        ...(ownerId ? [{ label: "Agent ID", value: ownerId }] : []),
+        { label: "Property ID", value: property.id },
         ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
-        ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : [])
-      ]
+        ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : []),
+      ],
     };
 
     try {
