@@ -6,8 +6,8 @@ import axios from "axios";
 import { toast } from "sonner";
 import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
 import CustomDropdown from "./CustomDropdown";
-import { useNavigate } from "react-router";
 import { authAPI } from "../../auth/services/authAPI";
+import { getCookie, setCookie } from "../../../shared/lib/utils";
 
 interface ReportAgentModalProps {
 
@@ -23,17 +23,36 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
   onOpenChange,
 }) => {
   const { isAuthenticated, customer } = useAuthStore();
-  const navigate = useNavigate();
   const [reason, setReason] = useState("");
   const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [profilePhone, setProfilePhone] = useState("");
+  const [guestName, setGuestName] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
+  const [guestPhone, setGuestPhone] = useState("");
+  const [agreed, setAgreed] = useState(false);
+  const modalCookieKey = "rewaciti_report_modal";
 
-  const name = customer ? `${customer.firstName} ${customer.lastName}`.trim() : "";
-  const email = customer?.email ?? "";
-  const phone = profilePhone || customer?.phoneNumber || "";
+  const name = customer ? `${customer.firstName} ${customer.lastName}`.trim() : guestName;
+  const email = customer?.email ?? guestEmail;
+  const phone = profilePhone || customer?.phoneNumber || guestPhone;
 
   React.useEffect(() => {
+    const savedForm = getCookie(modalCookieKey);
+    if (savedForm) {
+      try {
+        const parsed = JSON.parse(savedForm);
+        setGuestName(parsed.guestName || "");
+        setGuestEmail(parsed.guestEmail || "");
+        setGuestPhone(parsed.guestPhone || "");
+        setReason(parsed.reason || "");
+        setDescription(parsed.description || "");
+        setAgreed(parsed.agreed || false);
+      } catch {
+        // ignore malformed cookie data
+      }
+    }
+
     if (open && isAuthenticated) {
       const fetchProfile = async () => {
         try {
@@ -56,8 +75,23 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
     }
   }, [open, isAuthenticated]);
 
+  React.useEffect(() => {
+    setCookie(modalCookieKey, JSON.stringify({ guestName, guestEmail, guestPhone, reason, description, agreed }));
+  }, [guestName, guestEmail, guestPhone, reason, description, agreed]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!name.trim() || !email.trim() || !phone.trim()) {
+      toast.error("Please enter your full name, email, and phone number before submitting your report.");
+      return;
+    }
+
+    if (!agreed) {
+      toast.error("Please agree to the Terms and Privacy Policy before submitting your report.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     const payload = {
@@ -91,16 +125,38 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
       ]
     };
 
+    const apiBaseUrl = import.meta.env.VITE_API_URL || "https://api.sabiflow.com/api";
+    const candidateUrls = [
+      `${apiBaseUrl}/crm/deals/guest`,
+      `${apiBaseUrl}/crm/deals`,
+      "https://api.sabiflow.com/api/crm/deals/guest",
+    ];
+
     try {
-      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
-      toast.success("Report submitted successfully. We will investigate this agent.");
-      onOpenChange(false);
-      // Reset form
-      setReason("");
-      setDescription("");
+      let lastError: unknown;
+
+      for (const url of candidateUrls) {
+        try {
+          await axios.post(url, payload);
+          toast.success("Report submitted successfully. We will investigate this agent.");
+          onOpenChange(false);
+          setReason("");
+          setDescription("");
+          setCookie(modalCookieKey, JSON.stringify({ guestName: "", guestEmail: "", guestPhone: "", reason: "", description: "", agreed: false }));
+          return;
+        } catch (error) {
+          lastError = error;
+          const isMissingEndpoint = axios.isAxiosError(error) && error.response?.status === 404;
+          if (!isMissingEndpoint) {
+            throw error;
+          }
+        }
+      }
+
+      throw lastError;
     } catch (error) {
       console.error("Error submitting report:", error);
-      toast.error("Failed to submit report. Please try again.");
+      toast.error("The report service is currently unavailable. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
@@ -109,8 +165,8 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-6 rounded-xl shadow-2xl z-50">
+        <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm"/>
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-6 rounded-xl shadow-2xl z-50  max-h-[90vh] overflow-y-auto">
 
           <div className="flex justify-between items-center mb-6">
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900 flex items-center gap-2">
@@ -127,25 +183,8 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
             </Dialog.Close>
           </div>
 
-          {!isAuthenticated || !customer ? (
-            <div className="text-center py-6">
-              <p className="text-sm dark:text-gray-300 text-gray-700 mb-4">
-                You must be logged in to report an agent.
-              </p>
-              <button
-                type="button"
-                onClick={() => {
-                  onOpenChange(false);
-                  navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
-                }}
-                className="w-full bg-[#703BF7] hover:bg-[#5c2fe0] text-white font-medium py-3 rounded-md transition-colors text-sm font-semibold"
-              >
-                Log In / Register
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* User Details Card (Read-only) */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {isAuthenticated && customer ? (
               <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-2">
                 <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Your Details</h4>
                 <div className="text-sm dark:text-gray-300 text-gray-700 space-y-1">
@@ -154,6 +193,40 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                   <p><span className="font-semibold">Phone:</span> {phone || <span className="italic text-red-500">No phone number listed in profile</span>}</p>
                 </div>
               </div>
+            ) : (
+              <div className="space-y-2 rounded-lg border border-gray-600/30 bg-gray-500/10 p-3">
+                <div>
+                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={guestName}
+                    onChange={(e) => setGuestName(e.target.value)}
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={guestEmail}
+                    onChange={(e) => setGuestEmail(e.target.value)}
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Phone Number</label>
+                  <input
+                    type="tel"
+                    required
+                    value={guestPhone}
+                    onChange={(e) => setGuestPhone(e.target.value)}
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                  />
+                </div>
+              </div>
+            )}
 
               <div>
                 <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Reason for Reporting</label>
@@ -186,19 +259,26 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                 Reporting an agent is a serious matter. We will review your report and take appropriate action.
               </div>
 
+              <div className="flex items-center gap-1">
+                <input
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  className="mt-0.5 cursor-pointer"
+                />
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  I agree with the <a href="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</a> and <a href="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</a>.
+                </p>
+              </div>
+
               <button
                 type="submit"
-                disabled={isSubmitting || !phone}
+                disabled={isSubmitting || !name.trim() || !email.trim() || !phone.trim() || !agreed}
                 className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50"
               >
-                {!phone
-                  ? "Update Profile with Phone Number to Report"
-                  : isSubmitting
-                  ? "Submitting..."
-                  : "Submit Report"}
+                {isSubmitting ? "Submitting..." : "Submit Report"}
               </button>
             </form>
-          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

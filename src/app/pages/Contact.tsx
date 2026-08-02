@@ -4,15 +4,17 @@ import { FiMapPin } from "react-icons/fi";
 import Footer from "../../shared/components/Layout/Footer";
 import useScrollToHash from "../../shared/hooks/useScrollToHash";
 import { Helmet } from "react-helmet-async";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router";
 import { toast } from "sonner";
-import { COMPANY_ID } from "../../features/auth/store/useAuthStore";
+import { COMPANY_ID, useAuthStore } from "../../features/auth/store/useAuthStore";
+import { authAPI } from "../../features/auth/services/authAPI";
 import CustomDropdown from "../../features/properties/components/CustomDropdown";
+import { getCookie, setCookie } from "../../shared/lib/utils";
 
 function Contact() {
-
+  const { isAuthenticated, customer } = useAuthStore();
 
   const [agreed, setAgreed] = useState(false);
   const [firstName, setFirstName] = useState("");
@@ -23,13 +25,80 @@ function Contact() {
   const [source, setSource] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const inquiryCookieKey = "rewaciti_contact_inquiry";
 
   useScrollToHash();
+
+  useEffect(() => {
+    const savedInquiry = getCookie(inquiryCookieKey);
+    if (savedInquiry) {
+      try {
+        const parsed = JSON.parse(savedInquiry);
+        setFirstName(parsed.firstName || "");
+        setLastName(parsed.lastName || "");
+        setEmail(parsed.email || "");
+        setPhone(parsed.phone || "");
+        setInquiryType(parsed.inquiryType || "");
+        setSource(parsed.source || "");
+        setMessage(parsed.message || "");
+        setAgreed(parsed.agreed || false);
+      } catch {
+        // ignore malformed cookie data
+      }
+    }
+
+    if (!isAuthenticated || !customer) {
+      return;
+    }
+
+    const populateProfileDetails = async () => {
+      try {
+        const profileData = await authAPI.getProfile();
+        const latestPhone = profileData.phoneNumber || "";
+        setFirstName(customer.firstName || "");
+        setLastName(customer.lastName || "");
+        setEmail(customer.email || "");
+        setPhone(latestPhone || customer.phoneNumber || "");
+
+        const currentCustomer = useAuthStore.getState().customer;
+        if (currentCustomer && currentCustomer.phoneNumber !== latestPhone) {
+          useAuthStore.getState().setCustomer({
+            ...currentCustomer,
+            phoneNumber: latestPhone,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch profile for contact form:", error);
+      }
+    };
+
+    populateProfileDetails();
+  }, [isAuthenticated, customer]);
+
+  useEffect(() => {
+    const payload = {
+      firstName,
+      lastName,
+      email,
+      phone,
+      inquiryType,
+      source,
+      message,
+      agreed,
+    };
+
+    setCookie(inquiryCookieKey, JSON.stringify(payload));
+  }, [firstName, lastName, email, phone, inquiryType, source, message, agreed]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreed) {
       toast.error("Please agree to the Terms and Privacy Policy");
+      return;
+    }
+
+    if (!firstName.trim() || !lastName.trim() || !email.trim() || !phone.trim()) {
+      toast.error("Please enter your full name, email, and phone number to send a message.");
       return;
     }
 
@@ -69,6 +138,16 @@ function Contact() {
       setSource("");
       setMessage("");
       setAgreed(false);
+      setCookie(inquiryCookieKey, JSON.stringify({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        inquiryType: "",
+        source: "",
+        message: "",
+        agreed: false,
+      }));
     } catch (error) {
       console.error("Error sending message:", error);
       toast.error("Failed to send message. Please try again.");
@@ -220,6 +299,7 @@ function Contact() {
               <input
                 type="tel"
                 placeholder="Enter Phone Number"
+                required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-3 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
@@ -303,9 +383,9 @@ function Contact() {
           <div className="sm:col-span-2 flex items-center justify-end">
             <button
                 type="submit"
-                disabled={!agreed || isSubmitting}
+                disabled={!agreed || isSubmitting || !firstName.trim() || !lastName.trim() || !email.trim() || !phone.trim()}
                 className={`px-4 py-3 rounded-lg font-medium transition
-                  ${agreed && !isSubmitting
+                  ${agreed && !isSubmitting && firstName.trim() && lastName.trim() && email.trim() && phone.trim()
                     ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" 
                     : "bg-gray-400 cursor-not-allowed text-gray-200"
                   }`}

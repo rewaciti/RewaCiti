@@ -13,9 +13,12 @@ import { Link, NavLink } from "react-router";
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
 import { toast } from "sonner";
 import CustomDropdown from "../../../features/properties/components/CustomDropdown.tsx";
-import { COMPANY_ID } from "../../auth/store/useAuthStore";
+import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
+import { authAPI } from "../../auth/services/authAPI";
+import { getCookie, setCookie } from "../../../shared/lib/utils";
 
 function PropertySearchSection() {
+  const { isAuthenticated, customer } = useAuthStore();
 
   useScrollToHash();
   const {
@@ -39,11 +42,89 @@ function PropertySearchSection() {
   const [preferredContact, setPreferredContact] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedPriceLabel, setSelectedPriceLabel] = useState("");
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    0, 999999999,
+  ]);
+  const [selectedBedroomLabel, setSelectedBedroomLabel] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+
+  const inquiryCookieKey = "rewaciti_property_inquiry";
+
+  useEffect(() => {
+    const savedInquiry = getCookie(inquiryCookieKey);
+    if (savedInquiry) {
+      try {
+        const parsed = JSON.parse(savedInquiry);
+        setName(parsed.name || "");
+        setEmail(parsed.email || "");
+        setPhone(parsed.phone || "");
+        setPreferedLocation(parsed.preferedLocation || "");
+        setPreferedCategory(parsed.preferedCategory || "");
+        setBedroomsContact(parsed.bedroomsContact || "");
+        setBudget(parsed.budget || "");
+        setPreferredContact(parsed.preferredContact || "");
+        setMessage(parsed.message || "");
+        setAgreed(parsed.agreed || false);
+      } catch {
+        // ignore malformed cookie data
+      }
+    }
+
+    if (!isAuthenticated || !customer) {
+      return;
+    }
+
+    const populateProfileDetails = async () => {
+      try {
+        const profileData = await authAPI.getProfile();
+        const latestPhone = profileData.phoneNumber || "";
+        setName(customer.firstName && customer.lastName ? `${customer.firstName} ${customer.lastName}`.trim() : customer.firstName || "");
+        setEmail(customer.email || "");
+        setPhone(latestPhone || customer.phoneNumber || "");
+
+        const currentCustomer = useAuthStore.getState().customer;
+        if (currentCustomer && currentCustomer.phoneNumber !== latestPhone) {
+          useAuthStore.getState().setCustomer({
+            ...currentCustomer,
+            phoneNumber: latestPhone,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch profile for properties page form:", error);
+      }
+    };
+
+    populateProfileDetails();
+  }, [isAuthenticated, customer]);
+
+  useEffect(() => {
+    const payload = {
+      name,
+      email,
+      phone,
+      preferedLocation,
+      preferedCategory,
+      bedroomsContact,
+      budget: Budget,
+      preferredContact,
+      message,
+      agreed,
+    };
+
+    setCookie(inquiryCookieKey, JSON.stringify(payload));
+  }, [name, email, phone, preferedLocation, preferedCategory, bedroomsContact, Budget, preferredContact, message, agreed]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreed) {
       toast.error("Please agree to the Terms and Privacy Policy");
+      return;
+    }
+
+    if (!name.trim() || !email.trim() || !phone.trim() || !preferedLocation.trim()) {
+      toast.error("Please enter your name, email, phone number, and preferred location to continue.");
       return;
     }
 
@@ -87,6 +168,18 @@ function PropertySearchSection() {
       setPreferredContact("");
       setMessage("");
       setAgreed(false);
+      setCookie(inquiryCookieKey, JSON.stringify({
+        name: "",
+        email: "",
+        phone: "",
+        preferedLocation: "",
+        preferedCategory: "",
+        bedroomsContact: "",
+        budget: "",
+        preferredContact: "",
+        message: "",
+        agreed: false,
+      }));
     } catch (error) {
       console.error("Error sending message:", error);
       toast.error("Failed to send message. Please try again.");
@@ -94,16 +187,6 @@ function PropertySearchSection() {
       setIsSubmitting(false);
     }
   };
-
-  // NEW: Price range controlled through dropdown
-  const [selectedPriceLabel, setSelectedPriceLabel] = useState("");
-  const [priceRange, setPriceRange] = useState<[number, number]>([
-    0, 999999999,
-  ]);
-   const [selectedBedroomLabel, setSelectedBedroomLabel] = useState("");
-
-  const [showFilters, setShowFilters] = useState(false);
-  const [agreed, setAgreed] = useState(false);
 
   const priceOptions = [
     { label: "All Price", range: [0, 999999999] },
@@ -629,9 +712,9 @@ const areaOptions = [
             <div className="sm:col-span-2 flex items-center justify-end">
               <button
                 type="submit"
-                disabled={!agreed || isSubmitting}
+                disabled={!agreed || isSubmitting || !name.trim() || !email.trim() || !phone.trim() || !preferedLocation.trim()}
                 className={`px-4 py-3 rounded-lg font-medium transition
-                  ${agreed && !isSubmitting
+                  ${agreed && !isSubmitting && name.trim() && email.trim() && phone.trim() && preferedLocation.trim()
                     ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" 
                     : "bg-gray-400 cursor-not-allowed text-gray-200"
                   }`}

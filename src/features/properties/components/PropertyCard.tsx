@@ -7,6 +7,7 @@ import { formatCurrency } from "../../../shared/lib/utils";
 import { usePropertyStore } from "../store/usePropertyStore";
 import {useNavigate} from "react-router";
 import { toast } from "sonner";
+import { useAuthStore } from "../../auth/store/useAuthStore";
 
 interface PropertyCardProps {
   property: Property;
@@ -41,11 +42,18 @@ function PropertyCard({ property }: PropertyCardProps) {
     }
   };
 
-  const handleShortlist = (e: React.MouseEvent) => {
+  const handleShortlist = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleShortlist(property);
+
+    const { isAuthenticated } = useAuthStore.getState();
+    if (!isAuthenticated) {
+      toast.error("Please log in to access your wishlist.");
+      return;
+    }
+
     toast.success(isShortlisted ? "Removed from shortlist" : "Added to shortlist");
+    void toggleShortlist(property);
   };
 
   // Word limiter

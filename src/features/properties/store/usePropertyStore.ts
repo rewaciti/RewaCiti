@@ -1,7 +1,58 @@
 import { create } from "zustand";
 import axios from "axios";
+import { toast } from "sonner";
 import type { Property, PropertyStore, SabiFlowProduct, PropertyPaymentFees, Category, InventoryFilters } from "../../../types";
 import { ensureHttps } from "../../../shared/lib/utils";
+import { useAuthStore } from "../../auth/store/useAuthStore";
+
+interface WishlistProductResponse {
+  _id: string;
+  slug?: string;
+  thumbnail?: string;
+  images?: string[];
+  price?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  category?: string;
+  categoryId?: { name?: string };
+  location?: { area?: string; city_town?: string; state?: string };
+  pricing?: { TotalCost?: number };
+}
+
+interface WishlistResponse {
+  products?: WishlistProductResponse[];
+}
+
+const mapWishlistProductToProperty = (item: WishlistProductResponse): Property => ({
+  ...item,
+  id: item._id,
+  img: item.thumbnail || item.images?.[0] || "",
+  slug: item.slug || "",
+  name: item.slug || item._id,
+  description: "",
+  bedrooms: item.bedrooms ?? 0,
+  bathrooms: item.bathrooms ?? 0,
+  category: item.category || item.categoryId?.name || "",
+  pricing: {
+    LegalFee: 0,
+    ServiceFee: 0,
+    CautionFee: 0,
+    PropertyCost: item.price || 0,
+    AgentFee: 0,
+    TotalCost: item.price || 0,
+  },
+  location: {
+    area: item.location?.area || "",
+    city: item.location?.city_town || item.location?.area || "",
+    city_town: item.location?.city_town,
+    state: item.location?.state || "",
+  },
+  geo_location: { lat: 0, lng: 0 },
+  yearBuilt: 0,
+  keyFeatures: [],
+  images: item.images ?? [],
+  visitationfee: 0,
+});
 
 const mapSabiFlowProductsToProperties = (items: SabiFlowProduct[]): Property[] =>
   items.map((item: SabiFlowProduct) => {
@@ -327,19 +378,62 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
   },
 
   shortlistedProperties: [],
-  toggleShortlist: (property: Property) => {
-    set((state) => {
-      const isShortlisted = state.shortlistedProperties.some((p) => p.id === property.id);
-      if (isShortlisted) {
-        return {
-          shortlistedProperties: state.shortlistedProperties.filter((p) => p.id !== property.id),
-        };
-      }
+  fetchWishlist: async () => {
+    const { token, customer, isAuthenticated } = useAuthStore.getState();
 
-      return {
-        shortlistedProperties: [...state.shortlistedProperties, property],
-      };
-    });
+    if (!isAuthenticated || !customer || !token) {
+      set({ shortlistedProperties: [] });
+      return;
+    }
+
+    const apiUrl = import.meta.env.VITE_API_URL || "{{url}}";
+
+    try {
+      const response = await axios.get<WishlistResponse>(`${apiUrl}/customers/wishlist`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const products = response.data?.products ?? [];
+      const nextShortlisted = products.map(mapWishlistProductToProperty);
+      set({ shortlistedProperties: nextShortlisted });
+    } catch (error) {
+      console.error("Failed to fetch wishlist:", error);
+    }
+  },
+  toggleShortlist: async (property: Property) => {
+    const { token, customer, isAuthenticated } = useAuthStore.getState();
+
+    if (!isAuthenticated || !customer || !token) {
+      return;
+    }
+
+    const apiUrl = import.meta.env.VITE_API_URL || "{{url}}";
+    const isShortlisted = get().shortlistedProperties.some((p) => p.id === property.id);
+    const previousShortlisted = get().shortlistedProperties;
+
+    const optimisticProperties = isShortlisted
+      ? previousShortlisted.filter((p) => p.id !== property.id)
+      : [...previousShortlisted, property];
+
+    set({ shortlistedProperties: optimisticProperties });
+
+    try {
+      if (isShortlisted) {
+        await axios.delete(`${apiUrl}/customers/wishlist/${property.id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } else {
+        await axios.post(
+          `${apiUrl}/customers/wishlist`,
+          { productId: property.id },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      }
+    } catch (error) {
+      console.error("Wishlist update failed:", error);
+      set({ shortlistedProperties: previousShortlisted });
+      toast.error("Couldn't update wishlist. Please try again.");
+    }
   },
 
   filterProperties: (filters: {

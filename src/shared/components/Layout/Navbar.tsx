@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router";
 import logo from "/Symbol.png";
 import { useState, useRef, useEffect } from "react";
 import { useThemeStore } from "../../store/useThemeStore";
-import { FiSun, FiMoon, FiPlus, FiTrash2, FiUser } from "react-icons/fi";
+import { FiSun, FiMoon, FiPlus, FiTrash2 } from "react-icons/fi";
 import { usePropertyStore } from "../../../features/properties/store/usePropertyStore";
 import { useAuthStore } from "../../../features/auth/store/useAuthStore";
 import { toast } from "sonner";
@@ -18,9 +18,29 @@ const Navbar = () => {
   const mobileProfileRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useThemeStore();
   const { shortlistedProperties, toggleShortlist } = usePropertyStore();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, customer } = useAuthStore();
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  const profileInitials = (() => {
+    const firstName = customer?.firstName?.trim();
+    const lastName = customer?.lastName?.trim();
+    const email = customer?.email?.trim();
+
+    if (firstName && lastName) {
+      return `${firstName[0]}${lastName[0]}`.toUpperCase();
+    }
+
+    if (firstName) {
+      return firstName.slice(0, 2).toUpperCase();
+    }
+
+    if (email) {
+      return email.slice(0, 2).toUpperCase();
+    }
+
+    return "U";
+  })();
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -109,7 +129,13 @@ const Navbar = () => {
           {/* Shortlist Counter & Dropdown */}
           <div className="relative" ref={shortlistRef}>
             <button
-              onClick={() => setIsShortlistOpen(!isShortlistOpen)}
+              onClick={() => {
+                if (!isAuthenticated) {
+                  toast.error("Please log in to access your wishlist.");
+                  return;
+                }
+                setIsShortlistOpen(!isShortlistOpen);
+              }}
               title="Shortlist"
               className="flex items-center gap-1 text-gray-900 dark:text-white hover:text-[#703BF7] transition-colors relative group cursor-pointer"
             >
@@ -176,8 +202,8 @@ const Navbar = () => {
                         </div>
                         <button
                           onClick={() => {
-                            toggleShortlist(property);
                             toast.success("Removed from shortlist");
+                            void toggleShortlist(property);
                           }}
                           className="p-1.5 text-black hover:text-red-500 dark:text-white dark:hover:text-red-400 transition-colors cursor-pointer"
                         >
@@ -271,9 +297,9 @@ const Navbar = () => {
                   type="button"
                   title="Profile"
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-gray-100 text-gray-800 transition hover:bg-[#9677df] hover:text-white dark:border-gray-600 dark:bg-black/30 dark:text-white cursor-pointer animate-fade-in"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 transition hover:bg-[#9677df] hover:text-white dark:border-gray-600 cursor-pointer animate-fade-in font-semibold text-sm bg-[#703BF7] text-white"
                 >
-                  <FiUser size={18} />
+                  {profileInitials}
                 </button>
                 <ProfileDropdown isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)}  isMobile={false}/>
               </div>
@@ -303,9 +329,9 @@ const Navbar = () => {
                   type="button"
                   title="Profile"
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-gray-100 text-gray-800 transition hover:bg-[#9677df] hover:text-white dark:border-gray-600 dark:bg-black/30 dark:text-white cursor-pointer"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-gray-100 text-gray-800 transition hover:bg-[#9677df] hover:text-white dark:border-gray-600 dark:bg-black/30 dark:text-white cursor-pointer text-[13px] font-semibold"
                 >
-                  <FiUser size={16} />
+                  {profileInitials}
                 </button>
                 <ProfileDropdown isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} isMobile={true}/>
               </div>

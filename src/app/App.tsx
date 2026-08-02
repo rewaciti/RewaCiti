@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { Toaster } from "sonner";
 import { HelmetProvider } from "react-helmet-async";
 import { useThemeStore } from "../shared/store/useThemeStore";
+import { useAuthStore } from "../features/auth/store/useAuthStore";
+import { usePropertyStore } from "../features/properties/store/usePropertyStore";
 import Home from "./pages/Home";
 
 import AllComments from "../features/comments/pages/AllCommentsPage";
@@ -12,7 +14,7 @@ import Properties from "../features/properties/pages/PropertiesPage";
 import PropertyDetails from "../features/properties/pages/PropertyDetailsPage";
 import Service from "./pages/Service";
 import Contact from "./pages/Contact";
-import StudentHousing from "./pages/StudentArea";
+import StudentHousing from "../features/properties/pages/StudentAreaPage";
 import NotFound from "./pages/NotFound";
 import Terms from "./pages/Terms";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -27,6 +29,7 @@ import Profile from "../features/auth/pages/Profile";
 
 function App() {
   const theme = useThemeStore((s) => s.theme);
+  const { token, isAuthenticated } = useAuthStore();
 
   useEffect(() => {
     if (theme === "dark") {
@@ -35,6 +38,12 @@ function App() {
       document.documentElement.classList.remove("dark");
     }
   }, [theme]);
+
+  useEffect(() => {
+    if (isAuthenticated && token) {
+      void usePropertyStore.getState().fetchWishlist();
+    }
+  }, [isAuthenticated, token]);
   return (
     <HelmetProvider>
       <BrowserRouter>

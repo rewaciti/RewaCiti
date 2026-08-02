@@ -15,13 +15,15 @@ import ReportAgentModal from "../components/ReportAgentModal";
 import PropertyCard from "../components/PropertyCard";
 import { PropertyDetailsSkeleton, PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
 import { toast } from "sonner";
-import { formatCurrency } from "../../../shared/lib/utils";
+import { formatCurrency, getCookie, setCookie } from "../../../shared/lib/utils";
 
-import { COMPANY_ID } from "../../auth/store/useAuthStore";
+import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
+import { authAPI } from "../../auth/services/authAPI";
 
 function PropertyDetails() {
 
   const { slug } = useParams<{ slug: string }>();
+  const { isAuthenticated, customer } = useAuthStore();
   const {
     properties,
     fetchProperties,
@@ -38,11 +40,21 @@ function PropertyDetails() {
 
   const isShortlisted = property ? shortlistedProperties.some((p) => p.id === property.id) : false;
 
-  const handleShortlist = () => {
-    if (property) {
-      toggleShortlist(property);
-      toast.success(isShortlisted ? "Removed from shortlist" : "Added to shortlist");
+  const handleShortlist = async () => {
+    if (!property) {
+      setIsDropdownOpen(false);
+      return;
     }
+
+    const { isAuthenticated } = useAuthStore.getState();
+    if (!isAuthenticated) {
+      toast.error("Please log in to access your wishlist.");
+      setIsDropdownOpen(false);
+      return;
+    }
+
+    toast.success(isShortlisted ? "Removed from shortlist" : "Added to shortlist");
+    void toggleShortlist(property);
     setIsDropdownOpen(false);
   };
 
@@ -172,6 +184,50 @@ function PropertyDetails() {
   }, [properties.length, fetchProperties]);
 
   useEffect(() => {
+    const savedInquiry = getCookie(inquiryCookieKey);
+    if (savedInquiry) {
+      try {
+        const parsed = JSON.parse(savedInquiry);
+        setFirstName(parsed.firstName || "");
+        setLastName(parsed.lastName || "");
+        setEmail(parsed.email || "");
+        setPhone(parsed.phone || "");
+        setMessage(parsed.message || "");
+        setAgreed(parsed.agreed || false);
+      } catch {
+        // ignore malformed cookie data
+      }
+    }
+
+    if (!isAuthenticated || !customer) {
+      return;
+    }
+
+    const populateProfileDetails = async () => {
+      try {
+        const profileData = await authAPI.getProfile();
+        const latestPhone = profileData.phoneNumber || "";
+        setFirstName(customer.firstName || "");
+        setLastName(customer.lastName || "");
+        setEmail(customer.email || "");
+        setPhone(latestPhone || customer.phoneNumber || "");
+
+        const currentCustomer = useAuthStore.getState().customer;
+        if (currentCustomer && currentCustomer.phoneNumber !== latestPhone) {
+          useAuthStore.getState().setCustomer({
+            ...currentCustomer,
+            phoneNumber: latestPhone,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch profile for property details form:", error);
+      }
+    };
+
+    populateProfileDetails();
+  }, [isAuthenticated, customer]);
+
+  useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
 
@@ -180,13 +236,14 @@ function PropertyDetails() {
   }, [slug]);
 
   // FORM STATES
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [agreed, setAgreed] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const inquiryCookieKey = "rewaciti_property_details_inquiry";
   const [isInspectionModalOpen, setIsInspectionModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
@@ -229,11 +286,29 @@ function PropertyDetails() {
     };
   }, [isPaymentModalOpen]);
 
+  useEffect(() => {
+    const payload = {
+      firstName,
+      lastName,
+      email,
+      phone,
+      message,
+      agreed,
+    };
+
+    setCookie(inquiryCookieKey, JSON.stringify(payload));
+  }, [firstName, lastName, email, phone, message, agreed]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!agreed) {
       toast.error("Please agree to the Terms and Privacy Policy");
+      return;
+    }
+
+    if (!firstName.trim() || !lastName.trim() || !email.trim() || !phone.trim()) {
+      toast.error("Please enter your full name, email, and phone number to send a message.");
       return;
     }
 
@@ -302,6 +377,14 @@ function PropertyDetails() {
       setPhone("");
       setMessage("");
       setAgreed(false);
+      setCookie(inquiryCookieKey, JSON.stringify({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        message: "",
+        agreed: false,
+      }));
 
     } catch (error) {
       console.error("Error sending message:", error);
@@ -981,9 +1064,9 @@ function PropertyDetails() {
                 <div className="sm:col-span-2 flex items-center justify-end">
                   <button
                     type="submit"
-                    disabled={!agreed || isSubmitting}
+                    disabled={!agreed || isSubmitting || !firstName.trim() || !lastName.trim() || !email.trim() || !phone.trim()}
                     className={`px-4 py-3 rounded-lg font-medium transition
-                    ${agreed && !isSubmitting
+                    ${agreed && !isSubmitting && firstName.trim() && lastName.trim() && email.trim() && phone.trim()
                         ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white"
                         : "bg-gray-400 cursor-not-allowed text-gray-200"
                       }`}

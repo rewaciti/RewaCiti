@@ -5,11 +5,11 @@ import { useInspectionStore } from "../store/useInspectionStore";
 import type { Property } from "../../../types";
 import { FiX, FiMapPin } from "react-icons/fi";
 import axios from "axios";
-import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import PaystackPop from "@paystack/inline-js";
 import { COMPANY_ID } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
+import { getCookie, setCookie } from "../../../shared/lib/utils";
 
 interface BookInspectionModalProps {
   property: Property;
@@ -37,11 +37,28 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const { isAuthenticated, customer, token } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [profilePhone, setProfilePhone] = useState("");
-  const navigate = useNavigate();
+  const [guestName, setGuestName] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
+  const [guestPhone, setGuestPhone] = useState("");
+  const [agreed, setAgreed] = useState(false);
+  const modalCookieKey = "rewaciti_inspection_modal";
 
-  const phone = profilePhone || customer?.phoneNumber || "";
+  const phone = profilePhone || customer?.phoneNumber || guestPhone;
 
   React.useEffect(() => {
+    const savedForm = getCookie(modalCookieKey);
+    if (savedForm) {
+      try {
+        const parsed = JSON.parse(savedForm);
+        setGuestName(parsed.guestName || "");
+        setGuestEmail(parsed.guestEmail || "");
+        setGuestPhone(parsed.guestPhone || "");
+        setAgreed(parsed.agreed || false);
+      } catch {
+        // ignore malformed cookie data
+      }
+    }
+
     if (open && isAuthenticated) {
       const fetchProfile = async () => {
         try {
@@ -64,15 +81,18 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
     }
   }, [open, isAuthenticated]);
 
+  React.useEffect(() => {
+    setCookie(modalCookieKey, JSON.stringify({ guestName, guestEmail, guestPhone, agreed }));
+  }, [guestName, guestEmail, guestPhone, agreed]);
+
   const addInspection = useInspectionStore((state) => state.addInspection);
   const updatePaymentStatus = useInspectionStore((state) => state.updatePaymentStatus);
 
   const amount = property.visitationfee;
   const feeDisplay = amount === 0 ? "inspection is free" : `₦${amount.toLocaleString()}`;
 
-  // Name and email always come from the authenticated customer.
-  const fullName = customer ? `${customer.firstName} ${customer.lastName}`.trim() : "";
-  const bookingEmail = customer?.email ?? "";
+  const fullName = customer ? `${customer.firstName} ${customer.lastName}`.trim() : guestName;
+  const bookingEmail = customer?.email ?? guestEmail;
 
   const propertyAddress = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
   const propertyUrl = window.location.href;
@@ -100,16 +120,13 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isAuthenticated || !customer) {
-      toast.error("Please log in to book an inspection.");
-      onOpenChange(false);
-      navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+    if (!fullName.trim() || !bookingEmail.trim() || !phone.trim()) {
+      toast.error("Please enter your full name, email, and phone number to continue.");
       return;
     }
 
-
-    if (!phone.trim()) {
-      toast.error("Please enter a phone number");
+    if (!agreed) {
+      toast.error("Please agree to the Terms and Privacy Policy to continue.");
       return;
     }
 
@@ -241,11 +258,10 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
             await handleDownloadReceipt(saleId);
 
             onOpenChange(false);
-            navigate("/properties");
+            setCookie(modalCookieKey, JSON.stringify({ guestName: "", guestEmail: "", guestPhone: "", agreed: false }));
           } catch (error) {
             console.error("Verification/CRM error:", error);
             toast.error("Payment successful, but verification failed. Please contact support.");
-            navigate("/properties");
           } finally {
             setIsSubmitting(false);
           }
@@ -309,7 +325,40 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                   {phone || <span className="italic text-red-500">No phone number listed in profile</span>}
                 </p>
               </div>
-            ) : null}
+            ) : (
+              <div className="space-y-2 rounded-lg border border-gray-600/30 bg-gray-500/10 p-3">
+                <div>
+                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={guestName}
+                    onChange={(e) => setGuestName(e.target.value)}
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={guestEmail}
+                    onChange={(e) => setGuestEmail(e.target.value)}
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Phone Number</label>
+                  <input
+                    type="tel"
+                    required
+                    value={guestPhone}
+                    onChange={(e) => setGuestPhone(e.target.value)}
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                  />
+                </div>
+              </div>
+            )}
 
              <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
               <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
@@ -339,30 +388,28 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               </div>
             </div>
 
+            <div className="flex items-center gap-1">
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                className="mt-0.5 cursor-pointer"
+              />
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                I agree with the <a href="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</a> and <a href="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</a>.
+              </p>
+            </div>
+
             <button
-              type={isAuthenticated ? "submit" : "button"}
-              onClick={
-                !isAuthenticated
-                  ? () => {
-                      onOpenChange(false);
-                      navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
-                    }
-                  : undefined
-              }
-              disabled={isAuthenticated && (isSubmitting || !phone)}
+              type="submit"
+              disabled={isSubmitting || !fullName.trim() || !bookingEmail.trim() || !phone.trim() || !agreed}
               className={`w-full font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50 ${
-                (!isAuthenticated || (isSubmitting === false && phone))
-                  ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
-                  : "bg-gray-400 cursor-not-allowed text-gray-200"
+                isSubmitting || !fullName.trim() || !bookingEmail.trim() || !phone.trim() || !agreed
+                  ? "bg-gray-400 cursor-not-allowed text-gray-200"
+                  : "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
               }`}
             >
-              {!isAuthenticated
-                ? "Log in to Book a Visit"
-                : !phone
-                ? "Update Profile with Phone Number to Book"
-                : isSubmitting
-                ? "Processing..."
-                : "Pay & Book a Visit"}
+              {isSubmitting ? "Processing..." : "Pay & Book a Visit"}
             </button>
           </form>
         </Dialog.Content>

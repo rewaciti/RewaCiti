@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router";
 import { toast } from "sonner";
 import { authAPI } from "../services/authAPI";
 import { useAuthStore } from "../store/useAuthStore";
+import { usePropertyStore } from "../../properties/store/usePropertyStore";
 import Navbar from "../../../shared/components/Layout/Navbar";
 import { Helmet } from "react-helmet-async";
 
@@ -78,6 +79,7 @@ const Login = () => {
         setToken(response.token);
         setCustomer(response.customer);
         setCompanyId(response.customer.companyId);
+        await usePropertyStore.getState().fetchWishlist();
         toast.success("Login successful!");
         navigate("/");
       }

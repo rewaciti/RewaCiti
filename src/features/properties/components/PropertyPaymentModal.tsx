@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import PaystackPop from "@paystack/inline-js";
 import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
+import { getCookie, setCookie } from "../../../shared/lib/utils";
 
 interface PropertyPaymentModalProps {
 
@@ -38,13 +39,31 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   const { isAuthenticated, customer } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [profilePhone, setProfilePhone] = useState("");
+  const [guestName, setGuestName] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
+  const [guestPhone, setGuestPhone] = useState("");
+  const [agreed, setAgreed] = useState(false);
   const navigate = useNavigate();
+  const modalCookieKey = "rewaciti_payment_modal";
 
-  const fullName = customer ? `${customer.firstName} ${customer.lastName}`.trim() : "";
-  const email = customer?.email ?? "";
-  const phone = profilePhone || customer?.phoneNumber || "";
+  const fullName = customer ? `${customer.firstName} ${customer.lastName}`.trim() : guestName;
+  const email = customer?.email ?? guestEmail;
+  const phone = profilePhone || customer?.phoneNumber || guestPhone;
 
   React.useEffect(() => {
+    const savedForm = getCookie(modalCookieKey);
+    if (savedForm) {
+      try {
+        const parsed = JSON.parse(savedForm);
+        setGuestName(parsed.guestName || "");
+        setGuestEmail(parsed.guestEmail || "");
+        setGuestPhone(parsed.guestPhone || "");
+        setAgreed(parsed.agreed || false);
+      } catch {
+        // ignore malformed cookie data
+      }
+    }
+
     if (open && isAuthenticated) {
       const fetchProfile = async () => {
         try {
@@ -66,6 +85,10 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       fetchProfile();
     }
   }, [open, isAuthenticated]);
+
+  React.useEffect(() => {
+    setCookie(modalCookieKey, JSON.stringify({ guestName, guestEmail, guestPhone, agreed }));
+  }, [guestName, guestEmail, guestPhone, agreed]);
 
   const price = property.pricing.TotalCost || 0;
   const pricing = property.pricing;
@@ -96,8 +119,13 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isAuthenticated) {
-      navigate("/auth/login");
+    if (!fullName.trim() || !email.trim() || !phone.trim()) {
+      toast.error("Please enter your full name, email, and phone number to continue.");
+      return;
+    }
+
+    if (!agreed) {
+      toast.error("Please agree to the Terms and Privacy Policy to continue.");
       return;
     }
 
@@ -212,6 +240,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
             await handleDownloadReceipt(saleId);
 
             onOpenChange(false);
+            setCookie(modalCookieKey, JSON.stringify({ guestName: "", guestEmail: "", guestPhone: "", agreed: false }));
             
             // Trigger Rating Modal
             if (onPaymentSuccess) {
@@ -301,14 +330,46 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
           </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Billing Information Card (Read-only) - Only shown when logged in */}
-              {isAuthenticated && customer && (
+              {isAuthenticated && customer ? (
                 <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-2">
                   <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Billing Information</h4>
                   <div className="text-sm dark:text-gray-300 text-gray-700 space-y-1">
                     <p><span className="font-semibold">Name:</span> {fullName}</p>
                     <p><span className="font-semibold">Email:</span> {email}</p>
                     <p><span className="font-semibold">Phone:</span> {phone || <span className="italic text-red-500">No phone number listed in profile</span>}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2 rounded-lg border border-gray-600/30 bg-gray-500/10 p-3">
+                  <div>
+                    <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Full Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={guestName}
+                      onChange={(e) => setGuestName(e.target.value)}
+                      className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Email</label>
+                    <input
+                      type="email"
+                      required
+                      value={guestEmail}
+                      onChange={(e) => setGuestEmail(e.target.value)}
+                      className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Phone Number</label>
+                    <input
+                      type="tel"
+                      required
+                      value={guestPhone}
+                      onChange={(e) => setGuestPhone(e.target.value)}
+                      className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                    />
                   </div>
                 </div>
               )}
@@ -366,30 +427,28 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 </div>
               </div>
 
+              <div className="flex items-center gap-1">
+                <input
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  className="mt-0.5 cursor-pointer"
+                />
+                <p className="text-sm text-gray-700 dark:text-gray-300 ">
+                  I agree with the <a href="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</a> and <a href="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</a>.
+                </p>
+              </div>
+
               <button
-                type={isAuthenticated ? "submit" : "button"}
-                onClick={
-                  !isAuthenticated
-                    ? () => {
-                        onOpenChange(false);
-                        navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
-                      }
-                    : undefined
-                }
-                disabled={isAuthenticated && (isSubmitting || !phone)}
+                type="submit"
+                disabled={isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed}
                 className={`w-full font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50 ${
-                  (!isAuthenticated || (isSubmitting === false && phone))
-                    ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
-                    : "bg-gray-400 cursor-not-allowed text-gray-200"
+                  isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed
+                    ? "bg-gray-400 cursor-not-allowed text-gray-200"
+                    : "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
                 }`}
               >
-                {!isAuthenticated
-                  ? "Log In to Pay for Property"
-                  : !phone
-                  ? "Update Profile with Phone Number to Pay"
-                  : isSubmitting
-                  ? "Processing..."
-                  : `Pay Total: ₦${price.toLocaleString()}`}
+                {isSubmitting ? "Processing..." : `Pay Total: ₦${price.toLocaleString()}`}
               </button>
             </form>
         </Dialog.Content>

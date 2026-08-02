@@ -73,7 +73,8 @@ export interface PropertyStore {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   shortlistedProperties: Property[];
-  toggleShortlist: (property: Property) => void;
+  fetchWishlist: () => Promise<void>;
+  toggleShortlist: (property: Property) => Promise<void>;
   filterProperties: (filters: {
     location?: string;
     category?: string;
