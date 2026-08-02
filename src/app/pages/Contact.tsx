@@ -4,7 +4,7 @@ import { FiMapPin } from "react-icons/fi";
 import Footer from "../../shared/components/Layout/Footer";
 import useScrollToHash from "../../shared/hooks/useScrollToHash";
 import { Helmet } from "react-helmet-async";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router";
 import { toast } from "sonner";
@@ -26,6 +26,7 @@ function Contact() {
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const inquiryCookieKey = "rewaciti_contact_inquiry";
+  const cookieLoaded = useRef(false);
 
   useScrollToHash();
 
@@ -76,6 +77,11 @@ function Contact() {
   }, [isAuthenticated, customer]);
 
   useEffect(() => {
+    if (!cookieLoaded.current) {
+      cookieLoaded.current = true;
+      return;
+    }
+
     const payload = {
       firstName,
       lastName,
@@ -367,16 +373,9 @@ function Contact() {
                 onChange={(e) => setAgreed(e.target.checked)}
                 required
               />
-              <p className="text-gray-900 dark:text-white text-sm">
-                I agree with the{" "}
-                <Link to="/terms" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
-                  Terms
-                </Link>{" "}
-                and{" "}
-                <Link to="/privacy-policy" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
-                  Privacy Policy
-                </Link>
-              </p>
+              <p className="text-sm text-gray-700 dark:text-gray-300 ">
+                  I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
+                </p>
           </div>
 
           {/* Submit Button */}

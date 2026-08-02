@@ -26,7 +26,8 @@ export const ensureHttps = (url: string) => {
 export const setCookie = (name: string, value: string, days = 365) => {
   const expires = new Date();
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+  const secureFlag = window.location.protocol === "https:" ? ";Secure" : "";
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/;SameSite=Lax${secureFlag}`;
 };
 
 export const getCookie = (name: string) => {

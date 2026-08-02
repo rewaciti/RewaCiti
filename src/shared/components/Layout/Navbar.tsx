@@ -329,7 +329,7 @@ const Navbar = () => {
                   type="button"
                   title="Profile"
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-gray-100 text-gray-800 transition hover:bg-[#9677df] hover:text-white dark:border-gray-600 dark:bg-black/30 dark:text-white cursor-pointer text-[13px] font-semibold"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-[#703BF7] text-white transition hover:bg-[#9677df] hover:text-white dark:border-gray-600 cursor-pointer text-[13px] font-semibold"
                 >
                   {profileInitials}
                 </button>

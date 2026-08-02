@@ -244,6 +244,7 @@ function PropertyDetails() {
   const [message, setMessage] = useState("");
   const [agreed, setAgreed] = useState(false);
   const inquiryCookieKey = "rewaciti_property_details_inquiry";
+  const cookieLoaded = useRef(false);
   const [isInspectionModalOpen, setIsInspectionModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
@@ -287,6 +288,11 @@ function PropertyDetails() {
   }, [isPaymentModalOpen]);
 
   useEffect(() => {
+    if (!cookieLoaded.current) {
+      cookieLoaded.current = true;
+      return;
+    }
+
     const payload = {
       firstName,
       lastName,
@@ -668,7 +674,7 @@ function PropertyDetails() {
                         setLightboxIndex(currentIndex + index);
                         setIsLightboxOpen(true);
                       }}
-                      className={`w-full dark:bg-[#1A1A1A] bg-white lg:object-cover rounded-xl cursor-pointer ${visibleImages.length === 1 ? "h-[70vh]" : "h-[70vh]"
+                      className={`w-full dark:bg-[#1A1A1A] bg-white lg:object-cover rounded-xl cursor-pointer ${visibleImages.length === 1 ? "h-[65vh]" : "h-[70vh]"
                         }`}
                     />
                   ))}
@@ -950,7 +956,7 @@ function PropertyDetails() {
                 className="w-13 object-contain"
               />
 
-              <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Inquire About {property?.name} </h1>
+              <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Inquire About This Property</h1>
 
               <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
                 Interested in this property? Fill out the form below, and our real estate experts will get back to you with more details, including scheduling a viewing and answering any questions you may have.
@@ -1048,16 +1054,9 @@ function PropertyDetails() {
                     onChange={(e) => setAgreed(e.target.checked)}
                     required
                   />
-                  <p className="text-gray-900 dark:text-white text-sm">
-                    I agree with the{" "}
-                    <Link to="/terms" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
-                      Terms
-                    </Link>{" "}
-                    and{" "}
-                    <Link to="/privacy-policy" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
-                      Privacy Policy
-                    </Link>
-                  </p>
+                <p className="text-sm text-gray-700 dark:text-gray-300 ">
+                  I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
+                </p>
                 </div>
 
                 {/* Submit Button */}

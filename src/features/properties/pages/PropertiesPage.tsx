@@ -1,5 +1,5 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import { usePropertyStore } from "../store/usePropertyStore";
@@ -49,7 +49,7 @@ function PropertySearchSection() {
   const [selectedBedroomLabel, setSelectedBedroomLabel] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [agreed, setAgreed] = useState(false);
-
+  const cookieLoaded = useRef(false);
   const inquiryCookieKey = "rewaciti_property_inquiry";
 
   useEffect(() => {
@@ -100,6 +100,11 @@ function PropertySearchSection() {
   }, [isAuthenticated, customer]);
 
   useEffect(() => {
+    if (!cookieLoaded.current) {
+      cookieLoaded.current = true;
+      return;
+    }
+
     const payload = {
       name,
       email,
@@ -696,16 +701,9 @@ const areaOptions = [
                 onChange={(e) => setAgreed(e.target.checked)}
                 required
               />
-              <p className="text-gray-900 dark:text-white text-sm">
-                I agree with the{" "}
-                <Link to="/terms" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
-                  Terms
-                </Link>{" "}
-                and{" "}
-                <Link to="/privacy-policy" className="hover:text-[#703BF7] text-gray-900 dark:text-white text-sm underline dark:hover:text-[#703BF7]">
-                  Privacy Policy
-                </Link>
-              </p>
+           <p className="text-sm text-gray-700 dark:text-gray-300 ">
+                  I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
+                </p>
             </div>
 
             {/* Submit Button */}

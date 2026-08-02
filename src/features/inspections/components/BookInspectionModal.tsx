@@ -247,7 +247,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
             
             toast.success(
               <div className="whitespace-pre-wrap">
-                {`Payment successful! Reference: ${transaction.reference}\nA member of our team will contact you shortly.`}
+                {`Payment successful! \nA member of our team will contact you shortly.`}
               </div>,
               {
                 duration: 5000,
