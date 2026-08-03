@@ -60,15 +60,38 @@ const mergeWishlistMetadata = (property: Property, storedMetadata: Record<string
     return property;
   }
 
+  const mergedArea =
+    property.location.area ||
+    savedMetadata.location?.area ||
+    savedMetadata.location?.city_town ||
+    savedMetadata.location?.city ||
+    "";
+
+  const mergedCity =
+    property.location.city ||
+    property.location.city_town ||
+    savedMetadata.location?.city ||
+    savedMetadata.location?.city_town ||
+    savedMetadata.location?.area ||
+    "";
+
+  const mergedCityTown =
+    property.location.city_town ||
+    property.location.city ||
+    savedMetadata.location?.city_town ||
+    savedMetadata.location?.city ||
+    savedMetadata.location?.area ||
+    "";
+
   return {
     ...property,
     name: property.name || savedMetadata.name || "",
     slug: property.slug || savedMetadata.slug || "",
     img: property.img || savedMetadata.img || "",
     location: {
-      area: property.location.area || savedMetadata.location?.area || "",
-      city: property.location.city || savedMetadata.location?.city || "",
-      city_town: property.location.city_town || savedMetadata.location?.city_town || "",
+      area: mergedArea,
+      city: mergedCity,
+      city_town: mergedCityTown,
       state: property.location.state || savedMetadata.location?.state || "",
       nearest_university: property.location.nearest_university || savedMetadata.location?.nearest_university || "",
     },
@@ -78,12 +101,14 @@ const mergeWishlistMetadata = (property: Property, storedMetadata: Record<string
 const syncWishlistMetadata = (properties: Property[]) => {
   const storedMetadata = readStoredWishlistMetadata();
   const nextMetadata = properties.reduce<Record<string, WishlistMetadata>>((acc, property) => {
+    const mergedProperty = mergeWishlistMetadata(property, storedMetadata);
+
     acc[property.id] = {
       ...storedMetadata[property.id],
-      name: property.name,
-      slug: property.slug,
-      img: property.img,
-      location: { ...property.location },
+      name: mergedProperty.name,
+      slug: mergedProperty.slug,
+      img: mergedProperty.img,
+      location: { ...mergedProperty.location },
     };
     return acc;
   }, {});
@@ -144,7 +169,7 @@ const mapWishlistProductToProperty = (item: WishlistProductResponse): Property =
   location: {
     area: item.location?.area || "",
     city: item.location?.city_town || item.location?.area || "",
-    city_town: item.location?.city_town,
+    city_town: item.location?.city_town || item.location?.area || "",
     state: item.location?.state || "",
   },
   geo_location: { lat: 0, lng: 0 },
@@ -542,10 +567,12 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
     const apiUrl = import.meta.env.VITE_API_URL || "{{url}}";
     const isShortlisted = get().shortlistedProperties.some((p) => p.id === property.id);
     const previousShortlisted = get().shortlistedProperties;
+    const storedMetadata = readStoredWishlistMetadata();
+    const enrichedProperty = mergeWishlistMetadata(property, storedMetadata);
 
     const optimisticProperties = isShortlisted
       ? previousShortlisted.filter((p) => p.id !== property.id)
-      : [...previousShortlisted, property];
+      : [...previousShortlisted, enrichedProperty];
 
     syncWishlistMetadata(optimisticProperties);
     set({ shortlistedProperties: optimisticProperties });

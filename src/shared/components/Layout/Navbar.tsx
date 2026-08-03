@@ -197,7 +197,14 @@ const Navbar = () => {
                               navigate(`/properties/${property.slug}`);
                               setIsShortlistOpen(false);
                             }}>
-                            {property.location.area}, {property.location.city_town}, {property.location.state} state.
+                            {[
+                            property.location.area,
+                            property.location.city_town || property.location.city,
+                            property.location.state,
+                          ]
+                            .filter(Boolean)
+                            .join(", ")}
+                          {property.location.state ? " state." : ""}
                           </p>
                         </div>
                         <button
