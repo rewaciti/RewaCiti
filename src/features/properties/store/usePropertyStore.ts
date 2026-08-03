@@ -23,6 +23,106 @@ interface WishlistResponse {
   products?: WishlistProductResponse[];
 }
 
+const WISHLIST_METADATA_STORAGE_KEY = "rewaciti_wishlist_metadata";
+
+type WishlistMetadata = Partial<Pick<Property, "name" | "slug" | "img" | "location">>;
+
+const readStoredWishlistMetadata = (): Record<string, WishlistMetadata> => {
+  if (typeof window === "undefined") {
+    return {};
+  }
+
+  try {
+    const rawValue = window.localStorage.getItem(WISHLIST_METADATA_STORAGE_KEY);
+    return rawValue ? JSON.parse(rawValue) : {};
+  } catch (error) {
+    console.error("Failed to read wishlist metadata:", error);
+    return {};
+  }
+};
+
+const writeStoredWishlistMetadata = (metadata: Record<string, WishlistMetadata>) => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(WISHLIST_METADATA_STORAGE_KEY, JSON.stringify(metadata));
+  } catch (error) {
+    console.error("Failed to save wishlist metadata:", error);
+  }
+};
+
+const mergeWishlistMetadata = (property: Property, storedMetadata: Record<string, WishlistMetadata>): Property => {
+  const savedMetadata = storedMetadata[property.id];
+
+  if (!savedMetadata) {
+    return property;
+  }
+
+  return {
+    ...property,
+    name: property.name || savedMetadata.name || "",
+    slug: property.slug || savedMetadata.slug || "",
+    img: property.img || savedMetadata.img || "",
+    location: {
+      area: property.location.area || savedMetadata.location?.area || "",
+      city: property.location.city || savedMetadata.location?.city || "",
+      city_town: property.location.city_town || savedMetadata.location?.city_town || "",
+      state: property.location.state || savedMetadata.location?.state || "",
+      nearest_university: property.location.nearest_university || savedMetadata.location?.nearest_university || "",
+    },
+  };
+};
+
+const syncWishlistMetadata = (properties: Property[]) => {
+  const storedMetadata = readStoredWishlistMetadata();
+  const nextMetadata = properties.reduce<Record<string, WishlistMetadata>>((acc, property) => {
+    acc[property.id] = {
+      ...storedMetadata[property.id],
+      name: property.name,
+      slug: property.slug,
+      img: property.img,
+      location: { ...property.location },
+    };
+    return acc;
+  }, {});
+
+  writeStoredWishlistMetadata(nextMetadata);
+};
+
+const fetchAvailableWishlistIds = async (
+  wishlistIds: string[],
+  maxPages = 5,
+  pageSize = 100
+): Promise<Set<string>> => {
+  const inventoryUrl = "https://api.sabiflow.com/api/inventory/portal/rewacity/products";
+  const idsToFind = new Set(wishlistIds);
+  const foundIds = new Set<string>();
+  let page = 1;
+
+  while (page <= maxPages && foundIds.size < idsToFind.size) {
+    const res = await axios.get<{ data: SabiFlowProduct[]; total?: number }>(inventoryUrl, {
+      params: { page, limit: pageSize },
+    });
+
+    const data = res.data.data ?? [];
+    data.forEach((item) => {
+      if (idsToFind.has(item._id)) {
+        foundIds.add(item._id);
+      }
+    });
+
+    if (data.length < pageSize) {
+      break;
+    }
+
+    page += 1;
+  }
+
+  return foundIds;
+};
+
 const mapWishlistProductToProperty = (item: WishlistProductResponse): Property => ({
   ...item,
   id: item._id,
@@ -394,7 +494,39 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
       });
 
       const products = response.data?.products ?? [];
-      const nextShortlisted = products.map(mapWishlistProductToProperty);
+      const storedMetadata = readStoredWishlistMetadata();
+      const mappedWishlist = products
+        .map(mapWishlistProductToProperty)
+        .map((property) => mergeWishlistMetadata(property, storedMetadata));
+
+      const wishlistIds = mappedWishlist.map((property) => property.id);
+      let availableInventoryIds = new Set<string>(wishlistIds);
+      let shouldPreserveAll = false;
+
+      try {
+        availableInventoryIds = await fetchAvailableWishlistIds(wishlistIds, 5, 100);
+      } catch (inventoryError) {
+        console.warn("Wishlist availability lookup failed, keeping saved items for now:", inventoryError);
+        shouldPreserveAll = true;
+      }
+
+      const nextShortlisted = shouldPreserveAll
+        ? mappedWishlist
+        : mappedWishlist.filter((property) => availableInventoryIds.has(property.id));
+
+      if (!shouldPreserveAll && nextShortlisted.length < mappedWishlist.length) {
+        const unavailableItems = mappedWishlist.filter((property) => !availableInventoryIds.has(property.id));
+
+        await Promise.allSettled(
+          unavailableItems.map((item) =>
+            axios.delete(`${apiUrl}/customers/wishlist/${item.id}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            })
+          )
+        );
+      }
+
+      syncWishlistMetadata(nextShortlisted);
       set({ shortlistedProperties: nextShortlisted });
     } catch (error) {
       console.error("Failed to fetch wishlist:", error);
@@ -415,6 +547,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
       ? previousShortlisted.filter((p) => p.id !== property.id)
       : [...previousShortlisted, property];
 
+    syncWishlistMetadata(optimisticProperties);
     set({ shortlistedProperties: optimisticProperties });
 
     try {

@@ -108,10 +108,14 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
           label: "Property Name",
           value: property.name,
         },
-        {
-          label: "Agent ID",
-          value: property.createdBy?._id ?? property.createdBy?.id ?? "",
-        },
+        ...(property.createdBy?._id || property.createdBy?.id
+            ? [
+                {
+                  label: "Agent ID",
+                  value: property.createdBy._id ?? property.createdBy.id,
+                },
+              ]
+        : []),
         {
           label: "Property ID",
           value: property.id,
