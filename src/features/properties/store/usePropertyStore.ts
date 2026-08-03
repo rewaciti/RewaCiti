@@ -15,7 +15,7 @@ interface WishlistProductResponse {
   bathrooms?: number;
   category?: string;
   categoryId?: { name?: string };
-  location?: { area?: string; city_town?: string; state?: string };
+  location?: { area?: string; city?: string; city_town?: string; state?: string };
   pricing?: { TotalCost?: number };
 }
 
@@ -168,8 +168,16 @@ const mapWishlistProductToProperty = (item: WishlistProductResponse): Property =
   },
   location: {
     area: item.location?.area || "",
-    city: item.location?.city_town || item.location?.area || "",
-    city_town: item.location?.city_town || item.location?.area || "",
+    city:
+      item.location?.city_town ||
+      item.location?.city ||
+      item.location?.area ||
+      "",
+    city_town:
+      item.location?.city_town ||
+      item.location?.city ||
+      item.location?.area ||
+      "",
     state: item.location?.state || "",
   },
   geo_location: { lat: 0, lng: 0 },

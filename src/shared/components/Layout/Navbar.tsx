@@ -197,14 +197,22 @@ const Navbar = () => {
                               navigate(`/properties/${property.slug}`);
                               setIsShortlistOpen(false);
                             }}>
-                            {[
-                            property.location.area,
-                            property.location.city_town || property.location.city,
-                            property.location.state,
-                          ]
-                            .filter(Boolean)
-                            .join(", ")}
-                          {property.location.state ? " state." : ""}
+                            {
+                            (() => {
+                              const locationParts = [
+                                property.location.area,
+                                property.location.city_town || property.location.city,
+                              ].filter(Boolean);
+
+                              const locationText = locationParts.length
+                                ? `${locationParts.join(", ")}${property.location.state ? `, ${property.location.state}` : ""}`
+                                : property.location.state
+                                ? property.location.state
+                                : "";
+
+                              return locationText ? `${locationText} state.` : "";
+                            })()
+                          }
                           </p>
                         </div>
                         <button
