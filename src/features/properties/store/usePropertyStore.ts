@@ -576,12 +576,38 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
     const isShortlisted = get().shortlistedProperties.some((p) => p.id === property.id);
     const previousShortlisted = get().shortlistedProperties;
     const storedMetadata = readStoredWishlistMetadata();
-    const enrichedProperty = mergeWishlistMetadata(property, storedMetadata);
+
+    // Ensure we persist location and basic metadata for this property
+    const existingMeta = storedMetadata[property.id] || {};
+    const nextMetaForProperty = {
+      ...existingMeta,
+      name: property.name || existingMeta.name || "",
+      slug: property.slug || existingMeta.slug || "",
+      img: property.img || existingMeta.img || "",
+      location: {
+        area: property.location?.area || existingMeta.location?.area || "",
+        city: property.location?.city || existingMeta.location?.city || existingMeta.location?.city_town || "",
+        city_town: property.location?.city_town || existingMeta.location?.city_town || existingMeta.location?.city || "",
+        state: property.location?.state || existingMeta.location?.state || "",
+        nearest_university: property.location?.nearest_university || existingMeta.location?.nearest_university || "",
+      },
+    };
+
+    const nextStoredMetadata = {
+      ...storedMetadata,
+      [property.id]: nextMetaForProperty,
+    };
+
+    // Write immediate metadata so location is preserved between sessions
+    writeStoredWishlistMetadata(nextStoredMetadata);
+
+    const enrichedProperty = mergeWishlistMetadata(property, nextStoredMetadata);
 
     const optimisticProperties = isShortlisted
       ? previousShortlisted.filter((p) => p.id !== property.id)
       : [...previousShortlisted, enrichedProperty];
 
+    // Sync metadata for the whole wishlist and update state optimistically
     syncWishlistMetadata(optimisticProperties);
     set({ shortlistedProperties: optimisticProperties });
 
