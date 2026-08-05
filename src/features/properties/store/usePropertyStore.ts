@@ -528,7 +528,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
     };
     writeStoredWishlistMetadata(nextStoredMetadata);
 
-    const enrichedProperty = mergeWishlistMetadata(property, nextStoredMetadata);
+    const enrichedProperty  = mergeWishlistMetadata(property, nextStoredMetadata);
     const optimisticProperties = isShortlisted
       ? previousShortlisted.filter((p) => p.id !== property.id)
       : [...previousShortlisted, enrichedProperty];
