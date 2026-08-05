@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import { authAPI } from "../services/authAPI";
 import { useAuthStore } from "../store/useAuthStore";
 import Navbar from "../../../shared/components/Layout/Navbar";
-// import Footer from "../../../shared/components/Layout/Footer";
 import { Helmet } from "react-helmet-async";
 import { FiEye, FiEyeOff, FiArrowLeft } from "react-icons/fi";
 
@@ -30,10 +29,13 @@ const ResetPassword = () => {
   const { companyId } = useAuthStore();
 
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [formError, setFormError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
 
@@ -71,6 +73,7 @@ const ResetPassword = () => {
 
   const isFormValid =
     otp.join("").length === 6 &&
+    currentPassword &&
     newPassword &&
     confirmPassword &&
     newPassword === confirmPassword &&
@@ -79,15 +82,22 @@ const ResetPassword = () => {
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setFormError("");
+
     if (!isFormValid || !email) return;
 
     if (newPassword !== confirmPassword) {
-      toast.error("Passwords do not match");
+      setFormError("Passwords do not match");
       return;
     }
 
     if (newPassword.length < 8) {
-      toast.error("Password must be at least 8 characters");
+      setFormError("Password must be at least 8 characters");
+      return;
+    }
+
+    if (currentPassword === newPassword) {
+      setFormError("New password must be different from your current password");
       return;
     }
 
@@ -177,6 +187,31 @@ const ResetPassword = () => {
               </div>
             </div>
 
+            {/* Current Password */}
+            <div>
+              <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2">
+                Current Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showCurrentPassword ? "text" : "password"}
+                  placeholder="Enter your current password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#703BF7] placeholder:text-[12px] dark:placeholder:text-gray-400 placeholder:text-gray-600"
+                  required
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                >
+                  {showCurrentPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
+              </div>
+            </div>
+
             {/* New Password */}
             <div>
               <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2">
@@ -240,7 +275,11 @@ const ResetPassword = () => {
               )}
             </div>
 
-            {/* Reset Button */}
+            {formError && (
+              <p className="text-red-500 text-sm font-medium mt-1">
+                {formError}
+              </p>
+            )}
             <button
               type="submit"
               disabled={!isFormValid || isLoading}
@@ -255,8 +294,6 @@ const ResetPassword = () => {
           </form>
         </div>
       </div>
-
-      {/* <Footer /> */}
     </div>
   );
 };

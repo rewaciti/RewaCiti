@@ -191,7 +191,18 @@ const Profile = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [formError, setFormError] = useState("");
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+
+  const handleCurrentPasswordChange = (value: string) => {
+    setCurrentPassword(value);
+    if (formError) setFormError("");
+  };
+
+  const handleNewPasswordChange = (value: string) => {
+    setNewPassword(value);
+    if (formError) setFormError("");
+  };
 
   const loadFromProfile = (data: ProfileResponse) => {
     setProfile(data);
@@ -291,18 +302,25 @@ const Profile = () => {
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError("");
+
     if (!currentPassword || !newPassword) {
-      toast.error("Please fill in all password fields.");
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      toast.error("New passwords do not match.");
+      setFormError("Please fill in all password fields.");
       return;
     }
     if (newPassword.length < 8) {
-      toast.error("Password must be at least 8 characters long.");
+      setFormError("Password must be at least 8 characters long.");
       return;
     }
+    if (newPassword !== confirmPassword) {
+      setFormError("New passwords do not match.");
+      return;
+    }
+    if (currentPassword === newPassword) {
+      setFormError("New password must be different from your current password.");
+      return;
+    }
+
 
     setIsChangingPassword(true);
     try {
@@ -415,13 +433,13 @@ const Profile = () => {
                   <LabeledInput
                     label="Current Password"
                     value={currentPassword}
-                    onChange={setCurrentPassword}
+                    onChange={handleCurrentPasswordChange}
                     type="password"
                   />
                   <LabeledInput
                     label="New Password"
                     value={newPassword}
-                    onChange={setNewPassword}
+                    onChange={handleNewPasswordChange}
                     type="password"
                   />
                   {newPassword && newPassword.length < 8 && (
@@ -438,6 +456,11 @@ const Profile = () => {
                   {confirmPassword && newPassword !== confirmPassword && (
                     <p className="text-red-500 text-[9px] mt-0.5">
                       Passwords do not match
+                    </p>
+                  )}
+                  {formError && (
+                    <p className="text-red-500 text-[9px] mt-0.5">
+                      {formError}
                     </p>
                   )}
                   <div className="flex justify-end pt-2">
