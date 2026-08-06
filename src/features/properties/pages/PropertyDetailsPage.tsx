@@ -60,15 +60,43 @@ function PropertyDetails() {
 
   const handleShare = async () => {
     if (!property) return;
+    const description = property.description;
     const url = window.location.href;
     const address = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
-    const shareText = `Name: ${property.name}\nAddress: ${address}\nCategory: ${property.category}\nURL: ${url}`;
+    const coverImageUrl = property.img || property.images?.[0] || "";
+    const shareText = `${description}\n\nName: ${property.name}\nAddress: ${address}\nCategory: ${property.category}\nImage: ${coverImageUrl}\nURL: ${url}`;
+
     if (navigator.share) {
       try {
-        await navigator.share({
+        const shareData = {
           title: property.name,
           text: shareText,
-        });
+          url,
+        };
+
+        if (coverImageUrl && typeof File !== "undefined") {
+          try {
+            const response = await fetch(coverImageUrl);
+            const blob = await response.blob();
+
+            if (blob.size) {
+              const shareFile = new File([blob], `${property.slug || property.name}.jpg`, {
+                type: blob.type || "image/jpeg",
+              });
+
+              await navigator.share({
+                ...shareData,
+                files: [shareFile],
+              });
+              setIsDropdownOpen(false);
+              return;
+            }
+          } catch (imageError) {
+            console.error("Error preparing share image:", imageError);
+          }
+        }
+
+        await navigator.share(shareData);
       } catch (err) {
         console.error("Error sharing:", err);
       }
@@ -497,9 +525,9 @@ function PropertyDetails() {
                         property
                           ? [
                             property.location.area,
-                            property.location.city_town,
+                            property.location.city_town || property.location.city,
                             property.location.state,
-                          ].join(", ") + " state."
+                          ].filter(Boolean).join(", ") + (property.location.state ? " state." : "")
                           : ""
                       )}`
                   }
@@ -511,9 +539,9 @@ function PropertyDetails() {
                   {property &&
                     [
                       property.location.area,
-                      property.location.city_town,
+                      property.location.city_town || property.location.city,
                       property.location.state,
-                    ].join(", ") + " state."}
+                    ].filter(Boolean).join(", ") + (property.location.state ? " state." : "")}
                 </a>
               </div>
 
@@ -660,7 +688,7 @@ function PropertyDetails() {
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
               >
-                <div className="grid gap-2 grid-cols-1 sm:grid-cols-2">
+                <div className="grid gap-2 grid-cols-1 md:grid-cols-2">
                   {visibleImages.map((img, index) => (
                     <img
                       key={index}
@@ -669,8 +697,7 @@ function PropertyDetails() {
                         setLightboxIndex(currentIndex + index);
                         setIsLightboxOpen(true);
                       }}
-                      className={`w-full dark:bg-[#1A1A1A] bg-white lg:object-cover rounded-xl cursor-pointer ${visibleImages.length === 1 ? "h-[65vh]" : "h-[70vh]"
-                        }`}
+                      className={`w-full dark:bg-[#1A1A1A] bg-white lg:object-cover rounded-xl cursor-pointer ${visibleImages.length === 1 ? "h-[65vh] lg:h-[70vh]" : "h-[45vh] sm:h-[55vh] lg:h-[70vh]"}`}
                     />
                   ))}
                 </div>

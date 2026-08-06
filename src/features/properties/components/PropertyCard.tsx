@@ -24,9 +24,10 @@ function PropertyCard({ property }: PropertyCardProps) {
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    const description = property.description
     const url = `${window.location.origin}/properties/${propertySlug}`;
     const address = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
-    const shareText = `Name: ${property.name}\nAddress: ${address}\nCategory: ${property.category}\nURL: ${url}`;
+    const shareText = `${description}\n\nName: ${property.name}\nAddress: ${address}\nCategory: ${property.category}\nURL: ${url}`;
     if (navigator.share) {
       try {
         await navigator.share({
@@ -114,7 +115,11 @@ function PropertyCard({ property }: PropertyCardProps) {
       property.geo_location?.lng !== 0 && property.geo_location?.lng !== null
         ? `https://www.google.com/maps/search/?api=1&query=${property.geo_location.lat},${property.geo_location.lng}`
         : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-            [property.location.area, property.location.city_town, property.location.state].join(", ") + " state."
+            [
+              property.location.area,
+              property.location.city_town || property.location.city,
+              property.location.state,
+            ].filter(Boolean).join(", ") + (property.location.state ? " state." : "")
           )}`
     }
     target="_blank"
@@ -123,7 +128,11 @@ function PropertyCard({ property }: PropertyCardProps) {
     onClick={(e) => e.stopPropagation()}
   >
     <FiMapPin size={12} />
-    {[property.location.area, property.location.city_town, property.location.state].join(", ") + " state."}
+    {[
+      property.location.area,
+      property.location.city_town || property.location.city,
+      property.location.state,
+    ].filter(Boolean).join(", ") + (property.location.state ? " state." : "")}
   </a>
 
   {/* Description */}

@@ -103,9 +103,9 @@ const mergeWishlistMetadata = (property: Property, storedMetadata: WishlistMetad
     slug: firstTruthy(property.slug, saved.slug),
     img: firstTruthy(property.img, saved.img),
     location: {
-      area: firstTruthy(property.location.area, saved.location?.area, saved.location?.city_town, saved.location?.city),
-      city: firstTruthy(property.location.city, property.location.city_town, saved.location?.city, saved.location?.city_town, saved.location?.area),
-      city_town: firstTruthy(property.location.city_town, property.location.city, saved.location?.city_town, saved.location?.city, saved.location?.area),
+      area: firstTruthy(property.location.area, saved.location?.area),
+      city: firstTruthy(property.location.city, saved.location?.city),
+      city_town: firstTruthy(property.location.city_town, saved.location?.city_town),
       state: firstTruthy(property.location.state, saved.location?.state),
       nearest_university: firstTruthy(property.location.nearest_university, saved.location?.nearest_university),
     },
@@ -119,8 +119,8 @@ const buildWishlistMetadataEntry = (property: Property, existing: WishlistMetada
   img: firstTruthy(property.img, existing.img),
   location: {
     area: firstTruthy(property.location?.area, existing.location?.area),
-    city: firstTruthy(property.location?.city, existing.location?.city, existing.location?.city_town),
-    city_town: firstTruthy(property.location?.city_town, existing.location?.city_town, existing.location?.city),
+    city: firstTruthy(property.location?.city, existing.location?.city),
+    city_town: firstTruthy(property.location?.city_town, existing.location?.city_town),
     state: firstTruthy(property.location?.state, existing.location?.state),
     nearest_university: firstTruthy(property.location?.nearest_university, existing.location?.nearest_university),
   },
@@ -167,37 +167,33 @@ const fetchAvailableWishlistIds = async (
 // Mappers: raw API shapes -> Property
 // ---------------------------------------------------------------------------
 
-const mapWishlistProductToProperty = (item: WishlistProductResponse): Property => {
-  const location = firstTruthy(item.location?.city_town, item.location?.city, item.location?.area);
-
-  return {
-    ...item,
-    id: item._id,
-    img: item.thumbnail || item.images?.[0] || "",
-    slug: item.slug || "",
-    name: item.slug || item._id,
-    description: "",
-    bedrooms: item.bedrooms ?? 0,
-    bathrooms: item.bathrooms ?? 0,
-    category: item.category || item.categoryId?.name || "",
-    pricing: {
-      ...emptyPricing,
-      PropertyCost: item.price || 0,
-      TotalCost: item.price || 0,
-    },
-    location: {
-      area: item.location?.area || "",
-      city: location,
-      city_town: location,
-      state: item.location?.state || "",
-    },
-    geo_location: { ...emptyGeoLocation },
-    yearBuilt: 0,
-    keyFeatures: [],
-    images: item.images ?? [],
-    visitationfee: 0,
-  };
-};
+const mapWishlistProductToProperty = (item: WishlistProductResponse): Property => ({
+  ...item,
+  id: item._id,
+  img: item.thumbnail || item.images?.[0] || "",
+  slug: item.slug || "",
+  name: item.slug || item._id,
+  description: "",
+  bedrooms: item.bedrooms ?? 0,
+  bathrooms: item.bathrooms ?? 0,
+  category: item.category || item.categoryId?.name || "",
+  pricing: {
+    ...emptyPricing,
+    PropertyCost: item.price || 0,
+    TotalCost: item.price || 0,
+  },
+  location: {
+    area: item.location?.area || "",
+    city: item.location?.city || "",
+    city_town: item.location?.city_town || "",
+    state: item.location?.state || "",
+  },
+  geo_location: { ...emptyGeoLocation },
+  yearBuilt: 0,
+  keyFeatures: [],
+  images: item.images ?? [],
+  visitationfee: 0,
+});
 
 const mapSabiFlowProductsToProperties = (items: SabiFlowProduct[]): Property[] =>
   items.map((item) => {
