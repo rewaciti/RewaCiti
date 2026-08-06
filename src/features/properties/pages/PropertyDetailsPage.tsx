@@ -690,15 +690,24 @@ function PropertyDetails() {
               >
                 <div className="grid gap-2 grid-cols-1 md:grid-cols-2">
                   {visibleImages.map((img, index) => (
-                    <img
+                    <div
                       key={index}
-                      src={img}
+                      className="relative cursor-pointer"
                       onClick={() => {
                         setLightboxIndex(currentIndex + index);
                         setIsLightboxOpen(true);
                       }}
-                      className={`w-full dark:bg-[#1A1A1A] bg-white lg:object-cover rounded-xl cursor-pointer ${visibleImages.length === 1 ? "h-[55vh] sm:h-[65vh] lg:h-[70vh]" : "h-[45vh] sm:h-[55vh] lg:h-[70vh]"}`}
-                    />
+                    >
+                      <img
+                        src={img}
+                        className={`w-full dark:bg-[#1A1A1A] bg-white lg:object-cover rounded-xl ${visibleImages.length === 1 ? "h-[55vh] sm:h-[65vh] lg:h-[70vh]" : "h-[45vh] sm:h-[55vh] lg:h-[70vh]"}`}
+                        alt={`Property image ${currentIndex + index + 1}`}
+                      />
+
+                      <div className="absolute left-4 bottom-4 bg-black/60 dark:bg-black/60 text-white px-3 py-1 rounded-full text-xs font-medium select-none">
+                        Click to view real size image
+                      </div>
+                    </div>
                   ))}
                 </div>
 
