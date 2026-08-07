@@ -118,6 +118,12 @@ function PropertyDetails() {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
+  useEffect(() => {
+    setCurrentIndex(0);
+    setLightboxIndex(0);
+    setIsLightboxOpen(false);
+  }, [slug, property?.id]);
+
   const visibleImages = images.slice(currentIndex, currentIndex + step);
 
   const nextImages = useCallback(() => {
