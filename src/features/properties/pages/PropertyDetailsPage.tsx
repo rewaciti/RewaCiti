@@ -688,11 +688,11 @@ function PropertyDetails() {
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
               >
-                <div className="grid gap-2 grid-cols-1 md:grid-cols-2">
+                <div className={`grid gap-2 grid-cols-1 ${visibleImages.length === 1 ? "sm:grid-cols-1" : "sm:grid-cols-2"}`}>
                   {visibleImages.map((img, index) => (
                     <div
                       key={index}
-                      className="relative cursor-pointer"
+                      className={`relative cursor-pointer ${visibleImages.length === 1 ? "sm:col-span-2" : ""}`}
                       onClick={() => {
                         setLightboxIndex(currentIndex + index);
                         setIsLightboxOpen(true);

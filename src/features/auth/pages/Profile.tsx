@@ -438,6 +438,7 @@ const Profile = () => {
                     <div className="relative">
                       <input
                         type={showCurrentPassword ? "text" : "password"}
+                        placeholder="Enter current password"
                         value={currentPassword}
                         onChange={(e) => handleCurrentPasswordChange(e.target.value)}
                         className="w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#703BF7] placeholder:text-[11px] dark:placeholder:text-gray-500 placeholder:text-gray-600 text-xs"
@@ -458,6 +459,7 @@ const Profile = () => {
                     <div className="relative">
                       <input
                         type={showNewPassword ? "text" : "password"}
+                        placeholder="Enter new password"
                         value={newPassword}
                         onChange={(e) => handleNewPasswordChange(e.target.value)}
                         className="w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#703BF7] placeholder:text-[11px] dark:placeholder:text-gray-500 placeholder:text-gray-600 text-xs"
@@ -482,6 +484,7 @@ const Profile = () => {
                     <div className="relative">
                       <input
                         type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Re-enter new password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         className="w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#703BF7] placeholder:text-[11px] dark:placeholder:text-gray-500 placeholder:text-gray-600 text-xs"
