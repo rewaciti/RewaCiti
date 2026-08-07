@@ -692,7 +692,7 @@ function PropertyDetails() {
                   {visibleImages.map((img, index) => (
                     <div
                       key={index}
-                      className={`relative cursor-pointer ${visibleImages.length === 1 ? "sm:col-span-2" : ""}`}
+                      className="relative cursor-pointer"
                       onClick={() => {
                         setLightboxIndex(currentIndex + index);
                         setIsLightboxOpen(true);
