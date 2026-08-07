@@ -447,7 +447,7 @@ const Profile = () => {
                         type="button"
                         onClick={() => setShowCurrentPassword((s) => !s)}
                         aria-label={showCurrentPassword ? "Hide current password" : "Show current password"}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 text-sm"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm"
                       >
                         {showCurrentPassword ? <FiEyeOff /> : <FiEye />}
                       </button>
@@ -468,7 +468,7 @@ const Profile = () => {
                         type="button"
                         onClick={() => setShowNewPassword((s) => !s)}
                         aria-label={showNewPassword ? "Hide new password" : "Show new password"}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 text-sm"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm"
                       >
                         {showNewPassword ? <FiEyeOff /> : <FiEye />}
                       </button>
@@ -493,7 +493,7 @@ const Profile = () => {
                         type="button"
                         onClick={() => setShowConfirmPassword((s) => !s)}
                         aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 text-sm"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm"
                       >
                         {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
                       </button>

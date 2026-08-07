@@ -28,52 +28,27 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const { companyId } = useAuthStore();
 
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formError, setFormError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [resetOtp, setResetOtp] = useState("");
 
   useEffect(() => {
     const resetEmail = sessionStorage.getItem("resetEmail");
-    if (!resetEmail) {
+    const otpFromStorage = sessionStorage.getItem("resetOtp");
+    if (!resetEmail || !otpFromStorage) {
       navigate("/auth/forgot-password");
       return;
     }
     setEmail(resetEmail);
+    setResetOtp(otpFromStorage);
   }, [navigate]);
 
-  const handleOtpChange = (index: number, value: string) => {
-    if (value.length > 1) return;
-
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    if (value && index < 5) {
-      const nextInput = document.getElementById(`reset-otp-${index + 1}`);
-      nextInput?.focus();
-    }
-  };
-
-  const handleKeyDown = (
-    index: number,
-    e: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      const prevInput = document.getElementById(`reset-otp-${index - 1}`);
-      prevInput?.focus();
-    }
-  };
-
-  const isFormValid =
-    otp.join("").length === 6 &&
-    currentPassword &&
+  const isPasswordValid =
     newPassword &&
     confirmPassword &&
     newPassword === confirmPassword &&
@@ -84,7 +59,10 @@ const ResetPassword = () => {
 
     setFormError("");
 
-    if (!isFormValid || !email) return;
+    if (!isPasswordValid || !email || !resetOtp) {
+      setFormError("Please complete the password fields.");
+      return;
+    }
 
     if (newPassword !== confirmPassword) {
       setFormError("Passwords do not match");
@@ -96,17 +74,12 @@ const ResetPassword = () => {
       return;
     }
 
-    if (currentPassword === newPassword) {
-      setFormError("New password must be different from your current password");
-      return;
-    }
-
     setIsLoading(true);
     try {
       await authAPI.resetPassword({
         companyId,
         email,
-        otp: otp.join(""),
+        otp: resetOtp,
         newPassword,
       });
 
@@ -162,57 +135,6 @@ const ResetPassword = () => {
           </div>
 
           <form onSubmit={handleResetPassword} className="space-y-6">
-            {/* OTP Input */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
-                Enter 6-digit reset code
-              </label>
-
-              <div className="flex gap-1 justify-between">
-                {otp.map((digit, index) => (
-                  <input
-                    key={index}
-                    id={`reset-otp-${index}`}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={1}
-                    value={digit}
-                    onChange={(e) =>
-                      handleOtpChange(index, e.target.value)
-                    }
-                    onKeyDown={(e) => handleKeyDown(index, e)}
-                    className="w-10 h-10 text-center text-2xl font-bold border-2 border-gray-600/30 dark:border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-900 dark:text-white focus:outline-none focus:border-[#703BF7]"
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Current Password */}
-            <div>
-              <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2">
-                Current Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showCurrentPassword ? "text" : "password"}
-                  placeholder="Enter your current password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#703BF7] placeholder:text-[12px] dark:placeholder:text-gray-400 placeholder:text-gray-600"
-                  required
-                />
-
-                <button
-                  type="button"
-                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
-                >
-                  {showCurrentPassword ? <FiEyeOff /> : <FiEye />}
-                </button>
-              </div>
-            </div>
-
-            {/* New Password */}
             <div>
               <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2">
                 New Password
@@ -242,7 +164,6 @@ const ResetPassword = () => {
               )}
             </div>
 
-            {/* Confirm Password */}
             <div>
               <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2">
                 Confirm Password
@@ -259,33 +180,24 @@ const ResetPassword = () => {
 
                 <button
                   type="button"
-                  onClick={() =>
-                    setShowConfirmPassword(!showConfirmPassword)
-                  }
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
                 >
                   {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
                 </button>
               </div>
-
-              {confirmPassword && newPassword !== confirmPassword && (
-                <p className="text-red-500 text-xs mt-1">
-                  Passwords do not match
-                </p>
-              )}
             </div>
 
             {formError && (
-              <p className="text-red-500 text-sm font-medium mt-1">
-                {formError}
-              </p>
+              <p className="text-red-500 text-sm">{formError}</p>
             )}
+
             <button
               type="submit"
-              disabled={!isFormValid || isLoading}
+              disabled={isLoading || !isPasswordValid}
               className={`w-full px-4 py-3 rounded-lg font-medium transition ${
-                !isFormValid || isLoading
-                  ? "bg-gray-400 cursor-not-allowed text-gray-200"
+                isLoading || !isPasswordValid
+                  ? "bg-gray-400 cursor-not-allowed text-gray-700"
                   : "bg-[#703BF7] text-white hover:bg-[#5c2fe0]"
               }`}
             >
