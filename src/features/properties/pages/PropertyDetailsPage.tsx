@@ -435,6 +435,7 @@ function PropertyDetails() {
   const [relatedPage, setRelatedPage] = useState(1);
   const [showAllRelated, setShowAllRelated] = useState(false);
   const [sameAgentOnly, setSameAgentOnly] = useState(false);
+  const inquirySectionRef = useRef<HTMLDivElement | null>(null);
   const RELATED_ITEMS_PER_PAGE = 4;
 
   const totalRelatedPages = Math.ceil(totalRelatedProperties / RELATED_ITEMS_PER_PAGE);
@@ -473,6 +474,10 @@ function PropertyDetails() {
     setRelatedPage(1);
     setShowAllRelated(false);
   }, [sameAgentOnly, property?.id]);
+
+  const scrollToInquiry = () => {
+    inquirySectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div className="bg-gray-300 dark:bg-black/30">
@@ -985,7 +990,16 @@ function PropertyDetails() {
             ) : null}
           </section>
 
-          <section className="md:flex justify-between px-4">
+          <div className="fixed bottom-4 right-4 z-50">
+            <button
+              onClick={scrollToInquiry}
+              className="rounded-full bg-[#703BF7] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#703BF7]/30 transition-all duration-300 hover:-translate-y-1 hover:bg-[#5d2fe0]"
+            >
+              Make Inquiry
+            </button>
+          </div>
+
+          <section ref={inquirySectionRef} className="md:flex justify-between px-4">
             <div className="flex-1 flex flex-col space-y-3 z-10 mb-6 ">
               <img
                 src="/logo/Abstract Design (1).png"
