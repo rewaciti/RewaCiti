@@ -1105,10 +1105,10 @@ function PropertyDetails() {
                     onChange={(e) => setAgreed(e.target.checked)}
                     required
                   />
-                <p className="text-sm text-gray-700 dark:text-gray-300 ">
-                  I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
-                </p>
-                </div>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 ">
+                      I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
+                    </p>
+               </div>
 
                 {/* Submit Button */}
                 <div className="sm:col-span-2 flex items-center justify-end">

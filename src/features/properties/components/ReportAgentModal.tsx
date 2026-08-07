@@ -8,6 +8,7 @@ import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
 import CustomDropdown from "./CustomDropdown";
 import { authAPI } from "../../auth/services/authAPI";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
+import { Link } from "react-router";
 
 interface ReportAgentModalProps {
 
@@ -263,16 +264,17 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                 Reporting an agent is a serious matter. We will review your report and take appropriate action.
               </div>
 
-              <div className="flex items-center gap-1">
-                <input
-                  type="checkbox"
-                  checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
-                  className="mt-0.5 cursor-pointer"
-                />
-                <p className="text-sm text-gray-700 dark:text-gray-300">
-                  I agree with the <a href="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</a> and <a href="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</a>.
-                </p>
+              <div className="sm:col-span-2 flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    className="mt-0.5"
+                    checked={agreed}
+                    onChange={(e) => setAgreed(e.target.checked)}
+                    required
+                  />
+                  <p className="text-sm text-gray-700 dark:text-gray-300 ">
+                      I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
+                    </p>
               </div>
 
               <button
