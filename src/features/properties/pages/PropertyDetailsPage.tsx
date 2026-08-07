@@ -1014,7 +1014,7 @@ function PropertyDetails() {
               </p>
             </div>
 
-            <div className=" p-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl text-white flex-2">
+            <div className=" p-4 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl text-white flex-2">
               <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Send Us a Message</h2>
 
               <form onSubmit={handleSubmit} className="space-y-5 dark:bg-[#1A1A1A] bg-white">

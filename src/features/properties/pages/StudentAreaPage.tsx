@@ -434,7 +434,7 @@ function StudentAreaPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 border border-gray-700/40 rounded-3xl p-6 md:p-10">
+        <form onSubmit={handleSubmit} className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 border border-gray-700/40 rounded-3xl p-4 md:p-10">
           <div>
             <label className="text-gray-700 dark:text-gray-300 text-sm">Name</label>
             <input type="text" placeholder="Enter Full Name" required value={name} onChange={(e) => setName(e.target.value)} className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
