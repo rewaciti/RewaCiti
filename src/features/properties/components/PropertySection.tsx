@@ -38,7 +38,7 @@ function PropertySection() {
 
           <NavLink
             to="/properties"
-            className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center hidden sm:block"
+            className="border border-[#703BF7] px-4 py-2 rounded bg-[#703BF7] hover:bg-[#9677df] text-white transition text-center hidden sm:block"
           >
             View All
           </NavLink>
@@ -75,7 +75,7 @@ function PropertySection() {
               </div>
               <button
                 onClick={() => fetchProperties(1)}
-                className="bg-[#703BF7] text-white px-6 py-2 rounded-lg hover:bg-[#5a2ed1] transition-all shadow-md active:scale-95"
+                className="px-6 py-2 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white transition-all shadow-md active:scale-95"
               >
                 Try Again
               </button>
@@ -88,12 +88,12 @@ function PropertySection() {
         </div>
 
         <hr className="my-4 h-px bg-gray-600/50 border-0 w-full" />
-        <div className="flex justify-center items-center gap-4 text-white">
+        <div className="flex justify-end items-center gap-4 text-white">
              <NavLink
                 to="/properties"
-                className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center sm:hidden"
+                className="border border-[#703BF7] px-4 py-2 rounded bg-[#703BF7] hover:bg-[#9677df] text-white transition text-center sm:hidden"
               >
-            Explore Properties
+           View All
           </NavLink>
        </div>
       </div>

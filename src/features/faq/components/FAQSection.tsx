@@ -50,7 +50,7 @@ function FAQSection() {
 
           <NavLink
             to="/AllFAQs"
-            className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center hidden md:block"
+            className="border bg-[#703BF7] hover:bg-[#9677df] text-white px-4 py-2 rounded hover:text-white transition text-center hidden md:block"
           >
             View All
           </NavLink>
@@ -106,7 +106,7 @@ function FAQSection() {
 
         <NavLink
           to="/AllFAQs"
-          className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center md:hidden"
+          className="border bg-[#703BF7] hover:bg-[#9677df] text-white px-4 py-2 rounded hover:text-white transition text-center md:hidden"
         >
           View All
         </NavLink>
