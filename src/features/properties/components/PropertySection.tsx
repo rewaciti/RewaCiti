@@ -93,7 +93,7 @@ function PropertySection() {
                 to="/properties"
                 className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center sm:hidden"
               >
-            View All
+            Explore Properties
           </NavLink>
        </div>
       </div>
