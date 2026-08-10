@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Property } from "../../../types";
 import { NavLink } from "react-router";
 import { FaBed, FaBath, FaHome } from "react-icons/fa";
-import { FiMapPin, FiPlus, FiShare2, FiCheck } from "react-icons/fi";
+import { FiMapPin, FiHeart, FiShare2 } from "react-icons/fi";
 import { formatCurrency } from "../../../shared/lib/utils";
 import { usePropertyStore } from "../store/usePropertyStore";
 import {useNavigate} from "react-router";
@@ -90,7 +90,7 @@ function PropertyCard({ property }: PropertyCardProps) {
             : "bg-black/40 text-white hover:bg-[#703BF7]"
         }`}
       >
-        {isShortlisted ? <FiCheck size={18} /> : <FiPlus size={18} />}
+        <FiHeart size={18} className={isShortlisted ? "fill-current" : ""} />
       </button>
       <button
         onClick={handleShare}

@@ -1,7 +1,7 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
 import { useParams, Link } from "react-router";
 import { Helmet } from "react-helmet-async";
-import { FiMapPin, FiChevronLeft, FiChevronRight, FiChevronDown, FiPlus, FiShare2, FiCheck, FiArrowLeft, FiArrowRight, FiX } from "react-icons/fi";
+import { FiMapPin, FiChevronLeft, FiChevronRight, FiChevronDown, FiHeart, FiShare2, FiArrowLeft, FiArrowRight, FiX } from "react-icons/fi";
 import * as Dialog from "@radix-ui/react-dialog";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -583,7 +583,7 @@ function PropertyDetails() {
                         className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 group first:rounded-t-xl cursor-pointer"
                       >
                         <div className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-white group-hover:text-white">
-                          {isShortlisted ? <FiCheck className="text-green-500 group-hover:text-white" /> : <FiPlus />}
+                          <FiHeart className={isShortlisted ? "fill-current text-[#703BF7] group-hover:text-white" : "group-hover:text-white"} />
                           {isShortlisted ? "Shortlisted" : "Add to Shortlist"}
                         </div>
                         <div className="text-[10px] text-gray-500 dark:text-gray-400 group-hover:text-white/80">

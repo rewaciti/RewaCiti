@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router";
 import logo from "/Symbol.png";
 import { useState, useRef, useEffect } from "react";
 import { useThemeStore } from "../../store/useThemeStore";
-import { FiSun, FiMoon, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiSun, FiMoon, FiHeart, FiTrash2 } from "react-icons/fi";
 import { usePropertyStore } from "../../../features/properties/store/usePropertyStore";
 import { useAuthStore } from "../../../features/auth/store/useAuthStore";
 import { toast } from "sonner";
@@ -140,7 +140,7 @@ const Navbar = () => {
               className="flex items-center gap-1 text-gray-900 dark:text-white hover:text-[#703BF7] transition-colors relative group cursor-pointer"
             >
               <div className="relative p-0.5 rounded-full bg-gray-200 dark:bg-gray-700 text-black dark:text-white transition-all duration-300">
-                <FiPlus size={20} />
+                <FiHeart size={20} />
                 {shortlistedProperties.length > 0 && (
                   <span className="absolute -top-1 -right-2 bg-[#703BF7] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                     {shortlistedProperties.length}
@@ -161,7 +161,7 @@ const Navbar = () => {
                   {shortlistedProperties.length === 0 ? (
                     <div className="p-8 text-center">
                       <div className="text-gray-400 dark:text-gray-600 mb-2 flex justify-center">
-                        <FiPlus size={24} className="rotate-45" />
+                        <FiHeart size={24} />
                       </div>
                       <p className="text-gray-500 dark:text-gray-400 text-xs">No properties shortlisted yet.</p>
                     </div>

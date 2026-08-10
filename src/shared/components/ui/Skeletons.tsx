@@ -91,8 +91,8 @@ export function PropertyDetailsSkeleton() {
             </div>
             {/* Main Image Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <Skeleton className="w-full h-[70vh] rounded-xl" />
-              <Skeleton className="w-full h-[70vh] rounded-xl hidden md:block" />
+              <Skeleton className="w-full h-[45vh] sm:h-[55vh] lg:h-[70vh] rounded-xl" />
+              <Skeleton className="w-full h-[45vh] sm:h-[55vh] lg:h-[70vh] rounded-xl hidden md:block" />
             </div>
             {/* Controls */}
             <div className="flex justify-center items-center mt-4 gap-4 bg-black/20 p-1 rounded-full w-fit mx-auto">
