@@ -65,7 +65,7 @@ function Home() {
           <div className="flex space-x-4">
             <Link to="/Studentarea">
               <button className="bg-[#703BF7] hover:bg-[#9677df] text-white px-4 py-2 rounded text-sm cursor-pointer">
-                Campus Area
+                Campus Areas
               </button>
             </Link>
            <Link to = "/Properties">

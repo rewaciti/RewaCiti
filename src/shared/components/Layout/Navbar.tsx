@@ -139,7 +139,7 @@ const Navbar = () => {
               title="Shortlist"
               className="flex items-center gap-1 text-gray-900 dark:text-white hover:text-[#703BF7] transition-colors relative group cursor-pointer"
             >
-              <div className="relative p-0.5 rounded-full bg-gray-200 dark:bg-gray-700 text-black dark:text-white transition-all duration-300">
+              <div className="relative p-1 rounded-full bg-gray-200 dark:bg-gray-700 text-black dark:text-white transition-all duration-300">
                 <FiHeart size={20} />
                 {shortlistedProperties.length > 0 && (
                   <span className="absolute -top-1 -right-2 bg-[#703BF7] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">

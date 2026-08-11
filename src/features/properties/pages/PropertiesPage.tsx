@@ -628,10 +628,7 @@ const areaOptions = [
                   { label: "Smart Home", value: "Smart Home" },
                   { label: "Single Room", value: "Single Room (Shared)" },
                   { label: "Shared Room", value: "Shared Room" },
-                  { label: "Furnished Apartment", value: "Furnished Apartment" },
-                  { label: "Hostel", value: "Hostel" },
                   { label: "Land", value: "Land" },
-                  { label: "Mixed-Use Property", value: "Mixed-Use Property" },
                   { label: "Uncompleted Building", value: "Uncompleted Building" },
                 ]}
                 onChange={(val) => setPreferedCategory(val)}
