@@ -160,7 +160,7 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
                     : "bg-gray-400 cursor-not-allowed text-gray-200"
                 }`}
               >
-                {isSubmitting ? "Submitting..." : "Submit Feedback"}
+                {isSubmitting ? "Submitting..." : "Submit"}
               </button>
             </div>
           </form>
