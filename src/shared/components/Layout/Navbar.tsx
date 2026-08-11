@@ -428,7 +428,7 @@ const Navbar = () => {
           )}
         </div>
       </div>
-      <hr className="h-px bg-gray-600 border-0  w-full" />
+      <hr className="h-px dark:bg-gray-700 bg-gray-400 border-0  w-full" />
       </div>
       <div className="h-25 w-full" />
     </>
