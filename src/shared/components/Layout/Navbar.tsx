@@ -108,15 +108,16 @@ const Navbar = () => {
   }, [isProfileOpen]);
 
   return (
-    <div className="bg-gray-300 text-black dark:bg-[#1A1A1A] dark:text-white">
-      {/* Top small bar */}
-      <div
-        className="h-10 flex items-center justify-between px-4 sm:px-10 w-full text-black dark:bg-[#1A1A1A] bg-gray-400"
-        style={{
-          backgroundImage: "url('/logo/Abstract Design.png')",
-          backgroundPosition: "center",
-        }}
-      >
+    <>
+      <div className="fixed inset-x-0 top-0 z-50 bg-gray-300 text-black shadow-sm dark:bg-[#1A1A1A] dark:text-white">
+        {/* Top small bar */}
+        <div
+          className="h-10 flex items-center justify-between px-4 sm:px-10 w-full text-black dark:bg-[#1A1A1A] bg-gray-400"
+          style={{
+            backgroundImage: "url('/logo/Abstract Design.png')",
+            backgroundPosition: "center",
+          }}
+        >
 
         <div className="flex justify-center lg:ml-[40%] sm:ml-[20%] items-center">
           <p className="flex items-center mr-1 text-gray-900 dark:text-white ">✨Discover Properties with RewaCiti</p>
@@ -140,7 +141,7 @@ const Navbar = () => {
               className="flex items-center gap-1 text-gray-900 dark:text-white hover:text-[#703BF7] transition-colors relative group cursor-pointer"
             >
               <div className="relative p-1 rounded-full bg-gray-200 dark:bg-gray-700 text-black dark:text-white transition-all duration-300">
-                <FiHeart size={20} />
+                <FiHeart size={18} />
                 {shortlistedProperties.length > 0 && (
                   <span className="absolute -top-1 -right-2 bg-[#703BF7] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                     {shortlistedProperties.length}
@@ -428,7 +429,9 @@ const Navbar = () => {
         </div>
       </div>
       <hr className="h-px bg-gray-600 border-0  w-full" />
-    </div>
+      </div>
+      <div className="h-25 w-full" />
+    </>
   );
 };
 
