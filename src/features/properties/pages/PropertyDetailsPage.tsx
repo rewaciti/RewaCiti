@@ -566,7 +566,7 @@ function PropertyDetails() {
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setIsDropdownOpen((prev) => !prev)}
-                    className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-6 py-2 rounded-lg font-medium transition-all shadow-lg hover:shadow-[#703BF7]/20 flex items-center gap-2 cursor-pointer"
+                    className="bg-[#703BF7] hover:bg-[#9677df] text-white px-6 py-2 rounded-lg font-medium transition-all shadow-lg hover:shadow-[#703BF7]/20 flex items-center gap-2 cursor-pointer"
                   >
                     Actions
                     <FiChevronDown
@@ -993,7 +993,7 @@ function PropertyDetails() {
           <div className="fixed bottom-4 right-4 z-50">
             <button
               onClick={scrollToInquiry}
-              className="rounded-full bg-[#703BF7] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#703BF7]/30 transition-all duration-300 hover:-translate-y-1 hover:bg-[#5d2fe0]"
+              className="rounded-full bg-[#703BF7] hover:bg-[#9677df] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#703BF7]/30 transition-all duration-300 hover:-translate-y-1"
             >
               Make Inquiry
             </button>

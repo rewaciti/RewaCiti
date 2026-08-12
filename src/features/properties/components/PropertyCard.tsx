@@ -202,7 +202,7 @@ function PropertyCard({ property }: PropertyCardProps) {
 
     <NavLink
       to={`/properties/${propertySlug}`}
-      className="bg-[#703BF7] text-white px-3 py-1.5 rounded-md text-xs shadow hover:bg-[#5d2fe0] hover:shadow-md transition"
+      className="bg-[#703BF7] hover:bg-[#9677df] text-white px-3 py-1.5 rounded-md text-xs shadow hover:shadow-md transition"
     >
       View Property
     </NavLink>
