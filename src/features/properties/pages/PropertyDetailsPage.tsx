@@ -576,7 +576,7 @@ function PropertyDetails() {
                   </button>
 
                   {isDropdownOpen && (
-                    <div className="absolute right-0 top-9 mt-2 w-64 bg-white/95 dark:bg-[#1A1A1A]/95 backdrop-blur-md border border-gray-600/30 rounded-xl shadow-2xl z-100 overflow-hidden flex flex-col">
+                    <div className="absolute right-0 top-9 mt-2 w-64 bg-white/95 dark:bg-[#1A1A1A]/95 backdrop-blur-md border border-gray-600/30 rounded-xl shadow-2xl z-30 overflow-hidden flex flex-col">
 
                       <button
                         onClick={handleShortlist}

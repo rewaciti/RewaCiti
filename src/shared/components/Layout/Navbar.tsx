@@ -105,6 +105,18 @@ const Navbar = () => {
     };
   }, [isProfileOpen]);
 
+   useEffect(() => {
+    if (isShortlistOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isShortlistOpen]);
+
   return (
     <>
       {/* TOP SMALL BAR — lives in normal flow, scrolls away with the page */}
@@ -148,7 +160,7 @@ const Navbar = () => {
               </button>
 
               {isShortlistOpen && (
-                <div className="absolute right-0 top-4 mt-2 w-72 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-100 overflow-hidden">
+                <div className="absolute right-0 top-4 mt-2 w-72 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-100 overflow-hidden" ref={shortlistRef}>
                   <div className="p-3 border-b border-gray-100 dark:border-gray-800 bg-gray-300/50 dark:bg-white/5 flex justify-between items-center">
                     <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">Your Shortlist</h3>
                     <span className="text-[10px] bg-[#703BF7]/10 text-[#703BF7] dark:bg-[#703BF7] dark:text-white px-2 py-0.5 rounded-full font-bold">
@@ -261,7 +273,7 @@ const Navbar = () => {
       </div>
 
       {/* MAIN NAVBAR — sticky, stays pinned once you scroll past the top bar */}
-      <div className="sticky top-0 z-50 bg-gray-300 text-black shadow-sm dark:bg-[#1A1A1A] dark:text-white relative">
+      <div className="sticky top-0 z-50 bg-gray-300 text-black shadow-sm dark:bg-[#1A1A1A] dark:text-white">
         <div className="max-w-[95%] mx-auto">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
