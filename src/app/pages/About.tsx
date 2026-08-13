@@ -390,7 +390,7 @@ function About() {
                   href={member.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-[#703BF7] p-1 rounded-full shadow-md cursor-pointer hover:bg-purple-600 transition-colors"
+                  className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-[#703BF7] p-1 rounded-full shadow-md cursor-pointer hover:bg-[#9677df] transition-colors"
                 >
                   <FaLinkedin className="text-white w-7 h-7 p-1" />
                 </a>
@@ -433,7 +433,7 @@ function About() {
                     placeholder="Say Hello ✋"
                     className="text-gray-900 dark:text-white outline-none w-full placeholder:text-gray-400 dark:placeholder:text-gray-500"
                   />
-                <button type="submit" className="flex items-center justify-center p-2 bg-[#703BF7] rounded-full cursor-pointer hover:bg-purple-600">
+                <button type="submit" className="flex items-center justify-center p-2 bg-[#703BF7] rounded-full cursor-pointer hover:bg-[#9677df] transition-colors">
                   <Send className="w-4 h-4 text-white" />
                 </button>
               </form>

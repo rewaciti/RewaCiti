@@ -163,9 +163,17 @@ const Navbar = () => {
                 <div className="absolute right-0 top-4 mt-2 w-72 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-100 overflow-hidden" ref={shortlistRef}>
                   <div className="p-3 border-b border-gray-100 dark:border-gray-800 bg-gray-300/50 dark:bg-white/5 flex justify-between items-center">
                     <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">Your Shortlist</h3>
-                    <span className="text-[10px] bg-[#703BF7]/10 text-[#703BF7] dark:bg-[#703BF7] dark:text-white px-2 py-0.5 rounded-full font-bold">
-                      {shortlistedProperties.length} items
-                    </span>
+                    <div className="flex items-center gap-2">
+                        <span className="text-[10px] bg-[#703BF7]/10 text-[#703BF7] dark:bg-[#] dark:text-white px-2 py-0.5 rounded-full font-bold">
+                          {shortlistedProperties.length} items
+                        </span>
+                        <button
+                          onClick={() => setIsShortlistOpen(false)}
+                          className="text-gray-800 dark:text-white text-lg hover:bg-[#9677df] rounded-full px-1 transition-colors"
+                        >
+                          ✕
+                        </button>
+                    </div>
                   </div>
                   <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
                     {shortlistedProperties.length === 0 ? (
