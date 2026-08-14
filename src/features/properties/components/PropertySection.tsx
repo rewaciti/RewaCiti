@@ -52,7 +52,7 @@ function PropertySection() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
           {loading ? (
             [...Array(4)].map((_, i) => (
-              <div key={i} className={i === 3 ? hideOnMdOnly : undefined}>
+              <div key={i} className={`${i === 3 ? hideOnMdOnly : ""} h-full`}>
                 <PropertyCardSkeleton />
               </div>
             ))
@@ -90,7 +90,7 @@ function PropertySection() {
             </div>
           ) : (
             currentProperties.map((item, i) => (
-              <div key={item.id} className={i === 3 ? hideOnMdOnly : undefined}>
+              <div key={item.id} className={`${i === 3 ? hideOnMdOnly : ""} h-full`}>
                 <PropertyCard property={item} />
               </div>
             ))
