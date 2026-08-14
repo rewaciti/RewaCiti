@@ -297,7 +297,7 @@ function PropertyDetails() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     if (isInspectionModalOpen) {
       document.body.style.overflow = "hidden";
     } else {
@@ -309,7 +309,7 @@ function PropertyDetails() {
     };
   }, [isInspectionModalOpen]);
 
-   useEffect(() => {
+  useEffect(() => {
     if (isPaymentModalOpen) {
       document.body.style.overflow = "hidden";
     } else {
@@ -576,7 +576,7 @@ function PropertyDetails() {
                   </button>
 
                   {isDropdownOpen && (
-                    <div className="absolute right-0 top-9 mt-2 w-64 bg-white/95 dark:bg-[#1A1A1A]/95 backdrop-blur-md border border-gray-600/30 rounded-xl shadow-2xl z-30 overflow-hidden flex flex-col">
+                    <div className="absolute right-0 top-9 mt-2 w-64 bg-white/95 dark:bg-[#1A1A1A]/95 backdrop-blur-md border border-gray-600/30 rounded-xl shadow-2xl z-30 overflow-hidden flex flex-col animate-slide-down-fade">
 
                       <button
                         onClick={handleShortlist}
@@ -699,7 +699,7 @@ function PropertyDetails() {
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
               >
-                <div className= "grid gap-2 grid-cols-1 sm:grid-cols-2">
+                <div className="grid gap-2 grid-cols-1 sm:grid-cols-2">
                   {visibleImages.map((img, index) => (
                     <div
                       key={index}
@@ -1106,9 +1106,9 @@ function PropertyDetails() {
                     required
                   />
                   <p className="text-sm text-gray-700 dark:text-gray-300 ">
-                      I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
-                    </p>
-               </div>
+                    I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
+                  </p>
+                </div>
 
                 {/* Submit Button */}
                 <div className="sm:col-span-2 flex items-center justify-end">
@@ -1169,7 +1169,7 @@ function PropertyDetails() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                 {relatedPropertiesLoading ? (
                   Array.from({ length: 3 }).map((_, index) => (
                     <PropertyCardSkeleton key={index} />
