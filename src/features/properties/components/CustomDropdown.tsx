@@ -47,7 +47,7 @@ export default function CustomDropdown({
   const selectedLabel = selectedOption ? selectedOption.label : placeholder;
   const isSelected = !!selectedOption;
 
-  const defaultButtonClass = "w-full h-10 px-3 flex items-center justify-between rounded-xl border border-gray-600/70 bg-gray-300 dark:bg-black/70 text-gray-900 dark:text-white";
+  const defaultButtonClass = "w-full h-10 px-3 flex items-center justify-between rounded-lg border border-gray-600/70 bg-gray-300 dark:bg-black/70 text-gray-900 dark:text-white";
 
   return (
     <div

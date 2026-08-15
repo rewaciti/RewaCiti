@@ -525,7 +525,7 @@ const areaOptions = [
               <div className="py-6">
                 <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Location</h3>
                 <div className="grid grid-col-1 sm:grid-cols-2 gap-3">
-                  <div className="border border-gray-300 dark:border-gray-600 rounded-xl overflow-hidden">
+                  <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
                     <CustomDropdown
                       icon={<FiMapPin />}
                       placeholder="Location"
@@ -537,7 +537,7 @@ const areaOptions = [
                       }}
                     />
                   </div>
-                  <div className="border border-gray-300 dark:border-gray-600 rounded-xl overflow-hidden">
+                  <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
                     <CustomDropdown
                       icon={<FiMapPin />}
                       placeholder={location ? "Area" : "Choose Location First"}
@@ -680,7 +680,7 @@ const areaOptions = [
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 border border-gray-700/40 rounded-3xl p-4 md:p-10">
+          <form onSubmit={handleSubmit} className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 border border-gray-700/40 rounded-3xl p-4 md:p-10">
             {/* Name */}
             <div>
               <label className="text-gray-700 dark:text-gray-300 text-sm">Name</label>

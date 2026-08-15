@@ -413,7 +413,7 @@ function StudentAreaPage() {
               <div className="pb-6">
                 <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">University</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="border border-gray-300 dark:border-gray-600 rounded-xl overflow-hidden">
+                  <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
                     <CustomDropdown
                       icon={<FiMapPin />}
                       placeholder="University"
@@ -425,7 +425,7 @@ function StudentAreaPage() {
                       }}
                     />
                   </div>
-                  <div className="border border-gray-300 dark:border-gray-600 rounded-xl overflow-hidden">
+                  <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
                     <CustomDropdown
                       icon={<FiMapPin />}
                       placeholder={selectedUniversity ? "Area" : "Choose University First"}
