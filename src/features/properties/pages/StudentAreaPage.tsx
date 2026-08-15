@@ -3,8 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { useAreaMapStore } from "../../map/store/useAreaMapStore";
-import { FiArrowLeft, FiArrowRight, FiMapPin, FiHome, FiDollarSign } from "react-icons/fi";
-import { IoBedOutline } from "react-icons/io5";
+import { FiArrowLeft, FiArrowRight, FiMapPin } from "react-icons/fi";
 import PropertyCard from "../components/PropertyCard";
 import Footer from "../../../shared/components/Layout/Footer";
 import { FiFilter } from "react-icons/fi";
@@ -252,11 +251,6 @@ function StudentAreaPage() {
     { label: "Shared", value: "shared" },
   ];
 
-  const priceDropdownOptions = [
-    { label: "Budget", value: "" },
-    ...priceOptions.filter((item) => item.label !== "All Price").map((item) => ({ label: item.label, value: item.label })),
-  ];
-
   const totalApiPages = Math.max(1, Math.ceil(totalProperties / ITEMS_PER_PAGE));
   const currentProperties = properties;
 
@@ -270,6 +264,24 @@ function StudentAreaPage() {
     if (apiPage > 1) {
       prevPage();
     }
+  };
+
+  // Count of currently active filters, shown as a badge on the Filters button
+  const activeFilterCount = [
+    selectedUniversity,
+    location,
+    category,
+    bedrooms,
+    selectedPriceLabel,
+  ].filter((v) => v !== "").length;
+
+  const clearAllFilters = () => {
+    setUniversity("");
+    setLocation("");
+    setCategory("");
+    setBedrooms("");
+    setSelectedPriceLabel("");
+    setPriceRange([0, 999999999]);
   };
 
   return (
@@ -296,20 +308,26 @@ function StudentAreaPage() {
             🏠 General Residence
           </NavLink>
         </div>
-        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[80%]">
+        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[70%]">
           <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-b-none flex">
             <input
               type="text"
-              placeholder="Search For A Property"
-              className="p-3 flex justify-center items-center dark:placeholder-gray-400 placeholder-gray-900/70 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border border-gray-600/70 w-full rounded-b-none rounded-tr-none md:rounded-tr-lg"
+              placeholder="Search For Properties by name, location, or area..."
+              className="p-3 flex justify-center items-center dark:placeholder-gray-400 placeholder-gray-900/70 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border border-gray-600/70 w-full rounded-b-none rounded-tr-none"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white rounded-lg border border-gray-600 md:hidden rounded-tl-none rounded-b-none"
+              onClick={() => setShowFilters(true)}
+              className="relative flex items-center gap-2 px-4 py-2 dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white rounded-lg border border-gray-600 rounded-tl-none rounded-b-none md:rounded-tr-lg"
             >
               <FiFilter />
+              <span className="hidden sm:inline text-sm">Filters</span>
+              {activeFilterCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[11px] font-semibold w-5 h-5 flex items-center justify-center rounded-full">
+                  {activeFilterCount}
+                </span>
+              )}
             </button>
           </div>
         </div>
@@ -317,68 +335,6 @@ function StudentAreaPage() {
 
       <div className="bg-gray-300 dark:bg-black/30 px-4">
         <div className="pt-8 mx-auto">
-          <div className={`md:grid md:grid-cols-5 ${showFilters ? "block" : "hidden"} md:block md:bg-transparent rounded-2xl md:rounded-none md:p-0 mb-6`}>
-            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
-              <CustomDropdown
-                icon={<FiMapPin />}
-                placeholder="University"
-                value={selectedUniversity}
-                options={universityOptions}
-                onChange={(value) => {
-                  setUniversity(value);
-                  setLocation("");
-                }}
-              />
-            </div>
-            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
-              <CustomDropdown
-                icon={<FiMapPin />}
-                placeholder="Area"
-                value={location}
-                options={areaOptions}
-                disabled={!selectedUniversity}
-                onChange={setLocation}
-              />
-            </div>
-            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
-              <CustomDropdown
-                icon={<FiHome />}
-                placeholder="Category"
-                value={category}
-                options={categoryOptions}
-                onChange={setCategory}
-              />
-            </div>
-            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
-              <CustomDropdown
-                icon={<IoBedOutline />}
-                placeholder="Rooms"
-                value={bedrooms}
-                options={bedroomOptions}
-                onChange={setBedrooms}
-              />
-            </div>
-            <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 md:rounded-t-none">
-              <CustomDropdown
-                icon={<FiDollarSign />}
-                placeholder="Budget"
-                value={selectedPriceLabel}
-                options={priceDropdownOptions}
-                onChange={(label) => {
-                  setSelectedPriceLabel(label);
-                  if (!label) {
-                    setPriceRange([0, 999999999]);
-                    return;
-                  }
-                  const option = priceOptions.find((item) => item.label === label);
-                  if (option) {
-                    setPriceRange(option.range as [number, number]);
-                  }
-                }}
-              />
-            </div>
-          </div>
-
           <section>
             <div className="flex justify-between items-center mb-6 pt-4">
               <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
@@ -424,6 +380,188 @@ function StudentAreaPage() {
           </div>
         </div>
       </div>
+
+      {/* Filters Modal — overlay-backed, doesn't shift page layout */}
+      {showFilters && (
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center">
+          {/* backdrop */}
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowFilters(false)}
+          />
+
+          {/* panel */}
+          <div className="relative w-full md:w-[540px] max-h-[90vh] md:max-h-[85vh] bg-white dark:bg-[#1A1A1A] rounded-t-3xl md:rounded-3xl flex flex-col overflow-hidden shadow-2xl">
+            {/* header */}
+            <div className="flex items-center justify-center relative px-5 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-gray-900 dark:text-white font-semibold text-base">Filters</h2>
+              <button
+                onClick={() => setShowFilters(false)}
+                className="absolute right-4 text-gray-900 dark:text-white hover:opacity-60 text-xl leading-none"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* body — scrollable */}
+            <div className="overflow-y-auto px-6 py-5">
+
+              {/* University & Area */}
+              <div className="pb-6">
+                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">University</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="border border-gray-300 dark:border-gray-600 rounded-xl overflow-hidden">
+                    <CustomDropdown
+                      icon={<FiMapPin />}
+                      placeholder="University"
+                      value={selectedUniversity}
+                      options={universityOptions}
+                      onChange={(value) => {
+                        setUniversity(value);
+                        setLocation("");
+                      }}
+                    />
+                  </div>
+                  <div className="border border-gray-300 dark:border-gray-600 rounded-xl overflow-hidden">
+                    <CustomDropdown
+                      icon={<FiMapPin />}
+                      placeholder={selectedUniversity ? "Area" : "Choose University First"}
+                      value={location}
+                      options={areaOptions}
+                      disabled={!selectedUniversity}
+                      onChange={setLocation}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <hr className="border-gray-200 dark:border-gray-700" />
+
+              {/* Type of place */}
+              <div className="py-6">
+                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Type of place</h3>
+                <div className="flex gap-2 flex-wrap">
+                  <button
+                    onClick={() => setCategory("")}
+                    className={`px-4 py-3 rounded-full border text-sm font-medium transition ${
+                      category === ""
+                        ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
+                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
+                    }`}
+                  >
+                    Any
+                  </button>
+                  {categoryOptions
+                    .filter((opt) => opt.value !== "")
+                    .map((opt) => (
+                      <button
+                        key={opt.value}
+                        onClick={() => setCategory(opt.value)}
+                        className={`px-4 py-3 rounded-full border text-sm font-medium transition ${
+                          category === opt.value
+                            ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
+                            : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                </div>
+              </div>
+
+              <hr className="border-gray-200 dark:border-gray-700" />
+
+              {/* Rooms */}
+              <div className="py-6">
+                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Rooms</h3>
+                <div className="flex gap-2 flex-wrap">
+                  <button
+                    onClick={() => setBedrooms("")}
+                    className={`px-4 py-3 rounded-full border text-sm font-medium transition ${
+                      bedrooms === ""
+                        ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
+                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
+                    }`}
+                  >
+                    Any
+                  </button>
+                  {bedroomOptions
+                    .filter((opt) => opt.value !== "")
+                    .map((opt) => (
+                      <button
+                        key={opt.value}
+                        onClick={() => setBedrooms(opt.value)}
+                        className={`px-4 py-3 rounded-full border text-sm font-medium transition ${
+                          bedrooms === opt.value
+                            ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
+                            : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                </div>
+              </div>
+
+              <hr className="border-gray-200 dark:border-gray-700" />
+
+              {/* Budget */}
+              <div className="pt-6">
+                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Budget</h3>
+                <div className="flex gap-2 flex-wrap">
+                  <button
+                    onClick={() => {
+                      setSelectedPriceLabel("");
+                      setPriceRange([0, 999999999]);
+                    }}
+                    className={`px-4 py-3 rounded-full border text-sm font-medium transition ${
+                      selectedPriceLabel === ""
+                        ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
+                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
+                    }`}
+                  >
+                    Any
+                  </button>
+                  {priceOptions
+                    .filter((opt) => opt.label !== "All Price")
+                    .map((opt) => (
+                      <button
+                        key={opt.label}
+                        onClick={() => {
+                          setSelectedPriceLabel(opt.label);
+                          setPriceRange(opt.range as [number, number]);
+                        }}
+                        className={`px-4 py-3 rounded-full border text-sm font-medium transition ${
+                          selectedPriceLabel === opt.label
+                            ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
+                            : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                </div>
+              </div>
+            </div>
+
+            {/* footer */}
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+              <button
+                onClick={clearAllFilters}
+                className="text-gray-900 dark:text-white underline text-sm font-medium"
+              >
+                Clear all
+              </button>
+              <button
+                onClick={() => setShowFilters(false)}
+                className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-5 py-3 rounded-full text-sm font-semibold"
+              >
+                Show {totalProperties} {totalProperties === 1 ? "place" : "places"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <section className="bg-gray-300 dark:bg-black/30 py-2 px-4 pt-4 pb-20" id="StudentPortfolio">
         <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
