@@ -1,4 +1,3 @@
-import { useState } from "react";
 import type { Property } from "../../../types";
 import { NavLink } from "react-router";
 import { FaBed, FaBath, FaHome } from "react-icons/fa";
@@ -14,7 +13,6 @@ interface PropertyCardProps {
 }
 
 function PropertyCard({ property }: PropertyCardProps) {
-  const [expanded, setExpanded] = useState(false);
   const { toggleShortlist, shortlistedProperties } = usePropertyStore();
   const propertySlug = property.slug;
 
@@ -57,10 +55,10 @@ function PropertyCard({ property }: PropertyCardProps) {
     void toggleShortlist(property);
   };
 
-  // Word limiter
+  // Word limiter — always ends with "..." when truncated, no expand/collapse
   function truncateWords(text: string, limit: number): string {
     const words = text.split(" ");
-    return words.length <= limit ? text : words.slice(0, limit).join(" ");
+    return words.length <= limit ? text : `${words.slice(0, limit).join(" ")}...`;
   }
 
   const price = property?.pricing.TotalCost ?? 0;
@@ -136,21 +134,7 @@ function PropertyCard({ property }: PropertyCardProps) {
 
       {/* Description */}
       <p className="text-xs text-gray-600 dark:text-gray-300 mb-3 leading-relaxed">
-        {expanded
-          ? property.description
-          : truncateWords(property.description, 7)}
-
-        {property.description.split(" ").length > 8 && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setExpanded(!expanded)
-            }}
-            className="text-[#703BF7] ml-2 font-medium hover:underline"
-          >
-            {expanded ? "Show less" : "... Read more"}
-          </button>
-        )}
+        {truncateWords(property.description, 7)}
       </p>
 
       {/* Property Info */}
