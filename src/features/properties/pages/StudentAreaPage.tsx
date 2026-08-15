@@ -300,10 +300,6 @@ function StudentAreaPage() {
       <Navbar />
       <div className="relative" id="StudentCategories">
         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10 space-y-6 border-b border-gray-600">
-          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Find Student Accommodation</h1>
-          <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-            Welcome to RewaCiti, your trusted partner in finding comfortable and affordable student accommodation. Whether you're searching for a hostel, shared apartment, self-contained room and more, we've got options tailored to your needs. Use filters for university, budget, and amenities to discover places that fit your study needs and lifestyle.
-          </p>
           <NavLink to="/properties" className="inline-block mt-3 bg-[#703BF7] hover:bg-[#5c2fe0] transition text-white px-4 py-2 rounded-lg text-sm font-medium">
             🏠 General Residence
           </NavLink>
@@ -312,7 +308,7 @@ function StudentAreaPage() {
           <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-b-none flex">
             <input
               type="text"
-              placeholder="Search For Properties by name, location, or area..."
+              placeholder="Search For Properties..."
               className="p-3 flex justify-center items-center dark:placeholder-gray-400 placeholder-gray-900/70 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border border-gray-600/70 w-full rounded-b-none rounded-tr-none"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
