@@ -20,7 +20,7 @@ function PropertySection() {
   const currentProperties = properties.slice(0, 4);
 
   // sm -> 4, md -> 3, lg -> 4 (only the 4th card needs to toggle)
-  const hideOnMdOnly = "hidden sm:block md:hidden";
+  const hideOnMdOnly = "hidden sm:block md:hidden lg:block";
 
   return (
     <div className="px-4 mx-auto py-5 md:py-0">
@@ -49,7 +49,7 @@ function PropertySection() {
         </div>
       </div>
       <div className=" py-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           {loading ? (
             [...Array(4)].map((_, i) => (
               <div key={i} className={`${i === 3 ? hideOnMdOnly : ""} h-full`}>
