@@ -71,7 +71,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
           const profileData = await authAPI.getProfile();
           const latestPhone = profileData.phoneNumber || "";
           setProfilePhone(latestPhone);
-          
+
           const currentCustomer = useAuthStore.getState().customer;
           if (currentCustomer && currentCustomer.phoneNumber !== latestPhone) {
             useAuthStore.getState().setCustomer({
@@ -172,7 +172,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       // 2. Initialize Payment
       const initResponse = await axios.post(`${API_URL}/sales/${saleId}/payment/initiate`, {
         gatewayId: GATEWAY_ID,
-         initiateGateway: true,
+        initiateGateway: true,
       }, {
         headers: { "x-api-key": API_KEY }
       });
@@ -211,20 +211,20 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 { label: "amount Paid", value: `₦${price.toLocaleString()}` },
                 { label: "Service Fee", value: `₦${pricing.ServiceFee.toLocaleString()}` },
                 ...(property.createdBy?._id || property.createdBy?.id
-                    ? [
-                        {
-                          label: "Agent ID",
-                          value: property.createdBy._id ?? property.createdBy.id,
-                        },
-                      ]
-                : []),
+                  ? [
+                    {
+                      label: "Agent ID",
+                      value: property.createdBy._id ?? property.createdBy.id,
+                    },
+                  ]
+                  : []),
                 { label: "Property ID", value: property.id },
                 { label: "Sale ID", value: saleId },
                 ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
                 ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : [])
               ]
             };
-          
+
             console.log("Submitting CRM Payload:", crmPayload);
             await axios.post("https://api.sabiflow.com/api/crm/deals/guest", crmPayload);
 
@@ -242,7 +242,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
 
             onOpenChange(false);
             setCookie(modalCookieKey, JSON.stringify({ guestName: "", guestEmail: "", guestPhone: "", agreed: false }));
-            
+
             // Trigger Rating Modal
             if (onPaymentSuccess) {
               onPaymentSuccess({ name: fullName, email: email, phone: phone });
@@ -258,13 +258,13 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
         onCancel: () => {
           toast.info("Payment cancelled.");
           setIsSubmitting(false);
-        }     
+        }
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Payment flow error:", error);
         const errorMessage = error.response?.data?.message || "";
-        
+
         if (errorMessage.toLowerCase().includes("stock") || errorMessage.toLowerCase().includes("available")) {
           toast.error("This property is no longer available. Please check out our other listings.", {
             duration: 6000,
@@ -279,12 +279,12 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       setIsSubmitting(false);
     }
   };
- 
+
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange} modal={false}>
       <Dialog.Portal>
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-4 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto dialog-content-animate" aria-describedby="property-payment-description">
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-4 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto" aria-describedby="property-payment-description">
           <div className="flex justify-between items-center mb-6">
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900">
               Pay for Property
@@ -317,7 +317,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
               )}
             </div>
           </div>
-          
+
           <div className="mb-6 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
             <h4 className="text-xs font-bold text-blue-500 uppercase mb-2 flex items-center gap-2">
               <FiInfo /> Safety Tips & Payment Info
@@ -330,129 +330,128 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
             </ul>
           </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {isAuthenticated && customer ? (
-                <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-2">
-                  <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Billing Information</h4>
-                  <div className="text-sm dark:text-gray-300 text-gray-700 space-y-1">
-                    <p><span className="font-semibold">Name:</span> {fullName}</p>
-                    <p><span className="font-semibold">Email:</span> {email}</p>
-                    <p><span className="font-semibold">Phone:</span> {phone || <span className="italic text-red-500">No phone number listed in profile</span>}</p>
-                  </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {isAuthenticated && customer ? (
+              <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-2">
+                <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Billing Information</h4>
+                <div className="text-sm dark:text-gray-300 text-gray-700 space-y-1">
+                  <p><span className="font-semibold">Name:</span> {fullName}</p>
+                  <p><span className="font-semibold">Email:</span> {email}</p>
+                  <p><span className="font-semibold">Phone:</span> {phone || <span className="italic text-red-500">No phone number listed in profile</span>}</p>
                 </div>
-              ) : (
-                <div className="space-y-2 rounded-lg border border-gray-600/30 bg-gray-500/10 p-3">
-                  <div>
-                    <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Full Name</label>
-                    <input
-                      type="text"
-                      required
-                      value={guestName}
-                      onChange={(e) => setGuestName(e.target.value)}
-                      className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Email</label>
-                    <input
-                      type="email"
-                      required
-                      value={guestEmail}
-                      onChange={(e) => setGuestEmail(e.target.value)}
-                      className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Phone Number</label>
-                    <input
-                      type="tel"
-                      required
-                      value={guestPhone}
-                      onChange={(e) => setGuestPhone(e.target.value)}
-                      className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
-                    />
-                  </div>
+              </div>
+            ) : (
+              <div className="space-y-2 rounded-lg border border-gray-600/30 bg-gray-500/10 p-3">
+                <div>
+                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={guestName}
+                    onChange={(e) => setGuestName(e.target.value)}
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={guestEmail}
+                    onChange={(e) => setGuestEmail(e.target.value)}
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Phone Number</label>
+                  <input
+                    type="tel"
+                    required
+                    value={guestPhone}
+                    onChange={(e) => setGuestPhone(e.target.value)}
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
+              <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
+                Once your payment is confirmed, a verified agent will be assigned to you, and our team will contact you within{" "}
+                <span className="font-semibold text-[#703BF7]">24 hours</span> to schedule a meeting and finalize the next steps.
+              </p>
+
+              <p className="text-sm dark:text-gray-300 text-gray-700 text-center mt-1">
+                After scheduling, the agent’s contact details will be shared with you via email for the meeting and completion of your documentation.
+              </p>
+            </div>
+
+            {/* Breakdown Section */}
+            <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-3">
+              <h3 className="text-sm font-semibold dark:text-white text-gray-900 flex items-center gap-2">
+                <FiInfo className="text-[#703BF7]" />
+                Payment Breakdown
+              </h3>
+
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600 dark:text-gray-400">Property Cost</span>
+                <span className="font-medium dark:text-white text-gray-900">₦{pricing.PropertyCost.toLocaleString()}</span>
+              </div>
+              {pricing.LegalFee > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">Legal Fee</span>
+                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.LegalFee.toLocaleString()}</span>
+                </div>
+              )}
+              {pricing.AgentFee > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">Agent Fee</span>
+                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.AgentFee.toLocaleString()}</span>
+                </div>
+              )}
+              {pricing.ServiceFee > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">Service Fee</span>
+                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.ServiceFee.toLocaleString()}</span>
+                </div>
+              )}
+              {pricing.CautionFee > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">Caution Fee</span>
+                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.CautionFee.toLocaleString()}</span>
                 </div>
               )}
 
-              <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
-                <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
-                  Once your payment is confirmed, a verified agent will be assigned to you, and our team will contact you within{" "}
-                  <span className="font-semibold text-[#703BF7]">24 hours</span> to schedule a meeting and finalize the next steps.
-                </p>
-
-                <p className="text-sm dark:text-gray-300 text-gray-700 text-center mt-1">
-                  After scheduling, the agent’s contact details will be shared with you via email for the meeting and completion of your documentation.
-                </p>
+              <div className="flex justify-between text-lg font-bold border-t border-[#703BF7]/50 pt-2 text-[#703BF7]">
+                <span>Total Due</span>
+                <span>₦{price.toLocaleString()}</span>
               </div>
+            </div>
 
-              {/* Breakdown Section */}
-              <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-3">
-                <h3 className="text-sm font-semibold dark:text-white text-gray-900 flex items-center gap-2">
-                  <FiInfo className="text-[#703BF7]" />
-                  Payment Breakdown
-                </h3>
-                
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Property Cost</span>
-                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.PropertyCost.toLocaleString()}</span>
-                </div>
-                {pricing.LegalFee > 0 && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">Legal Fee</span>
-                    <span className="font-medium dark:text-white text-gray-900">₦{pricing.LegalFee.toLocaleString()}</span>
-                  </div>
-                )}
-                {pricing.AgentFee > 0 && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">Agent Fee</span>
-                    <span className="font-medium dark:text-white text-gray-900">₦{pricing.AgentFee.toLocaleString()}</span>
-                  </div>
-                )}
-                {pricing.ServiceFee > 0 && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">Service Fee</span>
-                    <span className="font-medium dark:text-white text-gray-900">₦{pricing.ServiceFee.toLocaleString()}</span>
-                  </div>
-                )}
-                {pricing.CautionFee > 0 && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">Caution Fee</span>
-                    <span className="font-medium dark:text-white text-gray-900">₦{pricing.CautionFee.toLocaleString()}</span>
-                  </div>
-                )}
-                
-                <div className="flex justify-between text-lg font-bold border-t border-[#703BF7]/50 pt-2 text-[#703BF7]">
-                  <span>Total Due</span>
-                  <span>₦{price.toLocaleString()}</span>
-                </div>
-              </div>
+            <div className="sm:col-span-2 flex items-center gap-3">
+              <input
+                type="checkbox"
+                className="mt-0.5"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                required
+              />
+              <p className="text-sm text-gray-700 dark:text-gray-300 ">
+                I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
+              </p>
+            </div>
 
-              <div className="sm:col-span-2 flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    className="mt-0.5"
-                    checked={agreed}
-                    onChange={(e) => setAgreed(e.target.checked)}
-                    required
-                  />
-                  <p className="text-sm text-gray-700 dark:text-gray-300 ">
-                      I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
-                    </p>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed}
-                className={`w-full font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50 ${
-                  isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed
-                    ? "bg-gray-400 cursor-not-allowed text-gray-200"
-                    : "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
+            <button
+              type="submit"
+              disabled={isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed}
+              className={`w-full font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50 ${isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed
+                  ? "bg-gray-400 cursor-not-allowed text-gray-200"
+                  : "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
                 }`}
-              >
-                {isSubmitting ? "Processing..." : `Pay Total: ₦${price.toLocaleString()}`}
-              </button>
-            </form>
+            >
+              {isSubmitting ? "Processing..." : `Pay Total: ₦${price.toLocaleString()}`}
+            </button>
+          </form>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

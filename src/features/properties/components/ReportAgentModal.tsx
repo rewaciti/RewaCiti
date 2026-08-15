@@ -60,7 +60,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
           const profileData = await authAPI.getProfile();
           const latestPhone = profileData.phoneNumber || "";
           setProfilePhone(latestPhone);
-          
+
           const currentCustomer = useAuthStore.getState().customer;
           if (currentCustomer && currentCustomer.phoneNumber !== latestPhone) {
             useAuthStore.getState().setCustomer({
@@ -110,13 +110,13 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
           value: property.name,
         },
         ...(property.createdBy?._id || property.createdBy?.id
-            ? [
-                {
-                  label: "Agent ID",
-                  value: property.createdBy._id ?? property.createdBy.id,
-                },
-              ]
-        : []),
+          ? [
+            {
+              label: "Agent ID",
+              value: property.createdBy._id ?? property.createdBy.id,
+            },
+          ]
+          : []),
         {
           label: "Property ID",
           value: property.id,
@@ -170,8 +170,8 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm dialog-overlay-animate"/>
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-4 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto dialog-content-animate">
+        <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm" />
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-4 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto">
 
           <div className="flex justify-between items-center mb-6">
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900 flex items-center gap-2">
@@ -233,58 +233,58 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
               </div>
             )}
 
-              <div>
-                <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Reason for Reporting</label>
-                <CustomDropdown
-                  placeholder="Select a reason"
-                  value={reason}
-                  options={[
-                    { label: "Unprofessional Behavior", value: "unprofessional" },
-                    { label: "Misleading Information", value: "misleading" },
-                    { label: "Agent No-show", value: "no-show" },
-                    { label: "Suspected Scam", value: "scam" },
-                    { label: "Other", value: "other" },
-                  ]}
-                  onChange={(val) => setReason(val)}
-                />
-              </div>
+            <div>
+              <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Reason for Reporting</label>
+              <CustomDropdown
+                placeholder="Select a reason"
+                value={reason}
+                options={[
+                  { label: "Unprofessional Behavior", value: "unprofessional" },
+                  { label: "Misleading Information", value: "misleading" },
+                  { label: "Agent No-show", value: "no-show" },
+                  { label: "Suspected Scam", value: "scam" },
+                  { label: "Other", value: "other" },
+                ]}
+                onChange={(val) => setReason(val)}
+              />
+            </div>
 
-              <div>
-                <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Description</label>
-                <textarea
-                  rows={4}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Please provide more details..."
-                  className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
-                />
-              </div>
+            <div>
+              <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Description</label>
+              <textarea
+                rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Please provide more details..."
+                className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
+              />
+            </div>
 
-              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-xs text-red-500">
-                Reporting an agent is a serious matter. We will review your report and take appropriate action.
-              </div>
+            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-xs text-red-500">
+              Reporting an agent is a serious matter. We will review your report and take appropriate action.
+            </div>
 
-              <div className="sm:col-span-2 flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    className="mt-0.5"
-                    checked={agreed}
-                    onChange={(e) => setAgreed(e.target.checked)}
-                    required
-                  />
-                  <p className="text-sm text-gray-700 dark:text-gray-300 ">
-                      I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
-                    </p>
-              </div>
+            <div className="sm:col-span-2 flex items-center gap-3">
+              <input
+                type="checkbox"
+                className="mt-0.5"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                required
+              />
+              <p className="text-sm text-gray-700 dark:text-gray-300 ">
+                I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
+              </p>
+            </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting || !name.trim() || !email.trim() || !phone.trim() || !agreed}
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50"
-              >
-                {isSubmitting ? "Submitting..." : "Submit Report"}
-              </button>
-            </form>
+            <button
+              type="submit"
+              disabled={isSubmitting || !name.trim() || !email.trim() || !phone.trim() || !agreed}
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50"
+            >
+              {isSubmitting ? "Submitting..." : "Submit Report"}
+            </button>
+          </form>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
