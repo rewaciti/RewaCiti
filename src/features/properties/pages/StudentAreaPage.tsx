@@ -299,7 +299,7 @@ function StudentAreaPage() {
       </Helmet>
       <Navbar />
       <div className="relative" id="StudentCategories">
-        <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10 space-y-6 border-b border-gray-600">
+        <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10 border-b border-gray-600">
           <NavLink to="/properties" className="inline-block mt-3 bg-[#703BF7] hover:bg-[#5c2fe0] transition text-white px-4 py-2 rounded-lg text-sm font-medium">
             🏠 General Residence
           </NavLink>
@@ -577,19 +577,19 @@ function StudentAreaPage() {
         <form onSubmit={handleSubmit} className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 border border-gray-700/40 rounded-3xl p-4 md:p-10">
           <div>
             <label className="text-gray-700 dark:text-gray-300 text-sm">Name</label>
-            <input type="text" placeholder="Enter Full Name" required value={name} onChange={(e) => setName(e.target.value)} className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+            <input type="text" placeholder="Enter Full Name" required value={name} onChange={(e) => setName(e.target.value)} className="w-full mt-1 px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
           </div>
           <div>
             <label className="text-gray-700 dark:text-gray-300 text-sm">Email</label>
-            <input type="email" placeholder="Enter your Email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+            <input type="email" placeholder="Enter your Email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full mt-1 px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
           </div>
           <div>
             <label className="text-gray-700 dark:text-gray-300 text-sm">Phone</label>
-            <input type="tel" placeholder="Enter Phone Number" required value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+            <input type="tel" placeholder="Enter Phone Number" required value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full mt-1 px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
           </div>
           <div>
             <label className="text-gray-700 dark:text-gray-300 text-sm">Preferred Location</label>
-            <input type="text" placeholder="Enter Preferred Location" required value={preferedLocation} onChange={(e) => setPreferedLocation(e.target.value)} className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+            <input type="text" placeholder="Enter Preferred Location" required value={preferedLocation} onChange={(e) => setPreferedLocation(e.target.value)} className="w-full mt-1 px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
           </div>
           <div>
             <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Category</label>
@@ -597,7 +597,7 @@ function StudentAreaPage() {
           </div>
           <div>
             <label className="text-gray-700 dark:text-gray-300 text-sm">No of Bedrooms</label>
-            <input type="number || text" placeholder="Enter Number of Bedrooms" required min={1} value={bedroomsContact} onChange={(e) => setBedroomsContact(e.target.value)} className="w-full mt-1 p-3 py-2.5 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+            <input type="number || text" placeholder="Enter Number of Bedrooms" required min={1} value={bedroomsContact} onChange={(e) => setBedroomsContact(e.target.value)} className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
           </div>
           <div>
             <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Budget</label>
@@ -609,7 +609,7 @@ function StudentAreaPage() {
           </div>
           <div className="sm:col-span-2 lg:col-span-4">
             <label className="text-gray-700 dark:text-gray-300 text-sm">Describe What You Want</label>
-            <textarea placeholder="Enter your Description here.." rows={4} required value={message} onChange={(e) => setMessage(e.target.value)} className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 resize-none" />
+            <textarea placeholder="Enter your Description here.." rows={3} required value={message} onChange={(e) => setMessage(e.target.value)} className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 resize-none" />
           </div>
           <div className="sm:col-span-2 flex items-center gap-3">
               <input
@@ -624,8 +624,8 @@ function StudentAreaPage() {
                 </p>
           </div>
           <div className="sm:col-span-2 flex items-center justify-end">
-            <button type="submit" disabled={!agreed || isSubmitting || !name.trim() || !email.trim() || !phone.trim() || !preferedLocation.trim()} className={`px-4 py-3 rounded-lg font-medium transition ${agreed && !isSubmitting && name.trim() && email.trim() && phone.trim() && preferedLocation.trim() ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" : "bg-gray-400 cursor-not-allowed text-gray-200"}`}>
-              {isSubmitting ? "Sending..." : "Send Your Message"}
+            <button type="submit" disabled={!agreed || isSubmitting || !name.trim() || !email.trim() || !phone.trim() || !preferedLocation.trim()} className={`px-4 py-2 rounded-lg font-medium transition ${agreed && !isSubmitting && name.trim() && email.trim() && phone.trim() && preferedLocation.trim() ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" : "bg-gray-400 cursor-not-allowed text-gray-200"}`}>
+              {isSubmitting ? "Sending..." : "Send"}
             </button>
           </div>
         </form>

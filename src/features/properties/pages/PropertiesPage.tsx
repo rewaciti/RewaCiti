@@ -690,7 +690,7 @@ const areaOptions = [
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
               />
             </div>
 
@@ -703,7 +703,7 @@ const areaOptions = [
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
               />
             </div>
 
@@ -716,7 +716,7 @@ const areaOptions = [
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
               />
             </div>
 
@@ -729,7 +729,7 @@ const areaOptions = [
                 required
                 value={preferedLocation}
                 onChange={(e) => setPreferedLocation(e.target.value)}
-                className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
               />
             </div>
 
@@ -769,7 +769,7 @@ const areaOptions = [
                 min={1}
                 value={bedroomsContact}
                 onChange={(e) => setBedroomsContact(e.target.value)}
-                className="w-full mt-1 p-3 py-2.5 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
               />
             </div>
 
@@ -806,7 +806,7 @@ const areaOptions = [
               <label className="text-gray-700 dark:text-gray-300 text-sm">Describe What You Want</label>
               <textarea
                 placeholder="Enter your Description here.."
-                rows={4}
+                rows={3}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 resize-none"
@@ -832,13 +832,13 @@ const areaOptions = [
               <button
                 type="submit"
                 disabled={!agreed || isSubmitting || !name.trim() || !email.trim() || !phone.trim() || !preferedLocation.trim()}
-                className={`px-4 py-3 rounded-lg font-medium transition
+                className={`px-4 py-2 rounded-lg font-medium transition
                   ${agreed && !isSubmitting && name.trim() && email.trim() && phone.trim() && preferedLocation.trim()
                     ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" 
                     : "bg-gray-400 cursor-not-allowed text-gray-200"
                   }`}
               >
-                {isSubmitting ? "Sending..." : "Send Your Message"}
+                {isSubmitting ? "Sending..." : "Send"}
               </button>
             </div>
           </form>
