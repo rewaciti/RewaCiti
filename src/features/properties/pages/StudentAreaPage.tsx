@@ -324,7 +324,7 @@ function StudentAreaPage() {
               <FiFilter />
               <span className="hidden sm:inline text-sm">Filters</span>
               {activeFilterCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[11px] font-semibold w-5 h-5 flex items-center justify-center rounded-full">
+                <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[11px] font-semibold w-5 h-5 flex items-center justify-center rounded-full animate-scale-in">
                   {activeFilterCount}
                 </span>
               )}
@@ -382,16 +382,23 @@ function StudentAreaPage() {
       </div>
 
       {/* Filters Modal — overlay-backed, doesn't shift page layout */}
-      {showFilters && (
-        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center">
-          {/* backdrop */}
-          <div
-            className="absolute inset-0 bg-black/50"
-            onClick={() => setShowFilters(false)}
-          />
+      <div className={`fixed inset-0 z-50 flex items-end md:items-center justify-center transition-opacity duration-300 ${
+        showFilters ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+      }`}>
+        {/* backdrop */}
+        <div
+          className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${
+            showFilters ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={() => setShowFilters(false)}
+        />
 
-          {/* panel */}
-          <div className="relative w-full md:w-[540px] max-h-[90vh] md:max-h-[85vh] bg-white dark:bg-[#1A1A1A] rounded-t-3xl md:rounded-3xl flex flex-col overflow-hidden shadow-2xl">
+        {/* panel */}
+        <div className={`relative w-full md:w-[540px] max-h-[90vh] md:max-h-[85vh] bg-white dark:bg-[#1A1A1A] rounded-t-3xl md:rounded-3xl flex flex-col overflow-hidden shadow-2xl transition-all duration-300 ease-out transform ${
+          showFilters 
+            ? "translate-y-0 opacity-100 scale-100" 
+            : "translate-y-full md:translate-y-10 opacity-0 scale-95"
+        }`}>
             {/* header */}
             <div className="flex items-center justify-center relative px-5 py-4 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-gray-900 dark:text-white font-semibold text-base">Filters</h2>
@@ -561,7 +568,6 @@ function StudentAreaPage() {
             </div>
           </div>
         </div>
-      )}
 
       <section className="bg-gray-300 dark:bg-black/30 py-2 px-4 pt-4 pb-20" id="StudentPortfolio">
         <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">

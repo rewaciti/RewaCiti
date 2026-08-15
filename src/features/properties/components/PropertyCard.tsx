@@ -69,7 +69,7 @@ function PropertyCard({ property }: PropertyCardProps) {
   const hasBathrooms = !!property.bathrooms && property.bathrooms !== 0 && property.bathrooms !== "0";
 
   return (
-    <div className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 text-gray-900 dark:text-white shadow-sm hover:shadow-lg transition-all duration-300 rounded-lg p-2 relative hover:cursor-pointer flex flex-col h-full"
+    <div className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 text-gray-900 dark:text-white shadow-sm hover:shadow-lg transition-all duration-300 rounded-lg p-2 relative hover:cursor-pointer flex flex-col h-full animate-fade-in-up"
       onClick={() => navigate(`/properties/${propertySlug}`)}>
       {/* Image Container */}
       <div className="relative group">
