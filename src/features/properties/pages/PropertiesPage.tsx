@@ -456,7 +456,7 @@ const areaOptions = [
       </div>
 
       {/* Filters Modal — Airbnb-style layout, follows the page's light/dark theme */}
-      <div className={`fixed inset-0 z-50 flex items-end md:items-center justify-center transition-opacity duration-300 ${
+      <div className={`fixed inset-0 z-50 flex items-end sm:items-center justify-center transition-opacity duration-300 ${
         showFilters ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
       }`}>
         {/* backdrop */}
@@ -468,7 +468,7 @@ const areaOptions = [
         />
 
         {/* panel */}
-        <div className={`relative w-full md:w-[540px] max-h-[90vh] md:max-h-[85vh] bg-white dark:bg-[#1A1A1A] rounded-t-3xl md:rounded-3xl flex flex-col overflow-hidden shadow-2xl transition-all duration-300 ease-out transform ${
+        <div className={`relative w-full sm:w-[540px] max-h-[90vh] sm:max-h-[85vh] bg-white dark:bg-[#1A1A1A] rounded-t-3xl sm:rounded-3xl flex flex-col overflow-hidden shadow-2xl transition-all duration-300 ease-out transform ${
           showFilters 
             ? "translate-y-0 opacity-100 scale-100" 
             : "translate-y-full md:translate-y-10 opacity-0 scale-95"
