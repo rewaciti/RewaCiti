@@ -138,7 +138,7 @@ function PropertyCard({ property }: PropertyCardProps) {
       </p>
 
       {/* Property Info */}
-      <div className={`grid gap-2 mb-3 ${(hasBedrooms && hasBathrooms) ? 'grid-cols-2 lg:grid-cols-3' :
+      <div className={`grid gap-2 mb-3 ${(hasBedrooms && hasBathrooms) ? 'grid-cols-2 xl:grid-cols-3' :
         (hasBedrooms || hasBathrooms) ? 'grid-cols-2' : 'grid-cols-1'
         }`}>
         {hasBedrooms && (
@@ -160,7 +160,7 @@ function PropertyCard({ property }: PropertyCardProps) {
         )}
 
         <p
-          className={`border border-purple-100 dark:border-gray-600/30 bg-purple-50 dark:bg-transparent text-gray-700 dark:text-gray-300 rounded-xl px-2 py-1 flex items-center justify-center gap-2 text-[11px] sm:text-xs transition ${(hasBedrooms && hasBathrooms) ? 'col-span-2 lg:col-span-1' : ''
+          className={`border border-purple-100 dark:border-gray-600/30 bg-purple-50 dark:bg-transparent text-gray-700 dark:text-gray-300 rounded-xl px-2 py-1 flex items-center justify-center gap-2 text-[11px] sm:text-xs transition ${(hasBedrooms && hasBathrooms) ? 'col-span-2 xl:col-span-1' : ''
             }`}
         >
           <FaHome />
