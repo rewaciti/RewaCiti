@@ -305,17 +305,17 @@ function StudentAreaPage() {
           </NavLink>
         </div>
         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[70%]">
-          <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-b-none flex">
+          <div className="border-4 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 flex">
             <input
               type="text"
               placeholder="Search For Properties..."
-              className="p-3 flex justify-center items-center dark:placeholder-gray-400 placeholder-gray-900/70 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border border-gray-600/70 w-full rounded-b-none rounded-tr-none"
+              className="p-3 flex justify-center items-center dark:placeholder-gray-400 placeholder-gray-900/70 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border border-gray-600/70 w-full rounded-r-none"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <button
               onClick={() => setShowFilters(true)}
-              className="relative flex items-center gap-2 px-4 py-2 dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white rounded-lg border border-gray-600 rounded-tl-none rounded-b-none md:rounded-tr-lg"
+              className="relative flex items-center gap-2 px-4 sm:px-2 py-2 dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white rounded-lg border border-gray-600 rounded-l-none  md:rounded-r-lg"
             >
               <FiFilter />
               <span className="hidden sm:inline text-sm">Filters</span>

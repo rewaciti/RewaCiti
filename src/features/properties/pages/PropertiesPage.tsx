@@ -340,13 +340,6 @@ const areaOptions = [
       <Navbar />
       <div className="relative" id="Categories">
         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10  space-y-6 border-b border-gray-600">
-          {/* <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-            Find Your Dream Property
-          </h1>
-
-          <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-           Welcome to RewaCiti, where your dream property awaits across every corner of the world. Explore our curated selection of properties, each with its own unique story and the potential to redefine the way you live. With categories designed to suit every lifestyle and aspiration, your journey to finding the perfect space begins here.
-          </p> */}
           <NavLink
             to="/Studentarea"
             className="inline-block mt-3 bg-[#703BF7] hover:bg-[#5c2fe0] transition text-white px-4 py-2 rounded-lg text-sm font-medium"
@@ -355,17 +348,17 @@ const areaOptions = [
           </NavLink>
         </div>
         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[70%]">
-          <div className="border-7 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 rounded-b-none flex">
+          <div className="border-4 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 flex">
             <input
               type="text"
               placeholder="Search For Properties..."
-              className="p-3 flex justify-center items-center dark:placeholder-gray-400 placeholder-gray-900/70 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border border-gray-600/70 w-full rounded-b-none rounded-tr-none"
+              className="p-3 flex justify-center items-center dark:placeholder-gray-400 placeholder-gray-900/70 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border border-gray-600/70 w-full rounded-r-none"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <button
               onClick={() => setShowFilters(true)}
-              className="relative flex items-center gap-2 px-4 py-2 dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white rounded-lg border border-gray-600 rounded-tl-none rounded-b-none md:rounded-tr-lg"
+              className="relative flex items-center gap-2 px-4 md:p-2 py-2 dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white rounded-lg border border-gray-600 rounded-l-none md:rounded-tr-lg"
             >
               <FiFilter />
               <span className="hidden sm:inline text-sm">Filters</span>
