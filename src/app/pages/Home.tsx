@@ -71,13 +71,13 @@ function Home() {
             <img
               src={centerLogo}
               alt="Center Logo"
-              className="w-23 h-auto transition-all duration-300 ease-in-out rounded-md shadow-md"
+              className="w-22 h-auto transition-all duration-300 ease-in-out rounded-md shadow-md"
             />
           </div>
         </div>
 
         {/* LEFT SECTION (TEXT) — overlays the image on mobile, normal panel on desktop */}
-        <div className="relative z-10 flex-1 flex flex-col justify-end sm:justify-center p-4 pb-8 py-6 sm:px-8 sm:py-10 space-y-6 sm:order-first bg-linear-to-t from-black/80 via-black/70 to-transparent sm:bg-none sm:bg-gray-300 sm:dark:bg-black/30">
+        <div className="relative z-10 flex-1 flex flex-col justify-center p-4 pb-8 py-6 sm:px-8 sm:py-10 space-y-6 sm:order-first bg-linear-to-t from-black/80 via-black/70 to-transparent sm:bg-none sm:bg-gray-300 sm:dark:bg-black/30">
           <h1 className="text-white sm:text-gray-900 sm:dark:text-white md:text-4xl text-3xl">
             Discover Your Dream Property with RewaCiti
           </h1>
