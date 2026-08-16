@@ -67,13 +67,13 @@ function Home() {
             className="w-full h-full sm:h-[70vh] sm:min-h-[500px] shadow-lg object-cover transition-all duration-300 ease-in-out"
           />
           {/* CENTER LOGO for small screens: positioned at bottom-left of the image */}
-          <div className="sm:hidden absolute left-2 bottom-1 z-20">
+          {/* <div className="sm:hidden absolute left-2 bottom-1 z-20">
             <img
               src={centerLogo}
               alt="Center Logo"
               className="w-22 h-auto transition-all duration-300 ease-in-out rounded-md shadow-md"
             />
-          </div>
+          </div> */}
         </div>
 
         {/* LEFT SECTION (TEXT) — overlays the image on mobile, normal panel on desktop */}
