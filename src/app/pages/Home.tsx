@@ -47,7 +47,7 @@ function Home() {
       <Navbar />
 
       <section
-        className="relative flex flex-col sm:flex-row h-[calc(95vh-6.5rem)] sm:h-auto sm:min-h-0 overflow-hidden"
+        className="relative flex flex-col sm:flex-row h-[calc(100vh-6.5rem)] sm:h-auto sm:min-h-0 overflow-hidden"
         id="hero"
       >
 
@@ -114,7 +114,7 @@ function Home() {
 
       {/* CENTER LOGO — mobile only, straddles the seam between hero and features */}
       <div className="relative z-30 sm:hidden">
-        <div className="absolute left-10 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute left-11 -translate-x-1/2 -translate-y-2/3">
           <img
             src={centerLogo}
             alt="Center Logo"
