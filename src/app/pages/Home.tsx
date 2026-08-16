@@ -45,7 +45,7 @@ function Home() {
         <link rel="canonical" href="https://rewaciti.com/" />
       </Helmet>
       <Navbar />
-      <section className="relative flex flex-col sm:flex-row min-h-[550px] sm:min-h-0" id="hero">
+      <section className="relative flex flex-col sm:flex-row min-h-[600px] sm:min-h-0" id="hero">
 
         {/* CENTER FLOATING IMAGE */}
         <div className="hidden sm:block absolute lg:left-[52%] top-1/3 md:left-[54%] left-[54%] -translate-x-1/2 -translate-y-1/2 z-20">
@@ -64,14 +64,14 @@ function Home() {
           <img
             src={hero}
             alt="Hero"
-            className="w-full h-[90vh] sm:h-[70vh] sm:min-h-[500px] shadow-lg object-cover transition-all duration-300 ease-in-out"
+            className="w-full h-full sm:h-[70vh] sm:min-h-[500px] shadow-lg object-cover transition-all duration-300 ease-in-out"
           />
           {/* CENTER LOGO for small screens: positioned at bottom-left of the image */}
           <div className="sm:hidden absolute left-2 bottom-1 z-20">
             <img
               src={centerLogo}
               alt="Center Logo"
-              className="w-20 h-auto transition-all duration-300 ease-in-out rounded-md shadow-md"
+              className="w-23 h-auto transition-all duration-300 ease-in-out rounded-md shadow-md"
             />
           </div>
         </div>
