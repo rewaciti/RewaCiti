@@ -1019,7 +1019,7 @@ function PropertyDetails() {
 
               <form onSubmit={handleSubmit} className="space-y-5 dark:bg-[#1A1A1A] bg-white">
                 {/* First & Last Name */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300">First Name</label>
                     <input
@@ -1046,7 +1046,7 @@ function PropertyDetails() {
                 </div>
 
                 {/* Email & Phone */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300">Email</label>
                     <input
@@ -1121,7 +1121,7 @@ function PropertyDetails() {
                         : "bg-gray-400 cursor-not-allowed text-gray-200"
                       }`}
                   >
-                    {isSubmitting ? "Sending..." : "Send Your Message"}
+                    {isSubmitting ? "Sending..." : "Send Message"}
                   </button>
                 </div>
               </form>

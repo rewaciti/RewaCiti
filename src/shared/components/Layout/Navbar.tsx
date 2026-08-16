@@ -105,7 +105,7 @@ const Navbar = () => {
     };
   }, [isProfileOpen]);
 
-   useEffect(() => {
+  useEffect(() => {
     if (isShortlistOpen) {
       document.body.style.overflow = "hidden";
     } else {
@@ -152,70 +152,79 @@ const Navbar = () => {
                 <div className="relative p-0.5 rounded-full bg-gray-200 dark:bg-gray-700 text-black dark:text-white transition-all duration-300">
                   <FiHeart size={18} />
                   {shortlistedProperties.length > 0 && (
-                    <span className="absolute -top-1 -right-2 bg-[#703BF7] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                    <span className="absolute -top-1 -right-2 bg-[#703BF7] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center animate-fade-in">
                       {shortlistedProperties.length}
                     </span>
                   )}
                 </div>
               </button>
 
-              {isShortlistOpen && (
-                <div className="absolute right-0 top-4 mt-2 w-72 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-100 overflow-hidden" ref={shortlistRef}>
-                  <div className="p-3 border-b border-gray-100 dark:border-gray-800 bg-gray-300/50 dark:bg-white/5 flex justify-between items-center">
-                    <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">Your Shortlist</h3>
-                    <div className="flex items-center gap-2">
-                        <span className="text-[10px] bg-[#703BF7]/10 text-[#703BF7] dark:bg-[#] dark:text-white px-2 py-0.5 rounded-full font-bold">
-                          {shortlistedProperties.length} items
-                        </span>
-                        <button
-                          onClick={() => setIsShortlistOpen(false)}
-                          className="text-gray-800 dark:text-white text-lg hover:bg-[#9677df] rounded-full px-1 transition-colors"
-                        >
-                          ✕
-                        </button>
-                    </div>
+              {/* Always mounted — animated with opacity/scale/translate so both open & close transitions play */}
+              <div
+                className={`absolute right-0 top-4 mt-2 w-72 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-100 overflow-hidden
+                  origin-top-right transform transition-all duration-200 ease-out
+                  ${isShortlistOpen
+                    ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+                    : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+                  }`}
+              >
+                <div className="p-3 border-b border-gray-100 dark:border-gray-800 bg-gray-300/50 dark:bg-white/5 flex justify-between items-center">
+                  <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">Your Shortlist</h3>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] bg-[#703BF7]/10 text-[#703BF7] dark:bg-[#] dark:text-white px-2 py-0.5 rounded-full font-bold">
+                      {shortlistedProperties.length} items
+                    </span>
+                    <button
+                      onClick={() => setIsShortlistOpen(false)}
+                      className="text-gray-800 dark:text-white text-lg hover:bg-[#9677df] rounded-full px-1 transition-colors"
+                    >
+                      ✕
+                    </button>
                   </div>
-                  <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
-                    {shortlistedProperties.length === 0 ? (
-                      <div className="p-8 text-center">
-                        <div className="text-gray-400 dark:text-gray-600 mb-2 flex justify-center">
-                          <FiHeart size={24} />
-                        </div>
-                        <p className="text-gray-500 dark:text-gray-400 text-xs">No properties shortlisted yet.</p>
+                </div>
+                <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+                  {shortlistedProperties.length === 0 ? (
+                    <div className="p-8 text-center">
+                      <div className="text-gray-400 dark:text-gray-600 mb-2 flex justify-center">
+                        <FiHeart size={24} />
                       </div>
-                    ) : (
-                      shortlistedProperties.map((property) => (
-                        <div
-                          key={property.id}
-                          className="p-3 hover:bg-gray-100 dark:hover:bg-white/5 flex items-center gap-3 group border-b border-gray-100 dark:border-gray-800 last:border-0 transition-colors"
-                        >
-                          <div className="relative overflow-hidden rounded-lg w-12 h-12 shrink-0">
-                            <img
-                              src={property.img}
-                              alt={property.name}
-                              className="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform duration-300"
-                              onClick={() => {
-                                navigate(`/properties/${property.slug}`);
-                                setIsShortlistOpen(false);
-                              }}
-                            />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p
-                              className="text-xs font-semibold truncate cursor-pointer text-gray-900 dark:text-gray-200"
-                              onClick={() => {
-                                navigate(`/properties/${property.slug}`);
-                                setIsShortlistOpen(false);
-                              }}
-                            >
-                              {property.name}
-                            </p>
-                            <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate cursor-pointer"
-                              onClick={() => {
-                                navigate(`/properties/${property.slug}`);
-                                setIsShortlistOpen(false);
-                              }}>
-                              {
+                      <p className="text-gray-500 dark:text-gray-400 text-xs">No properties shortlisted yet.</p>
+                    </div>
+                  ) : (
+                    shortlistedProperties.map((property) => (
+                      <div
+                        key={property.id}
+                        className="p-3 hover:bg-gray-100 dark:hover:bg-white/5 flex items-center gap-3 group border-b border-gray-100 dark:border-gray-800 last:border-0 transition-colors"
+                      >
+                        <div className="relative overflow-hidden rounded-lg w-12 h-12 shrink-0">
+                          <img
+                            src={property.img}
+                            alt={property.name}
+                            className="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform duration-300"
+                            onClick={() => {
+                              navigate(`/properties/${property.slug}`);
+                              setIsShortlistOpen(false);
+                            }}
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p
+                            className="text-xs font-semibold truncate cursor-pointer text-gray-900 dark:text-gray-200"
+                            onClick={() => {
+                              navigate(`/properties/${property.slug}`);
+                              setIsShortlistOpen(false);
+                            }}
+                          >
+                            {property.name}
+                          </p>
+                          <p
+                            className="text-[10px] text-gray-500 dark:text-gray-400 truncate cursor-pointer"
+                            onClick={() => {
+                              navigate(`/properties/${property.slug}`);
+                              setIsShortlistOpen(false);
+                            }}
+                          >
+                            {
                               (() => {
                                 const locationParts = [
                                   property.location.area,
@@ -231,34 +240,33 @@ const Navbar = () => {
                                 return locationText ? `${locationText} state.` : "";
                               })()
                             }
-                            </p>
-                          </div>
-                          <button
-                            onClick={() => {
-                              toast.success("Removed from shortlist");
-                              void toggleShortlist(property);
-                            }}
-                            className="p-1.5 text-black hover:text-red-500 dark:text-white dark:hover:text-red-400 transition-colors cursor-pointer"
-                          >
-                            <FiTrash2 size={14} />
-                          </button>
+                          </p>
                         </div>
-                      ))
-                    )}
-                  </div>
-                  {shortlistedProperties.length > 0 && (
-                    <div className="p-2 border-t border-gray-100 dark:border-gray-800 bg-gray-300/50 dark:bg-white/5 text-center">
-                      <NavLink
-                        to="/properties"
-                        onClick={() => setIsShortlistOpen(false)}
-                        className="text-[10px] text-[#703BF7] dark:text-white font-bold hover:underline"
-                      >
-                        Browse More Properties
-                      </NavLink>
-                    </div>
+                        <button
+                          onClick={() => {
+                            toast.success("Removed from shortlist");
+                            void toggleShortlist(property);
+                          }}
+                          className="p-1.5 text-black hover:text-red-500 dark:text-white dark:hover:text-red-400 transition-colors cursor-pointer"
+                        >
+                          <FiTrash2 size={14} />
+                        </button>
+                      </div>
+                    ))
                   )}
                 </div>
-              )}
+                {shortlistedProperties.length > 0 && (
+                  <div className="p-2 border-t border-gray-100 dark:border-gray-800 bg-gray-300/50 dark:bg-white/5 text-center">
+                    <NavLink
+                      to="/properties"
+                      onClick={() => setIsShortlistOpen(false)}
+                      className="text-[10px] text-[#703BF7] dark:text-white font-bold hover:underline"
+                    >
+                      Browse More Properties
+                    </NavLink>
+                  </div>
+                )}
+              </div>
             </div>
 
             <button
@@ -371,79 +379,88 @@ const Navbar = () => {
                 </div>
               )}
 
-              <button onClick={() => setIsOpen(!isOpen)}>
+              <button onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
                 <svg
-                  className="w-7 h-7"
+                  className={`w-7 h-7 transition-transform duration-300 ${isOpen ? "rotate-90" : ""}`}
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+                  {isOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+                  )}
                 </svg>
               </button>
             </div>
 
-            {/* MOBILE MENU */}
-            {isOpen && (
-              <div
-                ref={menuRef}
-                className={`absolute top-0 right-0 w-50 bg-gray-200/90 dark:bg-[#1A1A1A] backdrop-blur-xl text-gray-800 dark:text-white p-6 rounded-bl-xl shadow-xl z-50 flex flex-col items-start space-y-4 transition duration-300`}>
-                {/* Close Button */}
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="text-gray-800 dark:text-white text-2xl absolute top-3 right-5"
-                >
-                  ✕
-                </button>
+            {/* MOBILE MENU BACKDROP */}
+            <div
+              className={`fixed inset-0 bg-black/40 z-40 md:hidden transition-opacity duration-300 ease-in-out
+                ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+              onClick={() => setIsOpen(false)}
+              aria-hidden="true"
+            />
 
-                {/* Menu Items */}
-                <div className="flex flex-col space-y-4 w-full mt-4">
-                  {navItems.map((item) => (
-                    <NavLink
-                      key={item.path}
-                      to={item.path}
-                      onClick={() => setIsOpen(false)}
-                      className={({ isActive }) =>
-                        `text-[17px] ${isActive ? "text-[#703BF7] font-semibold" : ""
-                        }`
-                      }
+            {/* MOBILE MENU — slides in/out from the right, always mounted for smooth transitions */}
+            <div
+              ref={menuRef}
+              className={`fixed top-0 right-0 h-full w-64 max-w-[80%] bg-gray-200/95 dark:bg-[#1A1A1A] backdrop-blur-xl text-gray-800 dark:text-white p-6 shadow-xl z-50 flex flex-col items-start space-y-4
+                transform transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
+                ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-gray-800 dark:text-white text-2xl absolute top-3 right-5"
+                aria-label="Close menu"
+              >
+                ✕
+              </button>
+
+              {/* Menu Items */}
+              <div className="flex flex-col space-y-4 w-full mt-4">
+                {navItems.map((item) => (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setIsOpen(false)}
+                    className={({ isActive }) =>
+                      `text-[17px] ${isActive ? "text-[#703BF7] font-semibold" : ""}`
+                    }
+                  >
+                    {item.name}
+                  </NavLink>
+                ))}
+
+                {/* Mobile Action Links */}
+                <NavLink to="/Contact" onClick={() => setIsOpen(false)}>
+                  {({ isActive }) => (
+                    <button
+                      className={`
+                        ${isActive ? "text-[#703BF7] font-semibold" : ""}
+                      `}
                     >
-                      {item.name}
-                    </NavLink>
-                  ))}
+                      Contact
+                    </button>
+                  )}
+                </NavLink>
 
-                  {/* Mobile Action Links */}
-
-                  <NavLink to="/Contact" onClick={() => setIsOpen(false)}>
+                {!isAuthenticated && (
+                  <NavLink to="/auth/login" onClick={() => setIsOpen(false)}>
                     {({ isActive }) => (
                       <button
-                        className={`
-                        ${isActive
-                            ? "text-[#703BF7] font-semibold"
-                            : ""
-                          }
-                      `}
+                        className={`${isActive ? "text-[#703BF7] font-semibold" : ""}`}
                       >
-                        Contact
+                        Login
                       </button>
                     )}
                   </NavLink>
-
-                  {!isAuthenticated &&
-                    <NavLink to="/auth/login" onClick={() => setIsOpen(false)}>
-                      {({ isActive }) => (
-                        <button
-                          className={`${isActive ? "text-[#703BF7] font-semibold" : ""}`}
-                        >
-                          Login
-                        </button>
-                      )}
-                    </NavLink>}
-
-                </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
         <hr className="h-px dark:bg-gray-700 bg-gray-400 border-0 w-full" />

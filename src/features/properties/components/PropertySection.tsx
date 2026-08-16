@@ -57,7 +57,7 @@ function PropertySection() {
               </div>
             ))
           ) : error ? (
-            <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:grid-cols-4 py-10 flex flex-col items-center justify-center text-center space-y-4 bg-white dark:bg-[#1A1A1A] border border-red-100 dark:border-red-900/30 rounded-xl">
+            <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 py-10 flex flex-col items-center justify-center text-center space-y-4 bg-white dark:bg-[#1A1A1A] border border-red-100 dark:border-red-900/30 rounded-xl">
               <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-full">
                 <svg
                   className="w-8 h-8 text-red-500"

@@ -45,20 +45,44 @@ function Home() {
         <link rel="canonical" href="https://rewaciti.com/" />
       </Helmet>
       <Navbar />
-      <section className="relative flex flex-col sm:flex-row" id= "hero">
+      <section className="relative flex flex-col sm:flex-row min-h-[550px] sm:min-h-0" id="hero">
 
         {/* CENTER FLOATING IMAGE */}
         <div className="hidden sm:block absolute lg:left-[52%] top-1/3 md:left-[54%] left-[54%] -translate-x-1/2 -translate-y-1/2 z-20">
           <img src={centerLogo} alt="Center Logo" className="w-23 h-auto" />
         </div>
 
-        {/* LEFT SECTION */}
-        <div className="flex-1 bg-gray-300 dark:bg-black/30 flex flex-col justify-center p-4 py-6 sm:px-8 sm:py-10 space-y-6 z-10 order-last md:order-first">
-          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
+        {/* RIGHT SECTION (IMAGE) — full background on mobile, side panel on desktop */}
+        <div
+          className="absolute inset-0 sm:relative flex-1 flex justify-center items-center overflow-hidden bg-purple-400/30 dark:bg-purple-800/5 sm:order-last"
+          style={{
+            backgroundImage: "url('/logo/Abstract Design.png')",
+            backgroundPosition: "center",
+            backgroundSize: "cover",
+          }}
+        >
+          <img
+            src={hero}
+            alt="Hero"
+            className="w-full h-full sm:h-[70vh] sm:min-h-[500px] shadow-lg object-cover transition-all duration-300 ease-in-out"
+          />
+          {/* CENTER LOGO for small screens: positioned at bottom-left of the image */}
+          <div className="sm:hidden absolute left-2 bottom-1 z-20">
+            <img
+              src={centerLogo}
+              alt="Center Logo"
+              className="w-20 h-auto transition-all duration-300 ease-in-out rounded-md shadow-md"
+            />
+          </div>
+        </div>
+
+        {/* LEFT SECTION (TEXT) — overlays the image on mobile, normal panel on desktop */}
+        <div className="relative z-10 flex-1 flex flex-col justify-end sm:justify-center p-4 pb-8 py-6 sm:px-8 sm:py-10 space-y-6 sm:order-first bg-linear-to-t from-black/80 via-black/70 to-transparent sm:bg-none sm:bg-gray-300 sm:dark:bg-black/30">
+          <h1 className="text-white sm:text-gray-900 sm:dark:text-white md:text-4xl text-3xl">
             Discover Your Dream Property with RewaCiti
           </h1>
 
-          <p className="text-gray-600 dark:text-gray-400 text-[15px] max-w-[95%]">
+          <p className="text-gray-200 sm:text-gray-600 sm:dark:text-gray-400 text-[15px] max-w-[95%]">
             Your journey to finding the perfect property begins here. Explore our listings to find the home that matches your dreams.
           </p>
 
@@ -68,52 +92,26 @@ function Home() {
                 Campus Areas
               </button>
             </Link>
-           <Link to = "/Properties">
+            <Link to="/Properties">
               <button className="bg-[#703BF7] hover:bg-[#9677df] text-white px-4 py-2 rounded text-sm cursor-pointer">
                 Browse Properties
               </button>
-           </Link>
+            </Link>
           </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 items-center text-center md:text-left w-full">
-                <div className="bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-600/30 text-gray-900 dark:text-white px-4 py-3 rounded w-full">
-                  <p className="text-lg font-semibold">50+</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Happy customers</p>
-                </div>
-                <div className="bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-600/30 text-gray-900 dark:text-white px-4 py-3 rounded w-full">
-                  <p className="text-lg font-semibold">60+</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Properties for Clients</p>
-                </div>
-                <div className="bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-600/30 text-gray-900 dark:text-white px-4 py-3 rounded w-full col-span-2 md:col-span-1">
-                  <p className="text-lg font-semibold">5+</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Years of Experience</p>
-                </div>
-              </div>
-        </div>
-        
-
-        {/* RIGHT SECTION */}
-        <div
-          className="flex-1 relative flex justify-center items-center z-10 order-first sm:order-last m-0 bg-purple-400/30 dark:bg-purple-800/5 mb-10 sm:mb-0"
-          style={{
-            backgroundImage: "url('/logo/Abstract Design.png')",
-            backgroundPosition: "center",
-            backgroundSize: "cover ",
-            
-          }}
-        >
-          <img
-            src={hero}
-            alt="Hero"
-            className="w-full shadow-lg object-cover transition-all duration-300 ease-in-out min-h-[500px] h-[70vh]"
-          />
-          {/* CENTER LOGO for small screens: positioned at bottom-left of the image */}
-          <div className="sm:hidden absolute left-0 bottom-[-7%] z-20 ">
-            <img
-              src={centerLogo}
-              alt="Center Logo"
-              className="w-18 h-auto transition-all duration-300 ease-in-out rounded-md shadow-md "
-            />
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 items-center text-center md:text-left w-full">
+            <div className="bg-white/10 sm:bg-white backdrop-blur-sm sm:backdrop-blur-none dark:sm:bg-[#1A1A1A] border border-white/20 sm:border-gray-200 sm:dark:border-gray-600/30 text-white sm:text-gray-900 sm:dark:text-white px-4 py-3 rounded w-full">
+              <p className="text-lg font-semibold">50+</p>
+              <p className="text-sm text-gray-300 sm:text-gray-600 sm:dark:text-gray-400">Happy customers</p>
+            </div>
+            <div className="bg-white/10 sm:bg-white backdrop-blur-sm sm:backdrop-blur-none dark:sm:bg-[#1A1A1A] border border-white/20 sm:border-gray-200 sm:dark:border-gray-600/30 text-white sm:text-gray-900 sm:dark:text-white px-4 py-3 rounded w-full">
+              <p className="text-lg font-semibold">60+</p>
+              <p className="text-sm text-gray-300 sm:text-gray-600 sm:dark:text-gray-400">Properties for Clients</p>
+            </div>
+            <div className="bg-white/10 sm:bg-white backdrop-blur-sm sm:backdrop-blur-none dark:sm:bg-[#1A1A1A] border border-white/20 sm:border-gray-200 sm:dark:border-gray-600/30 text-white sm:text-gray-900 sm:dark:text-white px-4 py-3 rounded w-full col-span-2 md:col-span-1">
+              <p className="text-lg font-semibold">5+</p>
+              <p className="text-sm text-gray-300 sm:text-gray-600 sm:dark:text-gray-400">Years of Experience</p>
+            </div>
           </div>
         </div>
       </section>

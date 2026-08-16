@@ -838,7 +838,7 @@ const areaOptions = [
                     : "bg-gray-400 cursor-not-allowed text-gray-200"
                   }`}
               >
-                {isSubmitting ? "Sending..." : "Send"}
+                {isSubmitting ? "Sending..." : "Send Message"}
               </button>
             </div>
           </form>

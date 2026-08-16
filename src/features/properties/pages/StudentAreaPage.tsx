@@ -346,7 +346,7 @@ function StudentAreaPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
               {loading || areaLoading ? (
                 [...Array(6)].map((_, i) => <PropertyCardSkeleton key={i} />)
               ) : currentProperties.length === 0 ? (
@@ -625,7 +625,7 @@ function StudentAreaPage() {
           </div>
           <div className="sm:col-span-2 flex items-center justify-end">
             <button type="submit" disabled={!agreed || isSubmitting || !name.trim() || !email.trim() || !phone.trim() || !preferedLocation.trim()} className={`px-4 py-2 rounded-lg font-medium transition ${agreed && !isSubmitting && name.trim() && email.trim() && phone.trim() && preferedLocation.trim() ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" : "bg-gray-400 cursor-not-allowed text-gray-200"}`}>
-              {isSubmitting ? "Sending..." : "Send"}
+              {isSubmitting ? "Sending..." : "Send Message"}
             </button>
           </div>
         </form>
