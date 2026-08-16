@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { useAreaMapStore } from "../../map/store/useAreaMapStore";
-import { FiArrowLeft, FiArrowRight, FiMapPin } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight} from "react-icons/fi";
 import PropertyCard from "../components/PropertyCard";
 import Footer from "../../../shared/components/Layout/Footer";
 import { FiFilter } from "react-icons/fi";
@@ -235,22 +235,6 @@ function StudentAreaPage() {
     ...(availableUniversities.find((u) => u.id === selectedUniversity)?.areas.map((a) => ({ label: a, value: a })) ?? []),
   ];
 
-  const categoryOptions = [
-    { label: "Categories", value: "" },
-    { label: "Self Contain", value: "Self Contain" },
-    { label: "Single Room", value: "Single Room" },
-    { label: "Mini Flat", value: "Mini Flat" },
-    { label: "Shared Room", value: "Shared Room" },
-    { label: "Flat", value: "Flat" },
-  ];
-
-  const bedroomOptions = [
-    { label: "Bedrooms", value: "" },
-    { label: "1 Room", value: "1" },
-    { label: "2 Rooms", value: "2" },
-    { label: "3 Rooms", value: "3" },
-    { label: "Shared", value: "shared" },
-  ];
 
   const totalApiPages = Math.max(1, Math.ceil(totalProperties / ITEMS_PER_PAGE));
   const currentProperties = properties;

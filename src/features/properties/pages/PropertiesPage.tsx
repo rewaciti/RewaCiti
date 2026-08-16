@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import { usePropertyStore } from "../store/usePropertyStore";
-import { FiArrowLeft, FiArrowRight, FiMapPin} from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight} from "react-icons/fi";
 import PropertyCard from "../components/PropertyCard";
 import Footer from "../../../shared/components/Layout/Footer";
 import { FiFilter } from "react-icons/fi";
@@ -17,7 +17,6 @@ import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
 
-const MAX_BEDROOM_STEP = 7; // 7 means "7+"
 
 function PropertySearchSection() {
   const { isAuthenticated, customer } = useAuthStore();
