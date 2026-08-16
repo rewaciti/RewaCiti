@@ -102,7 +102,7 @@ function Home() {
             </div>
             <div className="bg-white/10 sm:bg-white backdrop-blur-sm sm:backdrop-blur-none dark:sm:bg-[#1A1A1A] border border-white/20 sm:border-gray-200 sm:dark:border-gray-600/30 text-white sm:text-gray-900 sm:dark:text-white px-4 py-3 rounded w-full">
               <p className="text-lg font-semibold">60+</p>
-              <p className="text-sm text-gray-300 sm:text-gray-600 sm:dark:text-gray-400">Properties for Clients</p>
+              <p className="text-sm text-gray-300 sm:text-gray-600 sm:dark:text-gray-400">AvailableProperties</p>
             </div>
             <div className="bg-white/10 sm:bg-white backdrop-blur-sm sm:backdrop-blur-none dark:sm:bg-[#1A1A1A] border border-white/20 sm:border-gray-200 sm:dark:border-gray-600/30 text-white sm:text-gray-900 sm:dark:text-white px-4 py-3 rounded w-full col-span-2 md:col-span-1">
               <p className="text-lg font-semibold">5+</p>
