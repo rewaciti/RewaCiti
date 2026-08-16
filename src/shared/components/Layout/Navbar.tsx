@@ -396,7 +396,7 @@ const Navbar = () => {
               </button>
 
               {/* Menu Items */}
-              <div className="flex flex-col space-y-4 w-full mt-4 flex-grow">
+              <div className="flex flex-col space-y-4 w-full mt-4 grow">
                 {navItems.map((item) => (
                   <NavLink
                     key={item.path}

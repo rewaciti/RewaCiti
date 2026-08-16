@@ -990,7 +990,7 @@ function PropertyDetails() {
             ) : null}
           </section>
 
-          <div className="fixed bottom-4 right-4 z-50">
+          <div className="fixed bottom-4 right-4 z-30">
             <button
               onClick={scrollToInquiry}
               className="rounded-full bg-[#703BF7] hover:bg-[#9677df] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#703BF7]/30 transition-all duration-300 hover:-translate-y-1"
