@@ -118,7 +118,7 @@ function Home() {
           <img
             src={centerLogo}
             alt="Center Logo"
-            className="w-20 h-auto rounded-md"
+            className="w-23 h-auto rounded-md"
           />
         </div>
       </div>
