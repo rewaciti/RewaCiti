@@ -45,7 +45,7 @@ function Home() {
         <link rel="canonical" href="https://rewaciti.com/" />
       </Helmet>
       <Navbar />
-      <section className="relative flex flex-col sm:flex-row min-h-[600px] sm:min-h-0" id="hero">
+      <section className="relative flex flex-col sm:flex-row min-h-screen sm:min-h-0" id="hero">
 
         {/* CENTER FLOATING IMAGE */}
         <div className="hidden sm:block absolute lg:left-[52%] top-1/3 md:left-[54%] left-[54%] -translate-x-1/2 -translate-y-1/2 z-20">
