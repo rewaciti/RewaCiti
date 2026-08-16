@@ -47,7 +47,7 @@ function Home() {
       <Navbar />
 
       <section
-        className="relative flex flex-col sm:flex-row h-[calc(90vh-6.5rem)] sm:h-auto sm:min-h-0 overflow-hidden"
+        className="relative flex flex-col sm:flex-row h-[calc(95vh-6.5rem)] sm:h-auto sm:min-h-0 overflow-hidden"
         id="hero"
       >
 
