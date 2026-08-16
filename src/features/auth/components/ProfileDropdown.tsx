@@ -9,11 +9,9 @@ interface ProfileDropdownProps {
   isMobile?: boolean;
 }
 
-function ProfileDropdown({isOpen,onClose}: ProfileDropdownProps) {
+function ProfileDropdown({ isOpen, onClose }: ProfileDropdownProps) {
   const { customer, logout } = useAuthStore();
   const navigate = useNavigate();
-
-  if (!isOpen) return null;
 
   const firstName = customer?.firstName ?? "";
   const lastName = customer?.lastName ?? "";
@@ -25,13 +23,18 @@ function ProfileDropdown({isOpen,onClose}: ProfileDropdownProps) {
   const handleLogout = () => {
     logout();
     onClose();
-       navigate("/");
+    navigate("/");
   };
 
-
-
   return (
-    <div className="absolute right-0 top-12.5 md:top-13 z-50 w-64 rounded-b-xl border border-gray-600/50 bg-gray-300 shadow-xl dark:border-gray-700 dark:bg-[#1A1A1A]">
+    <div
+      className={`absolute right-0 top-12.5 md:top-13 z-50 w-64 rounded-b-xl border border-gray-600/50 bg-gray-300 shadow-xl dark:border-gray-700 dark:bg-[#1A1A1A]
+        origin-top-right transform transition-all duration-200 ease-out
+        ${isOpen
+          ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+          : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+        }`}
+    >
       {/* User Information */}
       <div className="flex items-center gap-3 border-b border-gray-600/50 p-4 dark:border-gray-700">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#703BF7] font-semibold text-white">

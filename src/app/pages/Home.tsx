@@ -64,7 +64,7 @@ function Home() {
           <img
             src={hero}
             alt="Hero"
-            className="w-full h-full sm:h-[70vh] sm:min-h-[500px] shadow-lg object-cover transition-all duration-300 ease-in-out"
+            className="w-full h-[90vh] sm:h-[70vh] sm:min-h-[500px] shadow-lg object-cover transition-all duration-300 ease-in-out"
           />
           {/* CENTER LOGO for small screens: positioned at bottom-left of the image */}
           <div className="sm:hidden absolute left-2 bottom-1 z-20">
