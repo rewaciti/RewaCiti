@@ -12,10 +12,10 @@ import { Helmet } from "react-helmet-async";
 
 function Home() {
   useScrollToHash();
- 
 
-   const services = [
- {
+
+  const services = [
+    {
       img: "/logo/servicecontainer/Icon Container (3).png",
       text: "Find Your Dream Home",
     },
@@ -45,9 +45,13 @@ function Home() {
         <link rel="canonical" href="https://rewaciti.com/" />
       </Helmet>
       <Navbar />
-      <section className="relative flex flex-col sm:flex-row min-h-[85vh] sm:min-h-0" id="hero">
 
-        {/* CENTER FLOATING IMAGE */}
+      <section
+        className="relative flex flex-col sm:flex-row h-[calc(100vh-6.5rem)] sm:h-auto sm:min-h-0 overflow-hidden"
+        id="hero"
+      >
+
+        {/* CENTER FLOATING IMAGE — desktop only, floats between left/right panels */}
         <div className="hidden sm:block absolute lg:left-[52%] top-1/3 md:left-[54%] left-[54%] -translate-x-1/2 -translate-y-1/2 z-20">
           <img src={centerLogo} alt="Center Logo" className="w-23 h-auto" />
         </div>
@@ -66,14 +70,6 @@ function Home() {
             alt="Hero"
             className="w-full h-full sm:h-[70vh] sm:min-h-[500px] shadow-lg object-cover transition-all duration-300 ease-in-out"
           />
-          {/* CENTER LOGO for small screens: positioned at bottom-left of the image */}
-          {/* <div className="sm:hidden absolute left-2 bottom-1 z-20">
-            <img
-              src={centerLogo}
-              alt="Center Logo"
-              className="w-22 h-auto transition-all duration-300 ease-in-out rounded-md shadow-md"
-            />
-          </div> */}
         </div>
 
         {/* LEFT SECTION (TEXT) — overlays the image on mobile, normal panel on desktop */}
@@ -116,53 +112,64 @@ function Home() {
         </div>
       </section>
 
+      {/* CENTER LOGO — mobile only, straddles the seam between hero and features */}
+      <div className="relative z-30 sm:hidden">
+        <div className="absolute left-10 -translate-x-1/2 -translate-y-1/2">
+          <img
+            src={centerLogo}
+            alt="Center Logo"
+            className="w-20 h-auto rounded-md"
+          />
+        </div>
+      </div>
+
       <section className="px-4 py-2 bg-gray-300 dark:bg-black/30" id="features">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            
-            {/* BOX ITEM */}
-            {services.map((item, index) => (
-              <div
-                key={index}
-                className="relative bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-600/30 rounded-xl p-6 flex flex-col items-center hover:scale-[1.02] transition"
-              >
-                {/* Arrow at top-right */}
-                <div className="absolute top-3 right-3">
-                  <img
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+
+          {/* BOX ITEM */}
+          {services.map((item, index) => (
+            <div
+              key={index}
+              className="relative bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-600/30 rounded-xl p-6 flex flex-col items-center hover:scale-[1.02] transition"
+            >
+              {/* Arrow at top-right */}
+              <div className="absolute top-3 right-3">
+                <img
                   src="/logo/Vector 431.png"
                   alt="top arrow"
                   className="w-3 h-3 object-contain mb-3"
                 />
-                </div>
-
-                {/* Center Image */}
-                <img
-                  src={item.img}
-                  alt="Icon"
-                  className="w-13 h-13 object-contain mb-3"
-                />
-
-                {/* Text */}
-                <p className="text-gray-900 dark:text-white text-center text-sm">
-                  {item.text}
-                </p>
               </div>
-            ))}
 
-          </div>
+              {/* Center Image */}
+              <img
+                src={item.img}
+                alt="Icon"
+                className="w-13 h-13 object-contain mb-3"
+              />
+
+              {/* Text */}
+              <p className="text-gray-900 dark:text-white text-center text-sm">
+                {item.text}
+              </p>
+            </div>
+          ))}
+
+        </div>
       </section>
 
       <section className="bg-gray-300 dark:bg-black/30" id="properties">
         <PropertySection />
       </section>
       <section className="bg-gray-300 dark:bg-black/30" id="testimonials">
-        <CommentSection/>
+        <CommentSection />
       </section>
       <section className="bg-gray-300 dark:bg-black/30 pb-10" id="faq">
-        <FAQSection/>
+        <FAQSection />
       </section>
       <section className="bg-gray-300 dark:bg-black/30">
-        <Footer/>
-      </section> 
+        <Footer />
+      </section>
     </div>
   )
 }
