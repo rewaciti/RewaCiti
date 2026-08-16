@@ -6,7 +6,8 @@ import { authAPI } from "../services/authAPI";
 import type { ProfileResponse } from "../services/authAPI";
 import { useAuthStore } from "../store/useAuthStore";
 import { ProfilePageSkeleton } from "../../../shared/components/ui/Skeletons";
-import {FiUser, FiMapPin, FiEdit2, FiMail, FiSave, FiX, FiLock, FiCamera, FiPhone, FiEye, FiEyeOff} from "react-icons/fi";
+import {FiUser, FiMapPin, FiEdit2, FiMail, FiSave, FiX, FiLock, FiCamera, FiPhone, FiEye, FiEyeOff, FiLogOut} from "react-icons/fi";
+import { useNavigate } from "react-router";
 
 const getErrorMessage = (error: unknown, fallback: string) => {
   if (typeof error === "object" && error !== null) {
@@ -161,10 +162,17 @@ const LabeledInput = ({
 );
 
 const Profile = () => {
-  const { setCustomer, setCompanyId } = useAuthStore();
+  const { setCustomer, setCompanyId, logout } = useAuthStore();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"info" | "security">("info");
   const [isLoading, setIsLoading] = useState(true);
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
+
+  const handleLogout = () => {
+    logout();
+    toast.success("Logged out successfully");
+    navigate("/");
+  };
 
   // Which section (if any) is currently in edit mode
   const [editingSection, setEditingSection] = useState<Section | null>(null);
@@ -405,7 +413,7 @@ const Profile = () => {
         <div className="flex w-full max-w-xs bg-gray-100 dark:bg-black/20 p-1 rounded-lg mb-4">
           <button
             onClick={() => setActiveTab("info")}
-            className={`flex-1 flex items-center justify-center gap-2 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer ${
+            className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-4 rounded-md text-xs font-semibold transition cursor-pointer ${
               activeTab === "info"
                 ? "bg-[#703BF7] text-white shadow-sm"
                 : "text-gray-700 dark:text-gray-300 hover:text-[#703BF7]"
@@ -415,7 +423,7 @@ const Profile = () => {
           </button>
           <button
             onClick={() => setActiveTab("security")}
-            className={`flex-1 flex items-center justify-center gap-2 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer ${
+            className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-4 rounded-md text-xs font-semibold transition cursor-pointer ${
               activeTab === "security"
                 ? "bg-[#703BF7] text-white shadow-sm"
                 : "text-gray-700 dark:text-gray-300 hover:text-[#703BF7]"
@@ -591,6 +599,15 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Desktop Logout Button under Basic Info */}
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="hidden md:flex items-center justify-center gap-2 w-full py-2 px-4 rounded-xl border border-red-200 dark:border-red-800/60 bg-red-50/50 hover:bg-red-50 dark:bg-red-950/10 dark:hover:bg-red-950/20 text-red-500 hover:text-red-600 transition cursor-pointer text-xs font-semibold"
+              >
+                <FiLogOut size={14} /> Logout
+              </button>
             </div>
 
             {/* Right column */}
@@ -696,6 +713,31 @@ const Profile = () => {
                 )}
               </SectionCard>
             </div>
+          </div>
+        )}
+        {/* Mobile Logout Button (always bottom right on small screens) */}
+        {!isLoading && (
+          <div className="flex md:hidden justify-end mt-6 pb-4">
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl border border-red-200 dark:border-red-800/60 bg-red-50/50 hover:bg-red-100 dark:bg-red-950/10 dark:hover:bg-red-950/20 text-red-500 hover:text-red-600 transition cursor-pointer text-xs font-semibold shadow-sm"
+            >
+              <FiLogOut size={14} /> Logout
+            </button>
+          </div>
+        )}
+
+        {/* Desktop Logout Button for Security Tab (bottom right, only visible on desktop) */}
+        {!isLoading && activeTab === "security" && (
+          <div className="hidden md:flex justify-end mt-6 pb-4">
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl border border-red-200 dark:border-red-800/60 bg-red-50/50 hover:bg-red-100 dark:bg-red-950/10 dark:hover:bg-red-950/20 text-red-500 hover:text-red-600 transition cursor-pointer text-xs font-semibold shadow-sm"
+            >
+              <FiLogOut size={14} /> Logout
+            </button>
           </div>
         )}
       </div>

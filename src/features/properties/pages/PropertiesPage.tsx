@@ -12,6 +12,7 @@ import { Link, NavLink } from "react-router";
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
 import { toast } from "sonner";
 import CustomDropdown from "../../../features/properties/components/CustomDropdown.tsx";
+import PropertyFiltersModal from "../components/PropertyFiltersModal";
 import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
@@ -455,209 +456,30 @@ const areaOptions = [
         </div>
       </div>
 
-      {/* Filters Modal — Airbnb-style layout, follows the page's light/dark theme */}
-      <div className={`fixed inset-0 z-50 flex items-end sm:items-center justify-center transition-opacity duration-300 ${
-        showFilters ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-      }`}>
-        {/* backdrop */}
-        <div
-          className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${
-            showFilters ? "opacity-100" : "opacity-0"
-          }`}
-          onClick={() => setShowFilters(false)}
-        />
-
-        {/* panel */}
-        <div className={`relative w-full sm:w-[540px] max-h-[90vh] sm:max-h-[85vh] bg-white dark:bg-[#1A1A1A] rounded-t-3xl sm:rounded-3xl flex flex-col overflow-hidden shadow-2xl transition-all duration-300 ease-out transform ${
-          showFilters 
-            ? "translate-y-0 opacity-100 scale-100" 
-            : "translate-y-full md:translate-y-10 opacity-0 scale-95"
-        }`}>
-            {/* header */}
-            <div className="flex items-center justify-center relative px-5 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-gray-900 dark:text-white font-semibold text-base">Filters</h2>
-              <button
-                onClick={() => setShowFilters(false)}
-                className="absolute right-4 text-gray-900 dark:text-white hover:opacity-60 text-xl leading-none"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* body — scrollable */}
-            <div className="overflow-y-auto px-6 py-5">
-
-              {/* Type of place */}
-              <div className="pb-6">
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Type of place</h3>
-                <div className="flex gap-2 flex-wrap">
-                  <button
-                    onClick={() => setCategory("")}
-                    className={`px-4 py-3 rounded-full border text-sm font-medium transition ${
-                      category === ""
-                        ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
-                    }`}
-                  >
-                    Any
-                  </button>
-                  {categoryOptions
-                    .filter((opt) => opt.value !== "")
-                    .map((opt) => (
-                      <button
-                        key={opt.value}
-                        onClick={() => setCategory(opt.value)}
-                        className={`px-4 py-3 rounded-full border text-sm font-medium transition ${
-                          category === opt.value
-                            ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                            : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
-                        }`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                </div>
-              </div>
-
-              <hr className="border-gray-200 dark:border-gray-700" />
-
-              {/* Location */}
-              <div className="py-6">
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Location</h3>
-                <div className="grid grid-col-1 sm:grid-cols-2 gap-3">
-                  <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
-                    <CustomDropdown
-                      icon={<FiMapPin />}
-                      placeholder="Location"
-                      value={location}
-                      options={locationOptions}
-                      onChange={(value) => {
-                        setLocation(value);
-                        setArea("");
-                      }}
-                    />
-                  </div>
-                  <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
-                    <CustomDropdown
-                      icon={<FiMapPin />}
-                      placeholder={location ? "Area" : "Choose Location First"}
-                      value={area}
-                      options={areaOptions}
-                      disabled={!location}
-                      onChange={setArea}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <hr className="border-gray-200 dark:border-gray-700" />
-
-              {/* Price range */}
-              <div className="py-6">
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-1">Price range</h3>
-                <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">Enter a minimum and/or maximum price (₦)</p>
-
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">Minimum</label>
-                    <div className="border border-gray-300 dark:border-gray-600 rounded-full px-4 py-3 flex items-center gap-1">
-                      <span className="text-gray-500 dark:text-gray-400 text-sm">₦</span>
-                      <input
-                        type="number"
-                        min={0}
-                        inputMode="numeric"
-                        placeholder="0"
-                        value={minPriceInput}
-                        onChange={(e) => setMinPriceInput(e.target.value)}
-                        className="w-full bg-transparent outline-none text-gray-900 dark:text-white text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  <span className="text-gray-400 dark:text-gray-500 mt-5">—</span>
-
-                  <div className="flex-1">
-                    <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">Maximum</label>
-                    <div className="border border-gray-300 dark:border-gray-600 rounded-full px-4 py-3 flex items-center gap-1">
-                      <span className="text-gray-500 dark:text-gray-400 text-sm">₦</span>
-                      <input
-                        type="number"
-                        min={0}
-                        inputMode="numeric"
-                        placeholder="No max"
-                        value={maxPriceInput}
-                        onChange={(e) => setMaxPriceInput(e.target.value)}
-                        className="w-full bg-transparent outline-none text-gray-900 dark:text-white text-sm"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <hr className="border-gray-200 dark:border-gray-700" />
-
-              {/* Rooms and beds */}
-              <div className="pt-6">
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Rooms and beds</h3>
-
-                <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-800">
-                  <span className="text-gray-900 dark:text-white text-sm">Bedrooms</span>
-                  <div className="flex items-center gap-4">
-                    <button
-                      onClick={() => setBedroomCount((c) => Math.max(0, c - 1))}
-                      disabled={bedroomCount === 0}
-                      className="w-8 h-8 rounded-full border border-gray-300 dark:border-gray-600 flex items-center justify-center text-gray-900 dark:text-white disabled:opacity-30 disabled:cursor-not-allowed hover:border-black dark:hover:border-white"
-                    >
-                      –
-                    </button>
-                    <span className="text-gray-900 dark:text-white text-sm w-14 text-center">
-                      {bedroomCount === 0
-                        ? "Any"
-                        : bedroomCount >= MAX_BEDROOM_STEP
-                        ? `${MAX_BEDROOM_STEP}+`
-                        : bedroomCount}
-                    </span>
-                    <button
-                      onClick={() => setBedroomCount((c) => Math.min(MAX_BEDROOM_STEP, c + 1))}
-                      disabled={bedroomCount === MAX_BEDROOM_STEP}
-                      className="w-8 h-8 rounded-full border border-gray-300 dark:border-gray-600 flex items-center justify-center text-gray-900 dark:text-white disabled:opacity-30 disabled:cursor-not-allowed hover:border-black dark:hover:border-white"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between py-3">
-                  <span className="text-gray-900 dark:text-white text-sm">Shared room only</span>
-                  <button
-                    onClick={() => setSharedRoomOnly((v) => !v)}
-                    className={`w-11 h-6 rounded-full flex items-center transition px-0.5 ${
-                      sharedRoomOnly ? "bg-[#703BF7] justify-end" : "bg-gray-300 dark:bg-gray-600 justify-start"
-                    }`}
-                  >
-                    <span className="w-5 h-5 bg-white rounded-full shadow" />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* footer */}
-            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-700">
-              <button
-                onClick={clearAllFilters}
-                className="text-gray-900 dark:text-white underline text-sm font-medium"
-              >
-                Clear all
-              </button>
-              <button
-                onClick={() => setShowFilters(false)}
-                className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-5 py-3 rounded-full text-sm font-semibold"
-              >
-                Show {totalProperties} {totalProperties === 1 ? "place" : "places"}
-              </button>
-            </div>
-          </div>
-        </div>
+      <PropertyFiltersModal
+        mode="general"
+        isOpen={showFilters}
+        onClose={() => setShowFilters(false)}
+        clearAllFilters={clearAllFilters}
+        totalProperties={totalProperties}
+        category={category}
+        setCategory={setCategory}
+        location={location}
+        setLocation={setLocation}
+        area={area}
+        setArea={setArea}
+        minPriceInput={minPriceInput}
+        setMinPriceInput={setMinPriceInput}
+        maxPriceInput={maxPriceInput}
+        setMaxPriceInput={setMaxPriceInput}
+        bedroomCount={bedroomCount}
+        setBedroomCount={setBedroomCount}
+        sharedRoomOnly={sharedRoomOnly}
+        setSharedRoomOnly={setSharedRoomOnly}
+        categories={categoryOptions}
+        locationOptions={locationOptions}
+        areaOptions={areaOptions}
+      />
 
       <section className="bg-gray-300 dark:bg-black/30 px-4 py-2 pt-4 pb-20" id="Portfolio">
         <div className="  ">

@@ -2,22 +2,18 @@ import { NavLink, useNavigate } from "react-router";
 import logo from "/Symbol.png";
 import { useState, useRef, useEffect } from "react";
 import { useThemeStore } from "../../store/useThemeStore";
-import { FiSun, FiMoon, FiHeart, FiTrash2 } from "react-icons/fi";
+import { FiSun, FiMoon, FiHeart, FiTrash2, FiLogOut } from "react-icons/fi";
 import { usePropertyStore } from "../../../features/properties/store/usePropertyStore";
 import { useAuthStore } from "../../../features/auth/store/useAuthStore";
 import { toast } from "sonner";
-import ProfileDropdown from "../../../features/auth/components/ProfileDropdown";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isShortlistOpen, setIsShortlistOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const shortlistRef = useRef<HTMLDivElement>(null);
-  const profileRef = useRef<HTMLDivElement>(null);
-  const mobileProfileRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useThemeStore();
   const { shortlistedProperties, toggleShortlist } = usePropertyStore();
-  const { isAuthenticated, customer } = useAuthStore();
+  const { isAuthenticated, customer, logout } = useAuthStore();
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -52,11 +48,6 @@ const Navbar = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (shortlistRef.current && !shortlistRef.current.contains(event.target as Node)) {
         setIsShortlistOpen(false);
-      }
-      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
-        if (!mobileProfileRef.current || !mobileProfileRef.current.contains(event.target as Node)) {
-          setIsProfileOpen(false);
-        }
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -93,17 +84,7 @@ const Navbar = () => {
     };
   }, [isOpen]);
 
-  useEffect(() => {
-    if (isProfileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
 
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isProfileOpen]);
 
   useEffect(() => {
     if (isShortlistOpen) {
@@ -334,17 +315,14 @@ const Navbar = () => {
               </NavLink>
 
               {isAuthenticated ? (
-                <div className="relative" ref={profileRef}>
-                  <button
-                    type="button"
-                    title="Profile"
-                    onClick={() => setIsProfileOpen(!isProfileOpen)}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 transition hover:bg-[#9677df] hover:text-white dark:border-gray-600 cursor-pointer animate-fade-in font-semibold text-sm bg-[#703BF7] text-white"
-                  >
-                    {profileInitials}
-                  </button>
-                  <ProfileDropdown isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} isMobile={false} />
-                </div>
+                <button
+                  type="button"
+                  title="Profile"
+                  onClick={() => navigate("/auth/profile")}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 transition hover:bg-[#9677df] hover:text-white dark:border-gray-600 cursor-pointer animate-fade-in font-semibold text-sm bg-[#703BF7] text-white"
+                >
+                  {profileInitials}
+                </button>
               ) : (
                 <NavLink to="/auth/login">
                   {({ isActive }) => (
@@ -366,17 +344,14 @@ const Navbar = () => {
             {/* MOBILE MENU BUTTON */}
             <div className="md:hidden flex items-center gap-2">
               {isAuthenticated && (
-                <div className="relative" ref={mobileProfileRef}>
-                  <button
-                    type="button"
-                    title="Profile"
-                    onClick={() => setIsProfileOpen(!isProfileOpen)}
-                    className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-[#703BF7] text-white transition hover:bg-[#9677df] hover:text-white dark:border-gray-600 cursor-pointer text-[13px] font-semibold"
-                  >
-                    {profileInitials}
-                  </button>
-                  <ProfileDropdown isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} isMobile={true} />
-                </div>
+                <button
+                  type="button"
+                  title="Profile"
+                  onClick={() => navigate("/auth/profile")}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-[#703BF7] text-white transition hover:bg-[#9677df] hover:text-white dark:border-gray-600 cursor-pointer text-[13px] font-semibold"
+                >
+                  {profileInitials}
+                </button>
               )}
 
               <button onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
@@ -421,7 +396,7 @@ const Navbar = () => {
               </button>
 
               {/* Menu Items */}
-              <div className="flex flex-col space-y-4 w-full mt-4">
+              <div className="flex flex-col space-y-4 w-full mt-4 flex-grow">
                 {navItems.map((item) => (
                   <NavLink
                     key={item.path}
@@ -439,7 +414,7 @@ const Navbar = () => {
                 <NavLink to="/Contact" onClick={() => setIsOpen(false)}>
                   {({ isActive }) => (
                     <button
-                      className={`
+                      className={`text-left w-full
                         ${isActive ? "text-[#703BF7] font-semibold" : ""}
                       `}
                     >
@@ -448,17 +423,44 @@ const Navbar = () => {
                   )}
                 </NavLink>
 
-                {!isAuthenticated && (
-                  <NavLink to="/auth/login" onClick={() => setIsOpen(false)}>
-                    {({ isActive }) => (
-                      <button
-                        className={`${isActive ? "text-[#703BF7] font-semibold" : ""}`}
-                      >
-                        Login
-                      </button>
-                    )}
+                {isAuthenticated && (
+                  <NavLink
+                    to="/auth/profile"
+                    onClick={() => setIsOpen(false)}
+                    className={({ isActive }) =>
+                      `text-[17px] ${isActive ? "text-[#703BF7] font-semibold" : ""}`
+                    }
+                  >
+                    Profile
                   </NavLink>
                 )}
+
+                <div className="mt-auto w-full pt-4 border-t border-gray-400 dark:border-gray-700">
+                  {isAuthenticated ? (
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsOpen(false);
+                        navigate("/");
+                        toast.success("Logged out successfully");
+                      }}
+                      className="text-[17px] text-red-500 font-semibold cursor-pointer text-left w-full flex items-center gap-2"
+                    >
+                      <FiLogOut size={18} />
+                      Logout
+                    </button>
+                  ) : (
+                    <NavLink to="/auth/login" onClick={() => setIsOpen(false)} className="w-full block">
+                      {({ isActive }) => (
+                        <button
+                          className={`text-left w-full ${isActive ? "text-[#703BF7] font-semibold" : ""}`}
+                        >
+                          Login
+                        </button>
+                      )}
+                    </NavLink>
+                  )}
+                </div>
               </div>
             </div>
           </div>

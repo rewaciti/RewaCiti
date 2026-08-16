@@ -12,6 +12,7 @@ import { Link, NavLink } from "react-router";
 import { Helmet } from "react-helmet-async";
 import { toast } from "sonner";
 import CustomDropdown from "../components/CustomDropdown";
+import PropertyFiltersModal from "../components/PropertyFiltersModal";
 import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
@@ -377,193 +378,26 @@ function StudentAreaPage() {
         </div>
       </div>
 
-      {/* Filters Modal — overlay-backed, doesn't shift page layout */}
-      <div className={`fixed inset-0 z-50 flex items-end sm:items-center justify-center transition-opacity duration-300 ${
-        showFilters ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-      }`}>
-        {/* backdrop */}
-        <div
-          className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${
-            showFilters ? "opacity-100" : "opacity-0"
-          }`}
-          onClick={() => setShowFilters(false)}
-        />
-
-        {/* panel */}
-        <div className={`relative w-full sm:w-[540px] max-h-[90vh] sm:max-h-[85vh] bg-white dark:bg-[#1A1A1A] rounded-t-3xl sm:rounded-3xl flex flex-col overflow-hidden shadow-2xl transition-all duration-300 ease-out transform ${
-          showFilters 
-            ? "translate-y-0 opacity-100 scale-100" 
-            : "translate-y-full md:translate-y-10 opacity-0 scale-95"
-        }`}>
-            {/* header */}
-            <div className="flex items-center justify-center relative px-5 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-gray-900 dark:text-white font-semibold text-base">Filters</h2>
-              <button
-                onClick={() => setShowFilters(false)}
-                className="absolute right-4 text-gray-900 dark:text-white hover:opacity-60 text-xl leading-none"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* body — scrollable */}
-            <div className="overflow-y-auto px-6 py-5">
-
-              {/* University & Area */}
-              <div className="pb-6">
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">University</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
-                    <CustomDropdown
-                      icon={<FiMapPin />}
-                      placeholder="University"
-                      value={selectedUniversity}
-                      options={universityOptions}
-                      onChange={(value) => {
-                        setUniversity(value);
-                        setLocation("");
-                      }}
-                    />
-                  </div>
-                  <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
-                    <CustomDropdown
-                      icon={<FiMapPin />}
-                      placeholder={selectedUniversity ? "Area" : "Choose University First"}
-                      value={location}
-                      options={areaOptions}
-                      disabled={!selectedUniversity}
-                      onChange={setLocation}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <hr className="border-gray-200 dark:border-gray-700" />
-
-              {/* Type of place */}
-              <div className="py-6">
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Type of place</h3>
-                <div className="flex gap-2 flex-wrap">
-                  <button
-                    onClick={() => setCategory("")}
-                    className={`px-4 py-3 rounded-full border text-sm font-medium transition ${
-                      category === ""
-                        ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
-                    }`}
-                  >
-                    Any
-                  </button>
-                  {categoryOptions
-                    .filter((opt) => opt.value !== "")
-                    .map((opt) => (
-                      <button
-                        key={opt.value}
-                        onClick={() => setCategory(opt.value)}
-                        className={`px-4 py-3 rounded-full border text-sm font-medium transition ${
-                          category === opt.value
-                            ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                            : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
-                        }`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                </div>
-              </div>
-
-              <hr className="border-gray-200 dark:border-gray-700" />
-
-              {/* Rooms */}
-              <div className="py-6">
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Rooms</h3>
-                <div className="flex gap-2 flex-wrap">
-                  <button
-                    onClick={() => setBedrooms("")}
-                    className={`px-4 py-3 rounded-full border text-sm font-medium transition ${
-                      bedrooms === ""
-                        ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
-                    }`}
-                  >
-                    Any
-                  </button>
-                  {bedroomOptions
-                    .filter((opt) => opt.value !== "")
-                    .map((opt) => (
-                      <button
-                        key={opt.value}
-                        onClick={() => setBedrooms(opt.value)}
-                        className={`px-4 py-3 rounded-full border text-sm font-medium transition ${
-                          bedrooms === opt.value
-                            ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                            : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
-                        }`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                </div>
-              </div>
-
-              <hr className="border-gray-200 dark:border-gray-700" />
-
-              {/* Budget */}
-              <div className="pt-6">
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Budget</h3>
-                <div className="flex gap-2 flex-wrap">
-                  <button
-                    onClick={() => {
-                      setSelectedPriceLabel("");
-                      setPriceRange([0, 999999999]);
-                    }}
-                    className={`px-4 py-3 rounded-full border text-sm font-medium transition ${
-                      selectedPriceLabel === ""
-                        ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
-                    }`}
-                  >
-                    Any
-                  </button>
-                  {priceOptions
-                    .filter((opt) => opt.label !== "All Price")
-                    .map((opt) => (
-                      <button
-                        key={opt.label}
-                        onClick={() => {
-                          setSelectedPriceLabel(opt.label);
-                          setPriceRange(opt.range as [number, number]);
-                        }}
-                        className={`px-4 py-3 rounded-full border text-sm font-medium transition ${
-                          selectedPriceLabel === opt.label
-                            ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                            : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
-                        }`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                </div>
-              </div>
-            </div>
-
-            {/* footer */}
-            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-700">
-              <button
-                onClick={clearAllFilters}
-                className="text-gray-900 dark:text-white underline text-sm font-medium"
-              >
-                Clear all
-              </button>
-              <button
-                onClick={() => setShowFilters(false)}
-                className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-5 py-3 rounded-full text-sm font-semibold"
-              >
-                Show {totalProperties} {totalProperties === 1 ? "place" : "places"}
-              </button>
-            </div>
-          </div>
-        </div>
+      <PropertyFiltersModal
+        mode="student"
+        isOpen={showFilters}
+        onClose={() => setShowFilters(false)}
+        clearAllFilters={clearAllFilters}
+        totalProperties={totalProperties}
+        category={category}
+        setCategory={setCategory}
+        location={location}
+        setLocation={setLocation}
+        selectedUniversity={selectedUniversity}
+        setUniversity={setUniversity}
+        bedrooms={bedrooms}
+        setBedrooms={setBedrooms}
+        selectedPriceLabel={selectedPriceLabel}
+        setSelectedPriceLabel={setSelectedPriceLabel}
+        setPriceRange={setPriceRange}
+        universityOptions={universityOptions}
+        areaOptions={areaOptions}
+      />
 
       <section className="bg-gray-300 dark:bg-black/30 py-2 px-4 pt-4 pb-20" id="StudentPortfolio">
         <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
