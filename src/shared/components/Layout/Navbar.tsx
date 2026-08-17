@@ -382,7 +382,7 @@ const Navbar = () => {
             {/* MOBILE MENU — slides in/out from the right, always mounted for smooth transitions */}
             <div
               ref={menuRef}
-              className={`fixed top-0 right-0 h-full w-64 max-w-[80%] bg-gray-200/95 dark:bg-[#1A1A1A] backdrop-blur-xl text-gray-800 dark:text-white p-6 shadow-xl z-50 flex flex-col items-start space-y-4
+              className={`fixed top-0 right-0 h-full w-64 max-w-[80%] bg-gray-200/60 dark:bg-[#1A1A1A]/60 backdrop-blur-xl text-gray-800 dark:text-white p-6 shadow-xl z-50 flex flex-col items-start space-y-4
                 transform transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
                 ${isOpen ? "translate-x-0" : "translate-x-full"}`}
             >
@@ -435,7 +435,7 @@ const Navbar = () => {
                   </NavLink>
                 )}
 
-                <div className="mt-auto w-full pt-4 border-t border-gray-400 dark:border-gray-700">
+                <div className="mt-auto w-full pt-4 border-t border-gray-400 dark:border-gray-600">
                   {isAuthenticated ? (
                     <button
                       onClick={() => {

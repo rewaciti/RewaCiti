@@ -114,7 +114,7 @@ function Home() {
 
       {/* CENTER LOGO — mobile only, straddles the seam between hero and features */}
       <div className="relative z-30 sm:hidden">
-        <div className="absolute left-11 -translate-x-1/2 -translate-y-2/3">
+        <div className="absolute left-11.5 -translate-x-1/2 -translate-y-2/3">
           <img
             src={centerLogo}
             alt="Center Logo"
