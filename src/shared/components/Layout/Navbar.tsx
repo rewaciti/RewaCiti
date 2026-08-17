@@ -435,7 +435,7 @@ const Navbar = () => {
                   </NavLink>
                 )}
 
-                <div className="mt-auto w-full pt-4 border-t border-gray-400 dark:border-gray-600">
+                <div className="mt-auto w-full pt-4 border-t border-gray-500">
                   {isAuthenticated ? (
                     <button
                       onClick={() => {
