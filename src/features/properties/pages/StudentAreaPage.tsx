@@ -314,7 +314,11 @@ function StudentAreaPage() {
       </Helmet>
       <Navbar />
       <div className="relative" id="StudentCategories">
-        <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10 md:py-5 border-b border-gray-600">
+        <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 pb-10 border-b border-gray-600">
+         <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Find Student Accommodation</h1>
+          <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
+            Welcome to RewaCiti, your trusted partner in finding comfortable and affordable student accommodation. Whether you're searching for a hostel, shared apartment, self-contained room and more, we've got options tailored to your needs. Use filters for university, budget, and amenities to discover places that fit your study needs and lifestyle.
+          </p>
           <NavLink to="/properties" className="inline-block mt-3 bg-[#703BF7] hover:bg-[#9677df] transition text-white px-4 py-2 rounded-lg text-sm font-medium">
             🏠 General Residence
           </NavLink>
