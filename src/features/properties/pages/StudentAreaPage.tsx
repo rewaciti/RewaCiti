@@ -314,8 +314,8 @@ function StudentAreaPage() {
       </Helmet>
       <Navbar />
       <div className="relative" id="StudentCategories">
-        <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 border-b border-gray-600">
-          <NavLink to="/properties" className="inline-block mt-3 bg-[#703BF7] hover:bg-[#5c2fe0] transition text-white px-4 py-2 rounded-lg text-sm font-medium">
+        <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10 md:py-5 border-b border-gray-600">
+          <NavLink to="/properties" className="inline-block mt-3 bg-[#703BF7] hover:bg-[#9677df] transition text-white px-4 py-2 rounded-lg text-sm font-medium">
             🏠 General Residence
           </NavLink>
         </div>
