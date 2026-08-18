@@ -369,7 +369,7 @@ const areaOptions = [
       </Helmet>
       <Navbar />
       <div className="relative" id="Categories">
-        <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10  space-y-6 border-b border-gray-600">
+        <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 space-3-6 border-b border-gray-600">
           <NavLink
             to="/Studentarea"
             className="inline-block mt-3 bg-[#703BF7] hover:bg-[#5c2fe0] transition text-white px-4 py-2 rounded-lg text-sm font-medium"

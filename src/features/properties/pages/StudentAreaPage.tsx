@@ -314,7 +314,7 @@ function StudentAreaPage() {
       </Helmet>
       <Navbar />
       <div className="relative" id="StudentCategories">
-        <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10 border-b border-gray-600">
+        <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 border-b border-gray-600">
           <NavLink to="/properties" className="inline-block mt-3 bg-[#703BF7] hover:bg-[#5c2fe0] transition text-white px-4 py-2 rounded-lg text-sm font-medium">
             🏠 General Residence
           </NavLink>
@@ -352,9 +352,9 @@ function StudentAreaPage() {
                 <img src="/logo/Abstract Design (1).png" alt="Icon" className="w-13 object-contain" />
                 <div className="flex justify-between items-center">
                   <div className="space-y-3">
-                    <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Discover a World of Possibilities</h1>
+                    <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Discover properties around campuses</h1>
                     <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-                      Our portfolio of properties is as diverse as your dreams. Explore the following categories to find the perfect property that resonates with your vision of home.
+                       Explore properties around your preferred campus and find convenient accommodation in locations that fit your needs.
                     </p>
                   </div>
                 </div>

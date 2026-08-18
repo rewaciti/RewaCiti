@@ -194,7 +194,7 @@ function Contact() {
         <link rel="canonical" href="https://rewaciti.com/contact" />
       </Helmet>
       <Navbar />
-      <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10  space-y-6" id="Contactinfo">
+      <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 space-y-3" id="Contactinfo">
         <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
           Get in Touch with RewaCiti
         </h1>
