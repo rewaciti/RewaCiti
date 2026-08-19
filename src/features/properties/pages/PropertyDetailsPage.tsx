@@ -511,10 +511,15 @@ function PropertyDetails() {
       {loading && properties.length === 0 ? (
         <PropertyDetailsSkeleton />
       ) : !property ? (
-        <div className="bg-black/30 min-h-[70vh] flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-semibold text-white mb-4">Property Not Found</h1>
-            <p className="text-gray-400">The property you're looking for doesn't exist.</p>
+        <div className="dark:bg-black/30 bg-gray min-h-[70vh] flex items-center justify-center">
+          <div className="text-center space-y-3">
+            <h1 className="text-2xl font-semibold dark:text-white text-gray-800">Property Not Found</h1>
+            <p className="dark:text-gray-400 text-gray-600 ">The property you're looking for is no more more available, please explore other properties.</p>
+            <Link to="/Properties">
+              <button className="bg-[#703BF7] hover:bg-[#9677df] text-white px-4 py-2 rounded text-sm cursor-pointer">
+                Browse Properties
+              </button>
+            </Link>
           </div>
         </div>
       ) : (
