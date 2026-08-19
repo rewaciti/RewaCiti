@@ -194,13 +194,13 @@ function Contact() {
         <link rel="canonical" href="https://rewaciti.com/contact" />
       </Helmet>
       <Navbar />
-      <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 space-y-3" id="Contactinfo">
+      <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 space-y-1" id="Contactinfo">
         <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-          Get in Touch with RewaCiti
+          Get in Touch with Us
         </h1>
 
         <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-          Welcome to RewaCiti's Contact Us page. We're here to assist you with any inquiries, requests, or feedback you may have. Whether you're looking to buy or sell a property, explore investment opportunities, or simply want to connect, we're just a message away. Reach out to us, and let's start a conversation.
+          Welcome to RewaCiti's Contact Us page. Have questions, requests, or feedback? Whether you're buying, selling, or exploring properties, we're here to help. Reach out and let's connect.
         </p>
       </div>
 

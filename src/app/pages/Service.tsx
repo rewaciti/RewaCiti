@@ -119,7 +119,7 @@ const services4 = [
         <link rel="canonical" href="https://rewaciti.com/service" />
       </Helmet>
         <Navbar />
-         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 space-y-3">
+         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 space-y-1">
                 <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
                Elevate Your Real Estate Experience
             </h1>
