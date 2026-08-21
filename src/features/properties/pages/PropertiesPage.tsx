@@ -374,7 +374,7 @@ const areaOptions = [
             Find Your Dream Property
           </h1>
 
-            <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
+            <p className="text-gray-800 dark:text-gray-400 text-[14px]">
               Discover your dream property with RewaCiti. Explore properties
               across different categories and find the perfect space for your
               lifestyle.
@@ -428,7 +428,7 @@ const areaOptions = [
                     <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
                       Discover a World of Possibilities
                     </h1>
-                      <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
+                      <p className="text-gray-800 dark:text-gray-400 text-[14px]">
                         Our portfolio of properties is as diverse as your dreams.
                         Explore the following categories to find the perfect property
                         that resonates with your vision of home

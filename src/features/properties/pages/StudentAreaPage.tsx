@@ -317,7 +317,7 @@ function StudentAreaPage() {
         
         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 pb-10 space-y-1 border-b border-gray-600">
          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Student Area Properties</h1>
-         <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
+         <p className="text-gray-800 dark:text-gray-400 text-[14px]">
             Find comfortable and affordable student accommodation with RewaCiti. Explore hostels, apartments, and rooms tailored to your budget and lifestyle.
          </p>
           <NavLink to="/properties" className="inline-block mt-3 bg-[#703BF7] hover:bg-[#9677df] transition text-white px-4 py-2 rounded-lg text-sm font-medium">
@@ -358,7 +358,7 @@ function StudentAreaPage() {
                 <div className="flex justify-between items-center">
                   <div className="space-y-3">
                     <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Discover properties around campuses</h1>
-                    <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
+                    <p className="text-gray-800 dark:text-gray-400 text-[14px]">
                        Explore properties around your preferred campus and find convenient accommodation in locations that fit your needs.
                     </p>
                   </div>
