@@ -284,7 +284,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange} modal={false}>
       <Dialog.Portal>
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-4 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto" aria-describedby="property-payment-description">
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-4 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto center-modal-animate" aria-describedby="property-payment-description">
           <div className="flex justify-between items-center mb-6">
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900">
               Pay for Property
@@ -445,8 +445,8 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
               type="submit"
               disabled={isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed}
               className={`w-full font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50 ${isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed
-                  ? "bg-gray-400 cursor-not-allowed text-gray-200"
-                  : "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
+                ? "bg-gray-400 cursor-not-allowed text-gray-200"
+                : "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
                 }`}
             >
               {isSubmitting ? "Processing..." : `Pay Total: ₦${price.toLocaleString()}`}

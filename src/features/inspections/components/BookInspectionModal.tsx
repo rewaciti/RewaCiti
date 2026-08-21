@@ -66,7 +66,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
           const profileData = await authAPI.getProfile();
           const latestPhone = profileData.phoneNumber || "";
           setProfilePhone(latestPhone);
-          
+
           const currentCustomer = useAuthStore.getState().customer;
           if (currentCustomer && currentCustomer.phoneNumber !== latestPhone) {
             useAuthStore.getState().setCustomer({
@@ -104,7 +104,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
         headers: { "x-api-key": API_KEY },
         responseType: 'blob'
       });
-      
+
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -212,15 +212,15 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                 { label: "Booking Reference", value: transaction.reference },
                 { label: "Inspection Fee", value: `₦${amount.toLocaleString()}` },
                 ...(property.createdBy?._id || property.createdBy?.id
-                    ? [
-                        {
-                          label: "Agent ID",
-                          value: property.createdBy._id ?? property.createdBy.id,
-                        },
-                      ]
-                : []),
+                  ? [
+                    {
+                      label: "Agent ID",
+                      value: property.createdBy._id ?? property.createdBy.id,
+                    },
+                  ]
+                  : []),
                 { label: "Property ID", value: property.id },
-                { label: "Category", value: property.category},
+                { label: "Category", value: property.category },
                 { label: "Sale ID", value: saleId },
                 ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
                 ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : [])
@@ -245,7 +245,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
             });
 
             updatePaymentStatus(transaction.reference, "paid");
-            
+
             toast.success(
               <div className="whitespace-pre-wrap">
                 {`Payment successful! \nA member of our team will contact you shortly.`}
@@ -277,7 +277,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
       if (axios.isAxiosError(error)) {
         console.error("Payment flow error:", error);
         const errorMessage = error.response?.data?.message || "";
-        
+
         if (errorMessage.toLowerCase().includes("stock") || errorMessage.toLowerCase().includes("available")) {
           toast.error("This property is no longer available. Please check out our other listings.", {
             duration: 6000,
@@ -296,7 +296,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange} modal={false}>
       <Dialog.Portal>
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-4 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto" aria-describedby="inspection-modal-description">
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-4 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto center-modal-animate" aria-describedby="inspection-modal-description">
           <div className="flex justify-between items-center mb-6">
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900">
               Book a Visit
@@ -361,7 +361,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               </div>
             )}
 
-             <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
+            <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
               <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
                 A verified agent will be assigned and our team will contact you within{" "}
                 <span className="font-semibold text-[#703BF7]">24 hours</span> to confirm your property details and schedule a suitable viewing time.
@@ -390,26 +390,25 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
             </div>
 
             <div className="sm:col-span-2 flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  className="mt-0.5"
-                  checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
-                  required
-                />
-                <p className="text-sm text-gray-700 dark:text-gray-300 ">
-                    I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
-                  </p>
+              <input
+                type="checkbox"
+                className="mt-0.5"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                required
+              />
+              <p className="text-sm text-gray-700 dark:text-gray-300 ">
+                I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
+              </p>
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting || !fullName.trim() || !bookingEmail.trim() || !phone.trim() || !agreed}
-              className={`w-full font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50 ${
-                isSubmitting || !fullName.trim() || !bookingEmail.trim() || !phone.trim() || !agreed
-                  ? "bg-gray-400 cursor-not-allowed text-gray-200"
-                  : "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
-              }`}
+              className={`w-full font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50 ${isSubmitting || !fullName.trim() || !bookingEmail.trim() || !phone.trim() || !agreed
+                ? "bg-gray-400 cursor-not-allowed text-gray-200"
+                : "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
+                }`}
             >
               {isSubmitting ? "Processing..." : "Pay & Book a Visit"}
             </button>

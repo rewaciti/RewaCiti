@@ -124,8 +124,6 @@ function PropertyDetails() {
     setIsLightboxOpen(false);
   }, [slug, property?.id]);
 
-  const visibleImages = images.slice(currentIndex, currentIndex + step);
-
   const nextImages = useCallback(() => {
     if (currentIndex + step < images.length) {
       setCurrentIndex((prev) => prev + 1);
@@ -699,33 +697,39 @@ function PropertyDetails() {
 
               {/* Main Image Display */}
               <div
-                className="relative"
+                className="relative overflow-hidden rounded-xl"
                 onTouchStart={onTouchStart}
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
               >
-                <div className="grid gap-2 grid-cols-1 sm:grid-cols-2">
-                  {visibleImages.map((img, index) => (
+                <div
+                  className="flex transition-transform duration-500 ease-out"
+                  style={{
+                    transform: `translateX(-${currentIndex * (100 / step)}%)`,
+                  }}
+                >
+                  {images.map((img, index) => (
                     <div
                       key={index}
-                      className="relative cursor-pointer"
+                      className="w-full sm:w-1/2 flex-shrink-0 px-1 relative cursor-pointer"
                       onClick={() => {
-                        setLightboxIndex(currentIndex + index);
+                        setLightboxIndex(index);
                         setIsLightboxOpen(true);
                       }}
                     >
                       <img
                         src={img}
-                        className={`w-full dark:bg-[#1A1A1A] bg-white md:object-cover rounded-xl ${visibleImages.length === 1 ? "h-[55vh] sm:h-[65vh] lg:h-[70vh]" : "h-[45vh] sm:h-[55vh] lg:h-[70vh]"}`}
-                        alt={`Property image ${currentIndex + index + 1}`}
+                        className={`w-full dark:bg-[#1A1A1A] bg-white md:object-cover rounded-xl ${step === 1 ? "h-[55vh] sm:h-[65vh] lg:h-[70vh]" : "h-[45vh] sm:h-[55vh] lg:h-[70vh]"}`}
+                        alt={`Property image ${index + 1}`}
                       />
 
-                      <div className="absolute left-4 bottom-4 bg-black/60 dark:bg-black/60 text-white px-3 py-1 rounded-full text-xs font-medium select-none">
+                      <div className="absolute left-5 bottom-4 bg-black/60 dark:bg-black/60 text-white px-3 py-1 rounded-full text-xs font-medium select-none">
                         Click to view real size image
                       </div>
                     </div>
                   ))}
                 </div>
+              </div>
 
                 {/* Controls */}
                 <div className="flex justify-center items-center mt-4 gap-4 bg-black/20 p-1 rounded-full w-fit mx-auto">
@@ -773,14 +777,13 @@ function PropertyDetails() {
                   </button>
                 </div>
               </div>
-            </div>
           </section>
 
           {/* Lightbox Dialog */}
           <Dialog.Root open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
             <Dialog.Portal>
-              <Dialog.Overlay className="fixed inset-0 bg-white/95 dark:bg-black/95 z-50 backdrop-blur-sm" />
-              <Dialog.Content className="fixed inset-0 z-100 flex items-center justify-center outline-none">
+              <Dialog.Overlay className="fixed inset-0 bg-white/95 dark:bg-black/95 z-50 backdrop-blur-sm dialog-overlay-animate" />
+              <Dialog.Content className="fixed inset-0 z-100 flex items-center justify-center outline-none lightbox-content-animate">
                 <div className="relative w-full h-full flex items-center justify-center">
                   <Dialog.Title className="sr-only">Property Image Gallery</Dialog.Title>
                   <Dialog.Description className="sr-only">
@@ -833,18 +836,32 @@ function PropertyDetails() {
 
                   {/* Image Container */}
                   <div
-                    className="w-full h-full flex items-center justify-center p-4"
+                    className="w-full h-full overflow-hidden relative flex items-center justify-center p-4"
                     onClick={() => setIsLightboxOpen(false)}
                     onTouchStart={onTouchStart}
                     onTouchMove={onTouchMove}
                     onTouchEnd={onTouchEnd}
                   >
-                    <img
-                      src={images[lightboxIndex]}
-                      alt={`Property Image ${lightboxIndex + 1}`}
-                      className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl select-none"
-                      onClick={(e) => e.stopPropagation()}
-                    />
+                    <div
+                      className="flex transition-transform duration-500 ease-out w-full h-full items-center"
+                      style={{
+                        transform: `translateX(-${lightboxIndex * 100}%)`,
+                      }}
+                    >
+                      {images.map((img, index) => (
+                        <div
+                          key={index}
+                          className="w-full h-full flex-shrink-0 flex items-center justify-center p-4"
+                        >
+                          <img
+                            src={img}
+                            alt={`Property Image ${index + 1}`}
+                            className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl select-none"
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Counter */}

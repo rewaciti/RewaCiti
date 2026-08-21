@@ -47,7 +47,7 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
 
     setIsSubmitting(true);
 
-    try { 
+    try {
       const feedbackPayload = {
         companyId: COMPANY_ID,
         pipelineId: "6a27f05df19944ca7f9a87dd",
@@ -60,7 +60,7 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
         customData: [
           { label: "Property Name", value: property.name },
           { label: "Service Rating", value: `${rating} Stars` },
-          { label: "Feedback", value: feedback|| "No additional feedback provided" },
+          { label: "Feedback", value: feedback || "No additional feedback provided" },
           { label: "Property ID", value: property.id }
         ]
       };
@@ -87,7 +87,7 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
     <Dialog.Root open={open} onOpenChange={handleClose}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm dialog-overlay-animate" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-6 rounded-xl shadow-2xl z-50">
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-6 rounded-xl shadow-2xl z-50 center-modal-animate">
           <div className="flex justify-between items-center mb-6">
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900">
               Rate Our Service
@@ -119,11 +119,10 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
                   >
                     <FiStar
                       size={32}
-                      className={`${
-                        star <= (hoverRating || rating)
+                      className={`${star <= (hoverRating || rating)
                           ? "fill-yellow-400 text-yellow-400"
                           : "text-gray-400"
-                      }`}
+                        }`}
                     />
                   </button>
                 ))}
@@ -154,11 +153,10 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
               <button
                 type="submit"
                 disabled={rating === 0 || isSubmitting}
-                className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  rating > 0 && !isSubmitting
+                className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors ${rating > 0 && !isSubmitting
                     ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white"
                     : "bg-gray-400 cursor-not-allowed text-gray-200"
-                }`}
+                  }`}
               >
                 {isSubmitting ? "Submitting..." : "Submit"}
               </button>
