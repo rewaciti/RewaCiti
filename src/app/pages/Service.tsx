@@ -99,7 +99,7 @@ const services4 = [
     image: "/logo/servicecontainer/Icon Container (8).png",
   },
   {
-    title: "Diversification Mastery",
+    title: "Diversified Mastery",
     description:
       "Diversify your real estate portfolio effectively. Our experts guide you in spreading your investments across various property types and locations",
     image: "/logo/servicecontainer/Icon Container (6).png",
