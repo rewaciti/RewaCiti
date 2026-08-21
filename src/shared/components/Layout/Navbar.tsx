@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router";
+import { NavLink, useNavigate, useLocation } from "react-router";
 import logo from "/Symbol.png";
 import { useState, useRef, useEffect } from "react";
 import { useThemeStore } from "../../store/useThemeStore";
@@ -16,6 +16,18 @@ const Navbar = () => {
   const { isAuthenticated, customer, logout } = useAuthStore();
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const checkActive = (path: string) => {
+    const currentPath = location.pathname.toLowerCase();
+    const targetPath = path.toLowerCase();
+
+    if (targetPath === "/properties") {
+      return currentPath === "/properties" || currentPath === "/studentarea";
+    }
+
+    return currentPath === targetPath;
+  };
 
   const profileInitials = (() => {
     const firstName = customer?.firstName?.trim();
@@ -281,20 +293,21 @@ const Navbar = () => {
 
             {/* Desktop Nav */}
             <div className="hidden md:flex lg:space-x-6 space-x-3 items-center text-gray-800 2xl:text-[18px] sm:text-[15px] dark:text-white">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  className={({ isActive }) =>
-                    `${isActive
+              {navItems.map((item) => {
+                const isActive = checkActive(item.path);
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    className={`${isActive
                       ? 'p-2 px-3 bg-[#703BF7] text-white border border-gray-300 rounded-md'
                       : 'text-gray-800 dark:text-white border-gray-200 dark:border-gray-600 hover:bg-[#9677df] hover:border-[#703BF7] p-2 px-3 rounded-md'
-                    }`
-                  }
-                >
-                  {item.name}
-                </NavLink>
-              ))}
+                    }`}
+                  >
+                    {item.name}
+                  </NavLink>
+                );
+              })}
             </div>
 
             {/* Desktop Action Buttons */}
@@ -397,18 +410,19 @@ const Navbar = () => {
 
               {/* Menu Items */}
               <div className="flex flex-col space-y-4 w-full mt-4 grow">
-                {navItems.map((item) => (
-                  <NavLink
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setIsOpen(false)}
-                    className={({ isActive }) =>
-                      `text-[17px] ${isActive ? "text-[#703BF7] font-semibold" : ""}`
-                    }
-                  >
-                    {item.name}
-                  </NavLink>
-                ))}
+                {navItems.map((item) => {
+                  const isActive = checkActive(item.path);
+                  return (
+                    <NavLink
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => setIsOpen(false)}
+                      className={`text-[17px] ${isActive ? "text-[#703BF7] font-semibold" : ""}`}
+                    >
+                      {item.name}
+                    </NavLink>
+                  );
+                })}
 
                 {/* Mobile Action Links */}
                 <NavLink to="/Contact" onClick={() => setIsOpen(false)}>
