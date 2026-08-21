@@ -143,7 +143,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
       for (const url of candidateUrls) {
         try {
           await axios.post(url, payload);
-          toast.success("Report submitted successfully. We will investigate this agent.");
+          toast.success("Report submitted successfully.\nThank you for your feedback. We will investigate the issue appropriately.");
           onOpenChange(false);
           setReason("");
           setDescription("");

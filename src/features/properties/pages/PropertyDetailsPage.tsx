@@ -512,7 +512,7 @@ function PropertyDetails() {
         <div className="dark:bg-black/30 bg-gray min-h-[70vh] flex items-center justify-center">
           <div className="text-center space-y-3">
             <h1 className="text-2xl font-semibold dark:text-white text-gray-800">Property Not Found</h1>
-            <p className="dark:text-gray-400 text-gray-600 ">The property you're looking for is no more more available, please explore other properties.</p>
+            <p className="dark:text-gray-400 text-gray-600 ">The property you're looking for is no more more available or there is a poor internet connection, please explore other properties ar check your internet connection.</p>
             <Link to="/Properties">
               <button className="bg-[#703BF7] hover:bg-[#9677df] text-white px-4 py-2 rounded text-sm cursor-pointer">
                 Browse Properties
@@ -711,7 +711,7 @@ function PropertyDetails() {
                   {images.map((img, index) => (
                     <div
                       key={index}
-                      className="w-full sm:w-1/2 flex-shrink-0 px-1 relative cursor-pointer"
+                      className="w-full sm:w-1/2 shrink-0 px-1 relative cursor-pointer"
                       onClick={() => {
                         setLightboxIndex(index);
                         setIsLightboxOpen(true);
@@ -851,7 +851,7 @@ function PropertyDetails() {
                       {images.map((img, index) => (
                         <div
                           key={index}
-                          className="w-full h-full flex-shrink-0 flex items-center justify-center p-4"
+                          className="w-full h-full shrink-0 flex items-center justify-center p-4"
                         >
                           <img
                             src={img}
