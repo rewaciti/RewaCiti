@@ -1,7 +1,8 @@
+import { useState } from "react";
 import type { Property } from "../../../types";
 import { NavLink } from "react-router";
 import { FaBed, FaBath, FaHome } from "react-icons/fa";
-import { FiMapPin, FiHeart, FiShare2 } from "react-icons/fi";
+import { FiMapPin, FiHeart, FiShare2, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { formatCurrency } from "../../../shared/lib/utils";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { useNavigate } from "react-router";
@@ -12,12 +13,49 @@ interface PropertyCardProps {
   property: Property;
 }
 
+const DOTS_PER_GROUP = 4;
+
 function PropertyCard({ property }: PropertyCardProps) {
   const { toggleShortlist, shortlistedProperties } = usePropertyStore();
   const propertySlug = property.slug;
 
   const isShortlisted = shortlistedProperties.some((p) => p.id === property.id);
   const navigate = useNavigate();
+
+  // Support either a property.images[] array or fall back to the single property.img
+  const images: string[] =
+    Array.isArray((property as Property).images) && (property as Property).images.length > 0
+      ? (property as Property).images
+      : [property.img];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const hasMultipleImages = images.length > 1;
+  const currentGroup = Math.floor(currentIndex / DOTS_PER_GROUP);
+  const groupStart = currentGroup * DOTS_PER_GROUP;
+  const groupEnd = Math.min(groupStart + DOTS_PER_GROUP, images.length);
+  const dotIndices = Array.from(
+    { length: groupEnd - groupStart },
+    (_, i) => groupStart + i
+  );
+
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
+  const handleDotClick = (index: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIndex(index);
+  };
 
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -72,13 +110,49 @@ function PropertyCard({ property }: PropertyCardProps) {
       {/* Image Container */}
       <div className="relative group">
         <img
-          src={property.img}
+          src={images[currentIndex]}
           alt={property.name}
           className="w-full h-44 object-cover rounded-md mb-3"
         />
 
+        {/* Prev / Next Arrows — only show when there's more than one image, appear on hover */}
+        {hasMultipleImages && (
+          <>
+            <button
+              onClick={handlePrevImage}
+              title="Previous image"
+              className="absolute left-1 top-1/2 -translate-y-1/2 mb-3 p-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-[#703BF7] hover:scale-110 cursor-pointer"
+            >
+              <FiChevronLeft size={16} />
+            </button>
+            <button
+              onClick={handleNextImage}
+              title="Next image"
+              className="absolute right-1 top-1/2 -translate-y-1/2 mb-3 p-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-[#703BF7] hover:scale-110 cursor-pointer"
+            >
+              <FiChevronRight size={16} />
+            </button>
+
+            {/* Dot pagination — shows at most 4 dots at a time, grouped in sets of 4 */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5">
+              {dotIndices.map((idx) => (
+                <button
+                  key={idx}
+                  onClick={(e) => handleDotClick(idx, e)}
+                  title={`Image ${idx + 1}`}
+                  className={`rounded-full transition-all cursor-pointer ${
+                    idx === currentIndex
+                      ? "w-2 h-2 bg-white"
+                      : "w-1.5 h-1.5 bg-white/50 hover:bg-white/80"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
         {/* Floating Action Buttons */}
-        <div className="absolute bottom-4 right-1 flex flex-col gap-2 transition-opacity duration-300">
+        <div className="absolute bottom-4 right-1 flex gap-2 transition-opacity duration-300">
           <button
             onClick={handleShortlist}
             title={isShortlisted ? "Remove from shortlist" : "Add to shortlist"}
