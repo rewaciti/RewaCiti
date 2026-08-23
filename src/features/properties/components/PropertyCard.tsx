@@ -267,7 +267,7 @@ function PropertyCard({ property }: PropertyCardProps) {
         )}
 
         {/* Floating Action Buttons */}
-        <div className="absolute z-10 bottom-1 right-1 flex gap-1 transition-opacity duration-300">
+        <div className="absolute z-10 top-2 right-1 flex gap-1 transition-opacity duration-300">
           <button
             onClick={handleShortlist}
             title={isShortlisted ? "Remove from shortlist" : "Add to shortlist"}
