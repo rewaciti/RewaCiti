@@ -1,7 +1,8 @@
+import { useRef, useState } from "react";
 import type { Property } from "../../../types";
 import { NavLink } from "react-router";
 import { FaBed, FaBath, FaHome } from "react-icons/fa";
-import { FiMapPin, FiHeart, FiShare2 } from "react-icons/fi";
+import { FiMapPin, FiHeart, FiShare2, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { formatCurrency } from "../../../shared/lib/utils";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { useNavigate } from "react-router";
@@ -12,12 +13,112 @@ interface PropertyCardProps {
   property: Property;
 }
 
+const DOTS_PER_GROUP = 4;
+const DOT_SIZE = 6;
+const DOT_GAP = 6;
+const SWIPE_THRESHOLD = 40;
+
 function PropertyCard({ property }: PropertyCardProps) {
   const { toggleShortlist, shortlistedProperties } = usePropertyStore();
   const propertySlug = property.slug;
 
   const isShortlisted = shortlistedProperties.some((p) => p.id === property.id);
   const navigate = useNavigate();
+
+  // Support either a property.images[] array or fall back to the single property.img
+  const images: string[] =
+    Array.isArray((property as Property).images) && (property as Property).images.length > 0
+      ? (property as Property).images
+      : [property.img];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const hasMultipleImages = images.length > 1;
+
+  // Sliding window of dots: always shows at most DOTS_PER_GROUP dots,
+  // and the window shifts by one as currentIndex moves past its edges,
+  // instead of jumping in fixed blocks of 4.
+  const windowSize = Math.min(DOTS_PER_GROUP, images.length);
+  const windowStart = Math.max(
+    0,
+    Math.min(
+      currentIndex - Math.floor(windowSize / 2),
+      images.length - windowSize
+    )
+  );
+
+  const isFirstImage = currentIndex === 0;
+  const isLastImage = currentIndex === images.length - 1;
+
+  const goToIndex = (index: number) => {
+    setCurrentIndex(Math.max(0, Math.min(index, images.length - 1)));
+  };
+
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    goToIndex(currentIndex - 1);
+  };
+
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    goToIndex(currentIndex + 1);
+  };
+
+  const handleDotClick = (index: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    goToIndex(index);
+  };
+
+  // --- Touch / swipe support for mobile ---
+  const touchStartRef = useRef({ x: 0, y: 0 });
+  const isSwipingRef = useRef(false);
+  const justSwipedRef = useRef(false);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+    isSwipingRef.current = false;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - touchStartRef.current.x;
+    const deltaY = touch.clientY - touchStartRef.current.y;
+    // Only treat as a swipe once horizontal movement clearly dominates,
+    // so vertical page-scrolling on mobile still works normally.
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+      isSwipingRef.current = true;
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!hasMultipleImages) return;
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - touchStartRef.current.x;
+
+    if (isSwipingRef.current && Math.abs(deltaX) > SWIPE_THRESHOLD) {
+      e.preventDefault();
+      e.stopPropagation();
+      justSwipedRef.current = true; // stops the click that follows from navigating
+      if (deltaX < 0) {
+        goToIndex(currentIndex + 1); // swiped left -> next image
+      } else {
+        goToIndex(currentIndex - 1); // swiped right -> previous image
+      }
+    }
+    isSwipingRef.current = false;
+  };
+
+  const handleCardClick = () => {
+    if (justSwipedRef.current) {
+      justSwipedRef.current = false;
+      return;
+    }
+    navigate(`/properties/${propertySlug}`);
+  };
 
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -68,33 +169,131 @@ function PropertyCard({ property }: PropertyCardProps) {
 
   return (
     <div className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 text-gray-900 dark:text-white shadow-sm hover:shadow-lg transition-all duration-300 rounded-lg p-2 relative hover:cursor-pointer flex flex-col h-full animate-fade-in-up"
-      onClick={() => navigate(`/properties/${propertySlug}`)}>
+      onClick={handleCardClick}>
       {/* Image Container */}
-      <div className="relative group">
-        <img
-          src={property.img}
-          alt={property.name}
-          className="w-full h-44 object-cover rounded-md mb-3"
-        />
+      <div
+        className="relative group overflow-hidden rounded-md mb-3"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div
+          className="flex transition-transform duration-500 ease-in-out touch-pan-y"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        >
+          {images.map((img, idx) => (
+            <img
+              key={idx}
+              src={img}
+              alt={`${property.name} ${idx + 1}`}
+              className="w-full h-44 object-cover shrink-0"
+              draggable={false}
+            />
+          ))}
+        </div>
+
+        {/* Small transparent overlays — sit only over the arrow button's own
+            footprint (a small circle at the vertical center of each edge),
+            below the arrow in z-index. They swallow a click on just that
+            spot so tapping there never navigates to the property page —
+            even when the arrow itself isn't rendered (first/last image).
+            The rest of the photo is untouched and still navigates normally.
+            Hidden on touch devices via pointer-events so they don't block
+            swiping. */}
+        {hasMultipleImages && (
+          <>
+            <div
+              className="absolute z-0 left-1 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full max-sm:pointer-events-none"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            />
+            <div
+              className="absolute z-0 right-1 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full max-sm:pointer-events-none"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            />
+          </>
+        )}
+
+        {/* Prev / Next Arrows — desktop only (hover-revealed), hidden on touch
+            screens where swiping is the primary way to browse images */}
+        {hasMultipleImages && (
+          <>
+            {!isFirstImage && (
+              <button
+                onClick={handlePrevImage}
+                title="Previous image"
+                className="absolute z-10 left-1 top-1/2 -translate-y-1/2 p-1 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 hover:bg-[#703BF7] hover:scale-110 cursor-pointer max-sm:hidden"
+              >
+                <FiChevronLeft size={13} />
+              </button>
+            )}
+            {!isLastImage && (
+              <button
+                onClick={handleNextImage}
+                title="Next image"
+                className="absolute z-10 right-1 top-1/2 -translate-y-1/2 p-1 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 hover:bg-[#703BF7] hover:scale-110 cursor-pointer max-sm:hidden"
+              >
+                <FiChevronRight size={13} />
+              </button>
+            )}
+
+            {/* Dot pagination — Airbnb style: a fixed-width masked strip
+                showing at most DOTS_PER_GROUP dots, with the full dot row
+                sliding smoothly underneath as currentIndex changes, rather
+                than jumping between discrete groups. */}
+            <div
+              className="absolute z-10 bottom-2 left-1/2 -translate-x-1/2 overflow-hidden"
+              style={{
+                width: `${windowSize * DOT_SIZE + (windowSize - 1) * DOT_GAP}px`,
+              }}
+            >
+              <div
+                className="flex items-center transition-transform duration-300 ease-out"
+                style={{
+                  gap: `${DOT_GAP}px`,
+                  transform: `translateX(-${windowStart * (DOT_SIZE + DOT_GAP)}px)`,
+                }}
+              >
+                {images.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={(e) => handleDotClick(idx, e)}
+                    title={`Image ${idx + 1}`}
+                    className={`rounded-full shrink-0 transition-colors duration-300 ease-in-out cursor-pointer w-1.5 h-1.5 ${
+                      idx === currentIndex
+                        ? "bg-white"
+                        : "bg-white/50 hover:bg-white/80"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Floating Action Buttons */}
-        <div className="absolute bottom-4 right-1 flex flex-col gap-2 transition-opacity duration-300">
+        <div className="absolute z-10 bottom-1 right-1 flex gap-1 transition-opacity duration-300">
           <button
             onClick={handleShortlist}
             title={isShortlisted ? "Remove from shortlist" : "Add to shortlist"}
-            className={`p-2 rounded-full backdrop-blur-md border border-white/20 shadow-lg transition-all hover:scale-110 cursor-pointer ${isShortlisted
+            className={`p-1.5 rounded-full backdrop-blur-md border border-white/20 shadow-lg transition-all hover:scale-110 cursor-pointer ${isShortlisted
               ? "bg-[#703BF7] text-white"
               : "bg-black/40 text-white hover:bg-[#703BF7]"
               }`}
           >
-            <FiHeart size={18} className={isShortlisted ? "fill-current" : ""} />
+            <FiHeart size={16} className={isShortlisted ? "fill-current" : ""} />
           </button>
           <button
             onClick={handleShare}
             title="Share property"
-            className="p-2 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white shadow-lg transition-all hover:scale-110 hover:bg-[#703BF7] cursor-pointer"
+            className="p-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white shadow-lg transition-all hover:scale-110 hover:bg-[#703BF7] cursor-pointer"
           >
-            <FiShare2 size={18} />
+            <FiShare2 size={16} />
           </button>
         </div>
       </div>
