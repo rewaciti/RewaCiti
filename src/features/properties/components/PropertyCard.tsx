@@ -192,14 +192,7 @@ function PropertyCard({ property }: PropertyCardProps) {
           ))}
         </div>
 
-        {/* Small transparent overlays — sit only over the arrow button's own
-            footprint (a small circle at the vertical center of each edge),
-            below the arrow in z-index. They swallow a click on just that
-            spot so tapping there never navigates to the property page —
-            even when the arrow itself isn't rendered (first/last image).
-            The rest of the photo is untouched and still navigates normally.
-            Hidden on touch devices via pointer-events so they don't block
-            swiping. */}
+        {/* Small transparent overlays*/}
         {hasMultipleImages && (
           <>
             <div
@@ -242,10 +235,7 @@ function PropertyCard({ property }: PropertyCardProps) {
               </button>
             )}
 
-            {/* Dot pagination — Airbnb style: a fixed-width masked strip
-                showing at most DOTS_PER_GROUP dots, with the full dot row
-                sliding smoothly underneath as currentIndex changes, rather
-                than jumping between discrete groups. */}
+            {/* Dot pagination */}— 
             <div
               className="absolute z-10 bottom-2 left-1/2 -translate-x-1/2 overflow-hidden"
               style={{
