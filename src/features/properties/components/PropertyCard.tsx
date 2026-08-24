@@ -14,9 +14,9 @@ interface PropertyCardProps {
 }
 
 const DOTS_PER_GROUP = 4;
-const DOT_SIZE = 6;
-const DOT_GAP = 6;
-const SWIPE_THRESHOLD = 40;
+const DOT_SIZE = 6; // px, matches w-1.5/h-1.5
+const DOT_GAP = 6; // px, gap between dots in the sliding strip
+const SWIPE_THRESHOLD = 40; // px of horizontal drag before we treat it as a swipe
 
 function PropertyCard({ property }: PropertyCardProps) {
   const { toggleShortlist, shortlistedProperties } = usePropertyStore();
@@ -192,7 +192,14 @@ function PropertyCard({ property }: PropertyCardProps) {
           ))}
         </div>
 
-        {/* Small transparent overlays*/}
+        {/* Small transparent overlays — sit only over the arrow button's own
+            footprint (a small circle at the vertical center of each edge),
+            below the arrow in z-index. They swallow a click on just that
+            spot so tapping there never navigates to the property page —
+            even when the arrow itself isn't rendered (first/last image).
+            The rest of the photo is untouched and still navigates normally.
+            Hidden on touch devices via pointer-events so they don't block
+            swiping. */}
         {hasMultipleImages && (
           <>
             <div
@@ -235,7 +242,10 @@ function PropertyCard({ property }: PropertyCardProps) {
               </button>
             )}
 
-            {/* Dot pagination */}— 
+            {/* Dot pagination — Airbnb style: a fixed-width masked strip
+                showing at most DOTS_PER_GROUP dots, with the full dot row
+                sliding smoothly underneath as currentIndex changes, rather
+                than jumping between discrete groups. */}
             <div
               className="absolute z-10 bottom-2 left-1/2 -translate-x-1/2 overflow-hidden"
               style={{
@@ -267,7 +277,7 @@ function PropertyCard({ property }: PropertyCardProps) {
         )}
 
         {/* Floating Action Buttons */}
-        <div className="absolute z-10 top-2 right-1 flex gap-1 transition-opacity duration-300">
+        <div className="absolute z-10 bottom-1 right-1 flex gap-1 transition-opacity duration-300">
           <button
             onClick={handleShortlist}
             title={isShortlisted ? "Remove from shortlist" : "Add to shortlist"}
