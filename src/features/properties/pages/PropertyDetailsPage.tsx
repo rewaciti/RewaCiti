@@ -783,7 +783,7 @@ const handleShare = async () => {
             )}
           </section>
 
-          <section className="md:flex justify-between md:gap-6  px-4 mb-5 md:flex-row flex-col space-y-6 md:space-y-0">
+          <section className="md:flex justify-between md:gap-1.5  px-4 mb-5 md:flex-row flex-col space-y-6 md:space-y-0">
             <div className="px-4 py-10 border border-gray-600/30 rounded-xl flex-1 h-fit dark:bg-[#1A1A1A] bg-white">
               {/* Description */}
               <div className="mb-8">
@@ -944,7 +944,7 @@ const handleShare = async () => {
             </button>
           </div>
           {/* Actions Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 px-4 pb-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5 px-4 pb-6">
             {/* Inquire Button */}
             <button
               onClick={() => setIsInquiryModalOpen(true)}
