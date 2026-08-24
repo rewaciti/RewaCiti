@@ -426,7 +426,7 @@ function PropertyDetails() {
               </div>
 
               {/* Price + Actions */}
-              <div className="flex items-center justify-between sm:justify-end gap-4 mt-5 sm:mt-0 shrink-0">
+              <div className="flex items-center justify-between sm:justify-end gap-4 mt-2 sm:mt-0 shrink-0">
                 {/* Action Icons */}
                 <div className="flex items-center gap-2">
                   {/* Share */}
