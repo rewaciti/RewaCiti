@@ -144,7 +144,7 @@ export default function PropertyFiltersModal({
             <>
               {/* Type of place */}
               <div className="pb-6">
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Type of place</h3>
+                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Category of Property</h3>
                 <div className="flex gap-2 flex-wrap">
                   <button
                     onClick={() => setCategory("")}
@@ -333,7 +333,7 @@ export default function PropertyFiltersModal({
 
               {/* Type of place */}
               <div className="py-6">
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Type of place</h3>
+                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Category of Property</h3>
                 <div className="flex gap-2 flex-wrap">
                   <button
                     onClick={() => setCategory("")}
