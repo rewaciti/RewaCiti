@@ -944,7 +944,7 @@ const handleShare = async () => {
             </button>
           </div>
           {/* Actions Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 px-4 pb-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 px-4 pb-6">
             {/* Inquire Button */}
             <button
               onClick={() => setIsInquiryModalOpen(true)}
