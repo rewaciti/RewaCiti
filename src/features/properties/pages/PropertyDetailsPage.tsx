@@ -964,7 +964,7 @@ const handleShare = async () => {
             {/* Pay Button */}
             <button
               onClick={() => setIsPaymentModalOpen(true)}
-              className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-4 py-3.5 rounded-xl text-base font-medium transition-all flex items-center justify-center gap-1 cursor-pointer shadow-sm"
+              className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-2 py-3.5 rounded-xl text-base font-medium transition-all flex items-center justify-center gap-1 cursor-pointer shadow-sm"
             >
               <FiCreditCard size={20} /> Make Payment
             </button>
