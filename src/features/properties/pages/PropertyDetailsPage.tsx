@@ -70,56 +70,80 @@ function PropertyDetails() {
     void toggleShortlist(property);
   };
 
-  const handleShare = async () => {
-    if (!property) return;
-    const description = property.description;
-    const url = window.location.href;
-    const address = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
-    const coverImageUrl = property.img || property.images?.[0] || "";
-    const shareText = `${description}\n\nName: ${property.name}\nAddress: ${address}\nCategory: ${property.category}\nImage: ${coverImageUrl}\nURL: ${url}`;
+const handleShare = async () => {
+  if (!property) return;
+  const description = property.description;
+  const url = window.location.href;
+  const address = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
+  const shareText = `${description}\n\nName: ${property.name}\nAddress: ${address}\nCategory: ${property.category}\nURL: ${url}`;
 
-    if (navigator.share) {
-      try {
-        const shareData = {
-          title: property.name,
-          text: shareText,
-          url,
-        };
+  if (navigator.share) {
+    try {
+      const shareData = {
+        title: property.name,
+        text: shareText
+      };
 
-        if (coverImageUrl && typeof File !== "undefined") {
-          try {
-            const response = await fetch(coverImageUrl);
-            const blob = await response.blob();
+      // Prefer the property video for the attached share file; only fall
+      // back to the cover image if no video is available or it fails.
+      const videoUrl = property.videoUrl;
+      const coverImageUrl = property.img || property.images?.[0] || "";
 
-            if (blob.size) {
-              const shareFile = new File(
-                [blob],
-                `${property.slug || property.name}.jpg`,
-                {
-                  type: blob.type || "image/jpeg",
-                },
-              );
+      if (videoUrl && typeof File !== "undefined") {
+        try {
+          const response = await fetch(videoUrl);
+          const blob = await response.blob();
 
-              await navigator.share({
-                ...shareData,
-                files: [shareFile],
-              });
-              return;
-            }
-          } catch (imageError) {
-            console.error("Error preparing share image:", imageError);
+          if (blob.size) {
+            const shareFile = new File(
+              [blob],
+              `${property.slug || property.name}.mp4`,
+              { type: blob.type || "video/mp4" },
+            );
+
+            await navigator.share({
+              ...shareData,
+              files: [shareFile],
+            });
+            return;
           }
+        } catch (videoError) {
+          console.error("Error preparing share video:", videoError);
         }
-
-        await navigator.share(shareData);
-      } catch (err) {
-        console.error("Error sharing:", err);
       }
-    } else {
-      navigator.clipboard.writeText(`${shareText}`);
-      toast.success("Link copied to clipboard!");
+
+      if (coverImageUrl && typeof File !== "undefined") {
+        try {
+          const response = await fetch(coverImageUrl);
+          const blob = await response.blob();
+
+          if (blob.size) {
+            const shareFile = new File(
+              [blob],
+              `${property.slug || property.name}.jpg`,
+              { type: blob.type || "image/jpeg" },
+            );
+
+            await navigator.share({
+              ...shareData,
+              files: [shareFile],
+            });
+            return;
+          }
+        } catch (imageError) {
+          console.error("Error preparing share image:", imageError);
+        }
+      }
+
+      await navigator.share(shareData);
+    } catch (err) {
+      console.error("Error sharing:", err);
     }
-  };
+  } else {
+    navigator.clipboard.writeText(`${shareText}`);
+    toast.success("Link copied to clipboard!");
+  }
+};
 
   const price = property?.pricing.TotalCost ?? 0;
   const images = property?.images ?? [];
