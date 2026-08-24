@@ -576,7 +576,7 @@ const handleShare = async () => {
                       />
 
                       <div className="absolute left-5 bottom-4 bg-black/60 dark:bg-black/60 text-white px-3 py-1 rounded-full text-xs font-medium select-none">
-                        Click to view real size image
+                        Click to view image in actual proportion
                       </div>
                     </div>
                   ))}
