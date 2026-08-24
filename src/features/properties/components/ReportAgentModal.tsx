@@ -11,8 +11,6 @@ import { getCookie, setCookie } from "../../../shared/lib/utils";
 import { Link } from "react-router";
 
 interface ReportAgentModalProps {
-
-
   property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -34,7 +32,9 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
   const [agreed, setAgreed] = useState(false);
   const modalCookieKey = "rewaciti_report_modal";
 
-  const name = customer ? `${customer.firstName} ${customer.lastName}`.trim() : guestName;
+  const name = customer
+    ? `${customer.firstName} ${customer.lastName}`.trim()
+    : guestName;
   const email = customer?.email ?? guestEmail;
   const phone = profilePhone || customer?.phoneNumber || guestPhone;
 
@@ -77,19 +77,33 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
   }, [open, isAuthenticated]);
 
   React.useEffect(() => {
-    setCookie(modalCookieKey, JSON.stringify({ guestName, guestEmail, guestPhone, reason, description, agreed }));
+    setCookie(
+      modalCookieKey,
+      JSON.stringify({
+        guestName,
+        guestEmail,
+        guestPhone,
+        reason,
+        description,
+        agreed,
+      }),
+    );
   }, [guestName, guestEmail, guestPhone, reason, description, agreed]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!name.trim() || !email.trim() || !phone.trim()) {
-      toast.error("Please enter your full name, email, and phone number before submitting your report.");
+      toast.error(
+        "Please enter your full name, email, and phone number before submitting your report.",
+      );
       return;
     }
 
     if (!agreed) {
-      toast.error("Please agree to the Terms and Privacy Policy before submitting your report.");
+      toast.error(
+        "Please agree to the Terms and Privacy Policy before submitting your report.",
+      );
       return;
     }
 
@@ -111,11 +125,11 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
         },
         ...(property.createdBy?._id || property.createdBy?.id
           ? [
-            {
-              label: "Agent ID",
-              value: property.createdBy._id ?? property.createdBy.id,
-            },
-          ]
+              {
+                label: "Agent ID",
+                value: property.createdBy._id ?? property.createdBy.id,
+              },
+            ]
           : []),
         {
           label: "Property ID",
@@ -125,12 +139,27 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
           label: "Report Reason",
           value: reason,
         },
-        ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
-        ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : [])
-      ]
+        ...(property.caretakerContact?.whatsapp
+          ? [
+              {
+                label: "Caretaker WhatsApp",
+                value: property.caretakerContact.whatsapp,
+              },
+            ]
+          : []),
+        ...(property.caretakerContact?.phone
+          ? [
+              {
+                label: "Caretaker Phone",
+                value: property.caretakerContact.phone,
+              },
+            ]
+          : []),
+      ],
     };
 
-    const apiBaseUrl = import.meta.env.VITE_API_URL || "https://api.sabiflow.com/api";
+    const apiBaseUrl =
+      import.meta.env.VITE_API_URL || "https://api.sabiflow.com/api";
     const candidateUrls = [
       `${apiBaseUrl}/crm/deals/guest`,
       `${apiBaseUrl}/crm/deals`,
@@ -143,15 +172,28 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
       for (const url of candidateUrls) {
         try {
           await axios.post(url, payload);
-          toast.success("Report submitted successfully.\nThank you for your feedback. We will investigate the issue appropriately.");
+          toast.success(
+            "Report submitted successfully.\nThank you for your feedback. We will investigate the issue appropriately.",
+          );
           onOpenChange(false);
           setReason("");
           setDescription("");
-          setCookie(modalCookieKey, JSON.stringify({ guestName: "", guestEmail: "", guestPhone: "", reason: "", description: "", agreed: false }));
+          setCookie(
+            modalCookieKey,
+            JSON.stringify({
+              guestName: "",
+              guestEmail: "",
+              guestPhone: "",
+              reason: "",
+              description: "",
+              agreed: false,
+            }),
+          );
           return;
         } catch (error) {
           lastError = error;
-          const isMissingEndpoint = axios.isAxiosError(error) && error.response?.status === 404;
+          const isMissingEndpoint =
+            axios.isAxiosError(error) && error.response?.status === 404;
           if (!isMissingEndpoint) {
             throw error;
           }
@@ -161,7 +203,9 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
       throw lastError;
     } catch (error) {
       console.error("Error submitting report:", error);
-      toast.error("The report service is currently unavailable. Please try again later.");
+      toast.error(
+        "The report service is currently unavailable. Please try again later.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -172,14 +216,14 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm center-modal-animate" />
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-4 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto center-modal-animate">
-
           <div className="flex justify-between items-center mb-6">
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900 flex items-center gap-2">
               <FiAlertTriangle className="text-red-500" />
               Report Agent
             </Dialog.Title>
             <Dialog.Description className="sr-only">
-              Report an agent for unprofessional behavior or suspected scams related to {property.name}.
+              Report an agent for unprofessional behavior or suspected scams
+              related to {property.name}.
             </Dialog.Description>
             <Dialog.Close asChild>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600">
@@ -191,17 +235,32 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
           <form onSubmit={handleSubmit} className="space-y-4">
             {isAuthenticated && customer ? (
               <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-2">
-                <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Your Details</h4>
+                <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">
+                  Your Details
+                </h4>
                 <div className="text-sm dark:text-gray-300 text-gray-700 space-y-1">
-                  <p><span className="font-semibold">Name:</span> {name}</p>
-                  <p><span className="font-semibold">Email:</span> {email}</p>
-                  <p><span className="font-semibold">Phone:</span> {phone || <span className="italic text-red-500">No phone number listed in profile</span>}</p>
+                  <p>
+                    <span className="font-semibold">Name:</span> {name}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Email:</span> {email}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Phone:</span>{" "}
+                    {phone || (
+                      <span className="italic text-red-500">
+                        No phone number listed in profile
+                      </span>
+                    )}
+                  </p>
                 </div>
               </div>
             ) : (
               <div className="space-y-2 rounded-lg border border-gray-600/30 bg-gray-500/10 p-3">
                 <div>
-                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Full Name</label>
+                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">
+                    Full Name
+                  </label>
                   <input
                     type="text"
                     required
@@ -211,7 +270,9 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Email</label>
+                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">
+                    Email
+                  </label>
                   <input
                     type="email"
                     required
@@ -221,7 +282,9 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Phone Number</label>
+                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">
+                    Phone Number
+                  </label>
                   <input
                     type="tel"
                     required
@@ -234,7 +297,9 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
             )}
 
             <div>
-              <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Reason for Reporting</label>
+              <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">
+                Reason for Reporting
+              </label>
               <CustomDropdown
                 placeholder="Select a reason"
                 value={reason}
@@ -250,7 +315,9 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
             </div>
 
             <div>
-              <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">Description</label>
+              <label className="text-sm dark:text-gray-300 text-gray-700 block mb-1">
+                Description
+              </label>
               <textarea
                 rows={4}
                 value={description}
@@ -261,7 +328,8 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
             </div>
 
             <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-xs text-red-500">
-              Reporting an agent is a serious matter. We will review your report and take appropriate action.
+              Reporting an agent is a serious matter. We will review your report
+              and take appropriate action.
             </div>
 
             <div className="sm:col-span-2 flex items-center gap-3">
@@ -273,13 +341,37 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                 required
               />
               <p className="text-sm text-gray-700 dark:text-gray-300 ">
-                I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
+                I agree with the{" "}
+                <Link
+                  to="/terms"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[#703BF7] underline"
+                >
+                  Terms
+                </Link>{" "}
+                and{" "}
+                <Link
+                  to="/privacy-policy"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[#703BF7] underline"
+                >
+                  Privacy Policy
+                </Link>
+                .
               </p>
             </div>
 
             <button
               type="submit"
-              disabled={isSubmitting || !name.trim() || !email.trim() || !phone.trim() || !agreed}
+              disabled={
+                isSubmitting ||
+                !name.trim() ||
+                !email.trim() ||
+                !phone.trim() ||
+                !agreed
+              }
               className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50"
             >
               {isSubmitting ? "Submitting..." : "Submit Report"}

@@ -1,6 +1,6 @@
-import Navbar from "../../shared/components/Layout/Navbar"
-import hero from "/logo/Image.png"
-import centerLogo from "/logo/Sub Container.png"
+import Navbar from "../../shared/components/Layout/Navbar";
+import hero from "/logo/Image.png";
+import centerLogo from "/logo/Sub Container.png";
 import PropertySection from "../../features/properties/components/PropertySection";
 import CommentSection from "../../features/comments/components/CommentSection";
 import FAQSection from "../../features/faq/components/FAQSection";
@@ -9,10 +9,8 @@ import { Link } from "react-router";
 import useScrollToHash from "../../shared/hooks/useScrollToHash";
 import { Helmet } from "react-helmet-async";
 
-
 function Home() {
   useScrollToHash();
-
 
   const services = [
     {
@@ -37,10 +35,22 @@ function Home() {
     <div className="">
       <Helmet>
         <title> RewaCiti | Best Real Estate platform in Ile-Ife </title>
-        <meta name="description" content="RewaCiti is your number one platform for finding the best properties, student housing, and tourism guides in Ile-Ife and across Osun State, Nigeria." />
-        <meta property="og:title" content="RewaCiti - Discover Your Dream Property in Nigeria" />
-        <meta property="og:description" content="Find the best real estate listings, student accommodation, and cultural insights in Ile-Ife and Osun State." />
-        <meta property="og:image" content="https://rewaciti.com/logo/Image.png" />
+        <meta
+          name="description"
+          content="RewaCiti is your number one platform for finding the best properties, student housing, and tourism guides in Ile-Ife and across Osun State, Nigeria."
+        />
+        <meta
+          property="og:title"
+          content="RewaCiti - Discover Your Dream Property in Nigeria"
+        />
+        <meta
+          property="og:description"
+          content="Find the best real estate listings, student accommodation, and cultural insights in Ile-Ife and Osun State."
+        />
+        <meta
+          property="og:image"
+          content="https://rewaciti.com/logo/Image.png"
+        />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="https://rewaciti.com/" />
       </Helmet>
@@ -50,7 +60,6 @@ function Home() {
         className="relative flex flex-col sm:flex-row h-[calc(95vh-6.5rem)] sm:h-auto sm:min-h-0 overflow-hidden"
         id="hero"
       >
-
         {/* CENTER FLOATING IMAGE — desktop only, floats between left/right panels */}
         <div className="hidden sm:block absolute lg:left-[52%] top-1/3 md:left-[54%] left-[54%] -translate-x-1/2 -translate-y-1/2 z-20">
           <img src={centerLogo} alt="Center Logo" className="w-23 h-auto" />
@@ -79,7 +88,8 @@ function Home() {
           </h1>
 
           <p className="text-gray-200 sm:text-gray-600 sm:dark:text-gray-400 text-[15px] max-w-[95%]">
-            Your journey to finding the perfect property begins here. Explore our listings to find the home that matches your dreams.
+            Your journey to finding the perfect property begins here. Explore
+            our listings to find the home that matches your dreams.
           </p>
 
           <div className="flex space-x-4">
@@ -98,15 +108,21 @@ function Home() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 items-center text-center md:text-left w-full">
             <div className="bg-white/10 sm:bg-white backdrop-blur-sm sm:backdrop-blur-none dark:sm:bg-[#1A1A1A] border border-white/20 sm:border-gray-200 sm:dark:border-gray-600/30 text-white sm:text-gray-900 sm:dark:text-white px-4 py-3 rounded w-full">
               <p className="text-lg font-semibold">50+</p>
-              <p className="text-sm text-gray-300 sm:text-gray-600 sm:dark:text-gray-400">Happy customers</p>
+              <p className="text-sm text-gray-300 sm:text-gray-600 sm:dark:text-gray-400">
+                Happy customers
+              </p>
             </div>
             <div className="bg-white/10 sm:bg-white backdrop-blur-sm sm:backdrop-blur-none dark:sm:bg-[#1A1A1A] border border-white/20 sm:border-gray-200 sm:dark:border-gray-600/30 text-white sm:text-gray-900 sm:dark:text-white px-4 py-3 rounded w-full">
               <p className="text-lg font-semibold">60+</p>
-              <p className="text-sm text-gray-300 sm:text-gray-600 sm:dark:text-gray-400">Properties for Clients</p>
+              <p className="text-sm text-gray-300 sm:text-gray-600 sm:dark:text-gray-400">
+                Properties for Clients
+              </p>
             </div>
             <div className="bg-white/10 sm:bg-white backdrop-blur-sm sm:backdrop-blur-none dark:sm:bg-[#1A1A1A] border border-white/20 sm:border-gray-200 sm:dark:border-gray-600/30 text-white sm:text-gray-900 sm:dark:text-white px-4 py-3 rounded w-full col-span-2 md:col-span-1">
               <p className="text-lg font-semibold">5+</p>
-              <p className="text-sm text-gray-300 sm:text-gray-600 sm:dark:text-gray-400">Years of Experience</p>
+              <p className="text-sm text-gray-300 sm:text-gray-600 sm:dark:text-gray-400">
+                Years of Experience
+              </p>
             </div>
           </div>
         </div>
@@ -125,7 +141,6 @@ function Home() {
 
       <section className="px-4 py-2 bg-gray-300 dark:bg-black/30" id="features">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-
           {/* BOX ITEM */}
           {services.map((item, index) => (
             <div
@@ -154,7 +169,6 @@ function Home() {
               </p>
             </div>
           ))}
-
         </div>
       </section>
 
@@ -171,7 +185,7 @@ function Home() {
         <Footer />
       </section>
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;

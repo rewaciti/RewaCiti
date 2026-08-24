@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { useAreaMapStore } from "../../map/store/useAreaMapStore";
-import { FiArrowLeft, FiArrowRight} from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import PropertyCard from "../components/PropertyCard";
 import Footer from "../../../shared/components/Layout/Footer";
 import { FiFilter } from "react-icons/fi";
@@ -49,7 +49,9 @@ function StudentAreaPage() {
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedPriceLabel, setSelectedPriceLabel] = useState("");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 999999999]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    0, 999999999,
+  ]);
   const [showFilters, setShowFilters] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const cookieLoaded = useRef(false);
@@ -83,7 +85,11 @@ function StudentAreaPage() {
       try {
         const profileData = await authAPI.getProfile();
         const latestPhone = profileData.phoneNumber || "";
-        setName(customer.firstName && customer.lastName ? `${customer.firstName} ${customer.lastName}`.trim() : customer.firstName || "");
+        setName(
+          customer.firstName && customer.lastName
+            ? `${customer.firstName} ${customer.lastName}`.trim()
+            : customer.firstName || "",
+        );
         setEmail(customer.email || "");
         setPhone(latestPhone || customer.phoneNumber || "");
 
@@ -122,9 +128,20 @@ function StudentAreaPage() {
     };
 
     setCookie(inquiryCookieKey, JSON.stringify(payload));
-  }, [name, email, phone, preferedLocation, preferedCategory, bedroomsContact, Budget, preferredContact, message, agreed]);
+  }, [
+    name,
+    email,
+    phone,
+    preferedLocation,
+    preferedCategory,
+    bedroomsContact,
+    Budget,
+    preferredContact,
+    message,
+    agreed,
+  ]);
 
- // Lock body scroll while the filters modal is open (iOS-safe: freezes scroll position)
+  // Lock body scroll while the filters modal is open (iOS-safe: freezes scroll position)
   useEffect(() => {
     if (showFilters) {
       const scrollY = window.scrollY;
@@ -161,8 +178,15 @@ function StudentAreaPage() {
       return;
     }
 
-    if (!name.trim() || !email.trim() || !phone.trim() || !preferedLocation.trim()) {
-      toast.error("Please enter your name, email, phone number, and preferred location to continue.");
+    if (
+      !name.trim() ||
+      !email.trim() ||
+      !phone.trim() ||
+      !preferedLocation.trim()
+    ) {
+      toast.error(
+        "Please enter your name, email, phone number, and preferred location to continue.",
+      );
       return;
     }
 
@@ -191,9 +215,8 @@ function StudentAreaPage() {
       toast.success(
         <div className="whitespace-pre-wrap">
           Message sent successfully!
-          <br />
-          A member of our team will get back to you soon.
-        </div>
+          <br />A member of our team will get back to you soon.
+        </div>,
       );
       setName("");
       setEmail("");
@@ -205,18 +228,21 @@ function StudentAreaPage() {
       setPreferredContact("");
       setMessage("");
       setAgreed(false);
-      setCookie(inquiryCookieKey, JSON.stringify({
-        name: "",
-        email: "",
-        phone: "",
-        preferedLocation: "",
-        preferedCategory: "",
-        bedroomsContact: "",
-        budget: "",
-        preferredContact: "",
-        message: "",
-        agreed: false,
-      }));
+      setCookie(
+        inquiryCookieKey,
+        JSON.stringify({
+          name: "",
+          email: "",
+          phone: "",
+          preferedLocation: "",
+          preferedCategory: "",
+          bedroomsContact: "",
+          budget: "",
+          preferredContact: "",
+          message: "",
+          agreed: false,
+        }),
+      );
     } catch (error) {
       console.error("Error sending message:", error);
       toast.error("Failed to send message. Please try again.");
@@ -244,14 +270,28 @@ function StudentAreaPage() {
       maxPrice: priceRange[1] < 999999999 ? priceRange[1] : undefined,
     });
     fetchAreaMaps();
-  }, [searchTerm, location, category, bedrooms, priceRange, fetchProperties, fetchAreaMaps]);
+  }, [
+    searchTerm,
+    location,
+    category,
+    bedrooms,
+    priceRange,
+    fetchProperties,
+    fetchAreaMaps,
+  ]);
 
   const availableUniversities = useMemo(() => {
     return areaMaps
-      .filter((u) => u.areas.some((area) => properties.some((p) => p.location.area === area)))
+      .filter((u) =>
+        u.areas.some((area) =>
+          properties.some((p) => p.location.area === area),
+        ),
+      )
       .map((u) => ({
         ...u,
-        areas: u.areas.filter((area) => properties.some((p) => p.location.area === area)),
+        areas: u.areas.filter((area) =>
+          properties.some((p) => p.location.area === area),
+        ),
       }));
   }, [areaMaps, properties]);
 
@@ -262,11 +302,15 @@ function StudentAreaPage() {
 
   const areaOptions = [
     { label: "Areas", value: "" },
-    ...(availableUniversities.find((u) => u.id === selectedUniversity)?.areas.map((a) => ({ label: a, value: a })) ?? []),
+    ...(availableUniversities
+      .find((u) => u.id === selectedUniversity)
+      ?.areas.map((a) => ({ label: a, value: a })) ?? []),
   ];
 
-
-  const totalApiPages = Math.max(1, Math.ceil(totalProperties / ITEMS_PER_PAGE));
+  const totalApiPages = Math.max(
+    1,
+    Math.ceil(totalProperties / ITEMS_PER_PAGE),
+  );
   const currentProperties = properties;
 
   const handleNext = () => {
@@ -303,24 +347,45 @@ function StudentAreaPage() {
     <div>
       <Helmet>
         <title>Student Housing in Ile-Ife | RewaCiti Student Area</title>
-        <meta name="description" content="Search student accommodation in Ile-Ife with RewaCiti, including hostels, shared apartments, and student-friendly housing options." />
-        <meta property="og:title" content="Student Housing in Ile-Ife | RewaCiti" />
-        <meta property="og:description" content="Find student-friendly housing, affordable rentals, and university area homes with RewaCiti." />
+        <meta
+          name="description"
+          content="Search student accommodation in Ile-Ife with RewaCiti, including hostels, shared apartments, and student-friendly housing options."
+        />
+        <meta
+          property="og:title"
+          content="Student Housing in Ile-Ife | RewaCiti"
+        />
+        <meta
+          property="og:description"
+          content="Find student-friendly housing, affordable rentals, and university area homes with RewaCiti."
+        />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Student Housing in Ile-Ife | RewaCiti" />
-        <meta name="twitter:description" content="Explore student accommodation options around Ile-Ife and university areas with RewaCiti." />
+        <meta
+          name="twitter:title"
+          content="Student Housing in Ile-Ife | RewaCiti"
+        />
+        <meta
+          name="twitter:description"
+          content="Explore student accommodation options around Ile-Ife and university areas with RewaCiti."
+        />
         <link rel="canonical" href="https://rewaciti.com/studentarea" />
       </Helmet>
       <Navbar />
       <div className="relative" id="StudentCategories">
-        
         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 pb-10 space-y-1 border-b border-gray-600">
-         <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Student Area Properties</h1>
-         <p className="text-gray-800 dark:text-gray-400 text-[14px]">
-            Find comfortable and affordable student accommodation with RewaCiti. Explore hostels, apartments, and rooms tailored to your budget and lifestyle.
-         </p>
-          <NavLink to="/properties" className="inline-block mt-3 bg-[#703BF7] hover:bg-[#9677df] transition text-white px-4 py-2 rounded-lg text-sm font-medium">
+          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
+            Student Area Properties
+          </h1>
+          <p className="text-gray-800 dark:text-gray-400 text-[14px]">
+            Find comfortable and affordable student accommodation with RewaCiti.
+            Explore hostels, apartments, and rooms tailored to your budget and
+            lifestyle.
+          </p>
+          <NavLink
+            to="/properties"
+            className="inline-block mt-3 bg-[#703BF7] hover:bg-[#9677df] transition text-white px-4 py-2 rounded-lg text-sm font-medium"
+          >
             🏠 General Residence
           </NavLink>
         </div>
@@ -354,12 +419,19 @@ function StudentAreaPage() {
           <section>
             <div className="flex justify-between items-center mb-6 pt-4">
               <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
-                <img src="/logo/Abstract Design (1).png" alt="Icon" className="w-13 object-contain" />
+                <img
+                  src="/logo/Abstract Design (1).png"
+                  alt="Icon"
+                  className="w-13 object-contain"
+                />
                 <div className="flex justify-between items-center">
                   <div className="space-y-3">
-                    <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Discover properties around campuses</h1>
+                    <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
+                      Discover properties around campuses
+                    </h1>
                     <p className="text-gray-800 dark:text-gray-400 text-[14px]">
-                       Explore properties around your preferred campus and find convenient accommodation in locations that fit your needs.
+                      Explore properties around your preferred campus and find
+                      convenient accommodation in locations that fit your needs.
                     </p>
                   </div>
                 </div>
@@ -371,12 +443,20 @@ function StudentAreaPage() {
                 [...Array(6)].map((_, i) => <PropertyCardSkeleton key={i} />)
               ) : currentProperties.length === 0 ? (
                 <div className="col-span-full text-center py-10">
-                  <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">No properties found</h3>
-                  <p className="text-gray-800 dark:text-gray-400 text-sm">Try adjusting your search or filters</p>
-                  <p className="text-gray-800 dark:text-gray-400 text-sm">Make sure your connection is stable</p>
+                  <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">
+                    No properties found
+                  </h3>
+                  <p className="text-gray-800 dark:text-gray-400 text-sm">
+                    Try adjusting your search or filters
+                  </p>
+                  <p className="text-gray-800 dark:text-gray-400 text-sm">
+                    Make sure your connection is stable
+                  </p>
                 </div>
               ) : (
-                currentProperties.map((item) => <PropertyCard key={item.id} property={item} />)
+                currentProperties.map((item) => (
+                  <PropertyCard key={item.id} property={item} />
+                ))
               )}
             </div>
           </section>
@@ -384,12 +464,22 @@ function StudentAreaPage() {
           <hr className="my-4 border-gray-600/50" />
 
           <div className="flex justify-between items-center text-white">
-            <p className="text-sm text-black dark:text-white">Page {apiPage} of {totalApiPages}</p>
+            <p className="text-sm text-black dark:text-white">
+              Page {apiPage} of {totalApiPages}
+            </p>
             <div className="flex gap-4">
-              <button onClick={handlePrev} disabled={apiPage === 1} className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600">
+              <button
+                onClick={handlePrev}
+                disabled={apiPage === 1}
+                className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
+              >
                 <FiArrowLeft size={20} />
               </button>
-              <button onClick={handleNext} disabled={apiPage >= totalApiPages} className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600">
+              <button
+                onClick={handleNext}
+                disabled={apiPage >= totalApiPages}
+                className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
+              >
                 <FiArrowRight size={20} />
               </button>
             </div>
@@ -418,66 +508,204 @@ function StudentAreaPage() {
         areaOptions={areaOptions}
       />
 
-      <section className="bg-gray-300 dark:bg-black/30 py-2 px-4 pt-4 pb-20" id="StudentPortfolio">
+      <section
+        className="bg-gray-300 dark:bg-black/30 py-2 px-4 pt-4 pb-20"
+        id="StudentPortfolio"
+      >
         <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
-          <img src="/logo/Abstract Design (1).png" alt="Icon" className="w-13 object-contain" />
-          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Can't find your preference?</h1>
+          <img
+            src="/logo/Abstract Design (1).png"
+            alt="Icon"
+            className="w-13 object-contain"
+          />
+          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
+            Can't find your preference?
+          </h1>
           <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-            Ready to take the first step toward your dream property? Fill out the form below, and our real estate wizards will work their magic to find your perfect match. Don't wait; let's embark on this exciting journey together.
+            Ready to take the first step toward your dream property? Fill out
+            the form below, and our real estate wizards will work their magic to
+            find your perfect match. Don't wait; let's embark on this exciting
+            journey together.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 border border-gray-700/40 rounded-3xl p-4 md:p-10">
+        <form
+          onSubmit={handleSubmit}
+          className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 border border-gray-700/40 rounded-3xl p-4 md:p-10"
+        >
           <div>
-            <label className="text-gray-700 dark:text-gray-300 text-sm">Name</label>
-            <input type="text" placeholder="Enter Full Name" required value={name} onChange={(e) => setName(e.target.value)} className="w-full mt-1 px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+            <label className="text-gray-700 dark:text-gray-300 text-sm">
+              Name
+            </label>
+            <input
+              type="text"
+              placeholder="Enter Full Name"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full mt-1 px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+            />
           </div>
           <div>
-            <label className="text-gray-700 dark:text-gray-300 text-sm">Email</label>
-            <input type="email" placeholder="Enter your Email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full mt-1 px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+            <label className="text-gray-700 dark:text-gray-300 text-sm">
+              Email
+            </label>
+            <input
+              type="email"
+              placeholder="Enter your Email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full mt-1 px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+            />
           </div>
           <div>
-            <label className="text-gray-700 dark:text-gray-300 text-sm">Phone</label>
-            <input type="tel" placeholder="Enter Phone Number" required value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full mt-1 px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+            <label className="text-gray-700 dark:text-gray-300 text-sm">
+              Phone
+            </label>
+            <input
+              type="tel"
+              placeholder="Enter Phone Number"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full mt-1 px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+            />
           </div>
           <div>
-            <label className="text-gray-700 dark:text-gray-300 text-sm">Preferred Location</label>
-            <input type="text" placeholder="Enter Preferred Location" required value={preferedLocation} onChange={(e) => setPreferedLocation(e.target.value)} className="w-full mt-1 px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+            <label className="text-gray-700 dark:text-gray-300 text-sm">
+              Preferred Location
+            </label>
+            <input
+              type="text"
+              placeholder="Enter Preferred Location"
+              required
+              value={preferedLocation}
+              onChange={(e) => setPreferedLocation(e.target.value)}
+              className="w-full mt-1 px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+            />
           </div>
           <div>
-            <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Category</label>
-            <CustomDropdown placeholder="Category" value={preferedCategory} options={[{ label: "Self Contain", value: "Self Contain" }, { label: "Studio Apartment", value: "Studio Apartment" }, { label: "Mini Flat", value: "Mini Flat" }, { label: "Flat", value: "Flat" }, { label: "Bungalow", value: "Bungalow" }, { label: "Duplex", value: "Duplex" }, { label: "Smart Home", value: "Smart Home" }, { label: "Single Room", value: "Single Room (Shared)" }, { label: "Shared Room", value: "Shared Room" }, { label: "Furnished Apartment", value: "Furnished Apartment" }, { label: "Land", value: "Land"}]} onChange={(val) => setPreferedCategory(val)} />
+            <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+              Category
+            </label>
+            <CustomDropdown
+              placeholder="Category"
+              value={preferedCategory}
+              options={[
+                { label: "Self Contain", value: "Self Contain" },
+                { label: "Studio Apartment", value: "Studio Apartment" },
+                { label: "Mini Flat", value: "Mini Flat" },
+                { label: "Flat", value: "Flat" },
+                { label: "Bungalow", value: "Bungalow" },
+                { label: "Duplex", value: "Duplex" },
+                { label: "Smart Home", value: "Smart Home" },
+                { label: "Single Room", value: "Single Room (Shared)" },
+                { label: "Shared Room", value: "Shared Room" },
+                { label: "Furnished Apartment", value: "Furnished Apartment" },
+                { label: "Land", value: "Land" },
+              ]}
+              onChange={(val) => setPreferedCategory(val)}
+            />
           </div>
           <div>
-            <label className="text-gray-700 dark:text-gray-300 text-sm">No of Bedrooms</label>
-            <input type="number || text" placeholder="Enter Number of Bedrooms" required min={1} value={bedroomsContact} onChange={(e) => setBedroomsContact(e.target.value)} className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+            <label className="text-gray-700 dark:text-gray-300 text-sm">
+              No of Bedrooms
+            </label>
+            <input
+              type="number || text"
+              placeholder="Enter Number of Bedrooms"
+              required
+              min={1}
+              value={bedroomsContact}
+              onChange={(e) => setBedroomsContact(e.target.value)}
+              className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+            />
           </div>
           <div>
-            <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Budget</label>
-            <CustomDropdown placeholder="Price Range" value={Budget} options={priceOptions.map((opt) => ({ label: opt.label, value: opt.label }))} onChange={(val) => setBudget(val)} />
+            <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+              Budget
+            </label>
+            <CustomDropdown
+              placeholder="Price Range"
+              value={Budget}
+              options={priceOptions.map((opt) => ({
+                label: opt.label,
+                value: opt.label,
+              }))}
+              onChange={(val) => setBudget(val)}
+            />
           </div>
           <div>
-            <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Preferred Contact Method</label>
-            <CustomDropdown placeholder="Select Method" value={preferredContact} options={[{ label: "Phone", value: "Phone" }, { label: "Email", value: "Email" }]} onChange={(val) => setPreferredContact(val)} />
+            <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+              Preferred Contact Method
+            </label>
+            <CustomDropdown
+              placeholder="Select Method"
+              value={preferredContact}
+              options={[
+                { label: "Phone", value: "Phone" },
+                { label: "Email", value: "Email" },
+              ]}
+              onChange={(val) => setPreferredContact(val)}
+            />
           </div>
           <div className="sm:col-span-2 lg:col-span-4">
-            <label className="text-gray-700 dark:text-gray-300 text-sm">Describe What You Want</label>
-            <textarea placeholder="Enter your Description here.." rows={3} required value={message} onChange={(e) => setMessage(e.target.value)} className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 resize-none" />
+            <label className="text-gray-700 dark:text-gray-300 text-sm">
+              Describe What You Want
+            </label>
+            <textarea
+              placeholder="Enter your Description here.."
+              rows={3}
+              required
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 resize-none"
+            />
           </div>
           <div className="sm:col-span-2 flex items-center gap-3">
-              <input
-                type="checkbox"
-                className="mt-0.5"
-                checked={agreed}
-                onChange={(e) => setAgreed(e.target.checked)}
-                required
-              />
-              <p className="text-sm text-gray-700 dark:text-gray-300 ">
-                  I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
-                </p>
+            <input
+              type="checkbox"
+              className="mt-0.5"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              required
+            />
+            <p className="text-sm text-gray-700 dark:text-gray-300 ">
+              I agree with the{" "}
+              <Link
+                to="/terms"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[#703BF7] underline"
+              >
+                Terms
+              </Link>{" "}
+              and{" "}
+              <Link
+                to="/privacy-policy"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[#703BF7] underline"
+              >
+                Privacy Policy
+              </Link>
+              .
+            </p>
           </div>
           <div className="sm:col-span-2 flex items-center justify-end">
-            <button type="submit" disabled={!agreed || isSubmitting || !name.trim() || !email.trim() || !phone.trim() || !preferedLocation.trim()} className={`px-4 py-2 rounded-lg font-medium transition ${agreed && !isSubmitting && name.trim() && email.trim() && phone.trim() && preferedLocation.trim() ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" : "bg-gray-400 cursor-not-allowed text-gray-200"}`}>
+            <button
+              type="submit"
+              disabled={
+                !agreed ||
+                isSubmitting ||
+                !name.trim() ||
+                !email.trim() ||
+                !phone.trim() ||
+                !preferedLocation.trim()
+              }
+              className={`px-4 py-2 rounded-lg font-medium transition ${agreed && !isSubmitting && name.trim() && email.trim() && phone.trim() && preferedLocation.trim() ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" : "bg-gray-400 cursor-not-allowed text-gray-200"}`}
+            >
               {isSubmitting ? "Sending..." : "Send Message"}
             </button>
           </div>

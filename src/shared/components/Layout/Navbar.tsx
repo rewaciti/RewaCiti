@@ -58,7 +58,10 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (shortlistRef.current && !shortlistRef.current.contains(event.target as Node)) {
+      if (
+        shortlistRef.current &&
+        !shortlistRef.current.contains(event.target as Node)
+      ) {
         setIsShortlistOpen(false);
       }
     };
@@ -96,8 +99,6 @@ const Navbar = () => {
     };
   }, [isOpen]);
 
-
-
   useEffect(() => {
     if (isShortlistOpen) {
       document.body.style.overflow = "hidden";
@@ -122,8 +123,14 @@ const Navbar = () => {
           }}
         >
           <div className="flex justify-center lg:ml-[40%] sm:ml-[20%] items-center">
-            <p className="flex items-center mr-1 text-gray-900 dark:text-white ">✨Discover Properties with RewaCiti</p>
-            <NavLink to="/blog" aria-label="View blog page" className="underline text-sm hidden sm:block text-gray-900 dark:text-white">
+            <p className="flex items-center mr-1 text-gray-900 dark:text-white ">
+              ✨Discover Properties with RewaCiti
+            </p>
+            <NavLink
+              to="/blog"
+              aria-label="View blog page"
+              className="underline text-sm hidden sm:block text-gray-900 dark:text-white"
+            >
               View Blog
             </NavLink>
           </div>
@@ -156,13 +163,16 @@ const Navbar = () => {
               <div
                 className={`absolute right-0 top-4 mt-2 w-72 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-100 overflow-hidden
                   origin-top-right transform transition-all duration-200 ease-out
-                  ${isShortlistOpen
-                    ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
-                    : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+                  ${
+                    isShortlistOpen
+                      ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+                      : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
                   }`}
               >
                 <div className="p-3 border-b border-gray-100 dark:border-gray-800 bg-gray-300/50 dark:bg-white/5 flex justify-between items-center">
-                  <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">Your Shortlist</h3>
+                  <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+                    Your Shortlist
+                  </h3>
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] bg-[#703BF7]/10 text-[#703BF7] dark:bg-[#] dark:text-white px-2 py-0.5 rounded-full font-bold">
                       {shortlistedProperties.length} items
@@ -181,7 +191,9 @@ const Navbar = () => {
                       <div className="text-gray-400 dark:text-gray-600 mb-2 flex justify-center">
                         <FiHeart size={24} />
                       </div>
-                      <p className="text-gray-500 dark:text-gray-400 text-xs">No properties shortlisted yet.</p>
+                      <p className="text-gray-500 dark:text-gray-400 text-xs">
+                        No properties shortlisted yet.
+                      </p>
                     </div>
                   ) : (
                     shortlistedProperties.map((property) => (
@@ -217,22 +229,23 @@ const Navbar = () => {
                               setIsShortlistOpen(false);
                             }}
                           >
-                            {
-                              (() => {
-                                const locationParts = [
-                                  property.location.area,
-                                  property.location.city_town || property.location.city,
-                                ].filter(Boolean);
+                            {(() => {
+                              const locationParts = [
+                                property.location.area,
+                                property.location.city_town ||
+                                  property.location.city,
+                              ].filter(Boolean);
 
-                                const locationText = locationParts.length
-                                  ? `${locationParts.join(", ")}${property.location.state ? `, ${property.location.state}` : ""}`
-                                  : property.location.state
+                              const locationText = locationParts.length
+                                ? `${locationParts.join(", ")}${property.location.state ? `, ${property.location.state}` : ""}`
+                                : property.location.state
                                   ? property.location.state
                                   : "";
 
-                                return locationText ? `${locationText} state.` : "";
-                              })()
-                            }
+                              return locationText
+                                ? `${locationText} state.`
+                                : "";
+                            })()}
                           </p>
                         </div>
                         <button
@@ -286,7 +299,10 @@ const Navbar = () => {
         <div className="max-w-[95%] mx-auto">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <NavLink to="/" className="flex items-center space-x-2 text-gray-800 text-[30px] font-bold dark:text-white">
+            <NavLink
+              to="/"
+              className="flex items-center space-x-2 text-gray-800 text-[30px] font-bold dark:text-white"
+            >
               <img src={logo} alt="logo" className="h-10 mr-1" />
               <span> RewaCiti</span>
             </NavLink>
@@ -299,9 +315,10 @@ const Navbar = () => {
                   <NavLink
                     key={item.path}
                     to={item.path}
-                    className={`${isActive
-                      ? 'p-2 px-3 bg-[#703BF7] text-white border border-gray-300 rounded-md'
-                      : 'text-gray-800 dark:text-white border-gray-200 dark:border-gray-600 hover:bg-[#9677df] hover:border-[#703BF7] p-2 px-3 rounded-md'
+                    className={`${
+                      isActive
+                        ? "p-2 px-3 bg-[#703BF7] text-white border border-gray-300 rounded-md"
+                        : "text-gray-800 dark:text-white border-gray-200 dark:border-gray-600 hover:bg-[#9677df] hover:border-[#703BF7] p-2 px-3 rounded-md"
                     }`}
                   >
                     {item.name}
@@ -316,9 +333,10 @@ const Navbar = () => {
                 {({ isActive }) => (
                   <button
                     className={`py-2 px-4 rounded-md border transition
-                      ${isActive
-                        ? 'bg-[#703BF7] text-white border-[#703BF7]'
-                        : 'bg-gray-100 text-gray-800 border-gray-200 dark:hover:bg-[#9677df] hover:bg-[#9677df] hover:text-white hover:border-[#703BF7] dark:bg-black/30 dark:text-white'
+                      ${
+                        isActive
+                          ? "bg-[#703BF7] text-white border-[#703BF7]"
+                          : "bg-gray-100 text-gray-800 border-gray-200 dark:hover:bg-[#9677df] hover:bg-[#9677df] hover:text-white hover:border-[#703BF7] dark:bg-black/30 dark:text-white"
                       }
                     `}
                   >
@@ -341,9 +359,10 @@ const Navbar = () => {
                   {({ isActive }) => (
                     <button
                       className={`py-2 px-4 rounded-md border transition
-                        ${isActive
-                          ? 'bg-[#703BF7] text-white border-[#703BF7]'
-                          : 'bg-gray-100 text-gray-800 border-gray-200 dark:hover:bg-[#9677df] hover:bg-[#9677df] hover:text-white hover:border-[#703BF7] dark:bg-black/30 dark:text-white'
+                        ${
+                          isActive
+                            ? "bg-[#703BF7] text-white border-[#703BF7]"
+                            : "bg-gray-100 text-gray-800 border-gray-200 dark:hover:bg-[#9677df] hover:bg-[#9677df] hover:text-white hover:border-[#703BF7] dark:bg-black/30 dark:text-white"
                         }
                       `}
                     >
@@ -367,7 +386,10 @@ const Navbar = () => {
                 </button>
               )}
 
-              <button onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label="Toggle menu"
+              >
                 <svg
                   className={`w-7 h-7 transition-transform duration-300 ${isOpen ? "rotate-90" : ""}`}
                   fill="none"
@@ -376,9 +398,17 @@ const Navbar = () => {
                   viewBox="0 0 24 24"
                 >
                   {isOpen ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4 6h16M4 12h16m-7 6h7"
+                    />
                   )}
                 </svg>
               </button>
@@ -464,7 +494,11 @@ const Navbar = () => {
                       Logout
                     </button>
                   ) : (
-                    <NavLink to="/auth/login" onClick={() => setIsOpen(false)} className="w-full block">
+                    <NavLink
+                      to="/auth/login"
+                      onClick={() => setIsOpen(false)}
+                      className="w-full block"
+                    >
                       {({ isActive }) => (
                         <button
                           className={`text-left w-full ${isActive ? "text-[#703BF7] font-semibold" : ""}`}

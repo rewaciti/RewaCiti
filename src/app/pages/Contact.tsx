@@ -8,7 +8,10 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router";
 import { toast } from "sonner";
-import { COMPANY_ID, useAuthStore } from "../../features/auth/store/useAuthStore";
+import {
+  COMPANY_ID,
+  useAuthStore,
+} from "../../features/auth/store/useAuthStore";
 import { authAPI } from "../../features/auth/services/authAPI";
 import CustomDropdown from "../../features/properties/components/CustomDropdown";
 import { getCookie, setCookie } from "../../shared/lib/utils";
@@ -103,8 +106,15 @@ function Contact() {
       return;
     }
 
-    if (!firstName.trim() || !lastName.trim() || !email.trim() || !phone.trim()) {
-      toast.error("Please enter your full name, email, and phone number to send a message.");
+    if (
+      !firstName.trim() ||
+      !lastName.trim() ||
+      !email.trim() ||
+      !phone.trim()
+    ) {
+      toast.error(
+        "Please enter your full name, email, and phone number to send a message.",
+      );
       return;
     }
 
@@ -128,13 +138,12 @@ function Contact() {
 
     try {
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
-       toast.success( 
+      toast.success(
         <div className="whitespace-pre-wrap">
-            Message sent successfully!
-            <br />
-            A member of our team will get back to you soon.
-        </div>
-       );
+          Message sent successfully!
+          <br />A member of our team will get back to you soon.
+        </div>,
+      );
       // Reset form
       setFirstName("");
       setLastName("");
@@ -144,16 +153,19 @@ function Contact() {
       setSource("");
       setMessage("");
       setAgreed(false);
-      setCookie(inquiryCookieKey, JSON.stringify({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        inquiryType: "",
-        source: "",
-        message: "",
-        agreed: false,
-      }));
+      setCookie(
+        inquiryCookieKey,
+        JSON.stringify({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          inquiryType: "",
+          source: "",
+          message: "",
+          agreed: false,
+        }),
+      );
     } catch (error) {
       console.error("Error sending message:", error);
       toast.error("Failed to send message. Please try again.");
@@ -184,29 +196,47 @@ function Contact() {
     <div className="">
       <Helmet>
         <title>Contact RewaCiti | Real Estate Support in Ile-Ife</title>
-        <meta name="description" content="Get in touch with RewaCiti for property listings, student housing support, and real estate advisory services in Ile-Ife and Osun State." />
-        <meta property="og:title" content="Contact RewaCiti | Real Estate Support in Ile-Ife" />
-        <meta property="og:description" content="Contact RewaCiti to connect with our real estate experts, request property information, or book a housing consultation." />
+        <meta
+          name="description"
+          content="Get in touch with RewaCiti for property listings, student housing support, and real estate advisory services in Ile-Ife and Osun State."
+        />
+        <meta
+          property="og:title"
+          content="Contact RewaCiti | Real Estate Support in Ile-Ife"
+        />
+        <meta
+          property="og:description"
+          content="Contact RewaCiti to connect with our real estate experts, request property information, or book a housing consultation."
+        />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Contact RewaCiti | Real Estate Support" />
-        <meta name="twitter:description" content="Reach out to RewaCiti for property, student housing, and investment support in Ile-Ife." />
+        <meta
+          name="twitter:title"
+          content="Contact RewaCiti | Real Estate Support"
+        />
+        <meta
+          name="twitter:description"
+          content="Reach out to RewaCiti for property, student housing, and investment support in Ile-Ife."
+        />
         <link rel="canonical" href="https://rewaciti.com/contact" />
       </Helmet>
       <Navbar />
-      <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 space-y-1" id="Contactinfo">
+      <div
+        className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 space-y-1"
+        id="Contactinfo"
+      >
         <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
           Get in Touch with Us
         </h1>
 
         <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-          Welcome to RewaCiti's Contact Us page. Have questions, requests, or feedback? Whether you're buying, selling, or exploring properties, we're here to help. Reach out and let's connect.
+          Welcome to RewaCiti's Contact Us page. Have questions, requests, or
+          feedback? Whether you're buying, selling, or exploring properties,
+          we're here to help. Reach out and let's connect.
         </p>
       </div>
 
-      <section
-        className="px-4 py-2 bg-gray-300 dark:bg-black/30 border-t-5 border-b-5 border-gray-600/30"
-      >
+      <section className="px-4 py-2 bg-gray-300 dark:bg-black/30 border-t-5 border-b-5 border-gray-600/30">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {/* BOX ITEM */}
           {services1.map((item, index) => (
@@ -231,7 +261,9 @@ function Contact() {
               />
 
               {/* Text */}
-              <p className="text-gray-900 dark:text-white text-center text-sm">{item.text}</p>
+              <p className="text-gray-900 dark:text-white text-center text-sm">
+                {item.text}
+              </p>
             </div>
           ))}
         </div>
@@ -245,7 +277,9 @@ function Contact() {
             className="w-13 object-contain"
           />
 
-          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Let's Connect</h1>
+          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
+            Let's Connect
+          </h1>
 
           <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
             We're excited to connect with you and learn more about your real
@@ -256,11 +290,16 @@ function Contact() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5 border border-gray-600/30 p-4 rounded-xl dark:bg-[#121212] bg-white">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-5 border border-gray-600/30 p-4 rounded-xl dark:bg-[#121212] bg-white"
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {/* First & Last Name */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">First Name</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                First Name
+              </label>
               <input
                 type="text"
                 placeholder="Enter First Name"
@@ -272,7 +311,9 @@ function Contact() {
             </div>
 
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Last Name</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                Last Name
+              </label>
               <input
                 type="text"
                 placeholder="Enter Last Name"
@@ -285,7 +326,9 @@ function Contact() {
 
             {/* Email & Phone */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Email</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                Email
+              </label>
               <input
                 type="email"
                 placeholder="Enter your Email"
@@ -297,7 +340,9 @@ function Contact() {
             </div>
 
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Phone</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                Phone
+              </label>
               <input
                 type="tel"
                 placeholder="Enter Phone Number"
@@ -310,7 +355,9 @@ function Contact() {
 
             {/* Inquiry Type & Source */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Inquiry Type</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                Inquiry Type
+              </label>
 
               <CustomDropdown
                 placeholder="Select Inquiry Type"
@@ -350,7 +397,9 @@ function Contact() {
 
           {/* Message */}
           <div>
-            <label className=" text-gray-700 dark:text-gray-300 text-sm mb-1 block">Message</label>
+            <label className=" text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+              Message
+            </label>
             <textarea
               rows={3}
               placeholder="Enter your Message here..."
@@ -362,30 +411,61 @@ function Contact() {
 
           {/* Agreement */}
           <div className="sm:col-span-2 flex items-center gap-3">
-              <input
-                type="checkbox"
-                className="mt-0.5"
-                checked={agreed}
-                onChange={(e) => setAgreed(e.target.checked)}
-                required
-              />
-              <p className="text-sm text-gray-700 dark:text-gray-300 ">
-                  I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
-                </p>
+            <input
+              type="checkbox"
+              className="mt-0.5"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              required
+            />
+            <p className="text-sm text-gray-700 dark:text-gray-300 ">
+              I agree with the{" "}
+              <Link
+                to="/terms"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[#703BF7] underline"
+              >
+                Terms
+              </Link>{" "}
+              and{" "}
+              <Link
+                to="/privacy-policy"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[#703BF7] underline"
+              >
+                Privacy Policy
+              </Link>
+              .
+            </p>
           </div>
 
           {/* Submit Button */}
           <div className="sm:col-span-2 flex items-center justify-end">
             <button
-                type="submit"
-                disabled={!agreed || isSubmitting || !firstName.trim() || !lastName.trim() || !email.trim() || !phone.trim()}
-                className={`px-4 py-3 rounded-lg font-medium transition
-                  ${agreed && !isSubmitting && firstName.trim() && lastName.trim() && email.trim() && phone.trim()
-                    ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" 
-                    : "bg-gray-400 cursor-not-allowed text-gray-200"
+              type="submit"
+              disabled={
+                !agreed ||
+                isSubmitting ||
+                !firstName.trim() ||
+                !lastName.trim() ||
+                !email.trim() ||
+                !phone.trim()
+              }
+              className={`px-4 py-3 rounded-lg font-medium transition
+                  ${
+                    agreed &&
+                    !isSubmitting &&
+                    firstName.trim() &&
+                    lastName.trim() &&
+                    email.trim() &&
+                    phone.trim()
+                      ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white"
+                      : "bg-gray-400 cursor-not-allowed text-gray-200"
                   }`}
-              >
-                {isSubmitting ? "Sending..." : "Send Your Message"}
+            >
+              {isSubmitting ? "Sending..." : "Send Your Message"}
             </button>
           </div>
         </form>
@@ -417,7 +497,9 @@ function Contact() {
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
               Main Headquarters
             </h3>
-              <span className="text-gray-800 dark:text-gray-400">51, Ramon Adedoyin way, parakin, ile-ife, Osun State, Nigeria</span>
+            <span className="text-gray-800 dark:text-gray-400">
+              51, Ramon Adedoyin way, parakin, ile-ife, Osun State, Nigeria
+            </span>
           </div>
 
           {/* Description */}
