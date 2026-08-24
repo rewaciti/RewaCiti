@@ -919,39 +919,38 @@ function PropertyDetails() {
               Make Inquiry
             </button>
           </div>
-
           {/* Actions Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 px-4 pb-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 px-4 pb-6">
             {/* Inquire Button */}
             <button
               onClick={() => setIsInquiryModalOpen(true)}
-              className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-3 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-[#703BF7]/20"
+              className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-4 py-3.5 rounded-xl text-base font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-[#703BF7]/20"
             >
-              <FiMail size={16} /> Inquire
+              <FiMail size={20} /> Inquire
             </button>
 
             {/* Book Visit Button */}
             <button
               onClick={() => setIsInspectionModalOpen(true)}
-              className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-3 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-4 py-3.5 rounded-xl text-base font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
-              <FiCalendar size={16} /> Book a Visit
+              <FiCalendar size={20} /> Book a Visit
             </button>
 
             {/* Pay Button */}
             <button
               onClick={() => setIsPaymentModalOpen(true)}
-              className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-3 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-4 py-3.5 rounded-xl text-base font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
-              <FiCreditCard size={16} /> Pay for Property
+              <FiCreditCard size={20} /> Pay for Property
             </button>
 
             {/* Report Agent Button */}
             <button
               onClick={() => setIsReportModalOpen(true)}
-              className="bg-white dark:bg-[#1A1A1A] hover:bg-red-50 dark:hover:bg-red-950/20 border border-gray-600/30 hover:border-red-500 text-gray-900 dark:text-white hover:text-red-500 px-3 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              className="bg-white dark:bg-[#1A1A1A] hover:bg-red-50 dark:hover:bg-red-950/20 border border-gray-600/30 hover:border-red-500 text-gray-900 dark:text-white hover:text-red-500 px-4 py-3.5 rounded-xl text-base font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
-              <FiFlag size={16} /> Report Agent
+              <FiFlag size={20} /> Report Agent
             </button>
           </div>
 
