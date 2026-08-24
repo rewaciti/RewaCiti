@@ -1,29 +1,27 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
 import { useParams, Link } from "react-router";
 import { Helmet } from "react-helmet-async";
-import { FiMapPin, FiChevronLeft, FiChevronRight, FiChevronDown, FiHeart, FiShare2, FiArrowLeft, FiArrowRight, FiX } from "react-icons/fi";
+import { FiMapPin, FiChevronLeft, FiChevronRight, FiHeart, FiShare2, FiArrowLeft, FiArrowRight, FiX } from "react-icons/fi";
 import * as Dialog from "@radix-ui/react-dialog";
 import { usePropertyStore } from "../store/usePropertyStore";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FaBed, FaBath, FaHome, FaBolt } from "react-icons/fa";
 import Footer from "../../../shared/components/Layout/Footer";
-import axios from "axios";
 import BookInspectionModal from "../../inspections/components/BookInspectionModal";
 import PropertyPaymentModal from "../components/PropertyPaymentModal";
 import ServiceRatingModal from "../components/ServiceRatingModal";
 import ReportAgentModal from "../components/ReportAgentModal";
+import InquiryModal from "../components/InquiryModal";
 import PropertyCard from "../components/PropertyCard";
 import { PropertyDetailsSkeleton, PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
 import { toast } from "sonner";
-import { formatCurrency, getCookie, setCookie } from "../../../shared/lib/utils";
+import { formatCurrency } from "../../../shared/lib/utils";
 
-import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
-import { authAPI } from "../../auth/services/authAPI";
+import { useAuthStore } from "../../auth/store/useAuthStore";
 
 function PropertyDetails() {
 
   const { slug } = useParams<{ slug: string }>();
-  const { isAuthenticated, customer } = useAuthStore();
   const {
     properties,
     fetchProperties,
@@ -41,21 +39,16 @@ function PropertyDetails() {
   const isShortlisted = property ? shortlistedProperties.some((p) => p.id === property.id) : false;
 
   const handleShortlist = async () => {
-    if (!property) {
-      setIsDropdownOpen(false);
-      return;
-    }
+    if (!property) return;
 
     const { isAuthenticated } = useAuthStore.getState();
     if (!isAuthenticated) {
       toast.error("Please log in to access your wishlist.");
-      setIsDropdownOpen(false);
       return;
     }
 
     toast.success(isShortlisted ? "Removed from shortlist" : "Added to shortlist");
     void toggleShortlist(property);
-    setIsDropdownOpen(false);
   };
 
   const handleShare = async () => {
@@ -88,7 +81,6 @@ function PropertyDetails() {
                 ...shareData,
                 files: [shareFile],
               });
-              setIsDropdownOpen(false);
               return;
             }
           } catch (imageError) {
@@ -104,7 +96,6 @@ function PropertyDetails() {
       navigator.clipboard.writeText(`${shareText}`);
       toast.success("Link copied to clipboard!");
     }
-    setIsDropdownOpen(false);
   };
 
   const price = property?.pricing.TotalCost ?? 0;
@@ -216,50 +207,6 @@ function PropertyDetails() {
   }, [properties.length, fetchProperties]);
 
   useEffect(() => {
-    const savedInquiry = getCookie(inquiryCookieKey);
-    if (savedInquiry) {
-      try {
-        const parsed = JSON.parse(savedInquiry);
-        setFirstName(parsed.firstName || "");
-        setLastName(parsed.lastName || "");
-        setEmail(parsed.email || "");
-        setPhone(parsed.phone || "");
-        setMessage(parsed.message || "");
-        setAgreed(parsed.agreed || false);
-      } catch {
-        // ignore malformed cookie data
-      }
-    }
-
-    if (!isAuthenticated || !customer) {
-      return;
-    }
-
-    const populateProfileDetails = async () => {
-      try {
-        const profileData = await authAPI.getProfile();
-        const latestPhone = profileData.phoneNumber || "";
-        setFirstName(customer.firstName || "");
-        setLastName(customer.lastName || "");
-        setEmail(customer.email || "");
-        setPhone(latestPhone || customer.phoneNumber || "");
-
-        const currentCustomer = useAuthStore.getState().customer;
-        if (currentCustomer && currentCustomer.phoneNumber !== latestPhone) {
-          useAuthStore.getState().setCustomer({
-            ...currentCustomer,
-            phoneNumber: latestPhone,
-          });
-        }
-      } catch (error) {
-        console.error("Failed to fetch profile for property details form:", error);
-      }
-    };
-
-    populateProfileDetails();
-  }, [isAuthenticated, customer]);
-
-  useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
 
@@ -267,36 +214,15 @@ function PropertyDetails() {
     window.scrollTo(0, 0);
   }, [slug]);
 
-  // FORM STATES
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [message, setMessage] = useState("");
-  const [agreed, setAgreed] = useState(false);
-  const inquiryCookieKey = "rewaciti_property_details_inquiry";
-  const cookieLoaded = useRef(false);
   const [isInspectionModalOpen, setIsInspectionModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
   const [paymentUserData, setPaymentUserData] = useState<{ name: string; email: string; phone: string } | undefined>(undefined);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    if (isInspectionModalOpen) {
+    if (isInspectionModalOpen || isPaymentModalOpen || isInquiryModalOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -305,127 +231,7 @@ function PropertyDetails() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isInspectionModalOpen]);
-
-  useEffect(() => {
-    if (isPaymentModalOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isPaymentModalOpen]);
-
-  useEffect(() => {
-    if (!cookieLoaded.current) {
-      cookieLoaded.current = true;
-      return;
-    }
-
-    const payload = {
-      firstName,
-      lastName,
-      email,
-      phone,
-      message,
-      agreed,
-    };
-
-    setCookie(inquiryCookieKey, JSON.stringify(payload));
-  }, [firstName, lastName, email, phone, message, agreed]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!agreed) {
-      toast.error("Please agree to the Terms and Privacy Policy");
-      return;
-    }
-
-    if (!firstName.trim() || !lastName.trim() || !email.trim() || !phone.trim()) {
-      toast.error("Please enter your full name, email, and phone number to send a message.");
-      return;
-    }
-
-    if (!property) return;
-
-    setIsSubmitting(true);
-
-    const fullName = `${firstName} ${lastName}`.trim();
-
-    const propertyUrl = window.location.href;
-    const ownerId = property.createdBy?._id ?? property.createdBy?.id;
-
-    const payload = {
-      companyId: COMPANY_ID,
-      pipelineId: "69b49c7541d35d158e336621",
-      title: `${fullName} interested in ${property.name} (₦${formatCurrency(price)})`,
-      name: fullName,
-      amount: price,
-      email,
-      phone,
-      address: `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`,
-      note: message,
-      ...(ownerId ? { ownerId } : {}),
-      customData: [
-        {
-          label: "Property",
-          value: property.name,
-        },
-        {
-          label: "Property Link",
-          value: propertyUrl,
-        },
-        {
-          label: "Category",
-          value: property.category,
-        },
-        {
-          label: "Location",
-          value: `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`,
-        },
-        ...(ownerId ? [{ label: "Agent ID", value: ownerId }] : []),
-        { label: "Property ID", value: property.id },
-        ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
-        ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : []),
-      ],
-    };
-
-    try {
-      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
-      toast.success(
-        <div className="whitespace-pre-wrap">
-          Message sent successfully!
-          <br />
-          A member of our team will get back to you soon.
-        </div>
-      );
-      // reset form
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPhone("");
-      setMessage("");
-      setAgreed(false);
-      setCookie(inquiryCookieKey, JSON.stringify({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        message: "",
-        agreed: false,
-      }));
-
-    } catch (error) {
-      console.error("Error sending message:", error);
-      toast.error("Failed to send message. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  }, [isInspectionModalOpen, isPaymentModalOpen, isInquiryModalOpen]);
 
 
 
@@ -433,7 +239,6 @@ function PropertyDetails() {
   const [relatedPage, setRelatedPage] = useState(1);
   const [showAllRelated, setShowAllRelated] = useState(false);
   const [sameAgentOnly, setSameAgentOnly] = useState(false);
-  const inquirySectionRef = useRef<HTMLDivElement | null>(null);
   const RELATED_ITEMS_PER_PAGE = 4;
 
   const totalRelatedPages = Math.ceil(totalRelatedProperties / RELATED_ITEMS_PER_PAGE);
@@ -472,10 +277,6 @@ function PropertyDetails() {
     setRelatedPage(1);
     setShowAllRelated(false);
   }, [sameAgentOnly, property?.id]);
-
-  const scrollToInquiry = () => {
-    inquirySectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
 
   return (
     <div className="bg-gray-300 dark:bg-black/30">
@@ -559,94 +360,65 @@ function PropertyDetails() {
                 </a>
               </div>
 
-              {/* Price & Action */}
+              {/* Price */}
               <div className="flex gap-4 items-center justify-between mt-4 md:mt-0">
                 <div className="flex flex-col items-start">
                   <p className="text-xs text-gray-800 dark:text-gray-400 flex">Price ({property?.duration})</p>
                   <p className="text-2xl font-semibold text-gray-900 dark:text-white">₦{formatCurrency(price)}</p>
                 </div>
-
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    onClick={() => setIsDropdownOpen((prev) => !prev)}
-                    className="bg-[#703BF7] hover:bg-[#9677df] text-white px-6 py-2 rounded-lg font-medium transition-all shadow-lg hover:shadow-[#703BF7]/20 flex items-center gap-2 cursor-pointer"
-                  >
-                    Actions
-                    <FiChevronDown
-                      className={`transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""
-                        }`}
-                    />
-                  </button>
-
-                  {isDropdownOpen && (
-                    <div className="absolute right-0 top-9 mt-2 w-64 bg-white/95 dark:bg-[#1A1A1A]/95 backdrop-blur-md border border-gray-600/30 rounded-xl shadow-2xl z-30 overflow-hidden flex flex-col animate-slide-down-fade">
-
-                      <button
-                        onClick={handleShortlist}
-                        className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 group first:rounded-t-xl cursor-pointer"
-                      >
-                        <div className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-white group-hover:text-white">
-                          <FiHeart className={isShortlisted ? "fill-current text-[#703BF7] group-hover:text-white" : "group-hover:text-white"} />
-                          {isShortlisted ? "Shortlisted" : "Add to Shortlist"}
-                        </div>
-                        <div className="text-[10px] text-gray-500 dark:text-gray-400 group-hover:text-white/80">
-                          {isShortlisted ? "Remove from your favorites" : "Save this property for later"}
-                        </div>
-                      </button>
-
-                      <button
-                        onClick={handleShare}
-                        className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 border-t border-gray-600/30 group cursor-pointer"
-                      >
-                        <div className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-white group-hover:text-white">
-                          <FiShare2 /> Share Property
-                        </div>
-                        <div className="text-[10px] text-gray-500 dark:text-gray-400 group-hover:text-white/80">Share with friends or family</div>
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          setIsInspectionModalOpen(true);
-                          setIsDropdownOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 border-t border-gray-600/30 group cursor-pointer"
-                      >
-                        <div className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-white group-hover:text-white">
-                          <span>📅</span> Book a Visit
-                        </div>
-                        <div className="text-[10px] text-gray-500 dark:text-gray-400 group-hover:text-white/80">Non-refundable inspection fee applies</div>
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          setIsPaymentModalOpen(true);
-                          setIsDropdownOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-3 hover:bg-[#703BF7] dark:hover:bg-[#703BF7] hover:text-white transition-all duration-300 border-t border-gray-600/30 group cursor-pointer"
-                      >
-                        <div className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-white group-hover:text-white">
-                          <span>💳</span> Pay for Property
-                        </div>
-                        <div className="text-[10px] text-gray-500 dark:text-gray-400 group-hover:text-white/80">Complete property purchase & rating</div>
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          setIsReportModalOpen(true);
-                          setIsDropdownOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-3 hover:bg-red-500 dark:hover:bg-red-600 hover:text-white transition-all duration-300 border-t border-gray-600/30 group last:rounded-b-xl cursor-pointer"
-                      >
-                        <div className="text-sm font-medium flex items-center gap-2 text-red-500 group-hover:text-white">
-                          <span>🚩</span> Report Agent
-                        </div>
-                        <div className="text-[10px] text-red-400 group-hover:text-white/80">Report unprofessional behavior</div>
-                      </button>
-
-                    </div>
-                  )}
-                </div>
               </div>
+            </div>
+
+            {/* Actions Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 px-4 pb-6">
+              {/* Inquire Button */}
+              <button
+                onClick={() => setIsInquiryModalOpen(true)}
+                className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-4 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-[#703BF7]/20"
+              >
+                <span>✉️</span> Inquire
+              </button>
+
+              {/* Book Visit Button */}
+              <button
+                onClick={() => setIsInspectionModalOpen(true)}
+                className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-4 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              >
+                <span>📅</span> Book a Visit
+              </button>
+
+              {/* Pay Button */}
+              <button
+                onClick={() => setIsPaymentModalOpen(true)}
+                className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-4 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              >
+                <span>💳</span> Pay for Property
+              </button>
+
+              {/* Shortlist Button */}
+              <button
+                onClick={handleShortlist}
+                className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-4 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              >
+                <FiHeart className={isShortlisted ? "fill-current text-red-500" : ""} />
+                {isShortlisted ? "Shortlisted" : "Shortlist"}
+              </button>
+
+              {/* Share Button */}
+              <button
+                onClick={handleShare}
+                className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-4 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              >
+                <FiShare2 /> Share
+              </button>
+
+              {/* Report Agent Button */}
+              <button
+                onClick={() => setIsReportModalOpen(true)}
+                className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:bg-red-50 hover:dark:bg-red-950/20 border-gray-600/30 hover:border-red-500 text-gray-900 dark:text-white hover:text-red-500 px-4 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              >
+                <span>🚩</span> Report Agent
+              </button>
             </div>
           </div>
 
@@ -677,6 +449,12 @@ function PropertyDetails() {
             property={property}
             open={isReportModalOpen}
             onOpenChange={setIsReportModalOpen}
+          />
+
+          <InquiryModal
+            property={property}
+            open={isInquiryModalOpen}
+            onOpenChange={setIsInquiryModalOpen}
           />
 
           <section className="px-4 pb-10 ">
@@ -1014,141 +792,13 @@ function PropertyDetails() {
 
           <div className="fixed bottom-4 right-4 z-30">
             <button
-              onClick={scrollToInquiry}
+              onClick={() => setIsInquiryModalOpen(true)}
               className="rounded-full bg-[#703BF7] hover:bg-[#9677df] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#703BF7]/30 transition-all duration-300 hover:-translate-y-1"
             >
               Make Inquiry
             </button>
           </div>
 
-          <section ref={inquirySectionRef} className="md:flex justify-between px-4">
-            <div className="flex-1 flex flex-col space-y-3 z-10 mb-6 ">
-              <img
-                src="/logo/Abstract Design (1).png"
-                alt="Icon"
-                className="w-13 object-contain"
-              />
-
-              <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Inquire About This Property</h1>
-
-              <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-                Interested in this property? Fill out the form below, and our real estate experts will get back to you with more details, including scheduling a viewing and answering any questions you may have.
-              </p>
-            </div>
-
-            <div className=" p-4 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl text-white flex-2">
-              <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Send Us a Message</h2>
-
-              <form onSubmit={handleSubmit} className="space-y-5 dark:bg-[#1A1A1A] bg-white">
-                {/* First & Last Name */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300">First Name</label>
-                    <input
-                      type="text"
-                      placeholder="Enter First Name"
-                      required
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300">Last Name</label>
-                    <input
-                      type="text"
-                      placeholder="Enter Last Name"
-                      required
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      className="w-full bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
-                    />
-                  </div>
-                </div>
-
-                {/* Email & Phone */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300">Email</label>
-                    <input
-                      type="email"
-                      placeholder="Enter your Email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300">Phone</label>
-                    <input
-                      type="tel"
-                      placeholder="Enter Phone Number"
-                      required
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
-                    />
-                  </div>
-                </div>
-
-                {/* Selected Property */}
-                <div>
-                  <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300">Selected Property</label>
-                  <input
-                    type="text"
-                    value={`${property?.name}, ${property?.location?.area}, ${property?.location?.city_town}, ${property?.location?.state} state.`}
-                    readOnly
-                    className="w-full border border-gray-600/30 rounded-md px-4 py-2 text-s focus:outline-none text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
-                  />
-                </div>
-
-                {/* Message */}
-                <div>
-                  <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300">Message</label>
-                  <textarea
-                    rows={4}
-                    placeholder="Enter your Message here..."
-                    required
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    className="w-full bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
-                  />
-                </div>
-
-                {/* Agreement */}
-                <div className="sm:col-span-2 flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    className="mt-0.5"
-                    checked={agreed}
-                    onChange={(e) => setAgreed(e.target.checked)}
-                    required
-                  />
-                  <p className="text-sm text-gray-700 dark:text-gray-300 ">
-                    I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
-                  </p>
-                </div>
-
-                {/* Submit Button */}
-                <div className="sm:col-span-2 flex items-center justify-end">
-                  <button
-                    type="submit"
-                    disabled={!agreed || isSubmitting || !firstName.trim() || !lastName.trim() || !email.trim() || !phone.trim()}
-                    className={`px-4 py-3 rounded-lg font-medium transition
-                    ${agreed && !isSubmitting && firstName.trim() && lastName.trim() && email.trim() && phone.trim()
-                        ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white"
-                        : "bg-gray-400 cursor-not-allowed text-gray-200"
-                      }`}
-                  >
-                    {isSubmitting ? "Sending..." : "Send Message"}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </section>
           <hr className="my-2 border-gray-600/50 w-[98%] mx-auto" />
           {/* Related Properties Section */}
           {property && (
