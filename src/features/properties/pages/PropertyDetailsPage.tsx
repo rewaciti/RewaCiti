@@ -1087,42 +1087,68 @@ function PropertyDetails() {
 
       {/* Actions Bottom Bar (Airbnb style) */}
       <div
-        className={`fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-[#1A1A1A]/90 backdrop-blur-md border-t border-gray-300/30 dark:border-gray-800/80 py-2 px-4 shadow-[0_-8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_-8px_30px_rgb(0,0,0,0.3)] transition-transform duration-300 ease-in-out ${
+        className={`fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-[#1A1A1A]/90 backdrop-blur-md border-t border-gray-300/30 dark:border-gray-800/80 pt-2 pb-2 px-4 shadow-[0_-8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_-8px_30px_rgb(0,0,0,0.3)] transition-transform duration-300 ease-in-out ${
           showActionBar ? "translate-y-0" : "translate-y-full"
         }`}
       >
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3">
-          {/* Inquire Button */}
-          <button
-            onClick={() => setIsInquiryModalOpen(true)}
-            className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-4 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-[#703BF7]/20"
-          >
-            <FiMail size={18} /> Inquire
-          </button>
+        <div className="max-w-6xl mx-auto">
+          {/* Price / Duration / Visitation Fee summary */}
+          <div className="flex items-center justify-between gap-3 mb-2 pb-2 border-b border-gray-300/30 dark:border-gray-800/60 text-gray-900 dark:text-white">
+            <div>
+              <p className="text-[10px] uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                Price {property?.duration && `(${property.duration})`}
+              </p>
+              <p className="text-base md:text-lg font-bold text-[#703BF7]">
+                ₦{formatCurrency(price)}
+              </p>
+            </div>
 
-          {/* Book Visit Button */}
-          <button
-            onClick={() => setIsInspectionModalOpen(true)}
-            className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-4 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-          >
-            <FiCalendar size={18} /> Book a Visit
-          </button>
+            {property?.visitationfee ? (
+              <div className="text-right">
+                <p className="text-[10px] uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Visitation Fee
+                </p>
+                <p className="text-sm md:text-base font-semibold">
+                  ₦{formatCurrency(property.visitationfee)}
+                </p>
+              </div>
+            ) : null}
+          </div>
 
-          {/* Pay Button */}
-          <button
-            onClick={() => setIsPaymentModalOpen(true)}
-            className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-2 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
-          >
-            <FiCreditCard size={18} /> Make Payment
-          </button>
+          {/* Action Buttons */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {/* Inquire Button */}
+            <button
+              onClick={() => setIsInquiryModalOpen(true)}
+              className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-4 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-[#703BF7]/20"
+            >
+              <FiMail size={18} /> Inquire
+            </button>
 
-          {/* Report Agent Button */}
-          <button
-            onClick={() => setIsReportModalOpen(true)}
-            className="bg-white dark:bg-[#1A1A1A] hover:bg-red-50 dark:hover:bg-red-950/20 border border-gray-600/30 hover:border-red-500 text-gray-900 dark:text-white hover:text-red-500 px-4 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-          >
-            <FiFlag size={18} /> Report Agent
-          </button>
+            {/* Book Visit Button */}
+            <button
+              onClick={() => setIsInspectionModalOpen(true)}
+              className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-4 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+            >
+              <FiCalendar size={18} /> Book a Visit
+            </button>
+
+            {/* Pay Button */}
+            <button
+              onClick={() => setIsPaymentModalOpen(true)}
+              className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-2 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+            >
+              <FiCreditCard size={18} /> Make Payment
+            </button>
+
+            {/* Report Agent Button */}
+            <button
+              onClick={() => setIsReportModalOpen(true)}
+              className="bg-white dark:bg-[#1A1A1A] hover:bg-red-50 dark:hover:bg-red-950/20 border border-gray-600/30 hover:border-red-500 text-gray-900 dark:text-white hover:text-red-500 px-4 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+            >
+              <FiFlag size={18} /> Report Agent
+            </button>
+          </div>
         </div>
       </div>
     </div>
