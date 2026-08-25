@@ -124,7 +124,7 @@ const Navbar = () => {
         >
           <div className="flex justify-center lg:ml-[40%] sm:ml-[20%] items-center">
             <p className="flex items-center mr-1 text-gray-900 dark:text-white ">
-              ✨Discover Properties with RewaCiti
+              ✨Find your dream property
             </p>
             <NavLink
               to="/blog"
