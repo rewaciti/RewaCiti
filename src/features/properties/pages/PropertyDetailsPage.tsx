@@ -70,80 +70,80 @@ function PropertyDetails() {
     void toggleShortlist(property);
   };
 
-const handleShare = async () => {
-  if (!property) return;
-  const description = property.description;
-  const url = window.location.href;
-  const address = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
-  const shareText = `${description}\n\nName: ${property.name}\nAddress: ${address}\nCategory: ${property.category}\nURL: ${url}`;
+  const handleShare = async () => {
+    if (!property) return;
+    const description = property.description;
+    const url = window.location.href;
+    const address = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
+    const shareText = `${description}\n\nName: ${property.name}\nAddress: ${address}\nCategory: ${property.category}\nURL: ${url}`;
 
-  if (navigator.share) {
-    try {
-      const shareData = {
-        title: property.name,
-        text: shareText
-      };
+    if (navigator.share) {
+      try {
+        const shareData = {
+          title: property.name,
+          text: shareText
+        };
 
-      // Prefer the property video for the attached share file; only fall
-      // back to the cover image if no video is available or it fails.
-      const videoUrl = property.videoUrl;
-      const coverImageUrl = property.img || property.images?.[0] || "";
+        // Prefer the property video for the attached share file; only fall
+        // back to the cover image if no video is available or it fails.
+        const videoUrl = property.videoUrl;
+        const coverImageUrl = property.img || property.images?.[0] || "";
 
-      if (videoUrl && typeof File !== "undefined") {
-        try {
-          const response = await fetch(videoUrl);
-          const blob = await response.blob();
+        if (videoUrl && typeof File !== "undefined") {
+          try {
+            const response = await fetch(videoUrl);
+            const blob = await response.blob();
 
-          if (blob.size) {
-            const shareFile = new File(
-              [blob],
-              `${property.slug || property.name}.mp4`,
-              { type: blob.type || "video/mp4" },
-            );
+            if (blob.size) {
+              const shareFile = new File(
+                [blob],
+                `${property.slug || property.name}.mp4`,
+                { type: blob.type || "video/mp4" },
+              );
 
-            await navigator.share({
-              ...shareData,
-              files: [shareFile],
-            });
-            return;
+              await navigator.share({
+                ...shareData,
+                files: [shareFile],
+              });
+              return;
+            }
+          } catch (videoError) {
+            console.error("Error preparing share video:", videoError);
           }
-        } catch (videoError) {
-          console.error("Error preparing share video:", videoError);
         }
-      }
 
-      if (coverImageUrl && typeof File !== "undefined") {
-        try {
-          const response = await fetch(coverImageUrl);
-          const blob = await response.blob();
+        if (coverImageUrl && typeof File !== "undefined") {
+          try {
+            const response = await fetch(coverImageUrl);
+            const blob = await response.blob();
 
-          if (blob.size) {
-            const shareFile = new File(
-              [blob],
-              `${property.slug || property.name}.jpg`,
-              { type: blob.type || "image/jpeg" },
-            );
+            if (blob.size) {
+              const shareFile = new File(
+                [blob],
+                `${property.slug || property.name}.jpg`,
+                { type: blob.type || "image/jpeg" },
+              );
 
-            await navigator.share({
-              ...shareData,
-              files: [shareFile],
-            });
-            return;
+              await navigator.share({
+                ...shareData,
+                files: [shareFile],
+              });
+              return;
+            }
+          } catch (imageError) {
+            console.error("Error preparing share image:", imageError);
           }
-        } catch (imageError) {
-          console.error("Error preparing share image:", imageError);
         }
-      }
 
-      await navigator.share(shareData);
-    } catch (err) {
-      console.error("Error sharing:", err);
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    } else {
+      navigator.clipboard.writeText(`${shareText}`);
+      toast.success("Link copied to clipboard!");
     }
-  } else {
-    navigator.clipboard.writeText(`${shareText}`);
-    toast.success("Link copied to clipboard!");
-  }
-};
+  };
 
   const price = property?.pricing.TotalCost ?? 0;
   const images = property?.images ?? [];
@@ -410,23 +410,23 @@ const handleShare = async () => {
                   <a
                     href={
                       property?.geo_location?.lat !== 0 &&
-                      property?.geo_location?.lat !== null &&
-                      property?.geo_location?.lng !== 0 &&
-                      property?.geo_location?.lng !== null
+                        property?.geo_location?.lat !== null &&
+                        property?.geo_location?.lng !== 0 &&
+                        property?.geo_location?.lng !== null
                         ? `https://www.google.com/maps/search/?api=1&query=${property.geo_location.lat},${property.geo_location.lng}`
                         : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                            property
-                              ? [
-                                  property.location.area,
-                                  property.location.city_town ||
-                                    property.location.city,
-                                  property.location.state,
-                                ]
-                                  .filter(Boolean)
-                                  .join(", ") +
-                                  (property.location.state ? " state." : "")
-                              : "",
-                          )}`
+                          property
+                            ? [
+                              property.location.area,
+                              property.location.city_town ||
+                              property.location.city,
+                              property.location.state,
+                            ]
+                              .filter(Boolean)
+                              .join(", ") +
+                            (property.location.state ? " state." : "")
+                            : "",
+                        )}`
                     }
                     target="_blank"
                     rel="noopener noreferrer"
@@ -443,7 +443,7 @@ const handleShare = async () => {
                         ]
                           .filter(Boolean)
                           .join(", ") +
-                          (property.location.state ? " state." : "")}
+                        (property.location.state ? " state." : "")}
                     </span>
                   </a>
                 </div>
@@ -473,9 +473,8 @@ const handleShare = async () => {
                     className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white w-9 h-9 rounded-full transition-all flex items-center justify-center cursor-pointer shadow-sm"
                   >
                     <FiHeart
-                      className={`text-lg transition-all ${
-                        isShortlisted ? "fill-current text-[#703BF7]" : ""
-                      }`}
+                      className={`text-lg transition-all ${isShortlisted ? "fill-current text-[#703BF7]" : ""
+                        }`}
                     />
                   </button>
                 </div>
@@ -538,11 +537,10 @@ const handleShare = async () => {
                     key={index}
                     src={img}
                     onClick={() => setCurrentIndex(index)}
-                    className={`h-30 w-30 md:w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-lg cursor-pointer border ${
-                      index === currentIndex
-                        ? "border-[#703BF7]"
-                        : "border-gray-600/30"
-                    }`}
+                    className={`h-30 w-30 md:w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-lg cursor-pointer border ${index === currentIndex
+                      ? "border-[#703BF7]"
+                      : "border-gray-600/30"
+                      }`}
                   />
                 ))}
               </div>
@@ -600,11 +598,10 @@ const handleShare = async () => {
                       {images.map((_, idx) => (
                         <span
                           key={idx}
-                          className={`w-3 h-0.5 border-t-3 ${
-                            idx === currentIndex
-                              ? "border-[#703BF7]"
-                              : "border-gray-400 border-t"
-                          }`}
+                          className={`w-3 h-0.5 border-t-3 ${idx === currentIndex
+                            ? "border-[#703BF7]"
+                            : "border-gray-400 border-t"
+                            }`}
                         />
                       ))}
                     </div>
@@ -754,16 +751,16 @@ const handleShare = async () => {
 
                   <div className="relative w-full h-[70vh] aspect-video rounded-xl overflow-hidden border border-gray-600/30 ">
                     {property.videoUrl.includes("youtube.com") ||
-                    property.videoUrl.includes("youtu.be") ? (
+                      property.videoUrl.includes("youtu.be") ? (
                       <iframe
                         src={
                           property.videoUrl.includes("watch?v=")
                             ? property.videoUrl.replace("watch?v=", "embed/")
                             : property.videoUrl.includes("youtu.be/")
                               ? property.videoUrl.replace(
-                                  "youtu.be/",
-                                  "youtube.com/embed/",
-                                )
+                                "youtu.be/",
+                                "youtube.com/embed/",
+                              )
                               : property.videoUrl
                         }
                         title="Property Video Tour"
@@ -883,7 +880,7 @@ const handleShare = async () => {
             </div>
 
             {(property?.keyFeatures && property.keyFeatures.length > 0) ||
-            (property?.specialNotes && property.specialNotes.length > 0) ? (
+              (property?.specialNotes && property.specialNotes.length > 0) ? (
               <div className="flex-1 px-4 py-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl h-fit space-y-6">
                 {property?.keyFeatures && property.keyFeatures.length > 0 && (
                   <div>
@@ -935,48 +932,7 @@ const handleShare = async () => {
           </section>
           <hr className="my-2 border-gray-600/50 w-[98%] mx-auto" />
 
-          <div className="fixed bottom-4 right-4 z-30">
-            <button
-              onClick={() => setIsInquiryModalOpen(true)}
-              className="rounded-full bg-[#703BF7] hover:bg-[#9677df] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#703BF7]/30 transition-all duration-300 hover:-translate-y-1"
-            >
-              Make Inquiry
-            </button>
-          </div>
-          {/* Actions Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5 px-4 pb-6">
-            {/* Inquire Button */}
-            <button
-              onClick={() => setIsInquiryModalOpen(true)}
-              className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-4 py-3.5 rounded-xl text-base font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-[#703BF7]/20"
-            >
-              <FiMail size={20} /> Inquire
-            </button>
 
-            {/* Book Visit Button */}
-            <button
-              onClick={() => setIsInspectionModalOpen(true)}
-              className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-4 py-3.5 rounded-xl text-base font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-            >
-              <FiCalendar size={20} /> Book a Visit
-            </button>
-
-            {/* Pay Button */}
-            <button
-              onClick={() => setIsPaymentModalOpen(true)}
-              className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-2 py-3.5 rounded-xl text-base font-medium transition-all flex items-center justify-center gap-1 cursor-pointer shadow-sm"
-            >
-              <FiCreditCard size={20} /> Make Payment
-            </button>
-
-            {/* Report Agent Button */}
-            <button
-              onClick={() => setIsReportModalOpen(true)}
-              className="bg-white dark:bg-[#1A1A1A] hover:bg-red-50 dark:hover:bg-red-950/20 border border-gray-600/30 hover:border-red-500 text-gray-900 dark:text-white hover:text-red-500 px-4 py-3.5 rounded-xl text-base font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-            >
-              <FiFlag size={20} /> Report Agent
-            </button>
-          </div>
 
           {/* Related Properties Section */}
           {property && (
@@ -1011,13 +967,13 @@ const handleShare = async () => {
                   </div>
                   {(totalRelatedProperties > RELATED_ITEMS_PER_PAGE ||
                     showAllRelated) && (
-                    <button
-                      onClick={() => setShowAllRelated(!showAllRelated)}
-                      className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center shrink-0 hidden md:block"
-                    >
-                      {showAllRelated ? "Show Less" : "View All"}
-                    </button>
-                  )}
+                      <button
+                        onClick={() => setShowAllRelated(!showAllRelated)}
+                        className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center shrink-0 hidden md:block"
+                      >
+                        {showAllRelated ? "Show Less" : "View All"}
+                      </button>
+                    )}
                 </div>
                 <p className="text-gray-800 dark:text-gray-400">
                   {sameAgentOnly
@@ -1029,11 +985,11 @@ const handleShare = async () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                 {relatedPropertiesLoading
                   ? Array.from({ length: 3 }).map((_, index) => (
-                      <PropertyCardSkeleton key={index} />
-                    ))
+                    <PropertyCardSkeleton key={index} />
+                  ))
                   : currentRelatedProperties.map((p) => (
-                      <PropertyCard key={p.id} property={p} />
-                    ))}
+                    <PropertyCard key={p.id} property={p} />
+                  ))}
               </div>
 
               {!relatedPropertiesLoading &&
@@ -1099,6 +1055,43 @@ const handleShare = async () => {
       )}
       <div className="pt-5">
         <Footer />
+      </div>
+
+      {/* Actions Bottom Bar (Airbnb style) */}
+      <div className="sticky bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-[#1A1A1A]/90 backdrop-blur-md border-t border-gray-300/30 dark:border-gray-800/80 py-2 px-4 shadow-[0_-8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_-8px_30px_rgb(0,0,0,0.3)]">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3">
+          {/* Inquire Button */}
+          <button
+            onClick={() => setIsInquiryModalOpen(true)}
+            className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-4 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-[#703BF7]/20"
+          >
+            <FiMail size={18} /> Inquire
+          </button>
+
+          {/* Book Visit Button */}
+          <button
+            onClick={() => setIsInspectionModalOpen(true)}
+            className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-4 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+          >
+            <FiCalendar size={18} /> Book a Visit
+          </button>
+
+          {/* Pay Button */}
+          <button
+            onClick={() => setIsPaymentModalOpen(true)}
+            className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-2 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+          >
+            <FiCreditCard size={18} /> Make Payment
+          </button>
+
+          {/* Report Agent Button */}
+          <button
+            onClick={() => setIsReportModalOpen(true)}
+            className="bg-white dark:bg-[#1A1A1A] hover:bg-red-50 dark:hover:bg-red-950/20 border border-gray-600/30 hover:border-red-500 text-gray-900 dark:text-white hover:text-red-500 px-4 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+          >
+            <FiFlag size={18} /> Report Agent
+          </button>
+        </div>
       </div>
     </div>
   );

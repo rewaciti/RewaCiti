@@ -128,32 +128,29 @@ export function PropertyDetailsSkeleton() {
           </div>
         </section>
 
-        {/* Inquiry Section */}
-        <section className="md:flex justify-between px-4 pb-20 gap-6">
-          <div className="flex-1 space-y-4">
-            <Skeleton className="h-12 w-12 rounded-lg" />
-            <Skeleton className="h-10 w-3/4" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-5/6" />
+        {/* Related Properties Section Skeleton */}
+        <section className="p-4 mb-8">
+          <div className="mb-8 space-y-3 animate-pulse">
+            <Skeleton className="w-13 h-13 rounded-full" />
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-4 w-2/3" />
           </div>
-          <div className="p-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl flex-2 space-y-6">
-            <Skeleton className="h-8 w-1/3 mb-6" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-12 w-full" />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-12 w-full" />
-            </div>
-            <Skeleton className="h-12 w-full" />
-            <Skeleton className="h-32 w-full" />
-            <div className="flex justify-between items-center">
-              <Skeleton className="h-6 w-1/3" />
-              <Skeleton className="h-12 w-40 rounded-lg" />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+            <PropertyCardSkeleton />
+            <PropertyCardSkeleton />
+            <PropertyCardSkeleton />
           </div>
         </section>
+
+        {/* Actions Bottom Bar Skeleton (Airbnb style) */}
+        <div className="sticky bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-[#1A1A1A]/90 backdrop-blur-md border-t border-gray-300/30 dark:border-gray-800/80 py-2 px-4 shadow-[0_-8px_30px_rgb(0,0,0,0.12)]">
+          <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3 animate-pulse">
+            <Skeleton className="h-10 rounded-xl w-full" />
+            <Skeleton className="h-10 rounded-xl w-full" />
+            <Skeleton className="h-10 rounded-xl w-full" />
+            <Skeleton className="h-10 rounded-xl w-full" />
+          </div>
+        </div>
       </div>
     </div>
   );
