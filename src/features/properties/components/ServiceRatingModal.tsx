@@ -7,6 +7,15 @@ import { useNavigate } from "react-router";
 import type { Property } from "../../../types";
 import { COMPANY_ID } from "../../auth/store/useAuthStore";
 
+// The inline bootstrap script in index.html defines `window.tp` synchronously
+// (queuing calls until the real Trustpilot script finishes loading), so this
+// just tells TypeScript that it may exist on window.
+declare global {
+  interface Window {
+    tp?: (...args: unknown[]) => void;
+  }
+}
+
 interface ServiceRatingModalProps {
 
   property: Property;
@@ -38,6 +47,20 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
     }
   };
 
+  // Fires the Trustpilot review invitation. Sent for every submission
+  // regardless of star rating — Trustpilot's guidelines prohibit only
+  // inviting customers who gave a high internal rating ("review gating").
+  const sendTrustpilotInvitation = () => {
+    if (!userData?.email) return;
+
+    window.tp?.("createInvitation", {
+      recipientEmail: userData.email,
+      recipientName: userData.name || "Customer",
+      referenceId: property.id,
+      source: "InvitationScript",
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (rating === 0) {
@@ -66,6 +89,8 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
       };
 
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", feedbackPayload);
+
+      sendTrustpilotInvitation();
 
       toast.success("Thank you for your feedback!");
       handleClose(false);
