@@ -65,6 +65,7 @@ const emptyGeoLocation = { lat: 0, lng: 0 };
 
 interface WishlistProductResponse {
   _id: string;
+  name?: string;
   slug?: string;
   thumbnail?: string;
   images?: string[];
@@ -73,7 +74,17 @@ interface WishlistProductResponse {
   bathrooms?: number;
   category?: string;
   categoryId?: { name?: string };
-  location?: { area?: string; city?: string; city_town?: string; state?: string };
+  customData?: {
+    location?: {
+      area?: string;
+      city?: string;
+      city_town?: string;
+      state?: string;
+      nearest_university?: string;
+    };
+    bedrooms?: number | null;
+    bathrooms?: number | null;
+  };
   pricing?: { TotalCost?: number };
 }
 
@@ -172,21 +183,24 @@ const mapWishlistProductToProperty = (item: WishlistProductResponse): Property =
   id: item._id,
   img: item.thumbnail || item.images?.[0] || "",
   slug: item.slug || "",
-  name: item.slug || item._id,
+  // Prefer the real product name; fall back to slug/id only if name is genuinely missing.
+  name: item.name || item.slug || item._id,
   description: "",
-  bedrooms: item.bedrooms ?? 0,
-  bathrooms: item.bathrooms ?? 0,
+  bedrooms: item.bedrooms ?? item.customData?.bedrooms ?? 0,
+  bathrooms: item.bathrooms ?? item.customData?.bathrooms ?? 0,
   category: item.category || item.categoryId?.name || "",
   pricing: {
     ...emptyPricing,
     PropertyCost: item.price || 0,
     TotalCost: item.price || 0,
   },
+ 
   location: {
-    area: item.location?.area || "",
-    city: item.location?.city || "",
-    city_town: item.location?.city_town || "",
-    state: item.location?.state || "",
+    area: item.customData?.location?.area || "",
+    city: item.customData?.location?.city || "",
+    city_town: item.customData?.location?.city_town || "",
+    state: item.customData?.location?.state || "",
+    nearest_university: item.customData?.location?.nearest_university || "",
   },
   geo_location: { ...emptyGeoLocation },
   yearBuilt: 0,
@@ -524,7 +538,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
     };
     writeStoredWishlistMetadata(nextStoredMetadata);
 
-    const enrichedProperty  = mergeWishlistMetadata(property, nextStoredMetadata);
+    const enrichedProperty = mergeWishlistMetadata(property, nextStoredMetadata);
     const optimisticProperties = isShortlisted
       ? previousShortlisted.filter((p) => p.id !== property.id)
       : [...previousShortlisted, enrichedProperty];
