@@ -733,7 +733,7 @@ function PropertyDetails() {
 
                   {/* Image Container */}
                   <div
-                    className="w-full h-full overflow-hidden relative flex items-center justify-center p-4"
+                    className="w-full h-full overflow-hidden relative flex items-center justify-center md:p-4"
                     onClick={() => setIsLightboxOpen(false)}
                     onTouchStart={onTouchStart}
                     onTouchMove={onTouchMove}
@@ -748,12 +748,12 @@ function PropertyDetails() {
                       {images.map((img, index) => (
                         <div
                           key={index}
-                          className="w-full h-full shrink-0 flex items-center justify-center p-4"
+                          className="w-full h-full shrink-0 flex items-center justify-center md:p-4"
                         >
                           <img
                             src={img}
                             alt={`Property Image ${index + 1}`}
-                            className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl select-none"
+                            className="max-w-full max-h-[85vh] object-contain md:rounded-lg shadow-2xl select-none"
                             onClick={(e) => e.stopPropagation()}
                           />
                         </div>
