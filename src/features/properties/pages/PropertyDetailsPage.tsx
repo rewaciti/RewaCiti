@@ -598,7 +598,7 @@ function PropertyDetails() {
                     >
                       <img
                         src={img}
-                        className={`w-full dark:bg-[#1A1A1A] bg-white md:object-cover rounded-xl ${step === 1 ? "h-[55vh] sm:h-[65vh] lg:h-[70vh]" : "h-[45vh] sm:h-[55vh] lg:h-[70vh]"}`}
+                        className={`w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-xl ${step === 1 ? "h-[55vh] sm:h-[65vh] lg:h-[70vh]" : "h-[45vh] sm:h-[55vh] lg:h-[70vh]"}`}
                         alt={`Property image ${index + 1}`}
                       />
 
