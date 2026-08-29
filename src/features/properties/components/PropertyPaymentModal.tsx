@@ -349,7 +349,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                     required
                     value={guestName}
                     onChange={(e) => setGuestName(e.target.value)}
-                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
                   />
                 </div>
                 <div>
@@ -359,7 +359,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                     required
                     value={guestEmail}
                     onChange={(e) => setGuestEmail(e.target.value)}
-                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
                   />
                 </div>
                 <div>
@@ -369,7 +369,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                     required
                     value={guestPhone}
                     onChange={(e) => setGuestPhone(e.target.value)}
-                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
                   />
                 </div>
               </div>
@@ -377,12 +377,8 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
 
             <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
               <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
-                Once your payment is confirmed, a verified agent will be assigned to you, and our team will contact you within{" "}
-                <span className="font-semibold text-[#703BF7]">24 hours</span> to schedule a meeting and finalize the next steps.
-              </p>
-
-              <p className="text-sm dark:text-gray-300 text-gray-700 text-center mt-1">
-                After scheduling, the agent’s contact details will be shared with you via email for the meeting and completion of your documentation.
+                Once your payment is confirmed, a verified agent will be assigned and our team will contact you within{" "}
+                <span className="font-semibold text-[#703BF7]">24 hours</span> to schedule a meeting for necessary documentation and activities.
               </p>
             </div>
 

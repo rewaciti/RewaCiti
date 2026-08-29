@@ -335,7 +335,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                     required
                     value={guestName}
                     onChange={(e) => setGuestName(e.target.value)}
-                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
                   />
                 </div>
                 <div>
@@ -345,7 +345,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                     required
                     value={guestEmail}
                     onChange={(e) => setGuestEmail(e.target.value)}
-                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
                   />
                 </div>
                 <div>
@@ -355,7 +355,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                     required
                     value={guestPhone}
                     onChange={(e) => setGuestPhone(e.target.value)}
-                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
                   />
                 </div>
               </div>
@@ -363,12 +363,8 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
 
             <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
               <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
-                A verified agent will be assigned and our team will contact you within{" "}
+                A member of our team will contact you within{" "}
                 <span className="font-semibold text-[#703BF7]">24 hours</span> to confirm your property details and schedule a suitable viewing time.
-              </p>
-
-              <p className="text-sm dark:text-gray-300 text-gray-700 text-center mt-1">
-                For your security and a seamless experience, all communication and scheduling will be handled by our team. Agent contact details will not be shared directly.
               </p>
             </div>
 
