@@ -36,6 +36,9 @@ import { formatCurrency } from "../../../shared/lib/utils";
 import { useAuthStore } from "../../auth/store/useAuthStore";
 
 function PropertyDetails() {
+  const [orientations, setOrientations] = useState<
+    Record<number, "landscape" | "portrait">
+  >({});
   const [showActionBar, setShowActionBar] = useState(false);
   const lastScrollY = useRef(0);
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -71,6 +74,17 @@ function PropertyDetails() {
       isShortlisted ? "Removed from shortlist" : "Added to shortlist",
     );
     void toggleShortlist(property);
+  };
+
+  const handleImageLoad = (
+    index: number,
+    e: React.SyntheticEvent<HTMLImageElement>,
+  ) => {
+    const { naturalWidth, naturalHeight } = e.currentTarget;
+    setOrientations((prev) => ({
+      ...prev,
+      [index]: naturalWidth >= naturalHeight ? "landscape" : "portrait",
+    }));
   };
 
   const handleShare = async () => {
@@ -587,26 +601,38 @@ function PropertyDetails() {
                     transform: `translateX(-${currentIndex * (100 / step)}%)`,
                   }}
                 >
-                  {images.map((img, index) => (
-                    <div
-                      key={index}
-                      className="w-full sm:w-1/2 shrink-0 px-1 relative cursor-pointer"
-                      onClick={() => {
-                        setLightboxIndex(index);
-                        setIsLightboxOpen(true);
-                      }}
-                    >
-                      <img
-                        src={img}
-                        className={`w-full dark:bg-[#1A1A1A] bg-white md:object-cover rounded-xl ${step === 1 ? "h-[55vh] sm:h-[65vh] lg:h-[70vh]" : "h-[45vh] sm:h-[55vh] lg:h-[70vh]"}`}
-                        alt={`Property image ${index + 1}`}
-                      />
+                  {images.map((img, index) => {
+                    const orientation = orientations[index]; // undefined until it loads
+                    return (
+                      <div
+                        key={index}
+                        className="w-full sm:w-1/2 shrink-0 px-1 relative cursor-pointer"
+                        onClick={() => {
+                          setLightboxIndex(index);
+                          setIsLightboxOpen(true);
+                        }}
+                      >
+                        <img
+                          src={img}
+                          onLoad={(e) => handleImageLoad(index, e)}
+                          className={`w-full dark:bg-[#1A1A1A] bg-white rounded-xl ${
+                            orientation === "portrait"
+                              ? "object-contain"
+                              : "object-cover"
+                          } ${
+                            step === 1
+                              ? "h-[55vh] sm:h-[65vh] lg:h-[70vh]"
+                              : "h-[45vh] sm:h-[55vh] lg:h-[70vh]"
+                          }`}
+                          alt={`Property image ${index + 1}`}
+                        />
 
-                      <div className="absolute left-5 bottom-4 bg-black/60 dark:bg-black/60 text-white px-3 py-1 rounded-full text-xs font-medium select-none">
-                        Click to view image in actual proportion
+                        <div className="absolute left-5 bottom-4 bg-black/60 dark:bg-black/60 text-white px-3 py-1 rounded-full text-xs font-medium select-none">
+                          Click to view image in actual proportion
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
