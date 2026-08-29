@@ -51,9 +51,9 @@ const Navbar = () => {
 
   const navItems = [
     { name: "Home", path: "/" },
-    { name: "About", path: "/About" },
     { name: "Properties", path: "/properties" },
-    { name: "Services", path: "/Service" },
+     { name: "Services", path: "/Service" },
+    { name: "Contact", path: "/Contact" },
   ];
 
   useEffect(() => {
@@ -329,18 +329,18 @@ const Navbar = () => {
 
             {/* Desktop Action Buttons */}
             <div className="hidden md:flex items-center gap-2">
-              <NavLink to="/Contact">
+              <NavLink to="/Contact#Contactform">
                 {({ isActive }) => (
                   <button
-                    className={`py-2 px-4 rounded-md border transition
+                    className={`py-2 px-4 rounded-md transition
                       ${
                         isActive
-                          ? "bg-[#703BF7] text-white border-[#703BF7]"
+                          ? " black:text-white text-gray-700 hover:bg-gray-100"
                           : "bg-gray-100 text-gray-800 border-gray-200 dark:hover:bg-[#9677df] hover:bg-[#9677df] hover:text-white hover:border-[#703BF7] dark:bg-black/30 dark:text-white"
                       }
                     `}
                   >
-                    Contact
+                    List Property
                   </button>
                 )}
               </NavLink>
@@ -455,14 +455,14 @@ const Navbar = () => {
                 })}
 
                 {/* Mobile Action Links */}
-                <NavLink to="/Contact" onClick={() => setIsOpen(false)}>
+                <NavLink to="/Contact#Contactform" onClick={() => setIsOpen(false)}>
                   {({ isActive }) => (
                     <button
                       className={`text-left w-full
-                        ${isActive ? "text-[#703BF7] font-semibold" : ""}
+                        ${isActive ? "" : ""}
                       `}
                     >
-                      Contact
+                      List Property
                     </button>
                   )}
                 </NavLink>
