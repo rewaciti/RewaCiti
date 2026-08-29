@@ -573,7 +573,7 @@ function PropertyDetails() {
           <section className="px-4 pb-10 ">
             <div className="p-2 border border-gray-600/30 rounded-xl">
               {/* Thumbnail Row */}
-              <div className="flex gap-2 overflow-x-auto mb-6 p-1 border border-gray-600/30 rounded-xl bg-black/20 no-scrollbar">
+              <div className="flex gap-2 overflow-x-auto mb-6 p-1 border border-gray-600/30 rounded-xl dark:bg-black/20 bg-gray-200 no-scrollbar">
                 {images.map((img, index) => (
                   <img
                     key={index}
@@ -615,7 +615,7 @@ function PropertyDetails() {
                         <img
                           src={img}
                           onLoad={(e) => handleImageLoad(index, e)}
-                          className={`w-full dark:bg-[#1A1A1A] bg-white rounded-xl ${
+                          className={`w-full dark:bg-[#1A1A1A] bg-gray-200 rounded-xl ${
                             orientation === "portrait"
                               ? "object-contain"
                               : "object-cover"
@@ -692,7 +692,7 @@ function PropertyDetails() {
           {/* Lightbox Dialog */}
           <Dialog.Root open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
             <Dialog.Portal>
-              <Dialog.Overlay className="fixed inset-0 bg-white/95 dark:bg-black/95 z-50 backdrop-blur-sm dialog-overlay-animate" />
+              <Dialog.Overlay className="fixed inset-0 bg-gray-200 dark:bg-black/95 z-50 backdrop-blur-sm dialog-overlay-animate" />
               <Dialog.Content className="fixed inset-0 z-100 flex items-center justify-center outline-none lightbox-content-animate">
                 <div className="relative w-full h-full flex items-center justify-center">
                   <Dialog.Title className="sr-only">
