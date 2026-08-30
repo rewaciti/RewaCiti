@@ -344,7 +344,7 @@ function PropertyCard({ property }: PropertyCardProps) {
         }
         target="_blank"
         rel="noopener noreferrer"
-        className="text-[11px] text-gray-500 dark:text-gray-400 flex items-center gap-1 mb-2 hover:text-[#703BF7]  dark:hover:text-[#703BF7] transition-colors w-fit"
+        className="text-[11px] text-gray-500 dark:text-gray-400 flex items-center gap-1 mb-1 hover:text-[#703BF7]  dark:hover:text-[#703BF7] transition-colors w-fit"
         onClick={(e) => e.stopPropagation()}
       >
         <FiMapPin size={12} />
@@ -358,13 +358,13 @@ function PropertyCard({ property }: PropertyCardProps) {
       </a>
 
       {/* Description */}
-      <p className="text-xs text-gray-600 dark:text-gray-300 mb-3 leading-relaxed">
+      <p className="text-xs text-gray-600 dark:text-gray-300 mb-1 leading-relaxed">
         {truncateWords(property.description, 7)}
       </p>
 
       {/* Property Info */}
       <div
-        className={`grid gap-2 mb-3 ${
+        className={`grid gap-2 mb-1 ${
           hasBedrooms && hasBathrooms
             ? "grid-cols-2 xl:grid-cols-3"
             : hasBedrooms || hasBathrooms
@@ -397,7 +397,7 @@ function PropertyCard({ property }: PropertyCardProps) {
       </div>
 
       {/* Price + Button */}
-      <div className="flex justify-between items-end mt-auto pt-2">
+      <div className="flex justify-between items-end mt-auto">
         <div>
           {property.duration && (
             <p className="text-[11px] text-gray-500 dark:text-gray-400">
