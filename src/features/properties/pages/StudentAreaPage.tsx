@@ -5,6 +5,7 @@ import { usePropertyStore } from "../store/usePropertyStore";
 import { useAreaMapStore } from "../../map/store/useAreaMapStore";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import PropertyCard from "../components/PropertyCard";
+import PropertyMap from "../components/PropertyMap";
 import Footer from "../../../shared/components/Layout/Footer";
 import { FiFilter } from "react-icons/fi";
 import useScrollToHash from "../../../shared/hooks/useScrollToHash";
@@ -53,6 +54,12 @@ function StudentAreaPage() {
     0, 999999999,
   ]);
   const [showFilters, setShowFilters] = useState(false);
+  const [viewMode, setViewMode] = useState<"list" | "map">("list");
+  // Which property's card/pin is currently highlighted, synced between
+  // the scrollable list and the map markers in map view.
+  const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(
+    null,
+  );
   const [agreed, setAgreed] = useState(false);
   const cookieLoaded = useRef(false);
   const inquiryCookieKey = "rewaciti_student_inquiry";
@@ -372,93 +379,268 @@ function StudentAreaPage() {
         <link rel="canonical" href="https://rewaciti.com/studentarea" />
       </Helmet>
       <Navbar />
-      <div className="relative" id="StudentCategories">
-        <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 pb-10 space-y-1 border-b border-gray-600">
-          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-            Student Area Properties
-          </h1>
-          <p className="text-gray-800 dark:text-gray-400 text-[14px]">
-            Find comfortable and affordable student accommodation with RewaCiti.
-            Explore hostels, apartments, and rooms tailored to your budget and
-            lifestyle.
-          </p>
-          <NavLink
-            to="/properties"
-            className="inline-block mt-3 bg-[#703BF7] hover:bg-[#9677df] transition text-white px-4 py-2 rounded-lg text-sm font-medium"
-          >
-            🏠 General Residence
-          </NavLink>
-        </div>
-        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[70%]">
-          <div className="border-4 dark:border-neutral-800/90 border-neutral-500/70 rounded-2xl bg-neutral-700/90 flex">
+
+      {/* Top bar: Search + Filters + General Residence — same sticky-bar
+          pattern as the general Properties page, with the search input on
+          its own full-width row on mobile so it doesn't compete for space
+          with the buttons. */}
+      <div
+        className="border-b border-gray-300 dark:border-gray-700 bg-white dark:bg-black/90 sticky top-16 z-20"
+        id="StudentCategories"
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3 px-4 py-3">
+          {/* Search + Filter */}
+          <div className="relative w-full sm:flex-1 sm:min-w-[180px]">
             <input
               type="text"
-              placeholder="Search For Properties..."
-              className="p-3 flex justify-center items-center dark:placeholder-gray-400 placeholder-gray-900/70 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white focus:outline-none border border-gray-600/70 w-full rounded-r-none"
+              placeholder="Search for properties..."
+              className="w-full pl-4 pr-28 py-2 rounded-lg dark:bg-black/70 bg-gray-100 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 focus:outline-none dark:placeholder-gray-400 placeholder-gray-500 text-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+
+            {/* Filter inside search bar */}
             <button
               onClick={() => setShowFilters(true)}
-              className="relative flex items-center gap-2 px-4 sm:px-2 py-2 dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white rounded-lg border border-gray-600 rounded-l-none  md:rounded-r-lg"
+              className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-900 dark:text-white bg-white dark:bg-neutral-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition"
             >
               <FiFilter />
-              <span className="hidden sm:inline text-sm">Filters</span>
+
+              <span className="">Filters</span>
+
               {activeFilterCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[11px] font-semibold w-5 h-5 flex items-center justify-center rounded-full animate-scale-in">
+                <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[10px] font-semibold w-5 h-5 flex items-center justify-center rounded-full">
                   {activeFilterCount}
                 </span>
               )}
             </button>
           </div>
+
+          {/* Other controls */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
+            {/* General Residence */}
+            <NavLink
+              to="/properties"
+              className="bg-[#703BF7] hover:bg-[#9677df] transition text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap shrink-0"
+            >
+              🏠 General Residence
+            </NavLink>
+
+            {/* List / Map */}
+            <div className="flex items-center gap-1 bg-gray-100 dark:bg-neutral-800/90 p-1 rounded-xl border border-gray-300 dark:border-neutral-700/60 shrink-0 select-none">
+              <button
+                onClick={() => setViewMode("list")}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${
+                  viewMode === "list"
+                    ? "bg-[#703BF7] text-white shadow-md"
+                    : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                }`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                  className="w-3.5 h-3.5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25A2.25 2.25 0 0 1 8.25 10.5H6A2.25 2.25 0 0 1 3.75 8.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 8.25 20.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25h2.25A2.25 2.25 0 0 1 20.25 6v2.25a2.25 2.25 0 0 1-2.25 2.25h-2.25A2.25 2.25 0 0 1 13.5 8.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"
+                  />
+                </svg>
+                List
+              </button>
+
+              <button
+                onClick={() => setViewMode("map")}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${
+                  viewMode === "map"
+                    ? "bg-[#703BF7] text-white shadow-md"
+                    : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                }`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                  className="w-3.5 h-3.5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 6.75 12 9l3-2.25M9 17.25l3 2.25 3-2.25M9 6.75v10.5m6-12.75v12.75M3 9v12l6-2.25m12-9.75v12l-6-2.25M9 19.5l6-2.25"
+                  />
+                </svg>
+                Map
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className="bg-gray-300 dark:bg-black/30 px-4">
-        <div className="pt-8 mx-auto">
+        <div className="pt-3 mx-auto">
           <section>
-            <div className="flex justify-between items-center mb-6 pt-4">
-              <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
-                <img
-                  src="/logo/Abstract Design (1).png"
-                  alt="Icon"
-                  className="w-13 object-contain"
-                />
-                <div className="flex justify-between items-center">
-                  <div className="space-y-3">
-                    <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-                      Discover properties around campuses
-                    </h1>
-                    <p className="text-gray-800 dark:text-gray-400 text-[14px]">
-                      Explore properties around your preferred campus and find
-                      convenient accommodation in locations that fit your needs.
-                    </p>
-                  </div>
+            {viewMode === "map" ? (
+              loading || areaLoading ? (
+                <div className="w-full h-[600px] rounded-xl flex items-center justify-center bg-gray-200 dark:bg-neutral-800 animate-pulse text-gray-500 dark:text-gray-400">
+                  Loading interactive map...
                 </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-              {loading || areaLoading ? (
-                [...Array(6)].map((_, i) => <PropertyCardSkeleton key={i} />)
               ) : currentProperties.length === 0 ? (
-                <div className="col-span-full text-center py-10">
+                <div className="w-full h-[600px] rounded-xl flex flex-col items-center justify-center bg-gray-200 dark:bg-neutral-800/50 text-center p-6 border border-gray-300 dark:border-neutral-800">
                   <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">
-                    No properties found
+                    No properties found on the map
                   </h3>
                   <p className="text-gray-800 dark:text-gray-400 text-sm">
-                    Try adjusting your search or filters
-                  </p>
-                  <p className="text-gray-800 dark:text-gray-400 text-sm">
-                    Make sure your connection is stable
+                    Try adjusting your search or filters to see results.
                   </p>
                 </div>
               ) : (
-                currentProperties.map((item) => (
-                  <PropertyCard key={item.id} property={item} />
-                ))
-              )}
-            </div>
+                <>
+                  {/* Local keyframes for the list-shifts-left / map-slides-in-from-right
+                      transition. Injected here (same pattern as PropertyMap's popup
+                      style override) so no extra animation library is needed. */}
+                  <style>{`
+                    @keyframes propertyListShiftLeft {
+                      from { opacity: 0; transform: translateX(-12px); }
+                      to { opacity: 1; transform: translateX(0); }
+                    }
+                    @keyframes propertyMapSlideInRight {
+                      from { opacity: 0; transform: translateX(32px); }
+                      to { opacity: 1; transform: translateX(0); }
+                    }
+                  `}</style>
+                  <div className="flex flex-col lg:flex-row gap-4 items-start">
+                    {/* Card list panel. Hidden below `lg` so mobile map mode is
+                        just the map, full-screen — no cramped stacked list above
+                        it. From `lg` up it sits beside the map as 1 column;
+                        from `xl` up the cards go to 2 columns to use the extra
+                        width. No forced height/overflow — this scrolls as part
+                        of the normal page, same as list view does. */}
+                    <div
+                      className="hidden lg:block lg:w-[42%] w-full"
+                      style={{
+                        animation: "propertyListShiftLeft 0.35s ease-out",
+                      }}
+                    >
+                      <div>
+                        <div className="flex justify-between items-center mb-3 pt-4">
+                          <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
+                            <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl tracking-tight">
+                              Discover properties around campuses
+                            </h1>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
+                          {currentProperties.map((property) => (
+                            <div
+                              key={property.id}
+                              id={`property-card-${property.id}`}
+                              onMouseEnter={() =>
+                                setHoveredPropertyId(property.id)
+                              }
+                              onMouseLeave={() => setHoveredPropertyId(null)}
+                              className={`rounded-xl transition ${
+                                hoveredPropertyId === property.id
+                                  ? "ring-2 ring-[#703BF7]"
+                                  : "ring-1 ring-transparent"
+                              }`}
+                            >
+                              <PropertyCard property={property} />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Map panel — full width and full-viewport-ish height on
+                        mobile since it's the only thing shown there; from `lg`
+                        up it shrinks to share the row with the list and slides
+                        in from the right on mount. Positioned `sticky` (not
+                        `fixed`) on large screens so it stays pinned as the page
+                        scrolls past the card grid, without ever locking or
+                        altering the page's own scroll behavior. Only the map's
+                        own scroll-wheel zoom is captured while the cursor is
+                        over it — the page underneath scrolls exactly as normal. */}
+                    <div
+                      className="w-full lg:w-[58%] lg:sticky lg:top-35"
+                      style={{
+                        animation: "propertyMapSlideInRight 0.4s ease-out",
+                      }}
+                    >
+                      <PropertyMap
+                        properties={currentProperties}
+                        heightClassName="h-[calc(100vh-8.5rem)] min-h-[420px] lg:h-[80vh]"
+                        hoveredPropertyId={hoveredPropertyId}
+                        onHoverProperty={setHoveredPropertyId}
+                        onSelectProperty={(id) => {
+                          setHoveredPropertyId(id);
+                          document
+                            .getElementById(`property-card-${id}`)
+                            ?.scrollIntoView({
+                              behavior: "smooth",
+                              block: "center",
+                            });
+                        }}
+                      />
+                    </div>
+                  </div>
+                </>
+              )
+            ) : (
+              <div>
+                <div className="flex justify-between items-center mb-6 pt-4">
+                  <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
+                    <img
+                      src="/logo/Abstract Design (1).png"
+                      alt="Icon"
+                      className="w-13 object-contain"
+                    />
+                    <div className="flex justify-between items-center">
+                      <div className="space-y-3">
+                        <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
+                          Discover properties around campuses
+                        </h1>
+                        <p className="text-gray-800 dark:text-gray-400 text-[14px]">
+                          Explore properties around your preferred campus and
+                          find convenient accommodation in locations that fit
+                          your needs.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                  {loading || areaLoading ? (
+                    [...Array(6)].map((_, i) => (
+                      <PropertyCardSkeleton key={i} />
+                    ))
+                  ) : currentProperties.length === 0 ? (
+                    <div className="col-span-full text-center py-10">
+                      <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">
+                        No properties found
+                      </h3>
+                      <p className="text-gray-800 dark:text-gray-400 text-sm">
+                        Try adjusting your search or filters
+                      </p>
+                      <p className="text-gray-800 dark:text-gray-400 text-sm">
+                        Make sure your connection is stable
+                      </p>
+                    </div>
+                  ) : (
+                    currentProperties.map((item) => (
+                      <PropertyCard key={item.id} property={item} />
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
           </section>
 
           <hr className="my-4 border-gray-600/50" />
@@ -531,7 +713,7 @@ function StudentAreaPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 border border-gray-700/40 rounded-3xl p-4 md:p-10"
+          className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 border border-gray-700/40 rounded-3xl p-4"
         >
           <div>
             <label className="text-gray-700 dark:text-gray-300 text-sm">
