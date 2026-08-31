@@ -1,5 +1,5 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { useAreaMapStore } from "../../map/store/useAreaMapStore";
@@ -18,6 +18,11 @@ import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
+
+// Height of the sticky Navbar above this page's own sticky top bar. Kept as
+// a constant (rather than measured) since Navbar is a separate component —
+// this should match its actual rendered height (currently `top-16` = 4rem).
+const NAVBAR_HEIGHT_PX = 64;
 
 function StudentAreaPage() {
   const { isAuthenticated, customer } = useAuthStore();
@@ -63,6 +68,37 @@ function StudentAreaPage() {
   const [agreed, setAgreed] = useState(false);
   const cookieLoaded = useRef(false);
   const inquiryCookieKey = "rewaciti_student_inquiry";
+
+  // --- Measure the sticky top bar's real height so the map panel can sit
+  //     exactly below it (never overlapping it) and fill exactly the
+  //     remaining viewport height (no leftover empty space). The bar's own
+  //     height changes across breakpoints (it wraps to two rows on small
+  //     screens), so this is measured live instead of guessed as a fixed
+  //     number of rem/vh units.
+  const topBarRef = useRef<HTMLDivElement>(null);
+  const [mapTopOffset, setMapTopOffset] = useState(
+    NAVBAR_HEIGHT_PX + 64, // sensible fallback before the first measurement
+  );
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      if (topBarRef.current) {
+        setMapTopOffset(NAVBAR_HEIGHT_PX + topBarRef.current.offsetHeight);
+      }
+    };
+    measure();
+
+    // Re-measure on resize since the bar's height changes when it wraps
+    // between the stacked (mobile) and single-row (sm+) layouts.
+    window.addEventListener("resize", measure);
+    // Also re-measure shortly after mount / when the filter badge appears,
+    // since that can nudge the bar's height by a pixel or two.
+    const raf = requestAnimationFrame(measure);
+    return () => {
+      window.removeEventListener("resize", measure);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
 
   useEffect(() => {
     const savedInquiry = getCookie(inquiryCookieKey);
@@ -383,41 +419,21 @@ function StudentAreaPage() {
       {/* Top bar: Search + Filters + General Residence — same sticky-bar
           pattern as the general Properties page, with the search input on
           its own full-width row on mobile so it doesn't compete for space
-          with the buttons. */}
-      <div 
+          with the buttons. `ref={topBarRef}` lets us measure its real
+          rendered height (which changes across breakpoints) so the map
+          panel below can be offset and sized exactly, instead of guessing
+          fixed rem/vh numbers that drift out of sync and let the map
+          overlap or under/over-fill. */}
+      <div
+        ref={topBarRef}
         className="border-b border-gray-500 dark:border-gray-700 dark:bg-[#1A1A1A] bg-gray-300 text-black sticky top-16 z-20 p-0.5"
         id="StudentCategories"
       >
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3 px-4 py-3">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3 px-4 py-3 justifu-between">
           {/* Search + Filter */}
-          <div className="relative w-full sm:flex-1 sm:min-w-[180px]">
-            <input
-              type="text"
-              placeholder="Search for properties..."
-              className="w-full pl-4 pr-28 py-2 rounded-lg dark:bg-black/70 bg-gray-100 text-gray-900 dark:text-white border border-gray-500 dark:border-gray-600 focus:outline-none dark:placeholder-gray-400 placeholder-gray-500 text-sm"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-
-            {/* Filter inside search bar */}
-            <button
-              onClick={() => setShowFilters(true)}
-              className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-900 dark:text-white bg-white dark:bg-neutral-800 border border-gray-500 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition"
-            >
-              <FiFilter />
-
-              <span className="">Filters</span>
-
-              {activeFilterCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[10px] font-semibold w-5 h-5 flex items-center justify-center rounded-full">
-                  {activeFilterCount}
-                </span>
-              )}
-            </button>
-          </div>
 
           {/* Other controls */}
-          <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap justify-between">
             {/* General Residence */}
             <NavLink
               to="/properties"
@@ -478,6 +494,31 @@ function StudentAreaPage() {
                 Map
               </button>
             </div>
+          </div>
+           <div className="relative w-full sm:flex-1 sm:min-w-[180px] md:max-w-[400px]">
+            <input
+              type="text"
+              placeholder="Search for properties..."
+              className="w-full pl-4 pr-28 py-2 rounded-lg dark:bg-black/70 bg-gray-100 text-gray-900 dark:text-white border border-gray-500 dark:border-gray-600 focus:outline-none dark:placeholder-gray-400 placeholder-gray-500 text-sm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+
+            {/* Filter inside search bar */}
+            <button
+              onClick={() => setShowFilters(true)}
+              className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-900 dark:text-white bg-white dark:bg-neutral-800 border border-gray-500 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition"
+            >
+              <FiFilter />
+
+              <span className="">Filters</span>
+
+              {activeFilterCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[10px] font-semibold w-5 h-5 flex items-center justify-center rounded-full">
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
           </div>
         </div>
       </div>
@@ -558,24 +599,27 @@ function StudentAreaPage() {
                       </div>
                     </div>
 
-                    {/* Map panel — full width and full-viewport-ish height on
-                        mobile since it's the only thing shown there; from `lg`
-                        up it shrinks to share the row with the list and slides
-                        in from the right on mount. Positioned `sticky` (not
-                        `fixed`) on large screens so it stays pinned as the page
-                        scrolls past the card grid, without ever locking or
-                        altering the page's own scroll behavior. Only the map's
-                        own scroll-wheel zoom is captured while the cursor is
-                        over it — the page underneath scrolls exactly as normal. */}
+                    {/* Map panel. `z-10` keeps it explicitly below the top
+                        bar's `z-20` even if a Leaflet-internal stacking
+                        quirk ever tries to push it forward. `top` and
+                        `height` are both driven by the measured
+                        `mapTopOffset` (navbar + real top-bar height) instead
+                        of guessed fixed values — so on any screen size the
+                        map starts exactly where the bar ends (never under
+                        or over it) and fills exactly the remaining viewport
+                        height with no leftover empty space at the bottom. */}
                     <div
-                      className="w-full lg:w-[58%] lg:sticky lg:top-35"
+                      className="w-full lg:w-[58%] lg:sticky z-10"
                       style={{
+                        top: `${mapTopOffset}px`,
+                        height: `calc(100vh - ${mapTopOffset}px)`,
+                        minHeight: 420,
                         animation: "propertyMapSlideInRight 0.4s ease-out",
                       }}
                     >
                       <PropertyMap
                         properties={currentProperties}
-                        heightClassName="h-[calc(100vh-8.5rem)] min-h-[420px] lg:h-[80vh]"
+                        heightClassName="h-full"
                         hoveredPropertyId={hoveredPropertyId}
                         onHoverProperty={setHoveredPropertyId}
                         onSelectProperty={(id) => {

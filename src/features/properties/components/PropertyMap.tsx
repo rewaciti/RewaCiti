@@ -8,23 +8,8 @@ import {
 } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-
-// Matches the shape produced by mapSabiFlowProductsToProperties() in
-// usePropertyStore.ts — coordinates come from customData.geo_location,
-// price from pricing.TotalCost (property + agent + legal + service +
-// caution fees combined).
-interface Property {
-  id: string;
-  name: string;
-  pricing: {
-    TotalCost: number;
-  };
-  geo_location?: {
-    lat: number;
-    lng: number;
-    address?: string;
-  };
-}
+import type { Property } from "../../../types";
+import PropertyCard from "./PropertyCard";
 
 interface PropertyMapProps {
   properties: Property[];
@@ -34,10 +19,6 @@ interface PropertyMapProps {
   onSelectProperty?: (id: string) => void;
 }
 
-// The store defaults geo_location to { lat: 0, lng: 0 } for properties
-// that were never given coordinates, so treat (0, 0) as "no location"
-// rather than plotting it — otherwise every uncoordinated listing would
-// stack up on Null Island off the coast of West Africa.
 function getCoords(p: Property): [number, number] | null {
   const lat = p.geo_location?.lat;
   const lng = p.geo_location?.lng;
@@ -59,7 +40,10 @@ function formatPrice(price?: number): string {
   return `₦${price}`;
 }
 
-// Red price-pill marker, matching the bubble style in the reference screenshot.
+// Red price-pill marker — shows the price right on the map. Clicking opens
+// the real PropertyCard component as the popup (same card used in the list
+// view), so the image, name, price, and its own link to the property page
+// all come from that single component instead of being rebuilt here.
 function makePriceIcon(label: string, active: boolean) {
   return L.divIcon({
     className: "property-price-marker",
@@ -98,7 +82,7 @@ function FitBounds({ points }: { points: [number, number][] }) {
 
 export default function PropertyMap({
   properties,
-  heightClassName = "h-[600px]",
+  heightClassName = "h-[500px]",
   hoveredPropertyId,
   onHoverProperty,
   onSelectProperty,
@@ -116,23 +100,6 @@ export default function PropertyMap({
     [properties],
   );
 
-  // Open the popup for whichever card is hovered in the list (so hovering a
-  // card and hovering a pin feel like the same action), and close every
-  // other popup — including the previously-hovered one once hoveredPropertyId
-  // goes back to null on mouse-leave. Without the explicit close, a popup
-  // opened by hover would stay open until something else happened to open
-  // a different one.
-  useEffect(() => {
-    Object.entries(markersRef.current).forEach(([id, marker]) => {
-      if (!marker) return;
-      if (id === hoveredPropertyId) {
-        marker.openPopup();
-      } else {
-        marker.closePopup();
-      }
-    });
-  }, [hoveredPropertyId]);
-
   const points = pinned.map((x) => x.coords);
   const defaultCenter: [number, number] = points[0] ?? [6.5244, 3.3792]; // Lagos fallback
 
@@ -140,6 +107,27 @@ export default function PropertyMap({
     <div
       className={`${heightClassName} w-full rounded-2xl overflow-hidden border border-gray-300 dark:border-gray-700`}
     >
+      {/* Strips Leaflet's default popup chrome (padding, rounded box, tip
+          shadow) so PropertyCard's own styling shows through untouched.
+          Width is generous (320px, no overflow clipping) so the card
+          renders at something close to its natural size instead of being
+          squeezed/compacted the way a small fixed box would force it. */}
+      <style>{`
+        .property-card-popup .leaflet-popup-content-wrapper {
+          padding: 0;
+          border-radius: 12px;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+          background: transparent;
+        }
+        .property-card-popup .leaflet-popup-content {
+          margin: 0;
+          width: 320px !important;
+        }
+        .property-card-popup .leaflet-popup-tip {
+          box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+      `}</style>
+
       <MapContainer
         center={defaultCenter}
         zoom={10}
@@ -164,16 +152,19 @@ export default function PropertyMap({
               markersRef.current[property.id] = ref;
             }}
             eventHandlers={{
+              // Hover just highlights the pin (bigger + purple) and syncs
+              // with the card list ring — it doesn't open the popup.
               mouseover: () => onHoverProperty?.(property.id),
               mouseout: () => onHoverProperty?.(null),
+              // Clicking opens the popup (Leaflet's default behavior for a
+              // Marker with a nested Popup — also auto-closes any other
+              // open popup, and closes on outside click) and keeps the
+              // list in sync/scrolled to match.
               click: () => onSelectProperty?.(property.id),
             }}
           >
-            <Popup>
-              <div className="text-sm font-medium">{property.name}</div>
-              <div className="text-[#703BF7] font-semibold">
-                {formatPrice(property.pricing?.TotalCost)}
-              </div>
+            <Popup className="property-card-popup" minWidth={400}>
+              <PropertyCard property={property} />
             </Popup>
           </Marker>
         ))}
