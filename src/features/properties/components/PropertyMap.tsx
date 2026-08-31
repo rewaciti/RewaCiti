@@ -9,20 +9,21 @@ import {
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
+// Matches the shape produced by mapSabiFlowProductsToProperties() in
+// usePropertyStore.ts — coordinates come from customData.geo_location,
+// price from pricing.TotalCost (property + agent + legal + service +
+// caution fees combined).
 interface Property {
   id: string;
-  title?: string;
-  name?: string;
-  price?: number;
-  location?: {
-    latitude?: number;
-    longitude?: number;
-    lat?: number;
-    lng?: number;
+  name: string;
+  pricing: {
+    TotalCost: number;
   };
-  latitude?: number;
-  longitude?: number;
-  customData?: { label: string; value: string }[];
+  geo_location?: {
+    lat: number;
+    lng: number;
+    address?: string;
+  };
 }
 
 interface PropertyMapProps {
@@ -33,12 +34,20 @@ interface PropertyMapProps {
   onSelectProperty?: (id: string) => void;
 }
 
-// Your API's coordinate shape may differ from all of these — adjust this
-// one function if none of the fallbacks match what's actually coming back.
+// The store defaults geo_location to { lat: 0, lng: 0 } for properties
+// that were never given coordinates, so treat (0, 0) as "no location"
+// rather than plotting it — otherwise every uncoordinated listing would
+// stack up on Null Island off the coast of West Africa.
 function getCoords(p: Property): [number, number] | null {
-  const lat = p.location?.latitude ?? p.location?.lat ?? p.latitude;
-  const lng = p.location?.longitude ?? p.location?.lng ?? p.longitude;
-  if (typeof lat === "number" && typeof lng === "number") return [lat, lng];
+  const lat = p.geo_location?.lat;
+  const lng = p.geo_location?.lng;
+  if (
+    typeof lat === "number" &&
+    typeof lng === "number" &&
+    !(lat === 0 && lng === 0)
+  ) {
+    return [lat, lng];
+  }
   return null;
 }
 
@@ -107,11 +116,21 @@ export default function PropertyMap({
     [properties],
   );
 
-  // Open the popup for whichever card is hovered in the list, so hovering a
-  // card and hovering a pin feel like the same action.
+  // Open the popup for whichever card is hovered in the list (so hovering a
+  // card and hovering a pin feel like the same action), and close every
+  // other popup — including the previously-hovered one once hoveredPropertyId
+  // goes back to null on mouse-leave. Without the explicit close, a popup
+  // opened by hover would stay open until something else happened to open
+  // a different one.
   useEffect(() => {
-    if (!hoveredPropertyId) return;
-    markersRef.current[hoveredPropertyId]?.openPopup();
+    Object.entries(markersRef.current).forEach(([id, marker]) => {
+      if (!marker) return;
+      if (id === hoveredPropertyId) {
+        marker.openPopup();
+      } else {
+        marker.closePopup();
+      }
+    });
   }, [hoveredPropertyId]);
 
   const points = pinned.map((x) => x.coords);
@@ -138,7 +157,7 @@ export default function PropertyMap({
             key={property.id}
             position={coords}
             icon={makePriceIcon(
-              formatPrice(property.price),
+              formatPrice(property.pricing?.TotalCost),
               hoveredPropertyId === property.id,
             )}
             ref={(ref) => {
@@ -151,11 +170,9 @@ export default function PropertyMap({
             }}
           >
             <Popup>
-              <div className="text-sm font-medium">
-                {property.title ?? property.name}
-              </div>
+              <div className="text-sm font-medium">{property.name}</div>
               <div className="text-[#703BF7] font-semibold">
-                {formatPrice(property.price)}
+                {formatPrice(property.pricing?.TotalCost)}
               </div>
             </Popup>
           </Marker>

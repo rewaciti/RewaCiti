@@ -444,7 +444,7 @@ function PropertySearchSection() {
             <input
               type="text"
               placeholder="Search for properties..."
-              className="w-full pl-4 pr-28 py-2 rounded-lg dark:bg-black/70 bg-gray-100 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 focus:outline-none dark:placeholder-gray-400 placeholder-gray-500 text-sm"
+              className="w-full pl-4 pr-28 py-2 rounded-lg dark:bg-black/70 bg-gray-100 text-gray-900 dark:text-white border border-gray-500 dark:border-gray-600 focus:outline-none dark:placeholder-gray-400 placeholder-gray-500 text-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -452,7 +452,7 @@ function PropertySearchSection() {
             {/* Filter inside search bar */}
             <button
               onClick={() => setShowFilters(true)}
-              className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-900 dark:text-white bg-white dark:bg-neutral-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition"
+              className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-900 dark:text-white bg-white dark:bg-neutral-800 border border-gray-500 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition"
             >
               <FiFilter />
 
