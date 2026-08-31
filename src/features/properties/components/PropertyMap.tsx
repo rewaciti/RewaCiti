@@ -56,18 +56,30 @@ function makePriceIcon(label: string, active: boolean) {
   });
 }
 
-function FitBounds({ points }: { points: [number, number][] }) {
+/**
+ * FitBounds only auto-fits the map ONCE per distinct set of points
+ * (tracked via a stable key). This prevents the map from snapping
+ * back to the fitted view every time the parent re-renders for
+ * unrelated reasons (e.g. hover state changes), which previously
+ * made it impossible to click a marker/popup after zooming in.
+ */
+function FitBounds({ points, pointsKey }: { points: [number, number][]; pointsKey: string }) {
   const map = useMap();
+  const lastFitKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (points.length === 0) return;
+    if (lastFitKeyRef.current === pointsKey) return; // already fit for this exact set of points
+
+    lastFitKeyRef.current = pointsKey;
 
     if (points.length === 1) {
       map.setView(points[0], 12);
     } else {
       map.fitBounds(L.latLngBounds(points), { padding: [40, 40] });
     }
-  }, [points, map]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pointsKey, map]);
 
   return null;
 }
@@ -134,7 +146,17 @@ export default function PropertyMap({ properties, heightClassName = "h-[500px]",
     [properties],
   );
 
-  const points = pinned.map((x) => x.coords);
+  // Stable string key derived from the actual coordinate content.
+  // This only changes when the real set of pinned points changes,
+  // NOT when `properties`/`pinned` gets a new array reference on
+  // every re-render (e.g. from hover state changes in the parent).
+  const pointsKey = useMemo(
+    () => pinned.map(({ property, coords }) => `${property.id}:${coords[0]},${coords[1]}`).join("|"),
+    [pinned],
+  );
+
+  const points = useMemo(() => pinned.map((x) => x.coords), [pointsKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const defaultCenter: [number, number] = points[0] ?? [6.5244, 3.3792];
 
   return (
@@ -195,7 +217,7 @@ export default function PropertyMap({ properties, heightClassName = "h-[500px]",
       <MapContainer center={defaultCenter} zoom={10} scrollWheelZoom style={{ height: "100%", width: "100%" }}>
         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-        <FitBounds points={points} />
+        <FitBounds points={points} pointsKey={pointsKey} />
 
         {pinned.map(({ property, coords }) => (
           <Marker
