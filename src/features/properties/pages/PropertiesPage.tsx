@@ -380,18 +380,18 @@ function PropertySearchSection() {
       </Helmet>
       <Navbar />
 
-      {/* Top bar: on mobile, Student Residence + List/Map toggle share row 1 and Search takes full-width row 2 (grid-cols-2). On lg+ it becomes a 3-column grid in Student Residence / Search / Toggle order via lg:order. */}
+      {/* Top bar: on mobile, Student Residence + List/Map toggle share row 1 and Search takes full-width row 2 (grid-cols-2). At md+ it becomes a 3-column grid in Student Residence / Search / Toggle order via md:order. */}
       <div ref={topBarRef} className="border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#1A1A1A] text-gray-900 dark:text-white sticky top-16 z-20 p-0.5" id="Categories">
-        <div className="grid grid-cols-2 items-center gap-2.5 px-4 py-3 lg:grid-cols-3 lg:gap-4">
+        <div className="grid grid-cols-2 items-center gap-2.5 px-4 py-3 md:grid-cols-3 md:gap-4">
           {/* Student Residence */}
-          <div className="flex items-center justify-start lg:order-1">
-            <NavLink to="/Studentarea" className="bg-[#703BF7] hover:bg-[#5F2FE0] transition text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap shrink-0 shadow-sm">
+          <div className="flex items-center justify-start md:order-1">
+            <NavLink to="/Studentarea" className="bg-[#703BF7] hover:bg-[#9677df] transition text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap shrink-0 shadow-sm">
               🎓 Student Residence
             </NavLink>
           </div>
 
           {/* List / Map toggle */}
-          <div className="flex items-center justify-end lg:order-3">
+          <div className="flex items-center justify-end md:order-3">
             <div className="flex items-center gap-1 bg-gray-100 dark:bg-neutral-800/90 p-1 rounded-xl border border-gray-300 dark:border-neutral-700/60 shrink-0 select-none">
               <button onClick={() => setViewMode("list")} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "list" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5">
@@ -410,7 +410,7 @@ function PropertySearchSection() {
           </div>
 
           {/* Search + Filters */}
-          <div className="relative w-full col-span-2 lg:col-span-1 lg:max-w-[400px] lg:mx-auto lg:order-2">
+          <div className="relative w-full col-span-2 md:col-span-1 md:max-w-[400px] md:mx-auto md:order-2">
             <input type="text" placeholder="Search for properties..." className="w-full pl-4 pr-28 py-2.5 rounded-lg dark:bg-black/70 bg-gray-100 text-gray-900 dark:text-white border border-gray-500 dark:border-gray-600 focus:outline-none dark:placeholder-gray-400 placeholder-gray-500 text-sm" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
 
             <button onClick={() => setShowFilters(true)} className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-900 dark:text-white bg-white dark:bg-neutral-800 border border-gray-500 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
@@ -480,7 +480,7 @@ function PropertySearchSection() {
               )
             ) : (
               <div>
-               <div className="flex justify-between items-center mb-6 pt-4">
+                <div className="flex justify-between items-center mb-6 pt-4">
                   <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
                     <img src="/logo/Abstract Design (1).png" alt="Icon" className="w-13 object-contain" />
                     <div className="flex justify-between items-center">

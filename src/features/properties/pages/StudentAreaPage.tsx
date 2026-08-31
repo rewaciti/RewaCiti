@@ -18,12 +18,22 @@ import { authAPI } from "../../auth/services/authAPI";
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
 
+// Height of Navbar (top-16 = 4rem) — used to offset the sticky map panel
 const NAVBAR_HEIGHT_PX = 64;
 
 function StudentAreaPage() {
   const { isAuthenticated, customer } = useAuthStore();
   useScrollToHash();
-  const { properties, loading, ITEMS_PER_PAGE, fetchProperties, nextPage, prevPage, apiPage, totalProperties } = usePropertyStore();
+  const {
+    properties,
+    loading,
+    ITEMS_PER_PAGE,
+    fetchProperties,
+    nextPage,
+    prevPage,
+    apiPage,
+    totalProperties,
+  } = usePropertyStore();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [location, setLocation] = useState("");
@@ -50,6 +60,7 @@ function StudentAreaPage() {
   const cookieLoaded = useRef(false);
   const inquiryCookieKey = "rewaciti_student_inquiry";
 
+  // Measures the sticky top bar's real height so the map panel sits exactly below it
   const topBarRef = useRef<HTMLDivElement>(null);
   const [mapTopOffset, setMapTopOffset] = useState(NAVBAR_HEIGHT_PX + 64);
 
@@ -96,7 +107,11 @@ function StudentAreaPage() {
       try {
         const profileData = await authAPI.getProfile();
         const latestPhone = profileData.phoneNumber || "";
-        setName(customer.firstName && customer.lastName ? `${customer.firstName} ${customer.lastName}`.trim() : customer.firstName || "");
+        setName(
+          customer.firstName && customer.lastName
+            ? `${customer.firstName} ${customer.lastName}`.trim()
+            : customer.firstName || "",
+        );
         setEmail(customer.email || "");
         setPhone(latestPhone || customer.phoneNumber || "");
 
@@ -118,10 +133,23 @@ function StudentAreaPage() {
       return;
     }
 
-    const payload = { name, email, phone, preferedLocation, preferedCategory, bedroomsContact, budget: Budget, preferredContact, message, agreed };
+    const payload = {
+      name,
+      email,
+      phone,
+      preferedLocation,
+      preferedCategory,
+      bedroomsContact,
+      budget: Budget,
+      preferredContact,
+      message,
+      agreed,
+    };
+
     setCookie(inquiryCookieKey, JSON.stringify(payload));
   }, [name, email, phone, preferedLocation, preferedCategory, bedroomsContact, Budget, preferredContact, message, agreed]);
 
+  // Lock body scroll while the filters modal is open (iOS-safe: freezes scroll position)
   useEffect(() => {
     if (showFilters) {
       const scrollY = window.scrollY;
@@ -201,7 +229,21 @@ function StudentAreaPage() {
       setPreferredContact("");
       setMessage("");
       setAgreed(false);
-      setCookie(inquiryCookieKey, JSON.stringify({ name: "", email: "", phone: "", preferedLocation: "", preferedCategory: "", bedroomsContact: "", budget: "", preferredContact: "", message: "", agreed: false }));
+      setCookie(
+        inquiryCookieKey,
+        JSON.stringify({
+          name: "",
+          email: "",
+          phone: "",
+          preferedLocation: "",
+          preferedCategory: "",
+          bedroomsContact: "",
+          budget: "",
+          preferredContact: "",
+          message: "",
+          agreed: false,
+        }),
+      );
     } catch (error) {
       console.error("Error sending message:", error);
       toast.error("Failed to send message. Please try again.");
@@ -234,10 +276,16 @@ function StudentAreaPage() {
   const availableUniversities = useMemo(() => {
     return areaMaps
       .filter((u) => u.areas.some((area) => properties.some((p) => p.location.area === area)))
-      .map((u) => ({ ...u, areas: u.areas.filter((area) => properties.some((p) => p.location.area === area)) }));
+      .map((u) => ({
+        ...u,
+        areas: u.areas.filter((area) => properties.some((p) => p.location.area === area)),
+      }));
   }, [areaMaps, properties]);
 
-  const universityOptions = [{ label: "Universities", value: "" }, ...availableUniversities.map((u) => ({ label: u.name, value: u.id }))];
+  const universityOptions = [
+    { label: "Universities", value: "" },
+    ...availableUniversities.map((u) => ({ label: u.name, value: u.id })),
+  ];
 
   const areaOptions = [
     { label: "Areas", value: "" },
@@ -285,23 +333,18 @@ function StudentAreaPage() {
       </Helmet>
       <Navbar />
 
+      {/* Top bar: on mobile, General Residence + List/Map toggle share row 1 and Search takes full-width row 2 (grid-cols-2). At md+ it becomes a 3-column grid in Residence / Search / Toggle order via md:order. */}
       <div ref={topBarRef} className="border-b border-gray-500 dark:border-gray-700 dark:bg-[#1A1A1A] bg-gray-200 text-black dark:text-white sticky top-16 z-20 p-0.5" id="StudentCategories">
-        <div className="flex flex-wrap items-center gap-2.5 px-4 py-3 lg:grid lg:grid-cols-3 lg:items-center lg:gap-4">
-          <div className="order-1 flex items-center justify-start">
-            <NavLink to="/properties" className="bg-[#703BF7] hover:bg-[#9677df] transition text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap shrink-0">🏠 General Residence</NavLink>
+        <div className="grid grid-cols-2 items-center gap-2.5 px-4 py-3 md:grid-cols-3 md:gap-4">
+          {/* General Residence */}
+          <div className="flex items-center justify-start md:order-1">
+            <NavLink to="/properties" className="bg-[#703BF7] hover:bg-[#9677df] transition text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap shrink-0">
+              🏠 General Residence
+            </NavLink>
           </div>
 
-          <div className="order-3 lg:order-2 relative w-full lg:max-w-[400px] lg:mx-auto">
-            <input type="text" placeholder="Search for properties..." className="w-full pl-4 pr-28 py-2.5 rounded-lg dark:bg-black/70 bg-gray-100 text-gray-900 dark:text-white border border-gray-500 dark:border-gray-600 focus:outline-none dark:placeholder-gray-400 placeholder-gray-500 text-sm" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-
-            <button onClick={() => setShowFilters(true)} className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-900 dark:text-white bg-white dark:bg-neutral-800 border border-gray-500 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
-              <FiFilter />
-              <span>Filters</span>
-              {activeFilterCount > 0 && <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[10px] font-semibold w-5 h-5 flex items-center justify-center rounded-full">{activeFilterCount}</span>}
-            </button>
-          </div>
-
-          <div className="order-2 lg:order-3 flex items-center justify-end">
+          {/* List / Map toggle */}
+          <div className="flex items-center justify-end md:order-3">
             <div className="flex items-center gap-1 bg-gray-100 dark:bg-neutral-800/90 p-1 rounded-xl border border-gray-300 dark:border-neutral-700/60 shrink-0 select-none">
               <button onClick={() => setViewMode("list")} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "list" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5">
@@ -318,6 +361,19 @@ function StudentAreaPage() {
               </button>
             </div>
           </div>
+
+          {/* Search + Filters */}
+          <div className="relative w-full col-span-2 md:col-span-1 md:max-w-[400px] md:mx-auto md:order-2">
+            <input type="text" placeholder="Search for properties..." className="w-full pl-4 pr-28 py-2.5 rounded-lg dark:bg-black/70 bg-gray-100 text-gray-900 dark:text-white border border-gray-500 dark:border-gray-600 focus:outline-none dark:placeholder-gray-400 placeholder-gray-500 text-sm" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+
+            <button onClick={() => setShowFilters(true)} className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-900 dark:text-white bg-white dark:bg-neutral-800 border border-gray-500 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
+              <FiFilter />
+              <span>Filters</span>
+              {activeFilterCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[10px] font-semibold w-5 h-5 flex items-center justify-center rounded-full">{activeFilterCount}</span>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -326,7 +382,9 @@ function StudentAreaPage() {
           <section>
             {viewMode === "map" ? (
               loading || areaLoading ? (
-                <div className="w-full h-[600px] rounded-xl flex items-center justify-center bg-gray-200 dark:bg-neutral-800 animate-pulse text-gray-500 dark:text-gray-400">Loading interactive map...</div>
+                <div className="w-full h-[600px] rounded-xl flex items-center justify-center bg-gray-200 dark:bg-neutral-800 animate-pulse text-gray-500 dark:text-gray-400">
+                  Loading interactive map...
+                </div>
               ) : currentProperties.length === 0 ? (
                 <div className="w-full h-[600px] rounded-xl flex flex-col items-center justify-center bg-gray-200 dark:bg-neutral-800/50 text-center p-6 border border-gray-300 dark:border-neutral-800">
                   <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">No properties found on the map</h3>
@@ -334,7 +392,10 @@ function StudentAreaPage() {
                 </div>
               ) : (
                 <>
-                  <style>{`@keyframes propertyListShiftLeft { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } } @keyframes propertyMapSlideInRight { from { opacity: 0; transform: translateX(32px); } to { opacity: 1; transform: translateX(0); } }`}</style>
+                  <style>{`
+                    @keyframes propertyListShiftLeft { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+                    @keyframes propertyMapSlideInRight { from { opacity: 0; transform: translateX(32px); } to { opacity: 1; transform: translateX(0); } }
+                  `}</style>
                   <div className="flex flex-col lg:flex-row gap-4 items-start">
                     <div className="hidden lg:block lg:w-[42%] w-full" style={{ animation: "propertyListShiftLeft 0.35s ease-out" }}>
                       <div>
@@ -354,6 +415,7 @@ function StudentAreaPage() {
                       </div>
                     </div>
 
+                    {/* Map panel: top/height driven by measured mapTopOffset so it starts exactly below the top bar and fills the rest of the viewport */}
                     <div className="w-full lg:w-[58%] lg:sticky z-10" style={{ top: `${mapTopOffset}px`, height: `calc(100vh - ${mapTopOffset}px)`, minHeight: 420, animation: "propertyMapSlideInRight 0.4s ease-out" }}>
                       <PropertyMap
                         properties={currentProperties}
@@ -492,7 +554,15 @@ function StudentAreaPage() {
           </div>
           <div>
             <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Preferred Contact Method</label>
-            <CustomDropdown placeholder="Select Method" value={preferredContact} options={[{ label: "Phone", value: "Phone" }, { label: "Email", value: "Email" }]} onChange={(val) => setPreferredContact(val)} />
+            <CustomDropdown
+              placeholder="Select Method"
+              value={preferredContact}
+              options={[
+                { label: "Phone", value: "Phone" },
+                { label: "Email", value: "Email" },
+              ]}
+              onChange={(val) => setPreferredContact(val)}
+            />
           </div>
           <div className="sm:col-span-2 lg:col-span-4">
             <label className="text-gray-700 dark:text-gray-300 text-sm">Describe What You Want</label>
@@ -500,7 +570,7 @@ function StudentAreaPage() {
           </div>
           <div className="sm:col-span-2 flex items-center gap-3">
             <input type="checkbox" className="mt-0.5" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} required />
-            <p className="text-sm text-gray-700 dark:text-gray-300 ">
+            <p className="text-sm text-gray-700 dark:text-gray-300">
               I agree with the{" "}
               <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link>{" "}
               and{" "}
@@ -508,7 +578,11 @@ function StudentAreaPage() {
             </p>
           </div>
           <div className="sm:col-span-2 flex items-center justify-end">
-            <button type="submit" disabled={!agreed || isSubmitting || !name.trim() || !email.trim() || !phone.trim() || !preferedLocation.trim()} className={`px-4 py-2 rounded-lg font-medium transition ${agreed && !isSubmitting && name.trim() && email.trim() && phone.trim() && preferedLocation.trim() ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" : "bg-gray-400 cursor-not-allowed text-gray-200"}`}>
+            <button
+              type="submit"
+              disabled={!agreed || isSubmitting || !name.trim() || !email.trim() || !phone.trim() || !preferedLocation.trim()}
+              className={`px-4 py-2 rounded-lg font-medium transition ${agreed && !isSubmitting && name.trim() && email.trim() && phone.trim() && preferedLocation.trim() ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" : "bg-gray-400 cursor-not-allowed text-gray-200"}`}
+            >
               {isSubmitting ? "Sending..." : "Send Message"}
             </button>
           </div>
