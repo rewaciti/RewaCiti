@@ -385,7 +385,7 @@ function StudentAreaPage() {
           its own full-width row on mobile so it doesn't compete for space
           with the buttons. */}
       <div 
-        className="border-b border-gray-500 dark:border-gray-700 dark:bg-[#1A1A1A] bg-gray-300 text-black sticky top-16 z-20"
+        className="border-b border-gray-500 dark:border-gray-700 dark:bg-[#1A1A1A] bg-gray-300 text-black sticky top-16 z-20 p-0.5"
         id="StudentCategories"
       >
         <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3 px-4 py-3">
