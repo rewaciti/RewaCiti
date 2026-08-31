@@ -480,9 +480,16 @@ function PropertySearchSection() {
               )
             ) : (
               <div>
-                <div className="space-y-1 mb-3">
-                  <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Discover properties around campuses</h1>
-                  <p className="text-gray-800 dark:text-gray-400 text-[14px]">Explore properties around your preferred campus and find convenient accommodation in locations that fit your needs.</p>
+               <div className="flex justify-between items-center mb-6 pt-4">
+                  <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
+                    <img src="/logo/Abstract Design (1).png" alt="Icon" className="w-13 object-contain" />
+                    <div className="flex justify-between items-center">
+                      <div className="space-y-3">
+                        <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Discover properties around campuses</h1>
+                        <p className="text-gray-800 dark:text-gray-400 text-[14px]">Explore properties around your preferred campus and find convenient accommodation in locations that fit your needs.</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
