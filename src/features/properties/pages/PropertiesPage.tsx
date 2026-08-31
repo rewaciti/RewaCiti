@@ -3,11 +3,10 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import { usePropertyStore } from "../store/usePropertyStore";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiFilter } from "react-icons/fi";
 import PropertyCard from "../components/PropertyCard";
 import PropertyMap from "../components/PropertyMap";
 import Footer from "../../../shared/components/Layout/Footer";
-import { FiFilter } from "react-icons/fi";
 import useScrollToHash from "../../../shared/hooks/useScrollToHash";
 import { Link, NavLink } from "react-router";
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
@@ -18,9 +17,7 @@ import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
 
-// Height of the sticky Navbar above this page's own sticky top bar. Kept as
-// a constant (rather than measured) since Navbar is a separate component —
-// this should match its actual rendered height (currently `top-16` = 4rem).
+// Height of Navbar (top-16 = 4rem) — used to offset the sticky map panel
 const NAVBAR_HEIGHT_PX = 64;
 
 function PropertySearchSection() {
@@ -60,38 +57,23 @@ function PropertySearchSection() {
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Price range — free-form min/max entry instead of fixed buckets
   const [minPriceInput, setMinPriceInput] = useState("");
   const [maxPriceInput, setMaxPriceInput] = useState("");
-  const [priceRange, setPriceRange] = useState<[number, number]>([
-    0, 999999999,
-  ]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 999999999]);
 
-  // Rooms & beds — stepper based, 0 = "Any", MAX_BEDROOM_STEP = "7+"
   const [bedroomCount, setBedroomCount] = useState(0);
   const [sharedRoomOnly, setSharedRoomOnly] = useState(false);
 
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
-  // Which property's card/pin is currently highlighted, synced between
-  // the scrollable list and the map markers in map view.
-  const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(
-    null,
-  );
+  const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(null);
   const [agreed, setAgreed] = useState(false);
   const cookieLoaded = useRef(false);
   const inquiryCookieKey = "rewaciti_property_inquiry";
 
-  // --- Measure the sticky top bar's real height so the map panel can sit
-  //     exactly below it (never overlapping it) and fill exactly the
-  //     remaining viewport height (no leftover empty space). The bar's own
-  //     height changes across breakpoints (it wraps to two rows on small
-  //     screens), so this is measured live instead of guessed as a fixed
-  //     number of rem/vh units.
+  // Measures the sticky top bar's real height so the map panel sits exactly below it
   const topBarRef = useRef<HTMLDivElement>(null);
-  const [mapTopOffset, setMapTopOffset] = useState(
-    NAVBAR_HEIGHT_PX + 64, // sensible fallback before the first measurement
-  );
+  const [mapTopOffset, setMapTopOffset] = useState(NAVBAR_HEIGHT_PX + 64);
 
   useLayoutEffect(() => {
     const measure = () => {
@@ -100,12 +82,7 @@ function PropertySearchSection() {
       }
     };
     measure();
-
-    // Re-measure on resize since the bar's height changes when it wraps
-    // between the stacked (mobile) and single-row (sm+) layouts.
     window.addEventListener("resize", measure);
-    // Also re-measure shortly after mount / when the filter badge appears,
-    // since that can nudge the bar's height by a pixel or two.
     const raf = requestAnimationFrame(measure);
     return () => {
       window.removeEventListener("resize", measure);
@@ -151,16 +128,10 @@ function PropertySearchSection() {
 
         const currentCustomer = useAuthStore.getState().customer;
         if (currentCustomer && currentCustomer.phoneNumber !== latestPhone) {
-          useAuthStore.getState().setCustomer({
-            ...currentCustomer,
-            phoneNumber: latestPhone,
-          });
+          useAuthStore.getState().setCustomer({ ...currentCustomer, phoneNumber: latestPhone });
         }
       } catch (error) {
-        console.error(
-          "Failed to fetch profile for properties page form:",
-          error,
-        );
+        console.error("Failed to fetch profile for properties page form:", error);
       }
     };
 
@@ -187,18 +158,7 @@ function PropertySearchSection() {
     };
 
     setCookie(inquiryCookieKey, JSON.stringify(payload));
-  }, [
-    name,
-    email,
-    phone,
-    preferedLocation,
-    preferedCategory,
-    bedroomsContact,
-    Budget,
-    preferredContact,
-    message,
-    agreed,
-  ]);
+  }, [name, email, phone, preferedLocation, preferedCategory, bedroomsContact, Budget, preferredContact, message, agreed]);
 
   // Lock body scroll while the filters modal is open (iOS-safe: freezes scroll position)
   useEffect(() => {
@@ -237,15 +197,8 @@ function PropertySearchSection() {
       return;
     }
 
-    if (
-      !name.trim() ||
-      !email.trim() ||
-      !phone.trim() ||
-      !preferedLocation.trim()
-    ) {
-      toast.error(
-        "Please enter your name, email, phone number, and preferred location to continue.",
-      );
+    if (!name.trim() || !email.trim() || !phone.trim() || !preferedLocation.trim()) {
+      toast.error("Please enter your name, email, phone number, and preferred location to continue.");
       return;
     }
 
@@ -277,7 +230,6 @@ function PropertySearchSection() {
           <br />A member of our team will get back to you soon.
         </div>,
       );
-      // Reset form
       setName("");
       setEmail("");
       setPhone("");
@@ -311,7 +263,6 @@ function PropertySearchSection() {
     }
   };
 
-  // Kept for the contact form's Budget dropdown further down the page
   const priceOptions = [
     { label: "All Price", range: [0, 999999999] },
     { label: "Below ₦100k", range: [0, 100000] },
@@ -329,7 +280,6 @@ function PropertySearchSection() {
     fetchFilters();
   }, [fetchCategories, fetchFilters]);
 
-  // Keep `bedrooms` (used by fetchProperties) in sync with the stepper / shared toggle
   useEffect(() => {
     if (sharedRoomOnly) {
       setBedrooms("shared");
@@ -340,14 +290,9 @@ function PropertySearchSection() {
     }
   }, [bedroomCount, sharedRoomOnly]);
 
-  // Keep `priceRange` (used by fetchProperties) in sync with the min/max text inputs
   useEffect(() => {
-    const min =
-      minPriceInput.trim() === "" ? 0 : Math.max(0, Number(minPriceInput));
-    const max =
-      maxPriceInput.trim() === ""
-        ? 999999999
-        : Math.max(0, Number(maxPriceInput));
+    const min = minPriceInput.trim() === "" ? 0 : Math.max(0, Number(minPriceInput));
+    const max = maxPriceInput.trim() === "" ? 999999999 : Math.max(0, Number(maxPriceInput));
 
     if (Number.isNaN(min) || Number.isNaN(max)) return;
 
@@ -364,20 +309,9 @@ function PropertySearchSection() {
       minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
       maxPrice: priceRange[1] < 999999999 ? priceRange[1] : undefined,
     });
-  }, [
-    searchTerm,
-    category,
-    bedrooms,
-    area,
-    priceRange,
-    fetchProperties,
-    location,
-  ]);
+  }, [searchTerm, category, bedrooms, area, priceRange, fetchProperties, location]);
 
-  const totalApiPages = Math.max(
-    1,
-    Math.ceil(totalProperties / ITEMS_PER_PAGE),
-  );
+  const totalApiPages = Math.max(1, Math.ceil(totalProperties / ITEMS_PER_PAGE));
   const currentProperties = properties;
 
   const handleNext = () => {
@@ -392,30 +326,17 @@ function PropertySearchSection() {
     }
   };
 
-  // Dropdown unique options
-  const stateFilter = filtersData?.customFields?.find(
-    (f) => f.key === "location.state",
-  );
-
-  const cityFilter = filtersData?.customFields?.find(
-    (f) => f.key === "location.city_town",
-  );
-
-  const areaFilter = filtersData?.customFields?.find(
-    (f) => f.key === "location.area",
-  );
+  const stateFilter = filtersData?.customFields?.find((f) => f.key === "location.state");
+  const cityFilter = filtersData?.customFields?.find((f) => f.key === "location.city_town");
+  const areaFilter = filtersData?.customFields?.find((f) => f.key === "location.area");
 
   const categoryOptions = [
     { label: "Categories", value: "" },
-    ...categories.map((category) => ({
-      label: category.name,
-      value: category.id,
-    })),
+    ...categories.map((category) => ({ label: category.name, value: category.id })),
   ];
 
   const locationOptions = [
     { label: "Location", value: "" },
-
     ...(cityFilter?.options?.map((city: string, index: number) => ({
       label: `${city}, ${stateFilter?.options?.[index] ?? ""}`,
       value: `${city}, ${stateFilter?.options?.[index] ?? ""}`,
@@ -424,13 +345,9 @@ function PropertySearchSection() {
 
   const areaOptions = [
     { label: "Areas", value: "" },
-    ...(areaFilter?.options?.map((area: string) => ({
-      label: area,
-      value: area,
-    })) ?? []),
+    ...(areaFilter?.options?.map((area: string) => ({ label: area, value: area })) ?? []),
   ];
 
-  // Count of currently active filters, shown as a badge on the Filters button
   const activeFilterCount = [
     location,
     area,
@@ -455,162 +372,60 @@ function PropertySearchSection() {
     <div>
       <Helmet>
         <title>Properties | RewaCiti</title>
-        <meta
-          name="description"
-          content="Browse available properties on RewaCiti, including rentals and homes in Ile-Ife and surrounding areas."
-        />
+        <meta name="description" content="Browse available properties on RewaCiti, including rentals and homes in Ile-Ife and surrounding areas." />
         <meta property="og:title" content="Properties | RewaCiti" />
-        <meta
-          property="og:description"
-          content="Search top real estate listings, rentals, and student accommodations on RewaCiti."
-        />
+        <meta property="og:description" content="Search top real estate listings, rentals, and student accommodations on RewaCiti." />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="https://rewaciti.com/properties" />
       </Helmet>
       <Navbar />
 
-      {/* Top bar: Student Residence + Search + Filters + List/Map toggle.
-          `ref={topBarRef}` lets us measure its real rendered height (which
-          changes across breakpoints) so the map panel below can be offset
-          and sized exactly, instead of guessing fixed rem/vh numbers that
-          drift out of sync and let the map overlap or under/over-fill. */}
-      <div
-        ref={topBarRef}
-        className="border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#1A1A1A] text-gray-900 dark:text-white sticky top-16 z-20 p-0.5"
-        id="Categories"
-      >
-        <div
-          className="
-      flex flex-col gap-2.5 px-4 py-3
-
-      lg:grid lg:grid-cols-3
-      lg:items-center
-      lg:gap-4
-    "
-        >
-          {/* LEFT — Student Residence */}
-          <div className="flex items-center justify-start">
-            <NavLink
-              to="/Studentarea"
-              className="
-          bg-[#703BF7]
-          hover:bg-[#5F2FE0]
-          transition
-          text-white
-          px-3 sm:px-4
-          py-2
-          rounded-lg
-          text-xs sm:text-sm
-          font-medium
-          whitespace-nowrap
-          shrink-0
-          shadow-sm
-        "
-            >
+      {/* Top bar: on mobile, Student Residence + List/Map toggle share row 1 and Search takes full-width row 2 (grid-cols-2). On lg+ it becomes a 3-column grid in Student Residence / Search / Toggle order via lg:order. */}
+      <div ref={topBarRef} className="border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#1A1A1A] text-gray-900 dark:text-white sticky top-16 z-20 p-0.5" id="Categories">
+        <div className="grid grid-cols-2 items-center gap-2.5 px-4 py-3 lg:grid-cols-3 lg:gap-4">
+          {/* Student Residence */}
+          <div className="flex items-center justify-start lg:order-1">
+            <NavLink to="/Studentarea" className="bg-[#703BF7] hover:bg-[#5F2FE0] transition text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap shrink-0 shadow-sm">
               🎓 Student Residence
             </NavLink>
           </div>
 
-          {/* CENTER — Search + Filter */}
-          <div
-            className="
-        relative
-        w-full
-        lg:w-full
-        lg:max-w-[400px]
-        lg:mx-auto
-        order-last
-        lg:order-0
-      "
-          >
-   <input
-        type="text"
-        placeholder="Search for properties..."
-        className="w-full pl-4 pr-28 py-2.5 rounded-lg dark:bg-black/70 bg-gray-100 text-gray-900 dark:text-white border border-gray-500 dark:border-gray-600 focus:outline-none dark:placeholder-gray-400 placeholder-gray-500 text-sm"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+          {/* List / Map toggle */}
+          <div className="flex items-center justify-end lg:order-3">
+            <div className="flex items-center gap-1 bg-gray-100 dark:bg-neutral-800/90 p-1 rounded-xl border border-gray-300 dark:border-neutral-700/60 shrink-0 select-none">
+              <button onClick={() => setViewMode("list")} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "list" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25A2.25 2.25 0 0 1 8.25 10.5H6A2.25 2.25 0 0 1 3.75 8.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 8.25 20.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25h2.25A2.25 2.25 0 0 1 20.25 6v2.25a2.25 2.25 0 0 1-2.25 2.25h-2.25A2.25 2.25 0 0 1 13.5 8.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+                </svg>
+                List
+              </button>
 
-            {/* Filter inside search bar */}
-          <button
-        onClick={() => setShowFilters(true)}
-        className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-900 dark:text-white bg-white dark:bg-neutral-800 border border-gray-500 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition"
-      >
-        <FiFilter />
-
-        <span>Filters</span>
-
-        {activeFilterCount > 0 && (
-          <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[10px] font-semibold w-5 h-5 flex items-center justify-center rounded-full">
-            {activeFilterCount}
-          </span>
-        )}
-      </button>
+              <button onClick={() => setViewMode("map")} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "map" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75 12 9l3-2.25M9 17.25l3 2.25 3-2.25M9 6.75v10.5m6-12.75v12.75M3 9v12l6-2.25m12-9.75v12l-6-2.25M9 19.5l6-2.25" />
+                </svg>
+                Map
+              </button>
+            </div>
           </div>
 
-          {/* RIGHT — List / Map */}
- <div className="flex items-center justify-end">
-      <div className="flex items-center gap-1 bg-gray-100 dark:bg-neutral-800/90 p-1 rounded-xl border border-gray-300 dark:border-neutral-700/60 shrink-0 select-none">
-        
-        {/* List */}
-        <button
-          onClick={() => setViewMode("list")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${
-            viewMode === "list"
-              ? "bg-[#703BF7] text-white shadow-md"
-              : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-          }`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            stroke="currentColor"
-            className="w-3.5 h-3.5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25A2.25 2.25 0 0 1 8.25 10.5H6A2.25 2.25 0 0 1 3.75 8.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 8.25 20.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25h2.25A2.25 2.25 0 0 1 20.25 6v2.25a2.25 2.25 0 0 1-2.25 2.25h-2.25A2.25 2.25 0 0 1 13.5 8.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"
-            />
-          </svg>
-          List
-        </button>
+          {/* Search + Filters */}
+          <div className="relative w-full col-span-2 lg:col-span-1 lg:max-w-[400px] lg:mx-auto lg:order-2">
+            <input type="text" placeholder="Search for properties..." className="w-full pl-4 pr-28 py-2.5 rounded-lg dark:bg-black/70 bg-gray-100 text-gray-900 dark:text-white border border-gray-500 dark:border-gray-600 focus:outline-none dark:placeholder-gray-400 placeholder-gray-500 text-sm" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
 
-        {/* Map */}
-        <button
-          onClick={() => setViewMode("map")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${
-            viewMode === "map"
-              ? "bg-[#703BF7] text-white shadow-md"
-              : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-          }`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            stroke="currentColor"
-            className="w-3.5 h-3.5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9 6.75 12 9l3-2.25M9 17.25l3 2.25 3-2.25M9 6.75v10.5m6-12.75v12.75M3 9v12l6-2.25m12-9.75v12l-6-2.25M9 19.5l6-2.25"
-            />
-          </svg>
-          Map
-        </button>
-      </div>
-    </div>
+            <button onClick={() => setShowFilters(true)} className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-900 dark:text-white bg-white dark:bg-neutral-800 border border-gray-500 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
+              <FiFilter />
+              <span>Filters</span>
+              {activeFilterCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[10px] font-semibold w-5 h-5 flex items-center justify-center rounded-full">{activeFilterCount}</span>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
       <div className="bg-gray-300 dark:bg-black/30 px-4">
         <div className="pt-3 mx-auto">
-          {/* Properties */}
           <section>
             {viewMode === "map" ? (
               loading ? (
@@ -619,56 +434,27 @@ function PropertySearchSection() {
                 </div>
               ) : currentProperties.length === 0 ? (
                 <div className="w-full h-[600px] rounded-xl flex flex-col items-center justify-center bg-gray-200 dark:bg-neutral-800/50 text-center p-6 border border-gray-300 dark:border-neutral-800">
-                  <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">
-                    No properties found on the map
-                  </h3>
-                  <p className="text-gray-800 dark:text-gray-400 text-sm">
-                    Try adjusting your search or filters to see results.
-                  </p>
+                  <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">No properties found on the map</h3>
+                  <p className="text-gray-800 dark:text-gray-400 text-sm">Try adjusting your search or filters to see results.</p>
                 </div>
               ) : (
                 <>
                   <style>{`
-                    @keyframes propertyListShiftLeft {
-                      from { opacity: 0; transform: translateX(-12px); }
-                      to { opacity: 1; transform: translateX(0); }
-                    }
-                    @keyframes propertyMapSlideInRight {
-                      from { opacity: 0; transform: translateX(32px); }
-                      to { opacity: 1; transform: translateX(0); }
-                    }
+                    @keyframes propertyListShiftLeft { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+                    @keyframes propertyMapSlideInRight { from { opacity: 0; transform: translateX(32px); } to { opacity: 1; transform: translateX(0); } }
                   `}</style>
                   <div className="flex flex-col lg:flex-row gap-4 items-start">
-                    <div
-                      className="hidden lg:block lg:w-[42%] w-full"
-                      style={{
-                        animation: "propertyListShiftLeft 0.35s ease-out",
-                      }}
-                    >
+                    <div className="hidden lg:block lg:w-[42%] w-full" style={{ animation: "propertyListShiftLeft 0.35s ease-out" }}>
                       <div>
                         <div className="flex justify-between items-center mb-3 pt-4">
                           <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
-                            <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl tracking-tight">
-                              Discover a World of Possibilities
-                            </h1>
+                            <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl tracking-tight">Discover a World of Possibilities</h1>
                           </div>
                         </div>
 
                         <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
                           {currentProperties.map((property) => (
-                            <div
-                              key={property.id}
-                              id={`property-card-${property.id}`}
-                              onMouseEnter={() =>
-                                setHoveredPropertyId(property.id)
-                              }
-                              onMouseLeave={() => setHoveredPropertyId(null)}
-                              className={`rounded-xl transition ${
-                                hoveredPropertyId === property.id
-                                  ? "ring-2 ring-[#703BF7]"
-                                  : "ring-1 ring-transparent"
-                              }`}
-                            >
+                            <div key={property.id} id={`property-card-${property.id}`} onMouseEnter={() => setHoveredPropertyId(property.id)} onMouseLeave={() => setHoveredPropertyId(null)} className={`rounded-xl transition ${hoveredPropertyId === property.id ? "ring-2 ring-[#703BF7]" : "ring-1 ring-transparent"}`}>
                               <PropertyCard property={property} />
                             </div>
                           ))}
@@ -676,24 +462,8 @@ function PropertySearchSection() {
                       </div>
                     </div>
 
-                    {/* Map panel. `z-10` keeps it explicitly below the top
-                        bar's `z-20` even if a Leaflet-internal stacking
-                        quirk ever tries to push it forward. `top` and
-                        `height` are both driven by the measured
-                        `mapTopOffset` (navbar + real top-bar height) instead
-                        of guessed fixed values — so on any screen size the
-                        map starts exactly where the bar ends (never under
-                        or over it) and fills exactly the remaining viewport
-                        height with no leftover empty space at the bottom. */}
-                    <div
-                      className="w-full lg:w-[58%] lg:sticky z-10"
-                      style={{
-                        top: `${mapTopOffset}px`,
-                        height: `calc(100vh - ${mapTopOffset}px)`,
-                        minHeight: 420,
-                        animation: "propertyMapSlideInRight 0.4s ease-out",
-                      }}
-                    >
+                    {/* Map panel: top/height driven by measured mapTopOffset so it starts exactly below the top bar and fills the rest of the viewport */}
+                    <div className="w-full lg:w-[58%] lg:sticky z-10" style={{ top: `${mapTopOffset}px`, height: `calc(100vh - ${mapTopOffset}px)`, minHeight: 420, animation: "propertyMapSlideInRight 0.4s ease-out" }}>
                       <PropertyMap
                         properties={currentProperties}
                         heightClassName="h-full"
@@ -701,12 +471,7 @@ function PropertySearchSection() {
                         onHoverProperty={setHoveredPropertyId}
                         onSelectProperty={(id) => {
                           setHoveredPropertyId(id);
-                          document
-                            .getElementById(`property-card-${id}`)
-                            ?.scrollIntoView({
-                              behavior: "smooth",
-                              block: "center",
-                            });
+                          document.getElementById(`property-card-${id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
                         }}
                       />
                     </div>
@@ -716,36 +481,21 @@ function PropertySearchSection() {
             ) : (
               <div>
                 <div className="space-y-1 mb-3">
-                  <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-                    Discover properties around campuses
-                  </h1>
-                  <p className="text-gray-800 dark:text-gray-400 text-[14px]">
-                    Explore properties around your preferred campus and find
-                    convenient accommodation in locations that fit your needs.
-                  </p>
+                  <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Discover properties around campuses</h1>
+                  <p className="text-gray-800 dark:text-gray-400 text-[14px]">Explore properties around your preferred campus and find convenient accommodation in locations that fit your needs.</p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                   {loading ? (
-                    [...Array(6)].map((_, i) => (
-                      <PropertyCardSkeleton key={i} />
-                    ))
+                    [...Array(6)].map((_, i) => <PropertyCardSkeleton key={i} />)
                   ) : currentProperties.length === 0 ? (
                     <div className="col-span-full text-center py-10">
-                      <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">
-                        No properties found
-                      </h3>
-                      <p className="text-gray-800 dark:text-gray-400 text-sm">
-                        Try adjusting your search or filters
-                      </p>
-                      <p className="text-gray-800 dark:text-gray-400 text-sm">
-                        Make sure your connection is stable
-                      </p>
+                      <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">No properties found</h3>
+                      <p className="text-gray-800 dark:text-gray-400 text-sm">Try adjusting your search or filters</p>
+                      <p className="text-gray-800 dark:text-gray-400 text-sm">Make sure your connection is stable</p>
                     </div>
                   ) : (
-                    currentProperties.map((item) => (
-                      <PropertyCard key={item.id} property={item} />
-                    ))
+                    currentProperties.map((item) => <PropertyCard key={item.id} property={item} />)
                   )}
                 </div>
               </div>
@@ -754,26 +504,15 @@ function PropertySearchSection() {
 
           <hr className="my-4 border-gray-600/50" />
 
-          {/* Pagination */}
           <div className="flex justify-between items-center text-white">
-            <p className="text-sm text-black dark:text-white">
-              Page {apiPage} of {totalApiPages}
-            </p>
+            <p className="text-sm text-black dark:text-white">Page {apiPage} of {totalApiPages}</p>
 
             <div className="flex gap-4">
-              <button
-                onClick={handlePrev}
-                disabled={apiPage === 1}
-                className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
-              >
+              <button onClick={handlePrev} disabled={apiPage === 1} className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600">
                 <FiArrowLeft size={20} />
               </button>
 
-              <button
-                onClick={handleNext}
-                disabled={apiPage >= totalApiPages}
-                className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
-              >
+              <button onClick={handleNext} disabled={apiPage >= totalApiPages} className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600">
                 <FiArrowRight size={20} />
               </button>
             </div>
@@ -806,99 +545,37 @@ function PropertySearchSection() {
         areaOptions={areaOptions}
       />
 
-      <section
-        className="bg-gray-300 dark:bg-black/30 px-4 py-2 pt-4 pb-20"
-        id="Portfolio"
-      >
-        <div className="  ">
+      <section className="bg-gray-300 dark:bg-black/30 px-4 py-2 pt-4 pb-20" id="Portfolio">
+        <div>
           <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
-            <img
-              src="/logo/Abstract Design (1).png"
-              alt="Icon"
-              className="w-13 object-contain"
-            />
-
-            <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-              Can't find your preference?
-            </h1>
-
-            <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-              Ready to take the first step toward your dream property? Fill out
-              the form below, and our real estate wizards will work their magic
-              to find your perfect match. Don't wait; let's embark on this
-              exciting journey together.
-            </p>
+            <img src="/logo/Abstract Design (1).png" alt="Icon" className="w-13 object-contain" />
+            <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Can't find your preference?</h1>
+            <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">Ready to take the first step toward your dream property? Fill out the form below, and our real estate wizards will work their magic to find your perfect match. Don't wait; let's embark on this exciting journey together.</p>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 border border-gray-700/40 rounded-3xl p-4"
-          >
-            {/* Name */}
+          <form onSubmit={handleSubmit} className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 border border-gray-700/40 rounded-3xl p-4">
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">
-                Name
-              </label>
-              <input
-                type="text"
-                placeholder="Enter Full Name"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
-              />
+              <label className="text-gray-700 dark:text-gray-300 text-sm">Name</label>
+              <input type="text" placeholder="Enter Full Name" required value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
             </div>
 
-            {/* Email */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="Enter your Email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
-              />
+              <label className="text-gray-700 dark:text-gray-300 text-sm">Email</label>
+              <input type="email" placeholder="Enter your Email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
             </div>
 
-            {/* Phone */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">
-                Phone
-              </label>
-              <input
-                type="tel"
-                placeholder="Enter Phone Number"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
-              />
+              <label className="text-gray-700 dark:text-gray-300 text-sm">Phone</label>
+              <input type="tel" placeholder="Enter Phone Number" required value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
             </div>
 
-            {/* Preferred Location */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">
-                Preferred Location
-              </label>
-              <input
-                type="text"
-                placeholder="Enter Prefered Location"
-                required
-                value={preferedLocation}
-                onChange={(e) => setPreferedLocation(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
-              />
+              <label className="text-gray-700 dark:text-gray-300 text-sm">Preferred Location</label>
+              <input type="text" placeholder="Enter Prefered Location" required value={preferedLocation} onChange={(e) => setPreferedLocation(e.target.value)} className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
             </div>
 
-            {/* Category */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                Category
-              </label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Category</label>
               <CustomDropdown
                 placeholder="Category"
                 value={preferedCategory}
@@ -916,52 +593,24 @@ function PropertySearchSection() {
                   { label: "Single Room", value: "Single Room (Shared)" },
                   { label: "Shared Room", value: "Shared Room" },
                   { label: "Land", value: "Land" },
-                  {
-                    label: "Uncompleted Building",
-                    value: "Uncompleted Building",
-                  },
+                  { label: "Uncompleted Building", value: "Uncompleted Building" },
                 ]}
                 onChange={(val) => setPreferedCategory(val)}
               />
             </div>
 
-            {/* Bedrooms */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">
-                No of Bedrooms
-              </label>
-              <input
-                type="number||text"
-                placeholder="Enter Number of Bedrooms"
-                required
-                min={1}
-                value={bedroomsContact}
-                onChange={(e) => setBedroomsContact(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
-              />
+              <label className="text-gray-700 dark:text-gray-300 text-sm">No of Bedrooms</label>
+              <input type="number||text" placeholder="Enter Number of Bedrooms" required min={1} value={bedroomsContact} onChange={(e) => setBedroomsContact(e.target.value)} className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
             </div>
 
-            {/* Budget */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                Budget
-              </label>
-              <CustomDropdown
-                placeholder="Price Range"
-                value={Budget}
-                options={priceOptions.map((opt) => ({
-                  label: opt.label,
-                  value: opt.label,
-                }))}
-                onChange={(val) => setBudget(val)}
-              />
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Budget</label>
+              <CustomDropdown placeholder="Price Range" value={Budget} options={priceOptions.map((opt) => ({ label: opt.label, value: opt.label }))} onChange={(val) => setBudget(val)} />
             </div>
 
-            {/* Preferred Contact */}
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                Preferred Contact Method
-              </label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Preferred Contact Method</label>
               <CustomDropdown
                 placeholder="Select Method"
                 value={preferredContact}
@@ -973,75 +622,26 @@ function PropertySearchSection() {
               />
             </div>
 
-            {/* Message */}
             <div className="sm:col-span-2 lg:col-span-4">
-              <label className="text-gray-700 dark:text-gray-300 text-sm">
-                Describe What You Want
-              </label>
-              <textarea
-                placeholder="Enter your Description here.."
-                rows={3}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 resize-none"
-              />
+              <label className="text-gray-700 dark:text-gray-300 text-sm">Describe What You Want</label>
+              <textarea placeholder="Enter your Description here.." rows={3} value={message} onChange={(e) => setMessage(e.target.value)} className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 resize-none" />
             </div>
 
-            {/* Agreement */}
             <div className="sm:col-span-2 flex items-center gap-3">
-              <input
-                type="checkbox"
-                className="mt-0.5"
-                checked={agreed}
-                onChange={(e) => setAgreed(e.target.checked)}
-                required
-              />
-              <p className="text-sm text-gray-700 dark:text-gray-300 ">
+              <input type="checkbox" className="mt-0.5" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} required />
+              <p className="text-sm text-gray-700 dark:text-gray-300">
                 I agree with the{" "}
-                <Link
-                  to="/terms"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[#703BF7] underline"
-                >
-                  Terms
-                </Link>{" "}
+                <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link>{" "}
                 and{" "}
-                <Link
-                  to="/privacy-policy"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[#703BF7] underline"
-                >
-                  Privacy Policy
-                </Link>
-                .
+                <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
               </p>
             </div>
 
-            {/* Submit Button */}
             <div className="sm:col-span-2 flex items-center justify-end">
               <button
                 type="submit"
-                disabled={
-                  !agreed ||
-                  isSubmitting ||
-                  !name.trim() ||
-                  !email.trim() ||
-                  !phone.trim() ||
-                  !preferedLocation.trim()
-                }
-                className={`px-4 py-2 rounded-lg font-medium transition
-                  ${
-                    agreed &&
-                    !isSubmitting &&
-                    name.trim() &&
-                    email.trim() &&
-                    phone.trim() &&
-                    preferedLocation.trim()
-                      ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white"
-                      : "bg-gray-400 cursor-not-allowed text-gray-200"
-                  }`}
+                disabled={!agreed || isSubmitting || !name.trim() || !email.trim() || !phone.trim() || !preferedLocation.trim()}
+                className={`px-4 py-2 rounded-lg font-medium transition ${agreed && !isSubmitting && name.trim() && email.trim() && phone.trim() && preferedLocation.trim() ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" : "bg-gray-400 cursor-not-allowed text-gray-200"}`}
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
               </button>
