@@ -1,15 +1,9 @@
 import { useEffect, useMemo, useRef } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMap,
-} from "react-leaflet";
+import {MapContainer, TileLayer, Marker, Popup, useMap} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Property } from "../../../types";
-import PropertyCard from "./PropertyCard";
+import { FiMapPin, FiArrowRight } from "react-icons/fi";
 
 interface PropertyMapProps {
   properties: Property[];
@@ -22,6 +16,7 @@ interface PropertyMapProps {
 function getCoords(p: Property): [number, number] | null {
   const lat = p.geo_location?.lat;
   const lng = p.geo_location?.lng;
+
   if (
     typeof lat === "number" &&
     typeof lng === "number" &&
@@ -29,56 +24,288 @@ function getCoords(p: Property): [number, number] | null {
   ) {
     return [lat, lng];
   }
+
   return null;
 }
 
 function formatPrice(price?: number): string {
   if (!price) return "₦—";
-  if (price >= 1_000_000_000) return `₦${(price / 1_000_000_000).toFixed(1)}B`;
-  if (price >= 1_000_000) return `₦${(price / 1_000_000).toFixed(1)}M`;
-  if (price >= 1_000) return `₦${(price / 1_000).toFixed(0)}K`;
+
+  if (price >= 1_000_000_000) {
+    return `₦${(price / 1_000_000_000).toFixed(1)}B`;
+  }
+
+  if (price >= 1_000_000) {
+    return `₦${(price / 1_000_000).toFixed(1)}M`;
+  }
+
+  if (price >= 1_000) {
+    return `₦${(price / 1_000).toFixed(0)}K`;
+  }
+
   return `₦${price}`;
 }
 
-// Red price-pill marker — shows the price right on the map. Clicking opens
-// the real PropertyCard component as the popup (same card used in the list
-// view), so the image, name, price, and its own link to the property page
-// all come from that single component instead of being rebuilt here.
-function makePriceIcon(label: string, active: boolean) {
+/* =========================================================
+   PRICE MARKER
+========================================================= */
+
+function makePriceIcon(
+  label: string,
+  active: boolean,
+) {
   return L.divIcon({
     className: "property-price-marker",
-    html: `<div style="
-      background:${active ? "#5c2fe0" : "#e11d48"};
-      color:#fff;
-      font-weight:600;
-      font-size:12px;
-      padding:4px 8px;
-      border-radius:999px;
-      white-space:nowrap;
-      box-shadow:0 2px 6px rgba(0,0,0,0.35);
-      border:2px solid #fff;
-      transform:${active ? "scale(1.12)" : "scale(1)"};
-      transition:transform .15s ease;
-    ">${label}</div>`,
+    html: `
+      <div style="background:${active ? "#5c2fe0" : "#e11d48"};
+        color:#fff;
+        font-weight:600;
+        font-size:12px;
+        padding:4px 8px;
+        border-radius:999px;
+        white-space:nowrap;
+        box-shadow:0 2px 6px rgba(0,0,0,0.35);
+        border:2px solid #fff;
+        transform:${active ? "scale(1.12)" : "scale(1)"};
+        transition:transform .15s ease;
+      ">
+        ${label}
+      </div>
+    `,
     iconSize: undefined,
     iconAnchor: [20, 14],
   });
 }
 
-// Refits the map whenever the visible property set changes (e.g. after
-// filtering), so the pins stay in frame without the user re-panning.
-function FitBounds({ points }: { points: [number, number][] }) {
+/* =========================================================
+   FIT MAP TO PROPERTIES
+========================================================= */
+
+function FitBounds({
+  points,
+}: {
+  points: [number, number][];
+}) {
   const map = useMap();
+
   useEffect(() => {
     if (points.length === 0) return;
+
     if (points.length === 1) {
       map.setView(points[0], 12);
     } else {
-      map.fitBounds(L.latLngBounds(points), { padding: [40, 40] });
+      map.fitBounds(L.latLngBounds(points), {
+        padding: [40, 40],
+      });
     }
   }, [points, map]);
+
   return null;
 }
+
+/* =========================================================
+   MAP PROPERTY PREVIEW
+========================================================= */
+
+function PropertyPreview({
+  property,
+}: {
+  property: Property;
+}) {
+  const image =
+    Array.isArray(property.images) &&
+    property.images.length > 0
+      ? property.images[0]
+      : property.img;
+
+  const location = [
+    property.location?.area,
+    property.location?.city_town ||
+      property.location?.city,
+    property.location?.state,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  const goToProperty = () => {
+    window.location.href = `/properties/${property.slug}`;
+  };
+
+  return (
+    <div
+      className=" w-[270px] bg-white
+        dark:bg-[#1A1A1A]
+        rounded-xl
+        overflow-hidden
+        border
+        border-gray-200
+        dark:border-gray-700
+        shadow-lg
+        cursor-pointer
+        group
+      "
+      onClick={goToProperty}
+    >
+      {/* ================= IMAGE ================= */}
+
+      <div className="relative h-[115px] overflow-hidden">
+        <img
+          src={image}
+          alt={property.name}
+          className="
+            w-full
+            h-full
+            object-cover
+            transition-transform
+            duration-300
+            group-hover:scale-105
+          "
+        />
+
+        {/* Category */}
+
+        <span
+          className="
+            absolute
+            top-2
+            left-2
+            bg-black/60
+            backdrop-blur-sm
+            text-white
+            text-[10px]
+            font-medium
+            px-2
+            py-1
+            rounded-md
+          "
+        >
+          {property.category}
+        </span>
+      </div>
+
+      {/* ================= CONTENT ================= */}
+
+      <div className="px-3 py-2.5">
+
+        {/* Name */}
+
+        <h3
+          className="
+            text-sm
+            font-semibold
+            text-gray-900
+            dark:text-white
+            truncate
+            mb-1
+          "
+          title={property.name}
+        >
+          {property.name}
+        </h3>
+
+        {/* Location */}
+
+        {location && (
+          <div
+            className="
+              flex
+              items-center
+              gap-1
+              text-[10px]
+              text-gray-500
+              dark:text-gray-400
+              mb-2
+            "
+          >
+            <FiMapPin
+              size={11}
+              className="shrink-0 text-[#703BF7]"
+            />
+
+            <span className="truncate">
+              {location}
+            </span>
+          </div>
+        )}
+
+        {/* Bottom row */}
+
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+            gap-2
+          "
+        >
+          {/* Price */}
+
+          <div className="min-w-0">
+
+            {property.duration && (
+              <p
+                className="
+                  text-[9px]
+                  text-gray-500
+                  dark:text-gray-400
+                  leading-none
+                  mb-0.5
+                "
+              >
+                {property.duration}
+              </p>
+            )}
+
+            <p
+              className="
+                text-sm
+                font-bold
+                text-[#703BF7]
+                truncate
+              "
+            >
+              {formatPrice(
+                property.pricing?.TotalCost,
+              )}
+            </p>
+          </div>
+
+          {/* View button */}
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              goToProperty();
+            }}
+            className="
+              shrink-0
+              flex
+              items-center
+              gap-1
+              bg-[#703BF7]
+              hover:bg-[#5c2fe0]
+              text-white
+              text-[10px]
+              font-medium
+              px-2.5
+              py-1.5
+              rounded-md
+              transition
+            "
+          >
+            View
+            <FiArrowRight size={11} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
+   MAIN MAP
+========================================================= */
 
 export default function PropertyMap({
   properties,
@@ -87,87 +314,211 @@ export default function PropertyMap({
   onHoverProperty,
   onSelectProperty,
 }: PropertyMapProps) {
-  const markersRef = useRef<Record<string, L.Marker | null>>({});
+  const markersRef =
+    useRef<Record<string, L.Marker | null>>({});
 
   const pinned = useMemo(
     () =>
       properties
-        .map((p) => ({ property: p, coords: getCoords(p) }))
+        .map((p) => ({
+          property: p,
+          coords: getCoords(p),
+        }))
         .filter(
-          (x): x is { property: Property; coords: [number, number] } =>
-            x.coords !== null,
+          (
+            x,
+          ): x is {
+            property: Property;
+            coords: [number, number];
+          } => x.coords !== null,
         ),
     [properties],
   );
 
-  const points = pinned.map((x) => x.coords);
-  const defaultCenter: [number, number] = points[0] ?? [6.5244, 3.3792]; // Lagos fallback
+  const points = pinned.map(
+    (x) => x.coords,
+  );
+
+  const defaultCenter: [number, number] =
+    points[0] ?? [6.5244, 3.3792];
 
   return (
     <div
-      className={`${heightClassName} w-full rounded-2xl overflow-hidden border border-gray-300 dark:border-gray-700`}
+      className={`
+        ${heightClassName}
+        w-full
+        rounded-2xl
+        overflow-hidden
+        border
+        border-gray-300
+        dark:border-gray-700
+      `}
     >
-      {/* Strips Leaflet's default popup chrome (padding, rounded box, tip
-          shadow) so PropertyCard's own styling shows through untouched.
-          Width is generous (320px, no overflow clipping) so the card
-          renders at something close to its natural size instead of being
-          squeezed/compacted the way a small fixed box would force it. */}
+
+      {/* =================================================
+          LEAFLET POPUP STYLING
+      ================================================= */}
+
       <style>{`
-        .property-card-popup .leaflet-popup-content-wrapper {
-          padding: 0;
-          border-radius: 12px;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-          background: transparent;
+
+        /* Remove ALL default popup background */
+
+        .property-map-popup {
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          padding: 0 !important;
         }
-        .property-card-popup .leaflet-popup-content {
-          margin: 0;
-          width: 320px !important;
+
+        /* Remove popup wrapper background */
+
+        .property-map-popup
+        .leaflet-popup-content-wrapper {
+          background: transparent !important;
+          box-shadow: none !important;
+          border: none !important;
+          padding: 0 !important;
+          margin: 0 !important;
         }
-        .property-card-popup .leaflet-popup-tip {
-          box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+
+        /* Remove popup content spacing */
+
+        .property-map-popup
+        .leaflet-popup-content {
+          margin: 0 !important;
+          padding: 0 !important;
+          width: 270px !important;
         }
+
+        /* Remove popup tip */
+
+        .property-map-popup
+        .leaflet-popup-tip-container {
+          display: none !important;
+        }
+
+        .property-map-popup
+        .leaflet-popup-tip {
+          display: none !important;
+          background: transparent !important;
+          box-shadow: none !important;
+        }
+
+        /* Close button */
+
+        .property-map-popup
+        .leaflet-popup-close-button {
+          z-index: 20 !important;
+          top: 5px !important;
+          right: 5px !important;
+          width: 22px !important;
+          height: 22px !important;
+          border-radius: 999px !important;
+          background: rgba(0,0,0,0.45) !important;
+          color: white !important;
+          font-size: 17px !important;
+          line-height: 20px !important;
+          padding: 0 !important;
+          text-align: center !important;
+        }
+
+        .property-map-popup
+        .leaflet-popup-close-button:hover {
+          background: rgba(0,0,0,0.7) !important;
+          color: white !important;
+        }
+
+        /* Make sure Leaflet's outer popup doesn't add anything */
+
+        .leaflet-popup.property-map-popup {
+          margin-bottom: 0 !important;
+        }
+
+        .leaflet-popup.property-map-popup
+        .leaflet-popup-content-wrapper {
+          border-radius: 0 !important;
+        }
+
       `}</style>
+
+      {/* =================================================
+          MAP
+      ================================================= */}
 
       <MapContainer
         center={defaultCenter}
         zoom={10}
         scrollWheelZoom
-        style={{ height: "100%", width: "100%" }}
+        style={{
+          height: "100%",
+          width: "100%",
+        }}
       >
+
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
         <FitBounds points={points} />
 
-        {pinned.map(({ property, coords }) => (
-          <Marker
-            key={property.id}
-            position={coords}
-            icon={makePriceIcon(
-              formatPrice(property.pricing?.TotalCost),
-              hoveredPropertyId === property.id,
-            )}
-            ref={(ref) => {
-              markersRef.current[property.id] = ref;
-            }}
-            eventHandlers={{
-              // Hover just highlights the pin (bigger + purple) and syncs
-              // with the card list ring — it doesn't open the popup.
-              mouseover: () => onHoverProperty?.(property.id),
-              mouseout: () => onHoverProperty?.(null),
-              // Clicking opens the popup (Leaflet's default behavior for a
-              // Marker with a nested Popup — also auto-closes any other
-              // open popup, and closes on outside click) and keeps the
-              // list in sync/scrolled to match.
-              click: () => onSelectProperty?.(property.id),
-            }}
-          >
-            <Popup className="property-card-popup" minWidth={400}>
-              <PropertyCard property={property} />
-            </Popup>
-          </Marker>
-        ))}
+        {/* =================================================
+            PROPERTY MARKERS
+        ================================================= */}
+
+        {pinned.map(
+          ({ property, coords }) => (
+            <Marker
+              key={property.id}
+              position={coords}
+              icon={makePriceIcon(
+                formatPrice(
+                  property.pricing?.TotalCost,
+                ),
+                hoveredPropertyId ===
+                  property.id,
+              )}
+              ref={(ref) => {
+                markersRef.current[
+                  property.id
+                ] = ref;
+              }}
+              eventHandlers={{
+                mouseover: () =>
+                  onHoverProperty?.(
+                    property.id,
+                  ),
+
+                mouseout: () =>
+                  onHoverProperty?.(null),
+
+                click: () =>
+                  onSelectProperty?.(
+                    property.id,
+                  ),
+              }}
+            >
+
+              {/* =================================================
+                  PROPERTY CARD ONLY
+              ================================================= */}
+
+              <Popup
+                className="property-map-popup"
+                minWidth={270}
+                maxWidth={270}
+                closeButton={true}
+                autoPan={true}
+              >
+                <PropertyPreview
+                  property={property}
+                />
+              </Popup>
+
+            </Marker>
+          ),
+        )}
+
       </MapContainer>
     </div>
   );
