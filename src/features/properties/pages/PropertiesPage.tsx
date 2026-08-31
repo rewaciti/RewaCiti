@@ -435,7 +435,7 @@ function PropertySearchSection() {
 
       {/* Top bar: Student Residence + Search + Filters + List/Map toggle */}
       <div
-        className="border-b border-gray-300 dark:border-gray-700 bg-white dark:bg-black/90 sticky top-16 z-20"
+        className="border-b border-gray-300 dark:border-gray-700 bg-linear-to-r dark:from-gray-700 from-gray-400 dark:to-black/80 to-gray-500 sticky top-16 z-20"
         id="Categories"
       >
         <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3 px-4 py-3">
