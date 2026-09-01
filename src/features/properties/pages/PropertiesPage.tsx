@@ -1,9 +1,9 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import { usePropertyStore } from "../store/usePropertyStore";
-import { customFieldsAPI } from "../services/customFieldsAPI";
+import { customFieldsAPI, type CustomFieldsResponse, type LocationHierarchyItem } from "../services/customFieldsAPI";
 import { FiArrowLeft, FiArrowRight, FiFilter } from "react-icons/fi";
 import PropertyCard from "../components/PropertyCard";
 import PropertyMap from "../components/PropertyMap";
@@ -72,10 +72,6 @@ function PropertySearchSection() {
   const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(null);
   const [agreed, setAgreed] = useState(false);
   const [listingTypes, setListingTypes] = useState<string[]>([]);
-  const [states, setStates] = useState<string[]>([]);
-  const [cities, setCities] = useState<string[]>([]);
-  const [areas, setAreas] = useState<string[]>([]);
-  const [universities, setUniversities] = useState<string[]>([]);
   const cookieLoaded = useRef(false);
   const inquiryCookieKey = "rewaciti_property_inquiry";
 
@@ -287,17 +283,21 @@ function PropertySearchSection() {
     fetchCategories();
   }, [fetchCategories]);
 
-  // Fetch custom fields data from backend for state, city, area, and listing type
+  const [locationHierarchy, setLocationHierarchy] = useState<LocationHierarchyItem[]>([]);
+  const [customFilterValues, setCustomFilterValues] = useState<CustomFieldsResponse | null>(null);
+
+  // Fetch custom fields data and location hierarchy from backend
   useEffect(() => {
     const fetchCustomFields = async () => {
       try {
-        const data = await customFieldsAPI.getFilterValues();
-        // Set states, cities, areas, universities, and listing types
-        setStates(data["location.state"] || []);
-        setCities(data["location.city_town"] || []);
-        setAreas(data["location.area"] || []);
-        setUniversities(data["location.nearest_institution_in_full"] || []);
-        setListingTypes(data.listing_type || []);
+        const [filterData, hierarchyData] = await Promise.all([
+          customFieldsAPI.getFilterValues(),
+          customFieldsAPI.getLocationHierarchy(),
+        ]);
+
+        setCustomFilterValues(filterData);
+        setLocationHierarchy(hierarchyData);
+        setListingTypes(filterData.listing_type || []);
       } catch (error) {
         console.error("Failed to fetch custom fields:", error);
       }
@@ -374,18 +374,232 @@ function PropertySearchSection() {
     }
   };
 
-  const stateOptions = states.length > 0 
-    ? states.map((s) => ({ label: s, value: s }))
-    : [];
-  const cityOptions = cities.length > 0
-    ? cities.map((c) => ({ label: c, value: c }))
-    : [];
-  const areaOptions = areas.length > 0
-    ? areas.map((a) => ({ label: a, value: a }))
-    : [];
-  const universityOptions = universities.length > 0
-    ? universities.map((u) => ({ label: u, value: u }))
-    : [];
+  // 1. Available States (from hierarchy & custom filter values)
+  const stateOptions = useMemo(() => {
+    const stateMap = new Map<string, string>();
+
+    locationHierarchy.forEach((item) => {
+      if (item.state) {
+        const lower = item.state.toLowerCase();
+        if (!stateMap.has(lower)) {
+          stateMap.set(lower, item.state);
+        }
+      }
+    });
+
+    (customFilterValues?.["location.state"] || []).forEach((s) => {
+      if (s) {
+        const lower = s.toLowerCase();
+        if (!stateMap.has(lower)) {
+          stateMap.set(lower, s);
+        }
+      }
+    });
+
+    return Array.from(stateMap.entries())
+      .sort((a, b) => a[1].localeCompare(b[1]))
+      .map(([_, val]) => ({ label: val, value: val }));
+  }, [locationHierarchy, customFilterValues]);
+
+  // 2. Available Cities (only when state is selected)
+  const cityOptions = useMemo(() => {
+    if (!state) return [];
+    const cityMap = new Map<string, string>();
+    const stateLower = state.toLowerCase();
+
+    locationHierarchy.forEach((item) => {
+      if (item.state.toLowerCase() === stateLower && item.city) {
+        const lower = item.city.toLowerCase();
+        if (!cityMap.has(lower)) {
+          cityMap.set(lower, item.city);
+        }
+      }
+    });
+
+    (customFilterValues?.["location.city_town"] || []).forEach((c) => {
+      if (c) {
+        const matching = locationHierarchy.some(
+          (item) => item.state.toLowerCase() === stateLower && item.city.toLowerCase() === c.toLowerCase()
+        );
+        if (matching) {
+          const lower = c.toLowerCase();
+          if (!cityMap.has(lower)) {
+            cityMap.set(lower, c);
+          }
+        }
+      }
+    });
+
+    return Array.from(cityMap.entries())
+      .sort((a, b) => a[1].localeCompare(b[1]))
+      .map(([_, val]) => ({ label: val, value: val }));
+  }, [state, locationHierarchy, customFilterValues]);
+
+  // 3. Available Areas (only when state is selected, filtered further if city is chosen)
+  const areaOptions = useMemo(() => {
+    if (!state) return [];
+    const areaMap = new Map<string, string>();
+    const stateLower = state.toLowerCase();
+    const cityLower = city ? city.toLowerCase() : "";
+
+    locationHierarchy.forEach((item) => {
+      if (item.state.toLowerCase() === stateLower) {
+        if (!cityLower || item.city.toLowerCase() === cityLower) {
+          if (item.area) {
+            const lower = item.area.toLowerCase();
+            if (!areaMap.has(lower)) {
+              areaMap.set(lower, item.area);
+            }
+          }
+        }
+      }
+    });
+
+    (customFilterValues?.["location.area"] || []).forEach((a) => {
+      if (a) {
+        const matching = locationHierarchy.some(
+          (item) =>
+            item.state.toLowerCase() === stateLower &&
+            (!cityLower || item.city.toLowerCase() === cityLower) &&
+            item.area.toLowerCase() === a.toLowerCase()
+        );
+        if (matching) {
+          const lower = a.toLowerCase();
+          if (!areaMap.has(lower)) {
+            areaMap.set(lower, a);
+          }
+        }
+      }
+    });
+
+    return Array.from(areaMap.entries())
+      .sort((a, b) => a[1].localeCompare(b[1]))
+      .map(([_, val]) => ({ label: val, value: val }));
+  }, [state, city, locationHierarchy, customFilterValues]);
+
+  // 4. Available Universities (filtered by state if state is selected)
+  const universityOptions = useMemo(() => {
+    const uniMap = new Map<string, string>();
+    const stateLower = state ? state.toLowerCase() : "";
+
+    locationHierarchy.forEach((item) => {
+      if (item.university) {
+        if (!stateLower || item.state.toLowerCase() === stateLower) {
+          const lower = item.university.toLowerCase();
+          if (!uniMap.has(lower)) {
+            uniMap.set(lower, item.university);
+          }
+        }
+      }
+    });
+
+    (customFilterValues?.["location.nearest_institution_in_full"] || []).forEach((u) => {
+      if (u) {
+        if (!stateLower) {
+          const lower = u.toLowerCase();
+          if (!uniMap.has(lower)) {
+            uniMap.set(lower, u);
+          }
+        } else {
+          const matching = locationHierarchy.some(
+            (item) => item.state.toLowerCase() === stateLower && item.university?.toLowerCase() === u.toLowerCase()
+          );
+          if (matching) {
+            const lower = u.toLowerCase();
+            if (!uniMap.has(lower)) {
+              uniMap.set(lower, u);
+            }
+          }
+        }
+      }
+    });
+
+    return Array.from(uniMap.entries())
+      .sort((a, b) => a[1].localeCompare(b[1]))
+      .map(([_, val]) => ({ label: val, value: val }));
+  }, [state, locationHierarchy, customFilterValues]);
+
+  // Cascading Selection Handlers
+  const handleStateChange = (selectedState: string) => {
+    setState(selectedState);
+    if (!selectedState) {
+      setCity("");
+      setArea("");
+      return;
+    }
+
+    const stateLower = selectedState.toLowerCase();
+    const validCities = locationHierarchy
+      .filter((i) => i.state.toLowerCase() === stateLower)
+      .map((i) => i.city.toLowerCase());
+
+    if (city && !validCities.includes(city.toLowerCase())) {
+      setCity("");
+    }
+
+    const validAreas = locationHierarchy
+      .filter((i) => i.state.toLowerCase() === stateLower)
+      .map((i) => i.area.toLowerCase());
+
+    if (area && !validAreas.includes(area.toLowerCase())) {
+      setArea("");
+    }
+
+    const validUnis = locationHierarchy
+      .filter((i) => i.state.toLowerCase() === stateLower)
+      .map((i) => (i.university || "").toLowerCase());
+
+    if (university && !validUnis.includes(university.toLowerCase())) {
+      setUniversity("");
+    }
+  };
+
+  const handleCityChange = (selectedCity: string) => {
+    setCity(selectedCity);
+    if (!selectedCity) {
+      setArea("");
+      return;
+    }
+
+    const stateLower = state.toLowerCase();
+    const cityLower = selectedCity.toLowerCase();
+    const validAreas = locationHierarchy
+      .filter((i) => i.state.toLowerCase() === stateLower && i.city.toLowerCase() === cityLower)
+      .map((i) => i.area.toLowerCase());
+
+    if (area && !validAreas.includes(area.toLowerCase())) {
+      setArea("");
+    }
+  };
+
+  const handleAreaChange = (selectedArea: string) => {
+    setArea(selectedArea);
+    if (selectedArea && !city && state) {
+      const match = locationHierarchy.find(
+        (i) => i.state.toLowerCase() === state.toLowerCase() && i.area.toLowerCase() === selectedArea.toLowerCase()
+      );
+      if (match && match.city) {
+        setCity(match.city);
+      }
+    }
+  };
+
+  const handleUniversityChange = (selectedUniversity: string) => {
+    setUniversity(selectedUniversity);
+    if (selectedUniversity) {
+      const match = locationHierarchy.find(
+        (i) => (i.university || "").toLowerCase() === selectedUniversity.toLowerCase()
+      );
+      if (match) {
+        if (match.state && match.state.toLowerCase() !== state.toLowerCase()) {
+          setState(match.state);
+        }
+        if (match.city && match.city.toLowerCase() !== city.toLowerCase()) {
+          setCity(match.city);
+        }
+      }
+    }
+  };
 
   const categoryOptions = [
     { label: "Categories", value: "" },
@@ -453,16 +667,16 @@ function PropertySearchSection() {
             </button>
           </div>
 
-          <div className="mt-3 flex items-center gap-1.5">
-            <div className="flex-1 min-w-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <div className="flex min-w-max items-center gap-1.5">
-                <div className="min-w-[105px] sm:min-w-[170px] md:min-w-[190px] lg:min-w-[220px]">
+          <div className="mt-3 flex items-center justify-between gap-1.5 overflow-visible">
+            <div className="flex-1 min-w-0 overflow-visible">
+              <div className="flex flex-nowrap items-center gap-1.5 overflow-visible">
+                <div className="min-w-[110px] sm:min-w-[170px] md:min-w-[190px] lg:min-w-[220px]">
                   <CustomDropdown
                     placeholder="University"
                     value={university}
                     options={[{ label: "All Universities", value: "" }, ...universityOptions]}
-                    onChange={setUniversity}
-                    className="min-w-[105px] sm:min-w-[170px] md:min-w-[190px] lg:min-w-[220px]"
+                    onChange={handleUniversityChange}
+                    className="w-full"
                     buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
                   />
                 </div>
@@ -472,30 +686,32 @@ function PropertySearchSection() {
                     placeholder="State"
                     value={state}
                     options={[{ label: "All States", value: "" }, ...stateOptions]}
-                    onChange={setState}
-                    className="min-w-[95px] sm:min-w-[150px] md:min-w-[170px] lg:min-w-[200px]"
+                    onChange={handleStateChange}
+                    className="w-full"
                     buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
                   />
                 </div>
 
                 <div className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]">
                   <CustomDropdown
-                    placeholder="City"
+                    placeholder={state ? "City" : "Select State first"}
                     value={city}
                     options={[{ label: "All Cities", value: "" }, ...cityOptions]}
-                    onChange={setCity}
-                    className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]"
+                    onChange={handleCityChange}
+                    disabled={!state}
+                    className="w-full"
                     buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
                   />
                 </div>
 
                 <div className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]">
                   <CustomDropdown
-                    placeholder="Area"
+                    placeholder={state ? "Area" : "Select State first"}
                     value={area}
                     options={[{ label: "All Areas", value: "" }, ...areaOptions]}
-                    onChange={setArea}
-                    className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]"
+                    onChange={handleAreaChange}
+                    disabled={!state}
+                    className="w-full"
                     buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
                   />
                 </div>
