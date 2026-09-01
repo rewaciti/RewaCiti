@@ -677,7 +677,7 @@ function PropertySearchSection() {
                     options={[{ label: "All Universities", value: "" }, ...universityOptions]}
                     onChange={handleUniversityChange}
                     className="w-full"
-                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 bg-gray-100 font-bold dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
                   />
                 </div>
 
@@ -688,7 +688,7 @@ function PropertySearchSection() {
                     options={[{ label: "All States", value: "" }, ...stateOptions]}
                     onChange={handleStateChange}
                     className="w-full"
-                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 bg-gray-100 font-bold dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
                   />
                 </div>
 
@@ -700,7 +700,7 @@ function PropertySearchSection() {
                     onChange={handleCityChange}
                     disabled={!state}
                     className="w-full"
-                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 font-bold bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
                   />
                 </div>
 
@@ -712,7 +712,7 @@ function PropertySearchSection() {
                     onChange={handleAreaChange}
                     disabled={!state}
                     className="w-full"
-                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 font-bold bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
                   />
                 </div>
               </div>
