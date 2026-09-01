@@ -734,7 +734,7 @@ function PropertySearchSection() {
 
       <div
         ref={topBarRef}
-        className="border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#1A1A1A] text-gray-900 dark:text-white sticky top-16 z-20 p-0.5"
+        className="border-b border-gray-400 dark:border-neutral-800 bg-gray-300 dark:bg-[#1A1A1A] text-gray-900 dark:text-white sticky top-16 z-20 p-0.5"
         id="Categories"
       >
         <div className="px-4 py-3">
