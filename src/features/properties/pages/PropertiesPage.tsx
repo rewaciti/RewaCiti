@@ -9,7 +9,7 @@ import PropertyCard from "../components/PropertyCard";
 import PropertyMap from "../components/PropertyMap";
 import Footer from "../../../shared/components/Layout/Footer";
 import useScrollToHash from "../../../shared/hooks/useScrollToHash";
-import { Link, NavLink } from "react-router";
+import { Link } from "react-router";
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
 import { toast } from "sonner";
 import CustomDropdown from "../../../features/properties/components/CustomDropdown.tsx";
@@ -439,37 +439,9 @@ function PropertySearchSection() {
       </Helmet>
       <Navbar />
 
-      {/* Top bar: on mobile, Student Residence + List/Map toggle share row 1 and Search takes full-width row 2 (grid-cols-2). At md+ it becomes a 3-column grid in Student Residence / Search / Toggle order via md:order. */}
       <div ref={topBarRef} className="border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#1A1A1A] text-gray-900 dark:text-white sticky top-16 z-20 p-0.5" id="Categories">
-        <div className="grid grid-cols-2 items-center gap-2.5 px-4 py-3 md:grid-cols-3 md:gap-4">
-          {/* Student Residence */}
-          <div className="flex items-center justify-start md:order-1">
-            <NavLink to="/Studentarea" className="bg-[#703BF7] hover:bg-[#9677df] transition text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap shrink-0 shadow-sm">
-              🎓 Student Residence
-            </NavLink>
-          </div>
-
-          {/* List / Map toggle */}
-          <div className="flex items-center justify-end md:order-3">
-            <div className="flex items-center gap-1 bg-gray-100 dark:bg-neutral-800/90 p-1 rounded-xl border border-gray-300 dark:border-neutral-700/60 shrink-0 select-none">
-              <button onClick={() => setViewMode("list")} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "list" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25A2.25 2.25 0 0 1 8.25 10.5H6A2.25 2.25 0 0 1 3.75 8.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 8.25 20.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25h2.25A2.25 2.25 0 0 1 20.25 6v2.25a2.25 2.25 0 0 1-2.25 2.25h-2.25A2.25 2.25 0 0 1 13.5 8.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
-                </svg>
-                List
-              </button>
-
-              <button onClick={() => setViewMode("map")} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "map" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75 12 9l3-2.25M9 17.25l3 2.25 3-2.25M9 6.75v10.5m6-12.75v12.75M3 9v12l6-2.25m12-9.75v12l-6-2.25M9 19.5l6-2.25" />
-                </svg>
-                Map
-              </button>
-            </div>
-          </div>
-
-          {/* Search + Filters */}
-          <div className="relative w-full col-span-2 md:col-span-1 md:max-w-[400px] md:mx-auto md:order-2">
+        <div className="px-4 py-3">
+          <div className="relative w-full">
             <input type="text" placeholder="Search for properties..." className="w-full pl-4 pr-28 py-2.5 rounded-lg dark:bg-black/70 bg-gray-100 text-gray-900 dark:text-white border border-gray-500 dark:border-gray-600 focus:outline-none dark:placeholder-gray-400 placeholder-gray-500 text-sm" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
 
             <button onClick={() => setShowFilters(true)} className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-900 dark:text-white bg-white dark:bg-neutral-800 border border-gray-500 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
@@ -479,6 +451,74 @@ function PropertySearchSection() {
                 <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[10px] font-semibold w-5 h-5 flex items-center justify-center rounded-full">{activeFilterCount}</span>
               )}
             </button>
+          </div>
+
+          <div className="mt-3 flex items-center gap-1.5">
+            <div className="flex-1 min-w-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex min-w-max items-center gap-1.5">
+                <div className="min-w-[105px] sm:min-w-[170px] md:min-w-[190px] lg:min-w-[220px]">
+                  <CustomDropdown
+                    placeholder="University"
+                    value={university}
+                    options={[{ label: "All Universities", value: "" }, ...universityOptions]}
+                    onChange={setUniversity}
+                    className="min-w-[105px] sm:min-w-[170px] md:min-w-[190px] lg:min-w-[220px]"
+                    buttonClassName="w-full h-8 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                  />
+                </div>
+
+                <div className="min-w-[95px] sm:min-w-[150px] md:min-w-[170px] lg:min-w-[200px]">
+                  <CustomDropdown
+                    placeholder="State"
+                    value={state}
+                    options={[{ label: "All States", value: "" }, ...stateOptions]}
+                    onChange={setState}
+                    className="min-w-[95px] sm:min-w-[150px] md:min-w-[170px] lg:min-w-[200px]"
+                    buttonClassName="w-full h-8 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                  />
+                </div>
+
+                <div className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]">
+                  <CustomDropdown
+                    placeholder="City"
+                    value={city}
+                    options={[{ label: "All Cities", value: "" }, ...cityOptions]}
+                    onChange={setCity}
+                    className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]"
+                    buttonClassName="w-full h-8 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                  />
+                </div>
+
+                <div className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]">
+                  <CustomDropdown
+                    placeholder="Area"
+                    value={area}
+                    options={[{ label: "All Areas", value: "" }, ...areaOptions]}
+                    onChange={setArea}
+                    className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]"
+                    buttonClassName="w-full h-8 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end shrink-0">
+              <div className="flex items-center gap-1 bg-gray-100 dark:bg-neutral-800/90 p-1 rounded-xl border border-gray-300 dark:border-neutral-700/60 select-none">
+                <button onClick={() => setViewMode("list")} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "list" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25A2.25 2.25 0 0 1 8.25 10.5H6A2.25 2.25 0 0 1 3.75 8.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 8.25 20.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25h2.25A2.25 2.25 0 0 1 20.25 6v2.25a2.25 2.25 0 0 1-2.25 2.25h-2.25A2.25 2.25 0 0 1 13.5 8.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+                  </svg>
+                  List
+                </button>
+
+                <button onClick={() => setViewMode("map")} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "map" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75 12 9l3-2.25M9 17.25l3 2.25 3-2.25M9 6.75v10.5m6-12.75v12.75M3 9v12l6-2.25m12-9.75v12l-6-2.25M9 19.5l6-2.25" />
+                  </svg>
+                  Map
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -593,14 +633,6 @@ function PropertySearchSection() {
         totalProperties={totalProperties}
         category={category}
         setCategory={setCategory}
-        state={state}
-        setState={setState}
-        city={city}
-        setCity={setCity}
-        area={area}
-        setArea={setArea}
-        university={university}
-        setUniversity={setUniversity}
         minPriceInput={minPriceInput}
         setMinPriceInput={setMinPriceInput}
         maxPriceInput={maxPriceInput}
@@ -610,10 +642,6 @@ function PropertySearchSection() {
         sharedRoomOnly={sharedRoomOnly}
         setSharedRoomOnly={setSharedRoomOnly}
         categories={categoryOptions}
-        stateOptions={stateOptions}
-        cityOptions={cityOptions}
-        areaOptions={areaOptions}
-        universityOptions={universityOptions}
         listingType={listingType}
         setListingType={setListingType}
         listingTypeOptions={listingTypeOptions}

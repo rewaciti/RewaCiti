@@ -1,6 +1,3 @@
-import CustomDropdown from "./CustomDropdown";
-import { FiMapPin } from "react-icons/fi";
-
 const MAX_BEDROOM_STEP = 7;
 
 interface PropertyFiltersModalProps {
@@ -12,16 +9,6 @@ interface PropertyFiltersModalProps {
   // Category filters
   category?: string;
   setCategory?: (val: string) => void;
-
-  // Location/Area filters
-  state?: string;
-  setState?: (val: string) => void;
-  city?: string;
-  setCity?: (val: string) => void;
-  area?: string;
-  setArea?: (val: string) => void;
-  university?: string;
-  setUniversity?: (val: string) => void;
 
   // Listing type filter
   listingType?: string;
@@ -39,10 +26,6 @@ interface PropertyFiltersModalProps {
 
   // Data Options
   categories?: { label: string; value: string }[];
-  stateOptions?: { label: string; value: string }[];
-  cityOptions?: { label: string; value: string }[];
-  areaOptions?: { label: string; value: string }[];
-  universityOptions?: { label: string; value: string }[];
   listingTypeOptions?: { label: string; value: string }[];
 }
 
@@ -53,14 +36,6 @@ export default function PropertyFiltersModal({
   totalProperties,
   category,
   setCategory,
-  state = "",
-  setState,
-  city = "",
-  setCity,
-  area = "",
-  setArea,
-  university = "",
-  setUniversity,
   minPriceInput = "",
   setMinPriceInput,
   maxPriceInput = "",
@@ -72,10 +47,6 @@ export default function PropertyFiltersModal({
   listingType = "",
   setListingType,
   categories = [],
-  stateOptions = [],
-  cityOptions = [],
-  areaOptions = [],
-  universityOptions = [],
   listingTypeOptions = [],
 }: PropertyFiltersModalProps) {
   return (
@@ -142,62 +113,6 @@ export default function PropertyFiltersModal({
                         {opt.label}
                       </button>
                     ))}
-                </div>
-              </div>
-
-              <hr className="border-gray-200 dark:border-gray-700" />
-
-              {/* Location - State, City, Area */}
-              <div className="py-6" style={{ overflow: "visible" }}>
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Location</h3>
-                <div className="space-y-3" style={{ overflow: "visible" }}>
-                  <div style={{ overflow: "visible" }}>
-                    <CustomDropdown
-                      icon={<FiMapPin />}
-                      placeholder="State"
-                      value={state}
-                      options={stateOptions.length > 0 ? [{ label: "State", value: "" }, ...stateOptions] : [{ label: "State", value: "" }]}
-                      onChange={(value) => {
-                        setState?.(value);
-                        setCity?.("");
-                        setArea?.("");
-                      }}
-                    />
-                  </div>
-                  <div style={{ overflow: "visible" }}>
-                    <CustomDropdown
-                      icon={<FiMapPin />}
-                      placeholder={state ? "City" : "Choose State First"}
-                      value={city}
-                      options={cityOptions.length > 0 ? [{ label: "City", value: "" }, ...cityOptions] : [{ label: "City", value: "" }]}
-                      disabled={!state}
-                      onChange={(value) => {
-                        setCity?.(value);
-                        setArea?.("");
-                      }}
-                    />
-                  </div>
-                  <div style={{ overflow: "visible" }}>
-                    <CustomDropdown
-                      icon={<FiMapPin />}
-                      placeholder={city ? "Area" : "Choose City First"}
-                      value={area}
-                      options={areaOptions.length > 0 ? [{ label: "Area", value: "" }, ...areaOptions] : [{ label: "Area", value: "" }]}
-                      disabled={!city}
-                      onChange={(value) => {
-                        setArea?.(value);
-                      }}
-                    />
-                  </div>
-                  <div style={{ overflow: "visible" }}>
-                    <CustomDropdown
-                      icon={<FiMapPin />}
-                      placeholder="University"
-                      value={university}
-                      options={universityOptions.length > 0 ? [{ label: "University", value: "" }, ...universityOptions] : [{ label: "University", value: "" }]}
-                      onChange={(value) => setUniversity?.(value)}
-                    />
-                  </div>
                 </div>
               </div>
 
