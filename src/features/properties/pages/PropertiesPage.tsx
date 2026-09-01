@@ -3,7 +3,11 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import { usePropertyStore } from "../store/usePropertyStore";
-import { customFieldsAPI, type CustomFieldsResponse, type LocationHierarchyItem } from "../services/customFieldsAPI";
+import {
+  customFieldsAPI,
+  type CustomFieldsResponse,
+  type LocationHierarchyItem,
+} from "../services/customFieldsAPI";
 import { FiArrowLeft, FiArrowRight, FiFilter } from "react-icons/fi";
 import PropertyCard from "../components/PropertyCard";
 import PropertyMap from "../components/PropertyMap";
@@ -62,14 +66,18 @@ function PropertySearchSection() {
 
   const [minPriceInput, setMinPriceInput] = useState("");
   const [maxPriceInput, setMaxPriceInput] = useState("");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 999999999]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    0, 999999999,
+  ]);
 
   const [bedroomCount, setBedroomCount] = useState(0);
   const [sharedRoomOnly, setSharedRoomOnly] = useState(false);
 
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
-  const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(null);
+  const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(
+    null,
+  );
   const [agreed, setAgreed] = useState(false);
   const [listingTypes, setListingTypes] = useState<string[]>([]);
   const cookieLoaded = useRef(false);
@@ -132,10 +140,15 @@ function PropertySearchSection() {
 
         const currentCustomer = useAuthStore.getState().customer;
         if (currentCustomer && currentCustomer.phoneNumber !== latestPhone) {
-          useAuthStore.getState().setCustomer({ ...currentCustomer, phoneNumber: latestPhone });
+          useAuthStore
+            .getState()
+            .setCustomer({ ...currentCustomer, phoneNumber: latestPhone });
         }
       } catch (error) {
-        console.error("Failed to fetch profile for properties page form:", error);
+        console.error(
+          "Failed to fetch profile for properties page form:",
+          error,
+        );
       }
     };
 
@@ -162,7 +175,18 @@ function PropertySearchSection() {
     };
 
     setCookie(inquiryCookieKey, JSON.stringify(payload));
-  }, [name, email, phone, preferedLocation, preferedCategory, bedroomsContact, Budget, preferredContact, message, agreed]);
+  }, [
+    name,
+    email,
+    phone,
+    preferedLocation,
+    preferedCategory,
+    bedroomsContact,
+    Budget,
+    preferredContact,
+    message,
+    agreed,
+  ]);
 
   // Lock body scroll while the filters modal is open (iOS-safe: freezes scroll position)
   useEffect(() => {
@@ -201,8 +225,15 @@ function PropertySearchSection() {
       return;
     }
 
-    if (!name.trim() || !email.trim() || !phone.trim() || !preferedLocation.trim()) {
-      toast.error("Please enter your name, email, phone number, and preferred location to continue.");
+    if (
+      !name.trim() ||
+      !email.trim() ||
+      !phone.trim() ||
+      !preferedLocation.trim()
+    ) {
+      toast.error(
+        "Please enter your name, email, phone number, and preferred location to continue.",
+      );
       return;
     }
 
@@ -283,8 +314,11 @@ function PropertySearchSection() {
     fetchCategories();
   }, [fetchCategories]);
 
-  const [locationHierarchy, setLocationHierarchy] = useState<LocationHierarchyItem[]>([]);
-  const [customFilterValues, setCustomFilterValues] = useState<CustomFieldsResponse | null>(null);
+  const [locationHierarchy, setLocationHierarchy] = useState<
+    LocationHierarchyItem[]
+  >([]);
+  const [customFilterValues, setCustomFilterValues] =
+    useState<CustomFieldsResponse | null>(null);
 
   // Fetch custom fields data and location hierarchy from backend
   useEffect(() => {
@@ -330,8 +364,12 @@ function PropertySearchSection() {
   }, [bedrooms]);
 
   useEffect(() => {
-    const min = minPriceInput.trim() === "" ? 0 : Math.max(0, Number(minPriceInput));
-    const max = maxPriceInput.trim() === "" ? 999999999 : Math.max(0, Number(maxPriceInput));
+    const min =
+      minPriceInput.trim() === "" ? 0 : Math.max(0, Number(minPriceInput));
+    const max =
+      maxPriceInput.trim() === ""
+        ? 999999999
+        : Math.max(0, Number(maxPriceInput));
 
     if (Number.isNaN(min) || Number.isNaN(max)) return;
 
@@ -339,14 +377,17 @@ function PropertySearchSection() {
   }, [minPriceInput, maxPriceInput]);
 
   useEffect(() => {
-    const isCategoryId = categories.some((option) => String(option.id) === String(category));
+    const isCategoryId = categories.some(
+      (option) => String(option.id) === String(category),
+    );
 
     fetchProperties(1, {
       search: searchTerm || undefined,
       "customData.location.state": state || undefined,
       "customData.location.city_town": city || undefined,
       "customData.location.area": area || undefined,
-      "customData.location.nearest_institution_in_full": university || undefined,
+      "customData.location.nearest_institution_in_full":
+        university || undefined,
       ...(category
         ? isCategoryId
           ? { categoryId: category }
@@ -357,9 +398,24 @@ function PropertySearchSection() {
       maxPrice: priceRange[1] < 999999999 ? priceRange[1] : undefined,
       "customData.listing_type": listingType || undefined,
     });
-  }, [searchTerm, category, bedrooms, state, city, area, university, priceRange, fetchProperties, listingType, categories]);
+  }, [
+    searchTerm,
+    category,
+    bedrooms,
+    state,
+    city,
+    area,
+    university,
+    priceRange,
+    fetchProperties,
+    listingType,
+    categories,
+  ]);
 
-  const totalApiPages = Math.max(1, Math.ceil(totalProperties / ITEMS_PER_PAGE));
+  const totalApiPages = Math.max(
+    1,
+    Math.ceil(totalProperties / ITEMS_PER_PAGE),
+  );
   const currentProperties = properties;
 
   const handleNext = () => {
@@ -419,7 +475,9 @@ function PropertySearchSection() {
     (customFilterValues?.["location.city_town"] || []).forEach((c) => {
       if (c) {
         const matching = locationHierarchy.some(
-          (item) => item.state.toLowerCase() === stateLower && item.city.toLowerCase() === c.toLowerCase()
+          (item) =>
+            item.state.toLowerCase() === stateLower &&
+            item.city.toLowerCase() === c.toLowerCase(),
         );
         if (matching) {
           const lower = c.toLowerCase();
@@ -461,7 +519,7 @@ function PropertySearchSection() {
           (item) =>
             item.state.toLowerCase() === stateLower &&
             (!cityLower || item.city.toLowerCase() === cityLower) &&
-            item.area.toLowerCase() === a.toLowerCase()
+            item.area.toLowerCase() === a.toLowerCase(),
         );
         if (matching) {
           const lower = a.toLowerCase();
@@ -493,7 +551,9 @@ function PropertySearchSection() {
       }
     });
 
-    (customFilterValues?.["location.nearest_institution_in_full"] || []).forEach((u) => {
+    (
+      customFilterValues?.["location.nearest_institution_in_full"] || []
+    ).forEach((u) => {
       if (u) {
         if (!stateLower) {
           const lower = u.toLowerCase();
@@ -502,7 +562,9 @@ function PropertySearchSection() {
           }
         } else {
           const matching = locationHierarchy.some(
-            (item) => item.state.toLowerCase() === stateLower && item.university?.toLowerCase() === u.toLowerCase()
+            (item) =>
+              item.state.toLowerCase() === stateLower &&
+              item.university?.toLowerCase() === u.toLowerCase(),
           );
           if (matching) {
             const lower = u.toLowerCase();
@@ -564,7 +626,11 @@ function PropertySearchSection() {
     const stateLower = state.toLowerCase();
     const cityLower = selectedCity.toLowerCase();
     const validAreas = locationHierarchy
-      .filter((i) => i.state.toLowerCase() === stateLower && i.city.toLowerCase() === cityLower)
+      .filter(
+        (i) =>
+          i.state.toLowerCase() === stateLower &&
+          i.city.toLowerCase() === cityLower,
+      )
       .map((i) => i.area.toLowerCase());
 
     if (area && !validAreas.includes(area.toLowerCase())) {
@@ -576,7 +642,9 @@ function PropertySearchSection() {
     setArea(selectedArea);
     if (selectedArea && !city && state) {
       const match = locationHierarchy.find(
-        (i) => i.state.toLowerCase() === state.toLowerCase() && i.area.toLowerCase() === selectedArea.toLowerCase()
+        (i) =>
+          i.state.toLowerCase() === state.toLowerCase() &&
+          i.area.toLowerCase() === selectedArea.toLowerCase(),
       );
       if (match && match.city) {
         setCity(match.city);
@@ -588,7 +656,9 @@ function PropertySearchSection() {
     setUniversity(selectedUniversity);
     if (selectedUniversity) {
       const match = locationHierarchy.find(
-        (i) => (i.university || "").toLowerCase() === selectedUniversity.toLowerCase()
+        (i) =>
+          (i.university || "").toLowerCase() ===
+          selectedUniversity.toLowerCase(),
       );
       if (match) {
         if (match.state && match.state.toLowerCase() !== state.toLowerCase()) {
@@ -603,7 +673,10 @@ function PropertySearchSection() {
 
   const categoryOptions = [
     { label: "Categories", value: "" },
-    ...categories.map((category) => ({ label: category.name, value: category.id })),
+    ...categories.map((category) => ({
+      label: category.name,
+      value: category.id,
+    })),
   ];
 
   const listingTypeOptions = [
@@ -645,94 +718,234 @@ function PropertySearchSection() {
     <div>
       <Helmet>
         <title>Properties | RewaCiti</title>
-        <meta name="description" content="Browse available properties on RewaCiti, including rentals and homes in Ile-Ife and surrounding areas." />
+        <meta
+          name="description"
+          content="Browse available properties on RewaCiti, including rentals and homes in Ile-Ife and surrounding areas."
+        />
         <meta property="og:title" content="Properties | RewaCiti" />
-        <meta property="og:description" content="Search top real estate listings, rentals, and student accommodations on RewaCiti." />
+        <meta
+          property="og:description"
+          content="Search top real estate listings, rentals, and student accommodations on RewaCiti."
+        />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="https://rewaciti.com/properties" />
       </Helmet>
       <Navbar />
 
-      <div ref={topBarRef} className="border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#1A1A1A] text-gray-900 dark:text-white sticky top-16 z-20 p-0.5" id="Categories">
+      <div
+        ref={topBarRef}
+        className="border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#1A1A1A] text-gray-900 dark:text-white sticky top-16 z-20 p-0.5"
+        id="Categories"
+      >
         <div className="px-4 py-3">
           <div className="relative w-full">
-            <input type="text" placeholder="Search for properties..." className="w-full pl-4 pr-28 py-2.5 rounded-lg dark:bg-black/70 bg-gray-100 text-gray-900 dark:text-white border border-gray-500 dark:border-gray-600 focus:outline-none dark:placeholder-gray-400 placeholder-gray-500 text-sm" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+            <input
+              type="text"
+              placeholder="Search for properties..."
+              className="w-full pl-4 pr-28 py-2.5 rounded-lg dark:bg-black/70 bg-gray-100 text-gray-900 dark:text-white border border-gray-500 dark:border-gray-600 focus:outline-none dark:placeholder-gray-400 placeholder-gray-500 text-sm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
 
-            <button onClick={() => setShowFilters(true)} className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-900 dark:text-white bg-white dark:bg-neutral-800 border border-gray-500 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
+            <button
+              onClick={() => setShowFilters(true)}
+              className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-900 dark:text-white bg-white dark:bg-neutral-800 border border-gray-500 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition"
+            >
               <FiFilter />
               <span>Filters</span>
               {activeFilterCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[10px] font-semibold w-5 h-5 flex items-center justify-center rounded-full">{activeFilterCount}</span>
+                <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[10px] font-semibold w-5 h-5 flex items-center justify-center rounded-full">
+                  {activeFilterCount}
+                </span>
               )}
             </button>
           </div>
 
-          <div className="mt-3 flex items-center justify-between gap-1.5 overflow-visible">
-            <div className="flex-1 min-w-0 overflow-visible">
-              <div className="flex flex-nowrap items-center gap-1.5 overflow-visible">
-                <div className="min-w-[110px] sm:min-w-[170px] md:min-w-[190px] lg:min-w-[220px]">
-                  <CustomDropdown
-                    placeholder="University"
-                    value={university}
-                    options={[{ label: "All Universities", value: "" }, ...universityOptions]}
-                    onChange={handleUniversityChange}
-                    className="w-full"
-                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 bg-gray-100 font-bold dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
-                  />
-                </div>
+          <div className="mt-3">
+            {/* Small screens: explicit, scrollable Listing Type pills + toggle */}
+            <div className="lg:hidden flex items-center gap-1.5">
+              <div className="flex-1 min-w-0 flex items-center gap-1.5 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <button
+                  onClick={() => setListingType("")}
+                  className={`shrink-0 px-3 py-1.5 rounded-full border text-xs font-semibold transition ${
+                    listingType === ""
+                      ? "bg-[#703BF7] border-[#703BF7] text-white"
+                      : "border-gray-400 dark:border-neutral-700 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-900"
+                  }`}
+                >
+                  All
+                </button>
 
-                <div className="min-w-[95px] sm:min-w-[150px] md:min-w-[170px] lg:min-w-[200px]">
-                  <CustomDropdown
-                    placeholder="State"
-                    value={state}
-                    options={[{ label: "All States", value: "" }, ...stateOptions]}
-                    onChange={handleStateChange}
-                    className="w-full"
-                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 bg-gray-100 font-bold dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
-                  />
-                </div>
+                {["Rent", "Sale", "Investment"].map((lt) => (
+                  <button
+                    key={lt}
+                    onClick={() => setListingType(lt)}
+                    className={`shrink-0 px-3 py-1.5 rounded-full border text-xs font-semibold transition whitespace-nowrap ${
+                      listingType.toLowerCase() === lt.toLowerCase()
+                        ? "bg-[#703BF7] border-[#703BF7] text-white"
+                        : "border-gray-400 dark:border-neutral-700 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-900"
+                    }`}
+                  >
+                    {lt}
+                  </button>
+                ))}
+              </div>
 
-                <div className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]">
-                  <CustomDropdown
-                    placeholder={state ? "City" : "Select State first"}
-                    value={city}
-                    options={[{ label: "All Cities", value: "" }, ...cityOptions]}
-                    onChange={handleCityChange}
-                    disabled={!state}
-                    className="w-full"
-                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 font-bold bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
-                  />
-                </div>
+              <div className="shrink-0">
+                <div className="flex items-center gap-1 bg-gray-100 dark:bg-neutral-800/90 p-1 rounded-xl border border-gray-300 dark:border-neutral-700/60 select-none">
+                  <button
+                    onClick={() => setViewMode("list")}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "list" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="2"
+                      stroke="currentColor"
+                      className="w-3.5 h-3.5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25A2.25 2.25 0 0 1 8.25 10.5H6A2.25 2.25 0 0 1 3.75 8.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 8.25 20.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25h2.25A2.25 2.25 0 0 1 20.25 6v2.25a2.25 2.25 0 0 1-2.25 2.25h-2.25A2.25 2.25 0 0 1 13.5 8.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"
+                      />
+                    </svg>
+                    List
+                  </button>
 
-                <div className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]">
-                  <CustomDropdown
-                    placeholder={state ? "Area" : "Select State first"}
-                    value={area}
-                    options={[{ label: "All Areas", value: "" }, ...areaOptions]}
-                    onChange={handleAreaChange}
-                    disabled={!state}
-                    className="w-full"
-                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 font-bold bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
-                  />
+                  <button
+                    onClick={() => setViewMode("map")}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "map" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="2"
+                      stroke="currentColor"
+                      className="w-3.5 h-3.5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 6.75 12 9l3-2.25M9 17.25l3 2.25 3-2.25M9 6.75v10.5m6-12.75v12.75M3 9v12l6-2.25m12-9.75v12l-6-2.25M9 19.5l6-2.25"
+                      />
+                    </svg>
+                    Map
+                  </button>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center justify-end shrink-0">
-              <div className="flex items-center gap-1 bg-gray-100 dark:bg-neutral-800/90 p-1 rounded-xl border border-gray-300 dark:border-neutral-700/60 select-none">
-                <button onClick={() => setViewMode("list")} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "list" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25A2.25 2.25 0 0 1 8.25 10.5H6A2.25 2.25 0 0 1 3.75 8.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 8.25 20.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25h2.25A2.25 2.25 0 0 1 20.25 6v2.25a2.25 2.25 0 0 1-2.25 2.25h-2.25A2.25 2.25 0 0 1 13.5 8.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
-                  </svg>
-                  List
-                </button>
+            {/* Large screens: unchanged dropdown row */}
+            <div className="hidden lg:flex items-center justify-between gap-1.5 overflow-visible">
+              <div className="flex-1 min-w-0 overflow-visible">
+                <div className="flex flex-nowrap items-center gap-1.5 overflow-visible">
+                  <div className="min-w-[110px] sm:min-w-[170px] md:min-w-[190px] lg:min-w-[220px]">
+                    <CustomDropdown
+                      placeholder="University"
+                      value={university}
+                      options={[
+                        { label: "All Universities", value: "" },
+                        ...universityOptions,
+                      ]}
+                      onChange={handleUniversityChange}
+                      className="w-full"
+                      buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 bg-gray-100 font-bold dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                    />
+                  </div>
 
-                <button onClick={() => setViewMode("map")} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "map" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75 12 9l3-2.25M9 17.25l3 2.25 3-2.25M9 6.75v10.5m6-12.75v12.75M3 9v12l6-2.25m12-9.75v12l-6-2.25M9 19.5l6-2.25" />
-                  </svg>
-                  Map
-                </button>
+                  <div className="min-w-[95px] sm:min-w-[150px] md:min-w-[170px] lg:min-w-[200px]">
+                    <CustomDropdown
+                      placeholder="State"
+                      value={state}
+                      options={[
+                        { label: "All States", value: "" },
+                        ...stateOptions,
+                      ]}
+                      onChange={handleStateChange}
+                      className="w-full"
+                      buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 bg-gray-100 font-bold dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                    />
+                  </div>
+
+                  <div className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]">
+                    <CustomDropdown
+                      placeholder={state ? "City" : "Select State first"}
+                      value={city}
+                      options={[
+                        { label: "All Cities", value: "" },
+                        ...cityOptions,
+                      ]}
+                      onChange={handleCityChange}
+                      disabled={!state}
+                      className="w-full"
+                      buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 font-bold bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                    />
+                  </div>
+
+                  <div className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]">
+                    <CustomDropdown
+                      placeholder={state ? "Area" : "Select State first"}
+                      value={area}
+                      options={[
+                        { label: "All Areas", value: "" },
+                        ...areaOptions,
+                      ]}
+                      onChange={handleAreaChange}
+                      disabled={!state}
+                      className="w-full"
+                      buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 font-bold bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end shrink-0">
+                <div className="flex items-center gap-1 bg-gray-100 dark:bg-neutral-800/90 p-1 rounded-xl border border-gray-300 dark:border-neutral-700/60 select-none">
+                  <button
+                    onClick={() => setViewMode("list")}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "list" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="2"
+                      stroke="currentColor"
+                      className="w-3.5 h-3.5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25A2.25 2.25 0 0 1 8.25 10.5H6A2.25 2.25 0 0 1 3.75 8.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 8.25 20.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25h2.25A2.25 2.25 0 0 1 20.25 6v2.25a2.25 2.25 0 0 1-2.25 2.25h-2.25A2.25 2.25 0 0 1 13.5 8.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"
+                      />
+                    </svg>
+                    List
+                  </button>
+
+                  <button
+                    onClick={() => setViewMode("map")}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "map" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="2"
+                      stroke="currentColor"
+                      className="w-3.5 h-3.5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 6.75 12 9l3-2.25M9 17.25l3 2.25 3-2.25M9 6.75v10.5m6-12.75v12.75M3 9v12l6-2.25m12-9.75v12l-6-2.25M9 19.5l6-2.25"
+                      />
+                    </svg>
+                    Map
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -749,8 +962,12 @@ function PropertySearchSection() {
                 </div>
               ) : currentProperties.length === 0 ? (
                 <div className="w-full h-[600px] rounded-xl flex flex-col items-center justify-center bg-gray-200 dark:bg-neutral-800/50 text-center p-6 border border-gray-300 dark:border-neutral-800">
-                  <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">No properties found on the map</h3>
-                  <p className="text-gray-800 dark:text-gray-400 text-sm">Try adjusting your search or filters to see results.</p>
+                  <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">
+                    No properties found on the map
+                  </h3>
+                  <p className="text-gray-800 dark:text-gray-400 text-sm">
+                    Try adjusting your search or filters to see results.
+                  </p>
                 </div>
               ) : (
                 <>
@@ -759,17 +976,32 @@ function PropertySearchSection() {
                     @keyframes propertyMapSlideInRight { from { opacity: 0; transform: translateX(32px); } to { opacity: 1; transform: translateX(0); } }
                   `}</style>
                   <div className="flex flex-col lg:flex-row gap-4 items-start">
-                    <div className="hidden lg:block lg:w-[42%] w-full" style={{ animation: "propertyListShiftLeft 0.35s ease-out" }}>
+                    <div
+                      className="hidden lg:block lg:w-[42%] w-full"
+                      style={{
+                        animation: "propertyListShiftLeft 0.35s ease-out",
+                      }}
+                    >
                       <div>
                         <div className="flex justify-between items-center mb-3 pt-4">
                           <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
-                            <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl tracking-tight">Discover a World of Possibilities</h1>
+                            <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl tracking-tight">
+                              Discover a World of Possibilities
+                            </h1>
                           </div>
                         </div>
 
                         <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
                           {currentProperties.map((property) => (
-                            <div key={property.id} id={`property-card-${property.id}`} onMouseEnter={() => setHoveredPropertyId(property.id)} onMouseLeave={() => setHoveredPropertyId(null)} className={`rounded-xl transition ${hoveredPropertyId === property.id ? "ring-2 ring-[#703BF7]" : "ring-1 ring-transparent"}`}>
+                            <div
+                              key={property.id}
+                              id={`property-card-${property.id}`}
+                              onMouseEnter={() =>
+                                setHoveredPropertyId(property.id)
+                              }
+                              onMouseLeave={() => setHoveredPropertyId(null)}
+                              className={`rounded-xl transition ${hoveredPropertyId === property.id ? "ring-2 ring-[#703BF7]" : "ring-1 ring-transparent"}`}
+                            >
                               <PropertyCard property={property} />
                             </div>
                           ))}
@@ -778,7 +1010,15 @@ function PropertySearchSection() {
                     </div>
 
                     {/* Map panel: top/height driven by measured mapTopOffset so it starts exactly below the top bar and fills the rest of the viewport */}
-                    <div className="w-full lg:w-[58%] lg:sticky z-10" style={{ top: `${mapTopOffset}px`, height: `calc(100vh - ${mapTopOffset}px)`, minHeight: 420, animation: "propertyMapSlideInRight 0.4s ease-out" }}>
+                    <div
+                      className="w-full lg:w-[58%] lg:sticky z-10"
+                      style={{
+                        top: `${mapTopOffset}px`,
+                        height: `calc(100vh - ${mapTopOffset}px)`,
+                        minHeight: 420,
+                        animation: "propertyMapSlideInRight 0.4s ease-out",
+                      }}
+                    >
                       <PropertyMap
                         properties={currentProperties}
                         heightClassName="h-full"
@@ -786,7 +1026,12 @@ function PropertySearchSection() {
                         onHoverProperty={setHoveredPropertyId}
                         onSelectProperty={(id) => {
                           setHoveredPropertyId(id);
-                          document.getElementById(`property-card-${id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+                          document
+                            .getElementById(`property-card-${id}`)
+                            ?.scrollIntoView({
+                              behavior: "smooth",
+                              block: "center",
+                            });
                         }}
                       />
                     </div>
@@ -797,11 +1042,21 @@ function PropertySearchSection() {
               <div>
                 <div className="flex justify-between items-center mb-6 pt-4">
                   <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
-                    <img src="/logo/Abstract Design (1).png" alt="Icon" className="w-13 object-contain" />
+                    <img
+                      src="/logo/Abstract Design (1).png"
+                      alt="Icon"
+                      className="w-13 object-contain"
+                    />
                     <div className="flex justify-between items-center">
                       <div className="space-y-3">
-                        <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Discover properties around campuses</h1>
-                        <p className="text-gray-800 dark:text-gray-400 text-[14px]">Explore properties around your preferred campus and find convenient accommodation in locations that fit your needs.</p>
+                        <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
+                          Discover properties around campuses
+                        </h1>
+                        <p className="text-gray-800 dark:text-gray-400 text-[14px]">
+                          Explore properties around your preferred campus and
+                          find convenient accommodation in locations that fit
+                          your needs.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -809,15 +1064,25 @@ function PropertySearchSection() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                   {loading ? (
-                    [...Array(6)].map((_, i) => <PropertyCardSkeleton key={i} />)
+                    [...Array(6)].map((_, i) => (
+                      <PropertyCardSkeleton key={i} />
+                    ))
                   ) : currentProperties.length === 0 ? (
                     <div className="col-span-full text-center py-10">
-                      <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">No properties found</h3>
-                      <p className="text-gray-800 dark:text-gray-400 text-sm">Try adjusting your search or filters</p>
-                      <p className="text-gray-800 dark:text-gray-400 text-sm">Make sure your connection is stable</p>
+                      <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">
+                        No properties found
+                      </h3>
+                      <p className="text-gray-800 dark:text-gray-400 text-sm">
+                        Try adjusting your search or filters
+                      </p>
+                      <p className="text-gray-800 dark:text-gray-400 text-sm">
+                        Make sure your connection is stable
+                      </p>
                     </div>
                   ) : (
-                    currentProperties.map((item) => <PropertyCard key={item.id} property={item} />)
+                    currentProperties.map((item) => (
+                      <PropertyCard key={item.id} property={item} />
+                    ))
                   )}
                 </div>
               </div>
@@ -827,14 +1092,24 @@ function PropertySearchSection() {
           <hr className="my-4 border-gray-600/50" />
 
           <div className="flex justify-between items-center text-white">
-            <p className="text-sm text-black dark:text-white">Page {apiPage} of {totalApiPages}</p>
+            <p className="text-sm text-black dark:text-white">
+              Page {apiPage} of {totalApiPages}
+            </p>
 
             <div className="flex gap-4">
-              <button onClick={handlePrev} disabled={apiPage === 1} className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600">
+              <button
+                onClick={handlePrev}
+                disabled={apiPage === 1}
+                className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
+              >
                 <FiArrowLeft size={20} />
               </button>
 
-              <button onClick={handleNext} disabled={apiPage >= totalApiPages} className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600">
+              <button
+                onClick={handleNext}
+                disabled={apiPage >= totalApiPages}
+                className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
+              >
                 <FiArrowRight size={20} />
               </button>
             </div>
@@ -875,37 +1150,92 @@ function PropertySearchSection() {
         listingTypeOptions={listingTypeOptions}
       />
 
-      <section className="bg-gray-300 dark:bg-black/30 px-4 py-2 pt-4 pb-20" id="Portfolio">
+      <section
+        className="bg-gray-300 dark:bg-black/30 px-4 py-2 pt-4 pb-20"
+        id="Portfolio"
+      >
         <div>
           <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
-            <img src="/logo/Abstract Design (1).png" alt="Icon" className="w-13 object-contain" />
-            <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">Can't find your preference?</h1>
-            <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">Ready to take the first step toward your dream property? Fill out the form below, and our real estate wizards will work their magic to find your perfect match. Don't wait; let's embark on this exciting journey together.</p>
+            <img
+              src="/logo/Abstract Design (1).png"
+              alt="Icon"
+              className="w-13 object-contain"
+            />
+            <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
+              Can't find your preference?
+            </h1>
+            <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
+              Ready to take the first step toward your dream property? Fill out
+              the form below, and our real estate wizards will work their magic
+              to find your perfect match. Don't wait; let's embark on this
+              exciting journey together.
+            </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 border border-gray-700/40 rounded-3xl p-4">
+          <form
+            onSubmit={handleSubmit}
+            className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 border border-gray-700/40 rounded-3xl p-4"
+          >
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">Name</label>
-              <input type="text" placeholder="Enter Full Name" required value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+              <label className="text-gray-700 dark:text-gray-300 text-sm">
+                Name
+              </label>
+              <input
+                type="text"
+                placeholder="Enter Full Name"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+              />
             </div>
 
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">Email</label>
-              <input type="email" placeholder="Enter your Email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+              <label className="text-gray-700 dark:text-gray-300 text-sm">
+                Email
+              </label>
+              <input
+                type="email"
+                placeholder="Enter your Email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+              />
             </div>
 
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">Phone</label>
-              <input type="tel" placeholder="Enter Phone Number" required value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+              <label className="text-gray-700 dark:text-gray-300 text-sm">
+                Phone
+              </label>
+              <input
+                type="tel"
+                placeholder="Enter Phone Number"
+                required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+              />
             </div>
 
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">Preferred Location</label>
-              <input type="text" placeholder="Enter Prefered Location" required value={preferedLocation} onChange={(e) => setPreferedLocation(e.target.value)} className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+              <label className="text-gray-700 dark:text-gray-300 text-sm">
+                Preferred Location
+              </label>
+              <input
+                type="text"
+                placeholder="Enter Prefered Location"
+                required
+                value={preferedLocation}
+                onChange={(e) => setPreferedLocation(e.target.value)}
+                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+              />
             </div>
 
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Category</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                Category
+              </label>
               <CustomDropdown
                 placeholder="Category"
                 value={preferedCategory}
@@ -923,24 +1253,49 @@ function PropertySearchSection() {
                   { label: "Single Room", value: "Single Room (Shared)" },
                   { label: "Shared Room", value: "Shared Room" },
                   { label: "Land", value: "Land" },
-                  { label: "Uncompleted Building", value: "Uncompleted Building" },
+                  {
+                    label: "Uncompleted Building",
+                    value: "Uncompleted Building",
+                  },
                 ]}
                 onChange={(val) => setPreferedCategory(val)}
               />
             </div>
 
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">No of Bedrooms</label>
-              <input type="number||text" placeholder="Enter Number of Bedrooms" required min={1} value={bedroomsContact} onChange={(e) => setBedroomsContact(e.target.value)} className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70" />
+              <label className="text-gray-700 dark:text-gray-300 text-sm">
+                No of Bedrooms
+              </label>
+              <input
+                type="number||text"
+                placeholder="Enter Number of Bedrooms"
+                required
+                min={1}
+                value={bedroomsContact}
+                onChange={(e) => setBedroomsContact(e.target.value)}
+                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
+              />
             </div>
 
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Budget</label>
-              <CustomDropdown placeholder="Price Range" value={Budget} options={priceOptions.map((opt) => ({ label: opt.label, value: opt.label }))} onChange={(val) => setBudget(val)} />
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                Budget
+              </label>
+              <CustomDropdown
+                placeholder="Price Range"
+                value={Budget}
+                options={priceOptions.map((opt) => ({
+                  label: opt.label,
+                  value: opt.label,
+                }))}
+                onChange={(val) => setBudget(val)}
+              />
             </div>
 
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">Preferred Contact Method</label>
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                Preferred Contact Method
+              </label>
               <CustomDropdown
                 placeholder="Select Method"
                 value={preferredContact}
@@ -953,24 +1308,60 @@ function PropertySearchSection() {
             </div>
 
             <div className="sm:col-span-2 lg:col-span-4">
-              <label className="text-gray-700 dark:text-gray-300 text-sm">Describe What You Want</label>
-              <textarea placeholder="Enter your Description here.." rows={3} value={message} onChange={(e) => setMessage(e.target.value)} className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 resize-none" />
+              <label className="text-gray-700 dark:text-gray-300 text-sm">
+                Describe What You Want
+              </label>
+              <textarea
+                placeholder="Enter your Description here.."
+                rows={3}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 resize-none"
+              />
             </div>
 
             <div className="sm:col-span-2 flex items-center gap-3">
-              <input type="checkbox" className="mt-0.5" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} required />
+              <input
+                type="checkbox"
+                className="mt-0.5"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                required
+              />
               <p className="text-sm text-gray-700 dark:text-gray-300">
                 I agree with the{" "}
-                <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link>{" "}
+                <Link
+                  to="/terms"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[#703BF7] underline"
+                >
+                  Terms
+                </Link>{" "}
                 and{" "}
-                <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
+                <Link
+                  to="/privacy-policy"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[#703BF7] underline"
+                >
+                  Privacy Policy
+                </Link>
+                .
               </p>
             </div>
 
             <div className="sm:col-span-2 flex items-center justify-end">
               <button
                 type="submit"
-                disabled={!agreed || isSubmitting || !name.trim() || !email.trim() || !phone.trim() || !preferedLocation.trim()}
+                disabled={
+                  !agreed ||
+                  isSubmitting ||
+                  !name.trim() ||
+                  !email.trim() ||
+                  !phone.trim() ||
+                  !preferedLocation.trim()
+                }
                 className={`px-4 py-2 rounded-lg font-medium transition ${agreed && !isSubmitting && name.trim() && email.trim() && phone.trim() && preferedLocation.trim() ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" : "bg-gray-400 cursor-not-allowed text-gray-200"}`}
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
