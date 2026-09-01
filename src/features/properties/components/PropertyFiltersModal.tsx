@@ -4,21 +4,28 @@ import { FiMapPin } from "react-icons/fi";
 const MAX_BEDROOM_STEP = 7;
 
 interface PropertyFiltersModalProps {
-  mode: "general" | "student";
   isOpen: boolean;
   onClose: () => void;
   clearAllFilters: () => void;
   totalProperties: number;
 
   // Category filters
-  category: string;
-  setCategory: (val: string) => void;
+  category?: string;
+  setCategory?: (val: string) => void;
 
   // Location/Area filters
-  location: string;
-  setLocation: (val: string) => void;
+  state?: string;
+  setState?: (val: string) => void;
+  city?: string;
+  setCity?: (val: string) => void;
   area?: string;
   setArea?: (val: string) => void;
+  university?: string;
+  setUniversity?: (val: string) => void;
+
+  // Listing type filter
+  listingType?: string;
+  setListingType?: (val: string) => void;
 
   // General specific price and rooms
   minPriceInput?: string;
@@ -30,34 +37,30 @@ interface PropertyFiltersModalProps {
   sharedRoomOnly?: boolean;
   setSharedRoomOnly?: (val: boolean) => void;
 
-  // Student specific price and rooms
-  selectedUniversity?: string;
-  setUniversity?: (val: string) => void;
-  bedrooms?: string;
-  setBedrooms?: (val: string) => void;
-  selectedPriceLabel?: string;
-  setSelectedPriceLabel?: (val: string) => void;
-  setPriceRange?: (val: [number, number]) => void;
-
   // Data Options
   categories?: { label: string; value: string }[];
-  locationOptions?: { label: string; value: string }[];
+  stateOptions?: { label: string; value: string }[];
+  cityOptions?: { label: string; value: string }[];
   areaOptions?: { label: string; value: string }[];
   universityOptions?: { label: string; value: string }[];
+  listingTypeOptions?: { label: string; value: string }[];
 }
 
 export default function PropertyFiltersModal({
-  mode,
   isOpen,
   onClose,
   clearAllFilters,
   totalProperties,
   category,
   setCategory,
-  location,
-  setLocation,
+  state = "",
+  setState,
+  city = "",
+  setCity,
   area = "",
   setArea,
+  university = "",
+  setUniversity,
   minPriceInput = "",
   setMinPriceInput,
   maxPriceInput = "",
@@ -66,44 +69,15 @@ export default function PropertyFiltersModal({
   setBedroomCount,
   sharedRoomOnly = false,
   setSharedRoomOnly,
-  selectedUniversity = "",
-  setUniversity,
-  bedrooms = "",
-  setBedrooms,
-  selectedPriceLabel = "",
-  setSelectedPriceLabel,
-  setPriceRange,
+  listingType = "",
+  setListingType,
   categories = [],
-  locationOptions = [],
+  stateOptions = [],
+  cityOptions = [],
   areaOptions = [],
   universityOptions = [],
+  listingTypeOptions = [],
 }: PropertyFiltersModalProps) {
-  // Budget presets for student accommodation
-  const studentPriceOptions = [
-    { label: "Below ₦150k", range: [0, 150000] },
-    { label: "₦150k - ₦250k", range: [150000, 250000] },
-    { label: "₦250k - ₦350k", range: [250000, 350000] },
-    { label: "₦350k - ₦500k", range: [350000, 500000] },
-    { label: "Above ₦500k", range: [500000, 999999999] },
-  ];
-
-  // Category presets for student accommodation if not provided
-  const studentCategoryOptions = [
-    { label: "Self Contain", value: "Self Contain" },
-    { label: "Single Room", value: "Single Room" },
-    { label: "Mini Flat", value: "Mini Flat" },
-    { label: "Shared Room", value: "Shared Room" },
-    { label: "Flat", value: "Flat" },
-  ];
-
-  // Bedrooms presets for student accommodation
-  const studentBedroomOptions = [
-    { label: "1 Room", value: "1" },
-    { label: "2 Rooms", value: "2" },
-    { label: "3 Rooms", value: "3" },
-    { label: "Shared", value: "shared" },
-  ];
-
   return (
     <div
       className={`fixed inset-0 z-50 flex items-end sm:items-center justify-center transition-opacity duration-300 ${
@@ -138,16 +112,13 @@ export default function PropertyFiltersModal({
         </div>
 
         {/* body — scrollable */}
-        <div className="overflow-y-auto px-6 py-5">
-          {mode === "general" ? (
-            /* ==================== GENERAL PROPERTIES FILTERS ==================== */
-            <>
-              {/* Type of place */}
+        <div className="flex-1 overflow-auto px-6 py-5">
+              {/* Property type */}
               <div className="pb-6">
                 <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Property Type</h3>
                 <div className="flex gap-2 flex-wrap">
                   <button
-                    onClick={() => setCategory("")}
+                    onClick={() => setCategory?.("")}
                     className={`px-4 py-3 rounded-full border text-sm font-medium transition cursor-pointer ${
                       category === ""
                         ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
@@ -161,7 +132,7 @@ export default function PropertyFiltersModal({
                     .map((opt) => (
                       <button
                         key={opt.value}
-                        onClick={() => setCategory(opt.value)}
+                        onClick={() => setCategory?.(opt.value)}
                         className={`px-4 py-3 rounded-full border text-sm font-medium transition cursor-pointer ${
                           category === opt.value
                             ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
@@ -176,34 +147,91 @@ export default function PropertyFiltersModal({
 
               <hr className="border-gray-200 dark:border-gray-700" />
 
-              {/* Location */}
-              <div className="py-6">
+              {/* Location - State, City, Area */}
+              <div className="py-6" style={{ overflow: "visible" }}>
                 <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Location</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+                <div className="space-y-3" style={{ overflow: "visible" }}>
+                  <div style={{ overflow: "visible" }}>
                     <CustomDropdown
                       icon={<FiMapPin />}
-                      placeholder="Location"
-                      value={location}
-                      options={locationOptions}
+                      placeholder="State"
+                      value={state}
+                      options={stateOptions.length > 0 ? [{ label: "State", value: "" }, ...stateOptions] : [{ label: "State", value: "" }]}
                       onChange={(value) => {
-                        setLocation(value);
-                        if (setArea) setArea("");
+                        setState?.(value);
+                        setCity?.("");
+                        setArea?.("");
                       }}
                     />
                   </div>
-                  <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+                  <div style={{ overflow: "visible" }}>
                     <CustomDropdown
                       icon={<FiMapPin />}
-                      placeholder={location ? "Area" : "Choose Location First"}
+                      placeholder={state ? "City" : "Choose State First"}
+                      value={city}
+                      options={cityOptions.length > 0 ? [{ label: "City", value: "" }, ...cityOptions] : [{ label: "City", value: "" }]}
+                      disabled={!state}
+                      onChange={(value) => {
+                        setCity?.(value);
+                        setArea?.("");
+                      }}
+                    />
+                  </div>
+                  <div style={{ overflow: "visible" }}>
+                    <CustomDropdown
+                      icon={<FiMapPin />}
+                      placeholder={city ? "Area" : "Choose City First"}
                       value={area}
-                      options={areaOptions}
-                      disabled={!location}
+                      options={areaOptions.length > 0 ? [{ label: "Area", value: "" }, ...areaOptions] : [{ label: "Area", value: "" }]}
+                      disabled={!city}
                       onChange={(value) => {
-                        if (setArea) setArea(value);
+                        setArea?.(value);
                       }}
                     />
                   </div>
+                  <div style={{ overflow: "visible" }}>
+                    <CustomDropdown
+                      icon={<FiMapPin />}
+                      placeholder="University"
+                      value={university}
+                      options={universityOptions.length > 0 ? [{ label: "University", value: "" }, ...universityOptions] : [{ label: "University", value: "" }]}
+                      onChange={(value) => setUniversity?.(value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <hr className="border-gray-200 dark:border-gray-700" />
+
+              {/* Listing Type */}
+              <div className="py-6">
+                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Listing Type</h3>
+                <div className="flex gap-2 flex-wrap">
+                  <button
+                    onClick={() => setListingType?.("")}
+                    className={`px-4 py-3 rounded-full border text-sm font-medium transition cursor-pointer ${
+                      listingType === ""
+                        ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
+                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
+                    }`}
+                  >
+                    Any
+                  </button>
+                  {listingTypeOptions
+                    .filter((opt) => opt.value !== "")
+                    .map((opt) => (
+                      <button
+                        key={opt.value}
+                        onClick={() => setListingType?.(opt.value)}
+                        className={`px-4 py-3 rounded-full border text-sm font-medium transition cursor-pointer ${
+                          listingType === opt.value
+                            ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
+                            : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
                 </div>
               </div>
 
@@ -296,142 +324,6 @@ export default function PropertyFiltersModal({
                   </button>
                 </div>
               </div>
-            </>
-          ) : (
-            /* ==================== STUDENT PROPERTIES FILTERS ==================== */
-            <>
-              {/* University & Area */}
-              <div className="pb-6">
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">University</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
-                    <CustomDropdown
-                      icon={<FiMapPin />}
-                      placeholder="University"
-                      value={selectedUniversity}
-                      options={universityOptions}
-                      onChange={(value) => {
-                        setUniversity?.(value);
-                        setLocation("");
-                      }}
-                    />
-                  </div>
-                  <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
-                    <CustomDropdown
-                      icon={<FiMapPin />}
-                      placeholder={selectedUniversity ? "Area" : "Choose University First"}
-                      value={location}
-                      options={areaOptions}
-                      disabled={!selectedUniversity}
-                      onChange={setLocation}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <hr className="border-gray-200 dark:border-gray-700" />
-
-              {/* Type of place */}
-              <div className="py-6">
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Property Type</h3>
-                <div className="flex gap-2 flex-wrap">
-                  <button
-                    onClick={() => setCategory("")}
-                    className={`px-4 py-3 rounded-full border text-sm font-medium transition cursor-pointer ${
-                      category === ""
-                        ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
-                    }`}
-                  >
-                    Any
-                  </button>
-                  {studentCategoryOptions.map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setCategory(opt.value)}
-                      className={`px-4 py-3 rounded-full border text-sm font-medium transition cursor-pointer ${
-                        category === opt.value
-                          ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                          : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <hr className="border-gray-200 dark:border-gray-700" />
-
-              {/* Rooms */}
-              <div className="py-6">
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Rooms</h3>
-                <div className="flex gap-2 flex-wrap">
-                  <button
-                    onClick={() => setBedrooms?.("")}
-                    className={`px-4 py-3 rounded-full border text-sm font-medium transition cursor-pointer ${
-                      bedrooms === ""
-                        ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
-                    }`}
-                  >
-                    Any
-                  </button>
-                  {studentBedroomOptions.map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setBedrooms?.(opt.value)}
-                      className={`px-4 py-3 rounded-full border text-sm font-medium transition cursor-pointer ${
-                        bedrooms === opt.value
-                          ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                          : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <hr className="border-gray-200 dark:border-gray-700" />
-
-              {/* Budget */}
-              <div className="pt-6">
-                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Budget</h3>
-                <div className="flex gap-2 flex-wrap">
-                  <button
-                    onClick={() => {
-                      setSelectedPriceLabel?.("");
-                      setPriceRange?.([0, 999999999]);
-                    }}
-                    className={`px-4 py-3 rounded-full border text-sm font-medium transition cursor-pointer ${
-                      selectedPriceLabel === ""
-                        ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
-                    }`}
-                  >
-                    Any
-                  </button>
-                  {studentPriceOptions.map((opt) => (
-                    <button
-                      key={opt.label}
-                      onClick={() => {
-                        setSelectedPriceLabel?.(opt.label);
-                        setPriceRange?.(opt.range as [number, number]);
-                      }}
-                      className={`px-4 py-3 rounded-full border text-sm font-medium transition cursor-pointer ${
-                        selectedPriceLabel === opt.label
-                          ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                          : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
         </div>
 
         {/* footer */}

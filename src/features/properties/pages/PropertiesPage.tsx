@@ -3,6 +3,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import { usePropertyStore } from "../store/usePropertyStore";
+import { customFieldsAPI } from "../services/customFieldsAPI";
 import { FiArrowLeft, FiArrowRight, FiFilter } from "react-icons/fi";
 import PropertyCard from "../components/PropertyCard";
 import PropertyMap from "../components/PropertyMap";
@@ -35,16 +36,18 @@ function PropertySearchSection() {
     totalProperties,
     categories,
     fetchCategories,
-    fetchFilters,
-    filtersData,
   } = usePropertyStore();
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [location, setLocation] = useState("");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [area, setArea] = useState("");
+  const [university, setUniversity] = useState("");
   const [category, setCategory] = useState("");
   const [bedrooms, setBedrooms] = useState("");
-  const [area, setArea] = useState("");
+  const [listingType, setListingType] = useState("");
+  const [selectedPriceLabel, setSelectedPriceLabel] = useState("");
 
   const [preferedLocation, setPreferedLocation] = useState("");
   const [preferedCategory, setPreferedCategory] = useState("");
@@ -68,6 +71,11 @@ function PropertySearchSection() {
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(null);
   const [agreed, setAgreed] = useState(false);
+  const [listingTypes, setListingTypes] = useState<string[]>([]);
+  const [states, setStates] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [areas, setAreas] = useState<string[]>([]);
+  const [universities, setUniversities] = useState<string[]>([]);
   const cookieLoaded = useRef(false);
   const inquiryCookieKey = "rewaciti_property_inquiry";
 
@@ -277,8 +285,26 @@ function PropertySearchSection() {
 
   useEffect(() => {
     fetchCategories();
-    fetchFilters();
-  }, [fetchCategories, fetchFilters]);
+  }, [fetchCategories]);
+
+  // Fetch custom fields data from backend for state, city, area, and listing type
+  useEffect(() => {
+    const fetchCustomFields = async () => {
+      try {
+        const data = await customFieldsAPI.getFilterValues();
+        // Set states, cities, areas, universities, and listing types
+        setStates(data["location.state"] || []);
+        setCities(data["location.city_town"] || []);
+        setAreas(data["location.area"] || []);
+        setUniversities(data["location.nearest_institution_in_full"] || []);
+        setListingTypes(data.listing_type || []);
+      } catch (error) {
+        console.error("Failed to fetch custom fields:", error);
+      }
+    };
+
+    fetchCustomFields();
+  }, []);
 
   useEffect(() => {
     if (sharedRoomOnly) {
@@ -291,6 +317,19 @@ function PropertySearchSection() {
   }, [bedroomCount, sharedRoomOnly]);
 
   useEffect(() => {
+    if (bedrooms === "shared") {
+      setSharedRoomOnly(true);
+      setBedroomCount(0);
+    } else if (["1", "2", "3"].includes(bedrooms)) {
+      setBedroomCount(Number(bedrooms));
+      setSharedRoomOnly(false);
+    } else if (bedrooms === "") {
+      setBedroomCount(0);
+      setSharedRoomOnly(false);
+    }
+  }, [bedrooms]);
+
+  useEffect(() => {
     const min = minPriceInput.trim() === "" ? 0 : Math.max(0, Number(minPriceInput));
     const max = maxPriceInput.trim() === "" ? 999999999 : Math.max(0, Number(maxPriceInput));
 
@@ -300,16 +339,25 @@ function PropertySearchSection() {
   }, [minPriceInput, maxPriceInput]);
 
   useEffect(() => {
+    const isCategoryId = categories.some((option) => String(option.id) === String(category));
+
     fetchProperties(1, {
       search: searchTerm || undefined,
-      location: location || undefined,
-      area: area || undefined,
-      categoryId: category || undefined,
+      "customData.location.state": state || undefined,
+      "customData.location.city_town": city || undefined,
+      "customData.location.area": area || undefined,
+      "customData.location.nearest_institution_in_full": university || undefined,
+      ...(category
+        ? isCategoryId
+          ? { categoryId: category }
+          : { category }
+        : {}),
       "customData.bedrooms": bedrooms || undefined,
       minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
       maxPrice: priceRange[1] < 999999999 ? priceRange[1] : undefined,
+      "customData.listing_type": listingType || undefined,
     });
-  }, [searchTerm, category, bedrooms, area, priceRange, fetchProperties, location]);
+  }, [searchTerm, category, bedrooms, state, city, area, university, priceRange, fetchProperties, listingType, categories]);
 
   const totalApiPages = Math.max(1, Math.ceil(totalProperties / ITEMS_PER_PAGE));
   const currentProperties = properties;
@@ -326,46 +374,57 @@ function PropertySearchSection() {
     }
   };
 
-  const stateFilter = filtersData?.customFields?.find((f) => f.key === "location.state");
-  const cityFilter = filtersData?.customFields?.find((f) => f.key === "location.city_town");
-  const areaFilter = filtersData?.customFields?.find((f) => f.key === "location.area");
+  const stateOptions = states.length > 0 
+    ? states.map((s) => ({ label: s, value: s }))
+    : [];
+  const cityOptions = cities.length > 0
+    ? cities.map((c) => ({ label: c, value: c }))
+    : [];
+  const areaOptions = areas.length > 0
+    ? areas.map((a) => ({ label: a, value: a }))
+    : [];
+  const universityOptions = universities.length > 0
+    ? universities.map((u) => ({ label: u, value: u }))
+    : [];
 
   const categoryOptions = [
     { label: "Categories", value: "" },
     ...categories.map((category) => ({ label: category.name, value: category.id })),
   ];
 
-  const locationOptions = [
-    { label: "Location", value: "" },
-    ...(cityFilter?.options?.map((city: string, index: number) => ({
-      label: `${city}, ${stateFilter?.options?.[index] ?? ""}`,
-      value: `${city}, ${stateFilter?.options?.[index] ?? ""}`,
-    })) ?? []),
-  ];
-
-  const areaOptions = [
-    { label: "Areas", value: "" },
-    ...(areaFilter?.options?.map((area: string) => ({ label: area, value: area })) ?? []),
+  const listingTypeOptions = [
+    { label: "Listing Type", value: "" },
+    ...listingTypes.map((lt) => ({ label: lt, value: lt })),
   ];
 
   const activeFilterCount = [
-    location,
+    state,
+    city,
     area,
+    university,
     category,
     bedroomCount > 0 ? "x" : "",
     sharedRoomOnly ? "x" : "",
+    selectedPriceLabel,
     minPriceInput.trim() !== "" ? "x" : "",
     maxPriceInput.trim() !== "" ? "x" : "",
+    listingType,
   ].filter((v) => v !== "").length;
 
   const clearAllFilters = () => {
-    setLocation("");
+    setState("");
+    setCity("");
     setArea("");
+    setUniversity("");
     setCategory("");
     setBedroomCount(0);
     setSharedRoomOnly(false);
     setMinPriceInput("");
     setMaxPriceInput("");
+    setSelectedPriceLabel("");
+    setListingType("");
+    setPriceRange([0, 999999999]);
+    setBedrooms("");
   };
 
   return (
@@ -528,17 +587,20 @@ function PropertySearchSection() {
       </div>
 
       <PropertyFiltersModal
-        mode="general"
         isOpen={showFilters}
         onClose={() => setShowFilters(false)}
         clearAllFilters={clearAllFilters}
         totalProperties={totalProperties}
         category={category}
         setCategory={setCategory}
-        location={location}
-        setLocation={setLocation}
+        state={state}
+        setState={setState}
+        city={city}
+        setCity={setCity}
         area={area}
         setArea={setArea}
+        university={university}
+        setUniversity={setUniversity}
         minPriceInput={minPriceInput}
         setMinPriceInput={setMinPriceInput}
         maxPriceInput={maxPriceInput}
@@ -548,8 +610,13 @@ function PropertySearchSection() {
         sharedRoomOnly={sharedRoomOnly}
         setSharedRoomOnly={setSharedRoomOnly}
         categories={categoryOptions}
-        locationOptions={locationOptions}
+        stateOptions={stateOptions}
+        cityOptions={cityOptions}
         areaOptions={areaOptions}
+        universityOptions={universityOptions}
+        listingType={listingType}
+        setListingType={setListingType}
+        listingTypeOptions={listingTypeOptions}
       />
 
       <section className="bg-gray-300 dark:bg-black/30 px-4 py-2 pt-4 pb-20" id="Portfolio">

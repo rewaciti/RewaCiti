@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import { useEffect } from "react";
 import { Toaster } from "sonner";
 import { HelmetProvider } from "react-helmet-async";
@@ -14,7 +14,6 @@ import Properties from "../features/properties/pages/PropertiesPage";
 import PropertyDetails from "../features/properties/pages/PropertyDetailsPage";
 import Service from "./pages/Service";
 import Contact from "./pages/Contact";
-import StudentHousing from "../features/properties/pages/StudentAreaPage";
 import NotFound from "./pages/NotFound";
 import Terms from "./pages/Terms";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -82,7 +81,7 @@ function App() {
           <Route path="/properties/:slug" element={<PropertyDetails />} />
           <Route path="/Service" element={<Service />} />
           <Route path="/Contact" element={<Contact />} />
-          <Route path="/Studentarea" element={<StudentHousing />} />
+          <Route path="/Studentarea" element={<Navigate to="/properties" replace />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/blog" element={<BlogPage />} />

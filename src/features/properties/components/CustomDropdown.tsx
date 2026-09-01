@@ -79,6 +79,7 @@ export default function CustomDropdown({
             ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"
             : "opacity-0 scale-y-95 -translate-y-2 pointer-events-none"
         }`}
+        style={{ zIndex: 9999 }}
       >
         <div className="max-h-72 overflow-y-auto overflow-x-auto">
           {options.map((option) => (
