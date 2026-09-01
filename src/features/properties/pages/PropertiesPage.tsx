@@ -463,7 +463,7 @@ function PropertySearchSection() {
                     options={[{ label: "All Universities", value: "" }, ...universityOptions]}
                     onChange={setUniversity}
                     className="min-w-[105px] sm:min-w-[170px] md:min-w-[190px] lg:min-w-[220px]"
-                    buttonClassName="w-full h-8 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
                   />
                 </div>
 
@@ -474,7 +474,7 @@ function PropertySearchSection() {
                     options={[{ label: "All States", value: "" }, ...stateOptions]}
                     onChange={setState}
                     className="min-w-[95px] sm:min-w-[150px] md:min-w-[170px] lg:min-w-[200px]"
-                    buttonClassName="w-full h-8 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
                   />
                 </div>
 
@@ -485,7 +485,7 @@ function PropertySearchSection() {
                     options={[{ label: "All Cities", value: "" }, ...cityOptions]}
                     onChange={setCity}
                     className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]"
-                    buttonClassName="w-full h-8 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
                   />
                 </div>
 
@@ -496,7 +496,7 @@ function PropertySearchSection() {
                     options={[{ label: "All Areas", value: "" }, ...areaOptions]}
                     onChange={setArea}
                     className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]"
-                    buttonClassName="w-full h-8 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
+                    buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
                   />
                 </div>
               </div>
