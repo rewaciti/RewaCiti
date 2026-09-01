@@ -1,4 +1,11 @@
+import CustomDropdown from "./CustomDropdown";
+
 const MAX_BEDROOM_STEP = 7;
+
+interface DropdownOption {
+  label: string;
+  value: string;
+}
 
 interface PropertyFiltersModalProps {
   isOpen: boolean;
@@ -13,6 +20,20 @@ interface PropertyFiltersModalProps {
   // Listing type filter
   listingType?: string;
   setListingType?: (val: string) => void;
+
+  // Location filters
+  state?: string;
+  onStateChange?: (val: string) => void;
+  city?: string;
+  onCityChange?: (val: string) => void;
+  area?: string;
+  onAreaChange?: (val: string) => void;
+  university?: string;
+  onUniversityChange?: (val: string) => void;
+  stateOptions?: DropdownOption[];
+  cityOptions?: DropdownOption[];
+  areaOptions?: DropdownOption[];
+  universityOptions?: DropdownOption[];
 
   // General specific price and rooms
   minPriceInput?: string;
@@ -36,6 +57,18 @@ export default function PropertyFiltersModal({
   totalProperties,
   category,
   setCategory,
+  state = "",
+  onStateChange,
+  city = "",
+  onCityChange,
+  area = "",
+  onAreaChange,
+  university = "",
+  onUniversityChange,
+  stateOptions = [],
+  cityOptions = [],
+  areaOptions = [],
+  universityOptions = [],
   minPriceInput = "",
   setMinPriceInput,
   maxPriceInput = "",
@@ -84,8 +117,66 @@ export default function PropertyFiltersModal({
 
         {/* body — scrollable */}
         <div className="flex-1 overflow-auto px-6 py-5">
-              {/* Property type */}
+              {/* Location */}
               <div className="pb-6">
+                <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Location</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">University</label>
+                    <CustomDropdown
+                      placeholder="All Universities"
+                      value={university}
+                      options={[{ label: "All Universities", value: "" }, ...universityOptions]}
+                      onChange={(val) => onUniversityChange?.(val)}
+                      className="w-full"
+                      buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">State</label>
+                    <CustomDropdown
+                      placeholder="All States"
+                      value={state}
+                      options={[{ label: "All States", value: "" }, ...stateOptions]}
+                      onChange={(val) => onStateChange?.(val)}
+                      className="w-full"
+                      buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">City</label>
+                    <CustomDropdown
+                      placeholder={state ? "All Cities" : "Select State first"}
+                      value={city}
+                      options={[{ label: "All Cities", value: "" }, ...cityOptions]}
+                      onChange={(val) => onCityChange?.(val)}
+                      disabled={!state}
+                      className="w-full"
+                      buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">Area</label>
+                    <CustomDropdown
+                      placeholder={state ? "All Areas" : "Select State first"}
+                      value={area}
+                      options={[{ label: "All Areas", value: "" }, ...areaOptions]}
+                      onChange={(val) => onAreaChange?.(val)}
+                      disabled={!state}
+                      className="w-full"
+                      buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <hr className="border-gray-200 dark:border-gray-700" />
+
+              {/* Property type */}
+              <div className="py-6">
                 <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Property Type</h3>
                 <div className="flex gap-2 flex-wrap">
                   <button
