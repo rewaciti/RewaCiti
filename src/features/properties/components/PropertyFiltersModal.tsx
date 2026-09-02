@@ -105,7 +105,7 @@ export default function PropertyFiltersModal({
         }`}
       >
         {/* header */}
-        <div className="flex items-center justify-center relative px-5 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-center relative px-5 py-4 border-b border-gray-300 dark:border-gray-700">
           <h2 className="text-gray-900 dark:text-white font-semibold text-base">Filters</h2>
           <button
             onClick={onClose}
@@ -129,7 +129,7 @@ export default function PropertyFiltersModal({
                       options={[{ label: "All Universities", value: "" }, ...universityOptions]}
                       onChange={(val) => onUniversityChange?.(val)}
                       className="w-full"
-                      buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white text-sm"
+                      buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent text-gray-900 dark:text-white text-sm"
                     />
                   </div>
 
@@ -141,7 +141,7 @@ export default function PropertyFiltersModal({
                       options={[{ label: "All States", value: "" }, ...stateOptions]}
                       onChange={(val) => onStateChange?.(val)}
                       className="w-full"
-                      buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white text-sm"
+                      buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent text-gray-900 dark:text-white text-sm"
                     />
                   </div>
 
@@ -154,7 +154,7 @@ export default function PropertyFiltersModal({
                       onChange={(val) => onCityChange?.(val)}
                       disabled={!state}
                       className="w-full"
-                      buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white text-sm"
+                      buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent text-gray-900 dark:text-white text-sm"
                     />
                   </div>
 
@@ -167,13 +167,13 @@ export default function PropertyFiltersModal({
                       onChange={(val) => onAreaChange?.(val)}
                       disabled={!state}
                       className="w-full"
-                      buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white text-sm"
+                      buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent text-gray-900 dark:text-white text-sm"
                     />
                   </div>
                 </div>
               </div>
 
-              <hr className="border-gray-200 dark:border-gray-700" />
+              <hr className="border-gray-300 dark:border-gray-700" />
 
               {/* Property type */}
               <div className="py-6">
@@ -184,7 +184,7 @@ export default function PropertyFiltersModal({
                     className={`px-4 py-3 rounded-full border text-sm font-medium transition cursor-pointer ${
                       category === ""
                         ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
+                        : "border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
                     }`}
                   >
                     Any
@@ -198,7 +198,7 @@ export default function PropertyFiltersModal({
                         className={`px-4 py-3 rounded-full border text-sm font-medium transition cursor-pointer ${
                           category === opt.value
                             ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                            : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
+                            : "border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
                         }`}
                       >
                         {opt.label}
@@ -207,7 +207,7 @@ export default function PropertyFiltersModal({
                 </div>
               </div>
 
-              <hr className="border-gray-200 dark:border-gray-700" />
+              <hr className="border-gray-300 dark:border-gray-700" />
 
               {/* Listing Type */}
               <div className="py-6">
@@ -218,7 +218,7 @@ export default function PropertyFiltersModal({
                     className={`px-4 py-3 rounded-full border text-sm font-medium transition cursor-pointer ${
                       listingType === ""
                         ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
+                        : "border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
                     }`}
                   >
                     Any
@@ -232,7 +232,7 @@ export default function PropertyFiltersModal({
                         className={`px-4 py-3 rounded-full border text-sm font-medium transition cursor-pointer ${
                           listingType === opt.value
                             ? "border-black dark:border-white border-2 text-gray-900 dark:text-white"
-                            : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
+                            : "border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white"
                         }`}
                       >
                         {opt.label}
@@ -241,7 +241,7 @@ export default function PropertyFiltersModal({
                 </div>
               </div>
 
-              <hr className="border-gray-200 dark:border-gray-700" />
+              <hr className="border-gray-300 dark:border-gray-700" />
 
               {/* Price range */}
               <div className="py-6">
@@ -251,7 +251,7 @@ export default function PropertyFiltersModal({
                 <div className="flex items-center gap-4">
                   <div className="flex-1">
                     <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">Minimum</label>
-                    <div className="border border-gray-300 dark:border-gray-600 rounded-full px-4 py-3 flex items-center gap-1">
+                    <div className="border border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent rounded-full px-4 py-3 flex items-center gap-1">
                       <span className="text-gray-500 dark:text-gray-400 text-sm">₦</span>
                       <input
                         type="number"
@@ -269,7 +269,7 @@ export default function PropertyFiltersModal({
 
                   <div className="flex-1">
                     <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">Maximum</label>
-                    <div className="border border-gray-300 dark:border-gray-600 rounded-full px-4 py-3 flex items-center gap-1">
+                    <div className="border border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent rounded-full px-4 py-3 flex items-center gap-1">
                       <span className="text-gray-500 dark:text-gray-400 text-sm">₦</span>
                       <input
                         type="number"
@@ -285,19 +285,19 @@ export default function PropertyFiltersModal({
                 </div>
               </div>
 
-              <hr className="border-gray-200 dark:border-gray-700" />
+              <hr className="border-gray-300 dark:border-gray-700" />
 
               {/* Rooms and beds */}
               <div className="pt-6">
                 <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Rooms and beds</h3>
 
-                <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-800">
+                <div className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-800">
                   <span className="text-gray-900 dark:text-white text-sm">Bedrooms</span>
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => setBedroomCount?.(Math.max(0, bedroomCount - 1))}
                       disabled={bedroomCount === 0}
-                      className="w-8 h-8 rounded-full border border-gray-300 dark:border-gray-600 flex items-center justify-center text-gray-900 dark:text-white disabled:opacity-30 disabled:cursor-not-allowed hover:border-black dark:hover:border-white cursor-pointer"
+                      className="w-8 h-8 rounded-full border border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent flex items-center justify-center text-gray-900 dark:text-white disabled:opacity-30 disabled:cursor-not-allowed hover:border-black dark:hover:border-white cursor-pointer"
                     >
                       –
                     </button>
@@ -311,7 +311,7 @@ export default function PropertyFiltersModal({
                     <button
                       onClick={() => setBedroomCount?.(Math.min(MAX_BEDROOM_STEP, bedroomCount + 1))}
                       disabled={bedroomCount === MAX_BEDROOM_STEP}
-                      className="w-8 h-8 rounded-full border border-gray-300 dark:border-gray-600 flex items-center justify-center text-gray-900 dark:text-white disabled:opacity-30 disabled:cursor-not-allowed hover:border-black dark:hover:border-white cursor-pointer"
+                      className="w-8 h-8 rounded-full border border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent flex items-center justify-center text-gray-900 dark:text-white disabled:opacity-30 disabled:cursor-not-allowed hover:border-black dark:hover:border-white cursor-pointer"
                     >
                       +
                     </button>
@@ -333,7 +333,7 @@ export default function PropertyFiltersModal({
         </div>
 
         {/* footer */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-300 dark:border-gray-700">
           <button
             onClick={clearAllFilters}
             className="text-gray-900 dark:text-white underline text-sm font-medium cursor-pointer"

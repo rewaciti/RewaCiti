@@ -285,7 +285,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
     <Dialog.Root open={open} onOpenChange={onOpenChange} modal={false}>
       <Dialog.Portal>
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-4 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto center-modal-animate" aria-describedby="property-payment-description">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center mb-4">
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900">
               Pay for Property
             </Dialog.Title>
@@ -301,7 +301,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
 
           <p id="property-payment-description" className="sr-only">Complete your property payment securely using Paystack. All details are required for processing.</p>
 
-          <div className="mb-6 p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg">
+          <div className="mb-3 p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
             <h4 className="text-sm font-semibold dark:text-white text-gray-900 mb-2">Property Details</h4>
             <div className="space-y-1">
               <p className="text-sm dark:text-gray-300 text-gray-700">
@@ -318,7 +318,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
             </div>
           </div>
 
-          <div className="mb-6 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+          <div className="mb-3 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
             <h4 className="text-xs font-bold text-blue-500 uppercase mb-2 flex items-center gap-2">
               <FiInfo /> Safety Tips & Payment Info
             </h4>
@@ -332,7 +332,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {isAuthenticated && customer ? (
-              <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-2">
+              <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-2">
                 <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Billing Information</h4>
                 <div className="text-sm dark:text-gray-300 text-gray-700 space-y-1">
                   <p><span className="font-semibold">Name:</span> {fullName}</p>
@@ -440,7 +440,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
             <button
               type="submit"
               disabled={isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed}
-              className={`w-full font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50 ${isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed
+              className={`w-full font-medium py-3 rounded-md transition-colors mt-3 disabled:opacity-50 ${isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed
                 ? "bg-gray-400 cursor-not-allowed text-gray-200"
                 : "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
                 }`}

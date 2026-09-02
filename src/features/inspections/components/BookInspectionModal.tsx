@@ -327,7 +327,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                 </p>
               </div>
             ) : (
-              <div className="space-y-2 rounded-lg border border-gray-600/30 bg-gray-500/10 p-3">
+              <div className="space-y-1 rounded-lg border border-gray-600/30 bg-gray-500/10 p-2">
                 <div>
                   <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Full Name</label>
                   <input
@@ -361,14 +361,14 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               </div>
             )}
 
-            <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
+            <div className="p-2 bg-gray-500/10 border border-gray-600/30 rounded-lg">
               <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
                 A member of our team will contact you within{" "}
                 <span className="font-semibold text-[#703BF7]">24 hours</span> to confirm your property details and schedule a suitable viewing time.
               </p>
             </div>
 
-            <div className="p-3 bg-[#703BF7]/10 rounded-lg border border-[#703BF7]/30 space-y-2">
+            <div className="p-2 bg-[#703BF7]/10 rounded-lg border border-[#703BF7]/30 space-y-2">
               <div className="border-b border-[#703BF7]/20 pb-2 mb-2">
                 <h4 className="font-semibold dark:text-white text-gray-900">{property.name}</h4>
                 <p className="text-xs dark:text-gray-400 text-gray-600">{property.category} • {property.bedrooms} Bedrooms</p>

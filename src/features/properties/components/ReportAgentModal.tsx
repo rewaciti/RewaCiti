@@ -215,8 +215,8 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm center-modal-animate" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-4 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto center-modal-animate">
-          <div className="flex justify-between items-center mb-6">
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-3 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto center-modal-animate">
+          <div className="flex justify-between items-center mb-4">
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900 flex items-center gap-2">
               <FiAlertTriangle className="text-red-500" />
               Report Agent
@@ -232,7 +232,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
             </Dialog.Close>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3">
             {isAuthenticated && customer ? (
               <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-2">
                 <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">
@@ -256,7 +256,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="space-y-2 rounded-lg border border-gray-600/30 bg-gray-500/10 p-3">
+              <div className="space-y-2 rounded-lg border border-gray-600/30 bg-gray-500/10 p-2">
                 <div>
                   <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">
                     Full Name
@@ -372,7 +372,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                 !phone.trim() ||
                 !agreed
               }
-              className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50"
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-md transition-colors mt-3 disabled:opacity-50"
             >
               {isSubmitting ? "Submitting..." : "Submit Report"}
             </button>

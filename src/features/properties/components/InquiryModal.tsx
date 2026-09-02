@@ -18,8 +18,7 @@ interface InquiryModalProps {
 const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChange }) => {
   const { isAuthenticated, customer } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
@@ -33,8 +32,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
     if (savedInquiry) {
       try {
         const parsed = JSON.parse(savedInquiry);
-        setFirstName(parsed.firstName || "");
-        setLastName(parsed.lastName || "");
+        setFullName(parsed.fullName || "");
         setEmail(parsed.email || "");
         setPhone(parsed.phone || "");
         setMessage(parsed.message || "");
@@ -49,8 +47,10 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
         try {
           const profileData = await authAPI.getProfile();
           const latestPhone = profileData.phoneNumber || "";
-          setFirstName(customer?.firstName || "");
-          setLastName(customer?.lastName || "");
+          const nameFromCustomer = [customer?.firstName, customer?.lastName]
+            .filter(Boolean)
+            .join(" ");
+          setFullName(nameFromCustomer);
           setEmail(customer?.email || "");
           setPhone(latestPhone || customer?.phoneNumber || "");
 
@@ -77,8 +77,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
     }
 
     const payload = {
-      firstName,
-      lastName,
+      fullName,
       email,
       phone,
       message,
@@ -86,7 +85,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
     };
 
     setCookie(inquiryCookieKey, JSON.stringify(payload));
-  }, [firstName, lastName, email, phone, message, agreed]);
+  }, [fullName, email, phone, message, agreed]);
 
   const price = property.pricing.TotalCost ?? 0;
 
@@ -98,22 +97,22 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
       return;
     }
 
-    if (!firstName.trim() || !lastName.trim() || !email.trim() || !phone.trim()) {
+    if (!fullName.trim() || !email.trim() || !phone.trim()) {
       toast.error("Please enter your full name, email, and phone number to send a message.");
       return;
     }
 
     setIsSubmitting(true);
 
-    const fullName = `${firstName} ${lastName}`.trim();
+    const trimmedName = fullName.trim();
     const propertyUrl = window.location.href;
     const ownerId = property.createdBy?._id ?? property.createdBy?.id;
 
     const payload = {
       companyId: COMPANY_ID,
       pipelineId: "69b49c7541d35d158e336621",
-      title: `${fullName} interested in ${property.name} (₦${formatCurrency(price)})`,
-      name: fullName,
+      title: `${trimmedName} interested in ${property.name} (₦${formatCurrency(price)})`,
+      name: trimmedName,
       amount: price,
       email,
       phone,
@@ -154,15 +153,13 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
         </div>
       );
       // reset form
-      setFirstName("");
-      setLastName("");
+      setFullName("");
       setEmail("");
       setPhone("");
       setMessage("");
       setAgreed(false);
       setCookie(inquiryCookieKey, JSON.stringify({
-        firstName: "",
-        lastName: "",
+        fullName: "",
         email: "",
         phone: "",
         message: "",
@@ -193,110 +190,94 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
             </Dialog.Close>
           </div>
 
-          <p className="text-gray-800 dark:text-gray-400 text-sm mb-6">
-            Interested in this property? Fill out the form below, and our real estate experts will get back to you with more details.
-          </p>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="border border-gray-600/30 rounded-lg p-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">First Name</label>
+                <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Full Name</label>
                 <input
                   type="text"
-                  placeholder="Enter First Name"
+                  placeholder="Enter Full Name"
                   required
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
                   className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
                 />
               </div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Email</label>
+                  <input
+                    type="email"
+                    placeholder="Enter your Email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Phone</label>
+                  <input
+                    type="tel"
+                    placeholder="Enter Phone Number"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
+                  />
+                </div>
+              </div>
+
               <div>
-                <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Last Name</label>
+                <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Selected Property</label>
                 <input
                   type="text"
-                  placeholder="Enter Last Name"
-                  required
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Email</label>
-                <input
-                  type="email"
-                  placeholder="Enter your Email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
+                  value={`${property?.name}, ${property?.location?.area}, ${property?.location?.city_town}, ${property?.location?.state} state.`}
+                  readOnly
+                  className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
                 />
               </div>
 
               <div>
-                <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Phone</label>
-                <input
-                  type="tel"
-                  placeholder="Enter Phone Number"
+                <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Message</label>
+                <textarea
+                  rows={4}
+                  placeholder="Enter your Message here..."
                   required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
                 />
               </div>
-            </div>
 
-            <div>
-              <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Selected Property</label>
-              <input
-                type="text"
-                value={`${property?.name}, ${property?.location?.area}, ${property?.location?.city_town}, ${property?.location?.state} state.`}
-                readOnly
-                className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
-              />
-            </div>
+              <div className="flex items-center gap-3 font-medium">
+                <input
+                  type="checkbox"
+                  className="mt-0.5"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  required
+                />
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
+                </p>
+              </div>
 
-            <div>
-              <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Message</label>
-              <textarea
-                rows={4}
-                placeholder="Enter your Message here..."
-                required
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
-              />
-            </div>
-
-            <div className="flex items-center gap-3 font-medium">
-              <input
-                type="checkbox"
-                className="mt-0.5"
-                checked={agreed}
-                onChange={(e) => setAgreed(e.target.checked)}
-                required
-              />
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
-              </p>
-            </div>
-
-            <button
-              type="submit"
-              disabled={!agreed || isSubmitting || !firstName.trim() || !lastName.trim() || !email.trim() || !phone.trim()}
-              className={`w-full font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50 ${
-                agreed && !isSubmitting && firstName.trim() && lastName.trim() && email.trim() && phone.trim()
-                  ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
-                  : "bg-gray-400 cursor-not-allowed text-gray-200"
-              }`}
-            >
-              {isSubmitting ? "Sending..." : "Send Message"}
-            </button>
-          </form>
+              <button
+                type="submit"
+                disabled={!agreed || isSubmitting || !fullName.trim() || !email.trim() || !phone.trim()}
+                className={`w-full font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50 ${
+                  agreed && !isSubmitting && fullName.trim() && email.trim() && phone.trim()
+                    ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
+                    : "bg-gray-400 cursor-not-allowed text-gray-200"
+                }`}
+              >
+                {isSubmitting ? "Sending..." : "Send Message"}
+              </button>
+            </form>
+          </div>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
