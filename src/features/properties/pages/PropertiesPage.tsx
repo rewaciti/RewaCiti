@@ -764,7 +764,7 @@ function PropertySearchSection() {
           <div className="mt-3">
             {/* Small screens: explicit, scrollable Listing Type pills + toggle */}
             <div className="lg:hidden flex items-center gap-1.5">
-              <div className="flex-1 min-w-0 flex items-center gap-1.5 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex-1 min-w-0 flex items-center gap-1.5 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <button
                   onClick={() => setCategory("")}
                   className={`shrink-0 px-3 py-2 rounded-full border text-xs font-semibold transition ${
