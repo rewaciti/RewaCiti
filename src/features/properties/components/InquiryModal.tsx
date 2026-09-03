@@ -190,7 +190,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
             </Dialog.Close>
           </div>
 
-          <div className="border border-gray-600/30 rounded-lg p-4">
+          <div className="border border-gray-600/30 rounded-lg p-2">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Full Name</label>
