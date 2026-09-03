@@ -767,7 +767,7 @@ function PropertySearchSection() {
               <div className="flex-1 min-w-0 flex items-center gap-1.5 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <button
                   onClick={() => setCategory("")}
-                  className={`shrink-0 px-3 py-1.5 rounded-full border text-xs font-semibold transition ${
+                  className={`shrink-0 px-3 py-2 rounded-full border text-xs font-semibold transition ${
                     category === ""
                       ? "bg-[#703BF7] border-[#703BF7] text-white"
                       : "border-gray-400 dark:border-neutral-700 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-900"
@@ -782,7 +782,7 @@ function PropertySearchSection() {
                     <button
                       key={opt.value}
                       onClick={() => setCategory(opt.value)}
-                      className={`shrink-0 px-3 py-1.5 rounded-full border text-xs font-semibold transition whitespace-nowrap ${
+                      className={`shrink-0 px-3 py-2 rounded-full border text-xs font-semibold transition whitespace-nowrap ${
                         category === opt.value
                           ? "bg-[#703BF7] border-[#703BF7] text-white"
                           : "border-gray-400 dark:border-neutral-700 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-900"

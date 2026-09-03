@@ -53,7 +53,7 @@ const Navbar = () => {
     { name: "Home", path: "/" },
     { name: "Properties", path: "/properties" },
      { name: "Services", path: "/Service" },
-    { name: "Contact Us", path: "/Contact" },
+    { name: "Contact", path: "/Contact" },
   ];
 
   useEffect(() => {
