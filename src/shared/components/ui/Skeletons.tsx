@@ -87,7 +87,7 @@ export function PropertyDetailsSkeleton() {
         <section className="px-4 pb-10">
           <div className="p-2 border border-gray-600/30 rounded-xl">
             {/* Thumbnail Row */}
-            <div className="flex gap-2 overflow-x-auto mb-6 p-1 border border-gray-600/30 rounded-xl bg-black/20">
+            <div className="flex gap-2 overflow-x-auto mb-3 p-1 border border-gray-600/30 rounded-xl bg-black/20">
               {[...Array(5)].map((_, i) => (
                 <Skeleton key={i} className="h-30 w-30 md:flex-1 rounded-lg" />
               ))}
