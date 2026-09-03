@@ -241,7 +241,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
               </div>
 
               <div>
-                <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Message</label>
+                <label className="text-sm mb-0.5 block text-gray-700 dark:text-gray-300 font-medium">Message</label>
                 <textarea
                   rows={4}
                   placeholder="Enter your Message here..."
@@ -252,7 +252,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
                 />
               </div>
 
-              <div className="flex items-center gap-3 font-medium">
+              <div className="flex items-center gap-1 font-medium">
                 <input
                   type="checkbox"
                   className="mt-0.5"
@@ -268,7 +268,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
               <button
                 type="submit"
                 disabled={!agreed || isSubmitting || !fullName.trim() || !email.trim() || !phone.trim()}
-                className={`w-full font-medium py-3 rounded-md transition-colors mt-4 disabled:opacity-50 ${
+                className={`w-full font-medium py-3 rounded-md transition-colors mt-3 disabled:opacity-50 ${
                   agreed && !isSubmitting && fullName.trim() && email.trim() && phone.trim()
                     ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
                     : "bg-gray-400 cursor-not-allowed text-gray-200"
