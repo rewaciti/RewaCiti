@@ -179,7 +179,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/60 z-50 backdrop-blur-xs dialog-overlay-animate" />
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-lg dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-3 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto center-modal-animate">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center mb-4">
             <Dialog.Title className="text-2xl font-semibold dark:text-white text-gray-900">
               Inquire About This Property
             </Dialog.Title>
@@ -191,7 +191,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
           </div>
 
           <div className="border border-gray-600/30 rounded-lg p-2">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-2">
               <div>
                 <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Full Name</label>
                 <input
