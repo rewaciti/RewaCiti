@@ -37,7 +37,7 @@ function Home() {
         <title> RewaCiti | Best Real Estate platform in Ile-Ife </title>
         <meta
           name="description"
-          content="RewaCiti is your number one platform for finding the best properties, student housing, and tourism guides in Ile-Ife and across Osun State, Nigeria."
+          content="RewaCiti is your number one platform for finding the best properties, rentals, and real estate services in Ile-Ife and across Osun State, Nigeria."
         />
         <meta
           property="og:title"
@@ -45,7 +45,7 @@ function Home() {
         />
         <meta
           property="og:description"
-          content="Find the best real estate listings, student accommodation, and cultural insights in Ile-Ife and Osun State."
+          content="Find the best real estate listings, rentals, and property services in Ile-Ife and Osun State."
         />
         <meta
           property="og:image"
@@ -96,14 +96,14 @@ function Home() {
           </p>
 
           <div className="flex space-x-4">
-            <Link to="/Studentarea">
-              <button className="bg-[#703BF7] hover:bg-[#9677df] text-white px-4 py-2 rounded text-sm cursor-pointer">
-                Campus Areas
-              </button>
-            </Link>
             <Link to="/Properties">
               <button className="bg-[#703BF7] hover:bg-[#9677df] text-white px-4 py-2 rounded text-sm cursor-pointer">
                 Browse Properties
+              </button>
+            </Link>
+            <Link to="/Service">
+              <button className="bg-[#703BF7] hover:bg-[#9677df] text-white px-4 py-2 rounded text-sm cursor-pointer">
+                Our Services
               </button>
             </Link>
           </div>
