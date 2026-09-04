@@ -1,6 +1,5 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import { usePropertyStore } from "../store/usePropertyStore";
 import {
@@ -8,26 +7,21 @@ import {
   type CustomFieldsResponse,
   type LocationHierarchyItem,
 } from "../services/customFieldsAPI";
-import { FiArrowLeft, FiArrowRight, FiFilter } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiFilter, FiUsers, FiSliders } from "react-icons/fi";
 import PropertyCard from "../components/PropertyCard";
 import PropertyMap from "../components/PropertyMap";
 import Footer from "../../../shared/components/Layout/Footer";
 import useScrollToHash from "../../../shared/hooks/useScrollToHash";
-import { Link } from "react-router";
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
-import { toast } from "sonner";
 import CustomDropdown from "../../../features/properties/components/CustomDropdown.tsx";
 import PropertyFiltersModal from "../components/PropertyFiltersModal";
-import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
-import { authAPI } from "../../auth/services/authAPI";
-import { getCookie, setCookie } from "../../../shared/lib/utils";
+import PreferenceModal from "../components/PreferenceModal";
+import RoommateModal from "../components/RoommateModal";
 
 // Height of Navbar (top-16 = 4rem) — used to offset the sticky map panel
 const NAVBAR_HEIGHT_PX = 64;
 
 function PropertySearchSection() {
-  const { isAuthenticated, customer } = useAuthStore();
-
   useScrollToHash();
   const {
     properties,
@@ -53,17 +47,6 @@ function PropertySearchSection() {
   const [listingType, setListingType] = useState("");
   const [selectedPriceLabel, setSelectedPriceLabel] = useState("");
 
-  const [preferedLocation, setPreferedLocation] = useState("");
-  const [preferedCategory, setPreferedCategory] = useState("");
-  const [Budget, setBudget] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [bedroomsContact, setBedroomsContact] = useState("");
-  const [preferredContact, setPreferredContact] = useState("");
-  const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [minPriceInput, setMinPriceInput] = useState("");
   const [maxPriceInput, setMaxPriceInput] = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([
@@ -74,14 +57,13 @@ function PropertySearchSection() {
   const [sharedRoomOnly, setSharedRoomOnly] = useState(false);
 
   const [showFilters, setShowFilters] = useState(false);
+  const [isPreferenceModalOpen, setIsPreferenceModalOpen] = useState(false);
+  const [isRoommateModalOpen, setIsRoommateModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(
     null,
   );
-  const [agreed, setAgreed] = useState(false);
   const [listingTypes, setListingTypes] = useState<string[]>([]);
-  const cookieLoaded = useRef(false);
-  const inquiryCookieKey = "rewaciti_property_inquiry";
 
   // Measures the sticky top bar's real height so the map panel sits exactly below it
   const topBarRef = useRef<HTMLDivElement>(null);
@@ -101,92 +83,6 @@ function PropertySearchSection() {
       cancelAnimationFrame(raf);
     };
   }, []);
-
-  useEffect(() => {
-    const savedInquiry = getCookie(inquiryCookieKey);
-    if (savedInquiry) {
-      try {
-        const parsed = JSON.parse(savedInquiry);
-        setName(parsed.name || "");
-        setEmail(parsed.email || "");
-        setPhone(parsed.phone || "");
-        setPreferedLocation(parsed.preferedLocation || "");
-        setPreferedCategory(parsed.preferedCategory || "");
-        setBedroomsContact(parsed.bedroomsContact || "");
-        setBudget(parsed.budget || "");
-        setPreferredContact(parsed.preferredContact || "");
-        setMessage(parsed.message || "");
-        setAgreed(parsed.agreed || false);
-      } catch {
-        // ignore malformed cookie data
-      }
-    }
-
-    if (!isAuthenticated || !customer) {
-      return;
-    }
-
-    const populateProfileDetails = async () => {
-      try {
-        const profileData = await authAPI.getProfile();
-        const latestPhone = profileData.phoneNumber || "";
-        setName(
-          customer.firstName && customer.lastName
-            ? `${customer.firstName} ${customer.lastName}`.trim()
-            : customer.firstName || "",
-        );
-        setEmail(customer.email || "");
-        setPhone(latestPhone || customer.phoneNumber || "");
-
-        const currentCustomer = useAuthStore.getState().customer;
-        if (currentCustomer && currentCustomer.phoneNumber !== latestPhone) {
-          useAuthStore
-            .getState()
-            .setCustomer({ ...currentCustomer, phoneNumber: latestPhone });
-        }
-      } catch (error) {
-        console.error(
-          "Failed to fetch profile for properties page form:",
-          error,
-        );
-      }
-    };
-
-    populateProfileDetails();
-  }, [isAuthenticated, customer]);
-
-  useEffect(() => {
-    if (!cookieLoaded.current) {
-      cookieLoaded.current = true;
-      return;
-    }
-
-    const payload = {
-      name,
-      email,
-      phone,
-      preferedLocation,
-      preferedCategory,
-      bedroomsContact,
-      budget: Budget,
-      preferredContact,
-      message,
-      agreed,
-    };
-
-    setCookie(inquiryCookieKey, JSON.stringify(payload));
-  }, [
-    name,
-    email,
-    phone,
-    preferedLocation,
-    preferedCategory,
-    bedroomsContact,
-    Budget,
-    preferredContact,
-    message,
-    agreed,
-  ]);
 
   // Lock body scroll while the filters modal is open (iOS-safe: freezes scroll position)
   useEffect(() => {
@@ -217,98 +113,6 @@ function PropertySearchSection() {
       document.body.style.width = "";
     };
   }, [showFilters]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!agreed) {
-      toast.error("Please agree to the Terms and Privacy Policy");
-      return;
-    }
-
-    if (
-      !name.trim() ||
-      !email.trim() ||
-      !phone.trim() ||
-      !preferedLocation.trim()
-    ) {
-      toast.error(
-        "Please enter your name, email, phone number, and preferred location to continue.",
-      );
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    const payload = {
-      companyId: COMPANY_ID,
-      pipelineId: "69b49c7541d35d158e336621",
-      title: `Property Inquiry from ${name}`,
-      name: name,
-      email: email,
-      phone: phone,
-      address: preferedLocation,
-      note: message || "No additional details added",
-      customData: [
-        { label: "Budget", value: Budget },
-        { label: "Category", value: preferedCategory },
-        { label: "Preferred Location", value: preferedLocation },
-        { label: "Bedrooms", value: bedroomsContact },
-        { label: "Preferred Contact", value: preferredContact },
-      ],
-    };
-
-    try {
-      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
-      toast.success(
-        <div className="whitespace-pre-wrap">
-          Message sent successfully!
-          <br />A member of our team will get back to you soon.
-        </div>,
-      );
-      setName("");
-      setEmail("");
-      setPhone("");
-      setPreferedLocation("");
-      setPreferedCategory("");
-      setBedroomsContact("");
-      setBudget("");
-      setPreferredContact("");
-      setMessage("");
-      setAgreed(false);
-      setCookie(
-        inquiryCookieKey,
-        JSON.stringify({
-          name: "",
-          email: "",
-          phone: "",
-          preferedLocation: "",
-          preferedCategory: "",
-          bedroomsContact: "",
-          budget: "",
-          preferredContact: "",
-          message: "",
-          agreed: false,
-        }),
-      );
-    } catch (error) {
-      console.error("Error sending message:", error);
-      toast.error("Failed to send message. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const priceOptions = [
-    { label: "All Price", range: [0, 999999999] },
-    { label: "Below ₦100k", range: [0, 100000] },
-    { label: "₦100k - ₦200k", range: [100001, 200000] },
-    { label: "₦200k - ₦300k", range: [200001, 300000] },
-    { label: "₦300k - ₦400k", range: [300001, 400000] },
-    { label: "₦400k - ₦500k", range: [400001, 500000] },
-    { label: "₦500k - ₦700k", range: [500001, 700000] },
-    { label: "₦700k - ₦1M", range: [700001, 1000000] },
-    { label: "Above ₦1M", range: [1000001, 999999999] },
-  ];
 
   useEffect(() => {
     fetchCategories();
@@ -767,11 +571,10 @@ function PropertySearchSection() {
               <div className="flex-1 min-w-0 flex items-center gap-1.5 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <button
                   onClick={() => setCategory("")}
-                  className={`shrink-0 px-3 py-2 rounded-full border text-xs font-semibold transition ${
-                    category === ""
-                      ? "bg-[#703BF7] border-[#703BF7] text-white"
-                      : "border-gray-400 dark:border-neutral-700 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-900"
-                  }`}
+                  className={`shrink-0 px-3 py-2 rounded-full border text-xs font-semibold transition ${category === ""
+                    ? "bg-[#703BF7] border-[#703BF7] text-white"
+                    : "border-gray-400 dark:border-neutral-700 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-900"
+                    }`}
                 >
                   All
                 </button>
@@ -782,11 +585,10 @@ function PropertySearchSection() {
                     <button
                       key={opt.value}
                       onClick={() => setCategory(opt.value)}
-                      className={`shrink-0 px-3 py-2 rounded-full border text-xs font-semibold transition whitespace-nowrap ${
-                        category === opt.value
-                          ? "bg-[#703BF7] border-[#703BF7] text-white"
-                          : "border-gray-400 dark:border-neutral-700 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-900"
-                      }`}
+                      className={`shrink-0 px-3 py-2 rounded-full border text-xs font-semibold transition whitespace-nowrap ${category === opt.value
+                        ? "bg-[#703BF7] border-[#703BF7] text-white"
+                        : "border-gray-400 dark:border-neutral-700 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-900"
+                        }`}
                     >
                       {opt.label}
                     </button>
@@ -1077,9 +879,27 @@ function PropertySearchSection() {
                       <p className="text-gray-800 dark:text-gray-400 text-sm">
                         Try adjusting your search or filters
                       </p>
-                      <p className="text-gray-800 dark:text-gray-400 text-sm">
+                      <p className="text-gray-800 dark:text-gray-400 text-sm mb-4">
                         Make sure your connection is stable
                       </p>
+                      <div className="flex flex-wrap items-center justify-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setIsPreferenceModalOpen(true)}
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#703BF7] hover:bg-[#5c2fe0] text-white text-sm font-medium transition cursor-pointer"
+                        >
+                          <FiSliders size={16} />
+                          <span>Tell Us Your Preference</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsRoommateModalOpen(true)}
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 text-gray-900 dark:text-white text-sm font-medium transition cursor-pointer border border-gray-300 dark:border-neutral-700"
+                        >
+                          <FiUsers size={16} />
+                          <span>Find a Roommate</span>
+                        </button>
+                      </div>
                     </div>
                   ) : (
                     currentProperties.map((item) => (
@@ -1152,224 +972,77 @@ function PropertySearchSection() {
         listingTypeOptions={listingTypeOptions}
       />
 
+      <PreferenceModal
+        open={isPreferenceModalOpen}
+        onOpenChange={setIsPreferenceModalOpen}
+        categories={categoryOptions.filter((c) => c.value !== "")}
+      />
+
+      <RoommateModal
+        open={isRoommateModalOpen}
+        onOpenChange={setIsRoommateModalOpen}
+        universityOptions={universityOptions}
+      />
+
       <section
-        className="bg-gray-300 dark:bg-black/30 px-4 py-2 pt-4 pb-20"
+        className="bg-gray-300 dark:bg-black/30 px-4 py-8"
         id="Portfolio"
       >
-        <div>
-          <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
-            <img
-              src="/logo/Abstract Design (1).png"
-              alt="Icon"
-              className="w-13 object-contain"
-            />
-            <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-              Can't find your preference?
-            </h1>
-            <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-              Ready to take the first step toward your dream property? Fill out
-              the form below, and our real estate wizards will work their magic
-              to find your perfect match. Don't wait; let's embark on this
-              exciting journey together.
-            </p>
-          </div>
-
-          <form
-            onSubmit={handleSubmit}
-            className="grid dark:bg-[#1A1A1A] bg-white grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 border border-gray-700/40 rounded-3xl p-4"
-          >
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">
-                Name
-              </label>
-              <input
-                type="text"
-                placeholder="Enter Full Name"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
-              />
-            </div>
-
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="Enter your Email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
-              />
-            </div>
-
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">
-                Phone
-              </label>
-              <input
-                type="tel"
-                placeholder="Enter Phone Number"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
-              />
-            </div>
-
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">
-                Preferred Location
-              </label>
-              <input
-                type="text"
-                placeholder="Enter Prefered Location"
-                required
-                value={preferedLocation}
-                onChange={(e) => setPreferedLocation(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
-              />
-            </div>
-
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                Category
-              </label>
-              <CustomDropdown
-                placeholder="Category"
-                value={preferedCategory}
-                options={[
-                  { label: "None here", value: "none" },
-                  { label: "Self Contain", value: "Self Contain" },
-                  { label: "Studio Apartment", value: "Studio Apartment" },
-                  { label: "Mini Flat", value: "Mini Flat" },
-                  { label: "Flat", value: "Flat" },
-                  { label: "Bungalow", value: "Bungalow" },
-                  { label: "Duplex", value: "Duplex" },
-                  { label: "Mansion", value: "Mansion" },
-                  { label: "Villa", value: "Villa" },
-                  { label: "Smart Home", value: "Smart Home" },
-                  { label: "Single Room", value: "Single Room (Shared)" },
-                  { label: "Shared Room", value: "Shared Room" },
-                  { label: "Land", value: "Land" },
-                  {
-                    label: "Uncompleted Building",
-                    value: "Uncompleted Building",
-                  },
-                ]}
-                onChange={(val) => setPreferedCategory(val)}
-              />
-            </div>
-
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm">
-                No of Bedrooms
-              </label>
-              <input
-                type="number||text"
-                placeholder="Enter Number of Bedrooms"
-                required
-                min={1}
-                value={bedroomsContact}
-                onChange={(e) => setBedroomsContact(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70"
-              />
-            </div>
-
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                Budget
-              </label>
-              <CustomDropdown
-                placeholder="Price Range"
-                value={Budget}
-                options={priceOptions.map((opt) => ({
-                  label: opt.label,
-                  value: opt.label,
-                }))}
-                onChange={(val) => setBudget(val)}
-              />
-            </div>
-
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                Preferred Contact Method
-              </label>
-              <CustomDropdown
-                placeholder="Select Method"
-                value={preferredContact}
-                options={[
-                  { label: "Phone", value: "Phone" },
-                  { label: "Email", value: "Email" },
-                ]}
-                onChange={(val) => setPreferredContact(val)}
-              />
-            </div>
-
-            <div className="sm:col-span-2 lg:col-span-4">
-              <label className="text-gray-700 dark:text-gray-300 text-sm">
-                Describe What You Want
-              </label>
-              <textarea
-                placeholder="Enter your Description here.."
-                rows={3}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="w-full mt-1 p-3 rounded-lg dark:bg-black/70 bg-gray-300 text-gray-900 dark:text-white border border-gray-600/70 focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 resize-none"
-              />
-            </div>
-
-            <div className="sm:col-span-2 flex items-center gap-3">
-              <input
-                type="checkbox"
-                className="mt-0.5"
-                checked={agreed}
-                onChange={(e) => setAgreed(e.target.checked)}
-                required
-              />
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                I agree with the{" "}
-                <Link
-                  to="/terms"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[#703BF7] underline"
-                >
-                  Terms
-                </Link>{" "}
-                and{" "}
-                <Link
-                  to="/privacy-policy"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[#703BF7] underline"
-                >
-                  Privacy Policy
-                </Link>
-                .
+        <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-2">
+          {/* Card 1: Property Preference */}
+          <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-6 md:p-8 shadow-lg flex flex-col justify-between space-y-6">
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-2xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
+                <FiSliders size={24} />
+              </div>
+              <h2 className="text-gray-900 dark:text-white text-2xl md:text-3xl font-bold">
+                Can't find your preference?
+              </h2>
+              <p className="text-gray-700 dark:text-gray-400 text-sm md:text-base leading-relaxed">
+                Ready to take the first step toward your dream property? Fill out
+                the preference form, and our real estate wizards will work their
+                magic to find your perfect match.
               </p>
             </div>
 
-            <div className="sm:col-span-2 flex items-center justify-end">
+            <div>
               <button
-                type="submit"
-                disabled={
-                  !agreed ||
-                  isSubmitting ||
-                  !name.trim() ||
-                  !email.trim() ||
-                  !phone.trim() ||
-                  !preferedLocation.trim()
-                }
-                className={`px-4 py-2 rounded-lg font-medium transition ${agreed && !isSubmitting && name.trim() && email.trim() && phone.trim() && preferedLocation.trim() ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white" : "bg-gray-400 cursor-not-allowed text-gray-200"}`}
+                type="button"
+                onClick={() => setIsPreferenceModalOpen(true)}
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold transition-all shadow-lg hover:shadow-purple-500/25 cursor-pointer flex items-center justify-center gap-2 "
               >
-                {isSubmitting ? "Sending..." : "Send Message"}
+                <FiSliders size={18} />
+                <span>Submit Your Preference</span>
               </button>
             </div>
-          </form>
+          </div>
+
+          {/* Card 2: Looking for a Roommate */}
+          <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-6 md:p-8 shadow-lg flex flex-col justify-between space-y-6">
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-2xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
+                <FiUsers size={24} />
+              </div>
+              <h2 className="text-gray-900 dark:text-white text-2xl md:text-3xl font-bold">
+                Looking for a Roommate?
+              </h2>
+              <p className="text-gray-700 dark:text-gray-400 text-sm md:text-base leading-relaxed">
+                Want to split rent or find flatmates near your campus or preferred area?
+                Submit your roommate request and let us connect you with your match.
+              </p>
+            </div>
+
+            <div>
+              <button
+                type="button"
+                onClick={() => setIsRoommateModalOpen(true)}
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 border border-gray-700/40"
+              >
+                <FiUsers size={18} />
+                <span>Find a Roommate</span>
+              </button>
+            </div>
+          </div>
         </div>
       </section>
       <section className="bg-gray-300 dark:bg-black/30">

@@ -429,7 +429,7 @@ function PropertyDetails() {
             </h1>
             <p className="dark:text-gray-400 text-gray-600 ">
               The property you're looking for is no more more available or there
-              is a poor internet connection, please explore other properties ar
+              is a poor internet connection, please explore other properties or
               check your internet connection.
             </p>
             <Link to="/Properties">
@@ -451,23 +451,23 @@ function PropertyDetails() {
                   <a
                     href={
                       property?.geo_location?.lat !== 0 &&
-                      property?.geo_location?.lat !== null &&
-                      property?.geo_location?.lng !== 0 &&
-                      property?.geo_location?.lng !== null
+                        property?.geo_location?.lat !== null &&
+                        property?.geo_location?.lng !== 0 &&
+                        property?.geo_location?.lng !== null
                         ? `https://www.google.com/maps/search/?api=1&query=${property.geo_location.lat},${property.geo_location.lng}`
                         : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                            property
-                              ? [
-                                  property.location.area,
-                                  property.location.city_town ||
-                                    property.location.city,
-                                  property.location.state,
-                                ]
-                                  .filter(Boolean)
-                                  .join(", ") +
-                                  (property.location.state ? " state." : "")
-                              : "",
-                          )}`
+                          property
+                            ? [
+                              property.location.area,
+                              property.location.city_town ||
+                              property.location.city,
+                              property.location.state,
+                            ]
+                              .filter(Boolean)
+                              .join(", ") +
+                            (property.location.state ? " state." : "")
+                            : "",
+                        )}`
                     }
                     target="_blank"
                     rel="noopener noreferrer"
@@ -484,7 +484,7 @@ function PropertyDetails() {
                         ]
                           .filter(Boolean)
                           .join(", ") +
-                          (property.location.state ? " state." : "")}
+                        (property.location.state ? " state." : "")}
                     </span>
                   </a>
                 </div>
@@ -514,9 +514,8 @@ function PropertyDetails() {
                     className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white w-9 h-9 rounded-full transition-all flex items-center justify-center cursor-pointer shadow-sm"
                   >
                     <FiHeart
-                      className={`text-lg transition-all ${
-                        isShortlisted ? "fill-current text-[#703BF7]" : ""
-                      }`}
+                      className={`text-lg transition-all ${isShortlisted ? "fill-current text-[#703BF7]" : ""
+                        }`}
                     />
                   </button>
                 </div>
@@ -579,11 +578,10 @@ function PropertyDetails() {
                     key={index}
                     src={img}
                     onClick={() => setCurrentIndex(index)}
-                    className={`h-30 w-30 md:w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-lg cursor-pointer border ${
-                      index === currentIndex
-                        ? "border-[#703BF7]"
-                        : "border-gray-600/30"
-                    }`}
+                    className={`h-30 w-30 md:w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-lg cursor-pointer border ${index === currentIndex
+                      ? "border-[#703BF7]"
+                      : "border-gray-600/30"
+                      }`}
                   />
                 ))}
               </div>
@@ -615,15 +613,13 @@ function PropertyDetails() {
                         <img
                           src={img}
                           onLoad={(e) => handleImageLoad(index, e)}
-                          className={`w-full dark:bg-[#1A1A1A] bg-gray-200 rounded-xl ${
-                            orientation === "portrait"
-                              ? "object-contain"
-                              : "object-cover"
-                          } ${
-                            step === 1
+                          className={`w-full dark:bg-[#1A1A1A] bg-gray-200 rounded-xl ${orientation === "portrait"
+                            ? "object-contain"
+                            : "object-cover"
+                            } ${step === 1
                               ? "h-[55vh] sm:h-[65vh] lg:h-[70vh]"
                               : "h-[45vh] sm:h-[55vh] lg:h-[70vh]"
-                          }`}
+                            }`}
                           alt={`Property image ${index + 1}`}
                         />
 
@@ -653,11 +649,10 @@ function PropertyDetails() {
                       {images.map((_, idx) => (
                         <span
                           key={idx}
-                          className={`w-3 h-0.5 border-t-3 ${
-                            idx === currentIndex
-                              ? "border-[#703BF7]"
-                              : "border-gray-400 border-t"
-                          }`}
+                          className={`w-3 h-0.5 border-t-3 ${idx === currentIndex
+                            ? "border-[#703BF7]"
+                            : "border-gray-400 border-t"
+                            }`}
                         />
                       ))}
                     </div>
@@ -807,16 +802,16 @@ function PropertyDetails() {
 
                   <div className="relative w-full h-[70vh] aspect-video rounded-xl overflow-hidden border border-gray-600/30 ">
                     {property.videoUrl.includes("youtube.com") ||
-                    property.videoUrl.includes("youtu.be") ? (
+                      property.videoUrl.includes("youtu.be") ? (
                       <iframe
                         src={
                           property.videoUrl.includes("watch?v=")
                             ? property.videoUrl.replace("watch?v=", "embed/")
                             : property.videoUrl.includes("youtu.be/")
                               ? property.videoUrl.replace(
-                                  "youtu.be/",
-                                  "youtube.com/embed/",
-                                )
+                                "youtu.be/",
+                                "youtube.com/embed/",
+                              )
                               : property.videoUrl
                         }
                         title="Property Video Tour"
@@ -936,7 +931,7 @@ function PropertyDetails() {
             </div>
 
             {(property?.keyFeatures && property.keyFeatures.length > 0) ||
-            (property?.specialNotes && property.specialNotes.length > 0) ? (
+              (property?.specialNotes && property.specialNotes.length > 0) ? (
               <div className="flex-1 px-4 py-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl h-fit space-y-6">
                 {property?.keyFeatures && property.keyFeatures.length > 0 && (
                   <div>
@@ -1021,13 +1016,13 @@ function PropertyDetails() {
                   </div>
                   {(totalRelatedProperties > RELATED_ITEMS_PER_PAGE ||
                     showAllRelated) && (
-                    <button
-                      onClick={() => setShowAllRelated(!showAllRelated)}
-                      className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center shrink-0 hidden md:block"
-                    >
-                      {showAllRelated ? "Show Less" : "View All"}
-                    </button>
-                  )}
+                      <button
+                        onClick={() => setShowAllRelated(!showAllRelated)}
+                        className="text-[#703BF7] border border-[#703BF7] px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center shrink-0 hidden md:block"
+                      >
+                        {showAllRelated ? "Show Less" : "View All"}
+                      </button>
+                    )}
                 </div>
                 <p className="text-gray-800 dark:text-gray-400">
                   {sameAgentOnly
@@ -1039,11 +1034,11 @@ function PropertyDetails() {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                 {relatedPropertiesLoading
                   ? Array.from({ length: 3 }).map((_, index) => (
-                      <PropertyCardSkeleton key={index} />
-                    ))
+                    <PropertyCardSkeleton key={index} />
+                  ))
                   : currentRelatedProperties.map((p) => (
-                      <PropertyCard key={p.id} property={p} />
-                    ))}
+                    <PropertyCard key={p.id} property={p} />
+                  ))}
               </div>
 
               {!relatedPropertiesLoading &&
@@ -1111,11 +1106,10 @@ function PropertyDetails() {
         <Footer />
       </div>
 
-      {/* Actions Bottom Bar (Airbnb style) */}
+      {/* Actions Bottom Bar*/}
       <div
-        className={`fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-[#1A1A1A]/90 backdrop-blur-md border-t border-gray-300/30 dark:border-gray-800/80 pt-2 pb-2 px-4 shadow-[0_-8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_-8px_30px_rgb(0,0,0,0.3)] transition-transform duration-300 ease-in-out ${
-          showActionBar ? "translate-y-0" : "translate-y-full"
-        }`}
+        className={`fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-[#1A1A1A]/90 backdrop-blur-md border-t border-gray-300/30 dark:border-gray-800/80 pt-2 pb-2 px-4 shadow-[0_-8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_-8px_30px_rgb(0,0,0,0.3)] transition-transform duration-300 ease-in-out ${showActionBar ? "translate-y-0" : "translate-y-full"
+          }`}
       >
         <div className="max-w-6xl mx-auto">
           {/* Price / Duration / Visitation Fee summary */}
