@@ -53,13 +53,10 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
         setMessage(parsed.message || "");
         setAgreed(parsed.agreed || false);
       } catch {
-        // ignore malformed cookie data
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Populate from authenticated profile only when the modal opens while logged in.
   useEffect(() => {
     if (!(open && isAuthenticated)) return;
 

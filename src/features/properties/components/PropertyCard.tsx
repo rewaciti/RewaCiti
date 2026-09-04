@@ -42,9 +42,6 @@ function PropertyCard({ property }: PropertyCardProps) {
 
   const hasMultipleImages = images.length > 1;
 
-  // Sliding window of dots: always shows at most DOTS_PER_GROUP dots,
-  // and the window shifts by one as currentIndex moves past its edges,
-  // instead of jumping in fixed blocks of 4.
   const windowSize = Math.min(DOTS_PER_GROUP, images.length);
   const windowStart = Math.max(
     0,
@@ -94,8 +91,7 @@ function PropertyCard({ property }: PropertyCardProps) {
     const touch = e.touches[0];
     const deltaX = touch.clientX - touchStartRef.current.x;
     const deltaY = touch.clientY - touchStartRef.current.y;
-    // Only treat as a swipe once horizontal movement clearly dominates,
-    // so vertical page-scrolling on mobile still works normally.
+
     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
       isSwipingRef.current = true;
     }

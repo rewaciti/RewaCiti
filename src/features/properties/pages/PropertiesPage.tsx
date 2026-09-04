@@ -1005,6 +1005,26 @@ function PropertySearchSection() {
         className="bg-gray-300 dark:bg-black/30 px-4 py-8"
         id="Portfolio"
       >
+        <div className="mb-6 space-y-3">
+          <img
+            src="/logo/Abstract Design (1).png"
+            alt="Icon"
+            className="w-13 object-contain"
+            loading="lazy"
+            decoding="async"
+          />
+          <div className="flex justify-between items-center">
+            <div className="space-y-2">
+              <h2 className="text-gray-900 dark:text-white md:text-4xl text-3xl font-semibold">
+                Tailored Real Estate Services
+              </h2>
+              <p className="text-gray-800 dark:text-gray-400 text-[14px]">
+                Explore specialized solutions designed to meet your housing needs — from submitting custom preferences and co-renting to listing your properties.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
           {/* Card 1: Property Preference */}
           <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-4 md:p-5 shadow-lg flex flex-col justify-between space-y-4">
@@ -1013,14 +1033,14 @@ function PropertySearchSection() {
                 <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
                   <FiSliders size={18} />
                 </div>
-                <h2 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
+                <h3 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
                   Can't find preference?
-                </h2>
+                </h3>
               </div>
               <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
                 Ready to take the first step toward your dream property? Fill out
-                the preference form, and our real estate wizards will work their
-                magic to find your perfect match.
+                the preference form, and our real estate experts will work to
+                find your perfect match.
               </p>
             </div>
 
@@ -1043,12 +1063,12 @@ function PropertySearchSection() {
                 <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
                   <FiUsers size={18} />
                 </div>
-                <h2 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
+                <h3 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
                   Looking to Co-Rent?
-                </h2>
+                </h3>
               </div>
               <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
-                Want to split rent and share verified properties near your campus or preferred area?
+                Want to split rent and share verified properties in your preferred area?
                 Submit your co-rent request and let us connect you with compatible co-tenants.
               </p>
             </div>
@@ -1072,12 +1092,12 @@ function PropertySearchSection() {
                 <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
                   <FiHome size={18} />
                 </div>
-                <h2 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
+                <h3 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
                   Have a property to list?
-                </h2>
+                </h3>
               </div>
               <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
-                Are you a landlord, property owner, or agent? Reach thousands of verified tenants, students, and buyers by listing your property on RewaCiti.
+                Are you a landlord, property owner, or agent? Reach thousands of verified tenants, professionals, and buyers by listing your property on RewaCiti.
               </p>
             </div>
 

@@ -232,22 +232,6 @@ function Footer() {
                   Portfolio
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/Studentarea#StudentCategories"
-                  className="hover:text-[#703BF7] text-black dark:text-white cursor-pointer dark:hover:text-[#703BF7]"
-                >
-                  Student Categories
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/Studentarea#StudentPortfolio"
-                  className="hover:text-[#703BF7] text-black dark:text-white cursor-pointer dark:hover:text-[#703BF7]"
-                >
-                  Student Portfolio
-                </Link>
-              </li>
             </ul>
             <hr className="my-4 dark:border-gray-400/30 border-gray-900/30 md:hidden" />
 
