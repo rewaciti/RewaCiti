@@ -95,7 +95,6 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
         // ignore malformed cookie
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Populate from authenticated profile only when the modal opens while logged in.
