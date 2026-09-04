@@ -26,7 +26,7 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
   open,
   onOpenChange,
 }) => {
-  const { isAuthenticated, customer } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [name, setName] = useState("");
@@ -53,10 +53,12 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
         setMessage(parsed.message || "");
         setAgreed(parsed.agreed || false);
       } catch {
+        // ignore malformed cookie data
       }
     }
   }, []);
 
+  // Populate from authenticated profile only when the modal opens while logged in.
   useEffect(() => {
     if (!(open && isAuthenticated)) return;
 
@@ -64,14 +66,15 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
       try {
         const profileData = await authAPI.getProfile();
         const latestPhone = profileData.phoneNumber || "";
-        const nameFromCustomer = [customer?.firstName, customer?.lastName]
+        const currentCustomer = useAuthStore.getState().customer;
+
+        const nameFromCustomer = [currentCustomer?.firstName, currentCustomer?.lastName]
           .filter(Boolean)
           .join(" ");
         setName(nameFromCustomer);
-        setEmail(customer?.email || "");
-        setPhone(latestPhone || customer?.phoneNumber || "");
+        setEmail(currentCustomer?.email || "");
+        setPhone(latestPhone || currentCustomer?.phoneNumber || "");
 
-        const currentCustomer = useAuthStore.getState().customer;
         if (currentCustomer && currentCustomer.phoneNumber !== latestPhone) {
           useAuthStore.getState().setCustomer({
             ...currentCustomer,
@@ -289,7 +292,7 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
               />
             </div>
 
-            <div className="sm:col-span-2 flex items-center gap-3">
+            <div className="sm:col-span-2 flex items-center gap-1">
               <input
                 type="checkbox"
                 className="mt-0.5"

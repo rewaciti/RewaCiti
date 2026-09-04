@@ -55,7 +55,7 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
   onOpenChange,
   universityOptions = [],
 }) => {
-  const { isAuthenticated, customer } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [name, setName] = useState("");
@@ -105,14 +105,15 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
       try {
         const profileData = await authAPI.getProfile();
         const latestPhone = profileData.phoneNumber || "";
-        const nameFromCustomer = [customer?.firstName, customer?.lastName]
+        const currentCustomer = useAuthStore.getState().customer;
+
+        const nameFromCustomer = [currentCustomer?.firstName, currentCustomer?.lastName]
           .filter(Boolean)
           .join(" ");
         setName(nameFromCustomer);
-        setEmail(customer?.email || "");
-        setPhone(latestPhone || customer?.phoneNumber || "");
+        setEmail(currentCustomer?.email || "");
+        setPhone(latestPhone || currentCustomer?.phoneNumber || "");
 
-        const currentCustomer = useAuthStore.getState().customer;
         if (currentCustomer && currentCustomer.phoneNumber !== latestPhone) {
           useAuthStore.getState().setCustomer({
             ...currentCustomer,
@@ -439,7 +440,7 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
               />
             </div>
 
-            <div className="sm:col-span-2 flex items-center gap-3">
+            <div className="sm:col-span-2 flex items-center gap-1">
               <input
                 type="checkbox"
                 className="mt-0.5"
