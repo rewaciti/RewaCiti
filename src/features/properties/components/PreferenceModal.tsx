@@ -44,11 +44,6 @@ const DEFAULT_PRICE_OPTIONS = [
   { label: "Above ₦1M", value: "Above ₦1M" },
 ];
 
-const CONTACT_METHOD_OPTIONS = [
-  { label: "Phone", value: "Phone" },
-  { label: "Email", value: "Email" },
-];
-
 const PreferenceModal: React.FC<PreferenceModalProps> = ({
   open,
   onOpenChange,
@@ -63,8 +58,8 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
   const [preferedLocation, setPreferedLocation] = useState("");
   const [preferedCategory, setPreferedCategory] = useState("");
   const [bedroomsContact, setBedroomsContact] = useState("");
+  const [bathroomsContact, setBathroomsContact] = useState("");
   const [budget, setBudget] = useState("");
-  const [preferredContact, setPreferredContact] = useState("");
   const [message, setMessage] = useState("");
   const [agreed, setAgreed] = useState(false);
 
@@ -82,8 +77,8 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
         setPreferedLocation(parsed.preferedLocation || "");
         setPreferedCategory(parsed.preferedCategory || "");
         setBedroomsContact(parsed.bedroomsContact || "");
+        setBathroomsContact(parsed.bathroomsContact || "");
         setBudget(parsed.budget || "");
-        setPreferredContact(parsed.preferredContact || "");
         setMessage(parsed.message || "");
         setAgreed(parsed.agreed || false);
       } catch {
@@ -132,8 +127,8 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
       preferedLocation,
       preferedCategory,
       bedroomsContact,
+      bathroomsContact,
       budget,
-      preferredContact,
       message,
       agreed,
     };
@@ -146,8 +141,8 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
     preferedLocation,
     preferedCategory,
     bedroomsContact,
+    bathroomsContact,
     budget,
-    preferredContact,
     message,
     agreed,
   ]);
@@ -177,7 +172,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
     const payload = {
       companyId: COMPANY_ID,
       pipelineId: "69b49c7541d35d158e336621",
-      title: `Property Inquiry from ${name.trim()}`,
+      title: `Property Preference from ${name.trim()}`,
       name: name.trim(),
       email: email.trim(),
       phone: phone.trim(),
@@ -188,7 +183,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
         { label: "Category", value: preferedCategory },
         { label: "Preferred Location", value: preferedLocation.trim() },
         { label: "Bedrooms", value: bedroomsContact },
-        { label: "Preferred Contact", value: preferredContact },
+        { label: "Bathrooms", value: bathroomsContact },
       ],
     };
 
@@ -206,8 +201,8 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
       setPreferedLocation("");
       setPreferedCategory("");
       setBedroomsContact("");
+      setBathroomsContact("");
       setBudget("");
-      setPreferredContact("");
       setMessage("");
       setAgreed(false);
       setCookie(
@@ -219,8 +214,8 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
           preferedLocation: "",
           preferedCategory: "",
           bedroomsContact: "",
+          bathroomsContact: "",
           budget: "",
-          preferredContact: "",
           message: "",
           agreed: false,
         })
@@ -373,14 +368,14 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
 
               <div>
                 <label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5 block">
-                  Preferred Contact Method
+                  No of Bathrooms
                 </label>
-                <CustomDropdown
-                  placeholder="Select Method"
-                  value={preferredContact}
-                  options={CONTACT_METHOD_OPTIONS}
-                  onChange={(val) => setPreferredContact(val)}
-                  buttonClassName="w-full h-10.5 px-3.5 flex items-center justify-between rounded-lg bg-gray-100 dark:bg-black/70 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 text-sm focus:border-[#703BF7]"
+                <input
+                  type="text"
+                  placeholder="e.g. 1 or 2"
+                  value={bathroomsContact}
+                  onChange={(e) => setBathroomsContact(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-gray-100 dark:bg-black/70 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:border-[#703BF7] text-sm dark:placeholder-gray-500 placeholder-gray-400"
                 />
               </div>
             </div>
@@ -434,11 +429,10 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
               <button
                 type="submit"
                 disabled={!isFormValid}
-                className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-medium text-sm transition shadow-md ${
-                  isFormValid
+                className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-medium text-sm transition shadow-md ${isFormValid
                     ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer active:scale-[0.99]"
                     : "bg-gray-300 dark:bg-gray-800 text-gray-500 cursor-not-allowed"
-                }`}
+                  }`}
               >
                 {isSubmitting ? (
                   <>

@@ -9,7 +9,7 @@ import { authAPI } from "../../auth/services/authAPI";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
 import CustomDropdown from "./CustomDropdown";
 
-interface RoommateModalProps {
+interface CoRentModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   universityOptions?: { label: string; value: string }[];
@@ -50,7 +50,7 @@ const TIMELINE_OPTIONS = [
   { label: "Next Semester / Session", value: "Next Semester / Session" },
 ];
 
-const RoommateModal: React.FC<RoommateModalProps> = ({
+const CoRentModal: React.FC<CoRentModalProps> = ({
   open,
   onOpenChange,
   universityOptions = [],
@@ -64,18 +64,18 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
   const [institution, setInstitution] = useState("");
   const [preferedLocation, setPreferedLocation] = useState("");
   const [gender, setGender] = useState("");
-  const [preferredRoommateGender, setPreferredRoommateGender] = useState("Any");
+  const [preferredPartnerGender, setPreferredPartnerGender] = useState("Any");
   const [roomType, setRoomType] = useState("");
   const [budget, setBudget] = useState("");
   const [moveInTimeline, setMoveInTimeline] = useState("");
   const [message, setMessage] = useState("");
   const [agreed, setAgreed] = useState(false);
 
-  const roommateCookieKey = "rewaciti_roommate_request";
+  const coRentCookieKey = "rewaciti_corent_request";
   const cookieLoaded = useRef(false);
 
   useEffect(() => {
-    const savedData = getCookie(roommateCookieKey);
+    const savedData = getCookie(coRentCookieKey);
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData);
@@ -85,7 +85,7 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
         setInstitution(parsed.institution || "");
         setPreferedLocation(parsed.preferedLocation || "");
         setGender(parsed.gender || "");
-        setPreferredRoommateGender(parsed.preferredRoommateGender || "Any");
+        setPreferredPartnerGender(parsed.preferredPartnerGender || "Any");
         setRoomType(parsed.roomType || "");
         setBudget(parsed.budget || "");
         setMoveInTimeline(parsed.moveInTimeline || "");
@@ -116,7 +116,7 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
             });
           }
         } catch (error) {
-          console.error("Failed to fetch profile for roommate form:", error);
+          console.error("Failed to fetch profile for co-rent form:", error);
         }
       };
 
@@ -137,7 +137,7 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
       institution,
       preferedLocation,
       gender,
-      preferredRoommateGender,
+      preferredPartnerGender,
       roomType,
       budget,
       moveInTimeline,
@@ -145,7 +145,7 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
       agreed,
     };
 
-    setCookie(roommateCookieKey, JSON.stringify(payload));
+    setCookie(coRentCookieKey, JSON.stringify(payload));
   }, [
     name,
     email,
@@ -153,7 +153,7 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
     institution,
     preferedLocation,
     gender,
-    preferredRoommateGender,
+    preferredPartnerGender,
     roomType,
     budget,
     moveInTimeline,
@@ -179,19 +179,19 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
     const payload = {
       companyId: COMPANY_ID,
       pipelineId: "69b49c7541d35d158e336621",
-      title: `Roommate Request: ${name.trim()} (${gender || "Unspecified"} looking for ${preferredRoommateGender}) - ${preferedLocation.trim()}`,
+      title: `Co-Rent Request: ${name.trim()} (${gender || "Unspecified"} looking for ${preferredPartnerGender}) - ${preferedLocation.trim()}`,
       name: name.trim(),
       email: email.trim(),
       phone: phone.trim(),
       address: preferedLocation.trim(),
-      note: message || "Looking for a roommate match",
+      note: message || "Looking to co-rent a property",
       customData: [
-        { label: "Request Type", value: "Roommate Match" },
+        { label: "Request Type", value: "Co-Rent Match" },
         { label: "Institution / Campus", value: institution || "N/A" },
         { label: "Preferred Location", value: preferedLocation.trim() },
         { label: "Applicant Gender", value: gender || "Not specified" },
-        { label: "Preferred Roommate Gender", value: preferredRoommateGender },
-        { label: "Room Type", value: roomType || "Any" },
+        { label: "Preferred Co-Rent Partner Gender", value: preferredPartnerGender },
+        { label: "Room / Share Type", value: roomType || "Any" },
         { label: "Budget per Person", value: budget || "Flexible" },
         { label: "Move-in Timeline", value: moveInTimeline || "Flexible" },
         { label: "Lifestyle / About Applicant", value: message || "No extra notes" },
@@ -202,8 +202,8 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
       toast.success(
         <div className="whitespace-pre-wrap">
-          Roommate request submitted successfully!
-          <br />Our team will connect you with matching roommates soon.
+          Co-rent request submitted successfully!
+          <br />Our team will connect you with matching co-tenants soon.
         </div>
       );
       setName("");
@@ -212,14 +212,14 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
       setInstitution("");
       setPreferedLocation("");
       setGender("");
-      setPreferredRoommateGender("Any");
+      setPreferredPartnerGender("Any");
       setRoomType("");
       setBudget("");
       setMoveInTimeline("");
       setMessage("");
       setAgreed(false);
       setCookie(
-        roommateCookieKey,
+        coRentCookieKey,
         JSON.stringify({
           name: "",
           email: "",
@@ -227,7 +227,7 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
           institution: "",
           preferedLocation: "",
           gender: "",
-          preferredRoommateGender: "Any",
+          preferredPartnerGender: "Any",
           roomType: "",
           budget: "",
           moveInTimeline: "",
@@ -237,8 +237,8 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
       );
       onOpenChange(false);
     } catch (error) {
-      console.error("Error submitting roommate request:", error);
-      toast.error("Failed to submit roommate request. Please try again.");
+      console.error("Error submitting co-rent request:", error);
+      toast.error("Failed to submit co-rent request. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -265,11 +265,11 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
                   <FiUsers size={22} />
                 </div>
                 <Dialog.Title className="text-xl md:text-2xl font-bold dark:text-white text-gray-900">
-                  Looking for a Roommate?
+                  Looking to Co-Rent?
                 </Dialog.Title>
               </div>
               <Dialog.Description className="text-xs md:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                Connect with compatible students or co-tenants to split rent, find verified shared spaces, and live comfortably.
+                Connect with compatible students or co-tenants to split rent, share verified properties, and save costs.
               </Dialog.Description>
             </div>
             <Dialog.Close asChild>
@@ -383,13 +383,13 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
 
               <div>
                 <label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5 block">
-                  Preferred Roommate Gender
+                  Preferred Partner Gender
                 </label>
                 <CustomDropdown
                   placeholder="Preferred Gender"
-                  value={preferredRoommateGender}
+                  value={preferredPartnerGender}
                   options={PREFERRED_GENDER_OPTIONS}
-                  onChange={(val) => setPreferredRoommateGender(val)}
+                  onChange={(val) => setPreferredPartnerGender(val)}
                   buttonClassName="w-full h-10.5 px-3.5 flex items-center justify-between rounded-lg bg-gray-100 dark:bg-black/70 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 text-sm focus:border-[#703BF7]"
                 />
               </div>
@@ -436,10 +436,10 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
 
             <div>
               <label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5 block">
-                About You & Lifestyle Preferences
+                About You & Co-Renting Preferences
               </label>
               <textarea
-                placeholder="Tell us about yourself (e.g., student level, course of study, sleep schedule, study habits, quiet/social, cleanliness preferences)..."
+                placeholder="Tell us about yourself (e.g., student level, occupation, sleep schedule, study habits, quiet/social, cleanliness preferences)..."
                 rows={3}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
@@ -449,14 +449,14 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
 
             <div className="flex items-start gap-2.5 pt-1">
               <input
-                id="modal-agree-roommate-terms"
+                id="modal-agree-corent-terms"
                 type="checkbox"
                 className="mt-1 h-4 w-4 rounded border-gray-400 accent-[#703BF7] cursor-pointer"
                 checked={agreed}
                 onChange={(e) => setAgreed(e.target.checked)}
                 required
               />
-              <label htmlFor="modal-agree-roommate-terms" className="text-xs md:text-sm text-gray-700 dark:text-gray-300 cursor-pointer leading-snug">
+              <label htmlFor="modal-agree-corent-terms" className="text-xs md:text-sm text-gray-700 dark:text-gray-300 cursor-pointer leading-snug">
                 I agree with the{" "}
                 <Link
                   to="/terms"
@@ -483,11 +483,10 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
               <button
                 type="submit"
                 disabled={!isFormValid}
-                className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-medium text-sm transition shadow-md ${
-                  isFormValid
-                    ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer active:scale-[0.99]"
-                    : "bg-gray-300 dark:bg-gray-800 text-gray-500 cursor-not-allowed"
-                }`}
+                className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-medium text-sm transition shadow-md ${isFormValid
+                  ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer active:scale-[0.99]"
+                  : "bg-gray-300 dark:bg-gray-800 text-gray-500 cursor-not-allowed"
+                  }`}
               >
                 {isSubmitting ? (
                   <>
@@ -500,7 +499,7 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
                 ) : (
                   <>
                     <FiUserCheck size={16} />
-                    <span>Find My Roommate Match</span>
+                    <span>Find Co-Rent Partners</span>
                   </>
                 )}
               </button>
@@ -512,4 +511,4 @@ const RoommateModal: React.FC<RoommateModalProps> = ({
   );
 };
 
-export default RoommateModal;
+export default CoRentModal;

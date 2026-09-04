@@ -16,7 +16,7 @@ import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
 import CustomDropdown from "../../../features/properties/components/CustomDropdown.tsx";
 import PropertyFiltersModal from "../components/PropertyFiltersModal";
 import PreferenceModal from "../components/PreferenceModal";
-import RoommateModal from "../components/RoommateModal";
+import CoRentModal from "../components/CoRentModal";
 
 // Height of Navbar (top-16 = 4rem) — used to offset the sticky map panel
 const NAVBAR_HEIGHT_PX = 64;
@@ -58,7 +58,7 @@ function PropertySearchSection() {
 
   const [showFilters, setShowFilters] = useState(false);
   const [isPreferenceModalOpen, setIsPreferenceModalOpen] = useState(false);
-  const [isRoommateModalOpen, setIsRoommateModalOpen] = useState(false);
+  const [isCoRentModalOpen, setIsCoRentModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(
     null,
@@ -893,11 +893,11 @@ function PropertySearchSection() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => setIsRoommateModalOpen(true)}
+                          onClick={() => setIsCoRentModalOpen(true)}
                           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 text-gray-900 dark:text-white text-sm font-medium transition cursor-pointer border border-gray-300 dark:border-neutral-700"
                         >
                           <FiUsers size={16} />
-                          <span>Find a Roommate</span>
+                          <span>Looking to Co-Rent?</span>
                         </button>
                       </div>
                     </div>
@@ -978,9 +978,9 @@ function PropertySearchSection() {
         categories={categoryOptions.filter((c) => c.value !== "")}
       />
 
-      <RoommateModal
-        open={isRoommateModalOpen}
-        onOpenChange={setIsRoommateModalOpen}
+      <CoRentModal
+        open={isCoRentModalOpen}
+        onOpenChange={setIsCoRentModalOpen}
         universityOptions={universityOptions}
       />
 
@@ -1017,29 +1017,29 @@ function PropertySearchSection() {
             </div>
           </div>
 
-          {/* Card 2: Looking for a Roommate */}
+          {/* Card 2: Looking to Co-Rent */}
           <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-6 md:p-8 shadow-lg flex flex-col justify-between space-y-6">
             <div className="space-y-3">
               <div className="w-11 h-11 rounded-2xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
                 <FiUsers size={24} />
               </div>
               <h2 className="text-gray-900 dark:text-white text-2xl md:text-3xl font-bold">
-                Looking for a Roommate?
+                Looking to Co-Rent?
               </h2>
               <p className="text-gray-700 dark:text-gray-400 text-sm md:text-base leading-relaxed">
-                Want to split rent or find flatmates near your campus or preferred area?
-                Submit your roommate request and let us connect you with your match.
+                Want to split rent and share verified properties near your campus or preferred area?
+                Submit your co-rent request and let us connect you with compatible co-tenants.
               </p>
             </div>
 
             <div>
               <button
                 type="button"
-                onClick={() => setIsRoommateModalOpen(true)}
+                onClick={() => setIsCoRentModalOpen(true)}
                 className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 border border-gray-700/40"
               >
                 <FiUsers size={18} />
-                <span>Find a Roommate</span>
+                <span>Find Co-Rent Partners</span>
               </button>
             </div>
           </div>
