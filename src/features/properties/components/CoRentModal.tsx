@@ -178,7 +178,7 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
 
     const payload = {
       companyId: COMPANY_ID,
-      pipelineId: "69b49c7541d35d158e336621",
+      pipelineId: "6a9a70d121202229fbb92a98",
       title: `Co-Rent Request: ${name.trim()} (${gender || "Unspecified"} looking for ${preferredPartnerGender}) - ${preferedLocation.trim()}`,
       name: name.trim(),
       email: email.trim(),
