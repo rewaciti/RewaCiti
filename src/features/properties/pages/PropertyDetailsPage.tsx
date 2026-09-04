@@ -173,7 +173,9 @@ function PropertyDetails() {
     property.bathrooms !== "0";
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [step, setStep] = useState(window.innerWidth < 768 ? 1 : 2);
+  const [step, setStep] = useState(
+    typeof window !== "undefined" && window.innerWidth >= 640 ? 2 : 1,
+  );
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
@@ -184,16 +186,14 @@ function PropertyDetails() {
   }, [slug, property?.id]);
 
   const nextImages = useCallback(() => {
-    if (currentIndex + step < images.length) {
-      setCurrentIndex((prev) => prev + 1);
-    }
-  }, [currentIndex, images.length, step]);
+    setCurrentIndex((prev) =>
+      Math.min(prev + step, Math.max(0, images.length - step)),
+    );
+  }, [images.length, step]);
 
   const prevImages = useCallback(() => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1);
-    }
-  }, [currentIndex]);
+    setCurrentIndex((prev) => Math.max(prev - step, 0));
+  }, [step]);
 
   const nextLightboxImage = useCallback(() => {
     if (lightboxIndex < images.length - 1) {
@@ -347,11 +347,15 @@ function PropertyDetails() {
 
   useEffect(() => {
     const handleResize = () => {
-      setStep(window.innerWidth > 640 ? 2 : 1);
+      const newStep = window.innerWidth >= 640 ? 2 : 1;
+      setStep(newStep);
+      setCurrentIndex((prev) =>
+        Math.min(prev, Math.max(0, images.length - newStep)),
+      );
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [images.length]);
 
   useEffect(() => {
     setRelatedPage(1);
@@ -573,20 +577,31 @@ function PropertyDetails() {
             <div className="p-2 border border-gray-600/30 rounded-xl">
               {/* Thumbnail Row */}
               <div className="flex gap-2 overflow-x-auto mb-3 p-1 border border-gray-600/30 rounded-xl dark:bg-black/20 bg-gray-200 no-scrollbar">
-                {images.map((img, index) => (
-                  <img
-                    key={index}
-                    src={img}
-                    alt={`Thumbnail ${index + 1}`}
-                    loading="lazy"
-                    decoding="async"
-                    onClick={() => setCurrentIndex(index)}
-                    className={`h-30 w-30 md:w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-lg cursor-pointer border ${index === currentIndex
-                      ? "border-[#703BF7]"
-                      : "border-gray-600/30"
+                {images.map((img, index) => {
+                  const isThumbActive =
+                    step === 1
+                      ? index === currentIndex
+                      : index >= currentIndex && index < currentIndex + step;
+                  return (
+                    <img
+                      key={index}
+                      src={img}
+                      alt={`Thumbnail ${index + 1}`}
+                      loading="lazy"
+                      decoding="async"
+                      onClick={() =>
+                        setCurrentIndex(
+                          Math.min(index, Math.max(0, images.length - step)),
+                        )
+                      }
+                      className={`h-30 w-30 md:w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-lg cursor-pointer border transition-colors ${
+                        isThumbActive
+                          ? "border-[#703BF7]"
+                          : "border-gray-600/30"
                       }`}
-                  />
-                ))}
+                    />
+                  );
+                })}
               </div>
 
               {/* Main Image Display */}
@@ -618,13 +633,15 @@ function PropertyDetails() {
                           loading={index === currentIndex ? "eager" : "lazy"}
                           decoding="async"
                           onLoad={(e) => handleImageLoad(index, e)}
-                          className={`w-full dark:bg-[#1A1A1A] bg-gray-200 rounded-xl ${orientation === "portrait"
-                            ? "object-contain"
-                            : "object-cover"
-                            } ${step === 1
+                          className={`w-full dark:bg-[#1A1A1A] bg-gray-200 rounded-xl ${
+                            orientation === "portrait"
+                              ? "object-contain"
+                              : "object-cover"
+                          } ${
+                            step === 1
                               ? "h-[55vh] sm:h-[65vh] lg:h-[70vh]"
                               : "h-[45vh] sm:h-[55vh] lg:h-[70vh]"
-                            }`}
+                          }`}
                           alt={`Property image ${index + 1}`}
                         />
 
@@ -642,7 +659,7 @@ function PropertyDetails() {
                 <button
                   onClick={prevImages}
                   disabled={currentIndex === 0}
-                  className="p-2 rounded-full border border-gray-600 disabled:opacity-30 bg-gray-600"
+                  className="p-2 rounded-full border border-gray-600 disabled:opacity-30 bg-gray-600 cursor-pointer disabled:cursor-not-allowed"
                 >
                   <FiChevronLeft size={15} />
                 </button>
@@ -651,26 +668,34 @@ function PropertyDetails() {
                 <div className="flex items-center gap-3">
                   {images.length <= 5 ? (
                     <div className="flex gap-1">
-                      {images.map((_, idx) => (
-                        <span
-                          key={idx}
-                          className={`w-3 h-0.5 border-t-3 ${idx === currentIndex
-                            ? "border-[#703BF7]"
-                            : "border-gray-400 border-t"
+                      {images.map((_, idx) => {
+                        const isIndicatorActive =
+                          step === 1
+                            ? idx === currentIndex
+                            : idx >= currentIndex && idx < currentIndex + step;
+                        return (
+                          <span
+                            key={idx}
+                            className={`w-3 h-0.5 border-t-3 transition-colors ${
+                              isIndicatorActive
+                                ? "border-[#703BF7]"
+                                : "border-gray-400 border-t"
                             }`}
-                        />
-                      ))}
+                          />
+                        );
+                      })}
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] text-gray-400 font-medium whitespace-nowrap">
-                        {currentIndex + 1} / {images.length}
+                        {Math.min(currentIndex + step, images.length)} /{" "}
+                        {images.length}
                       </span>
                       <div className="w-20 h-1 bg-gray-600 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-[#703BF7] transition-all duration-300"
                           style={{
-                            width: `${((currentIndex + 1) / images.length) * 100}%`,
+                            width: `${(Math.min(currentIndex + step, images.length) / images.length) * 100}%`,
                           }}
                         />
                       </div>
@@ -680,8 +705,11 @@ function PropertyDetails() {
 
                 <button
                   onClick={nextImages}
-                  disabled={currentIndex >= images.length - step}
-                  className="p-2 rounded-full border border-gray-600 disabled:opacity-30 bg-gray-600"
+                  disabled={
+                    currentIndex >= images.length - step ||
+                    images.length <= step
+                  }
+                  className="p-2 rounded-full border border-gray-600 disabled:opacity-30 bg-gray-600 cursor-pointer disabled:cursor-not-allowed"
                 >
                   <FiChevronRight size={15} />
                 </button>

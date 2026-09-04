@@ -116,8 +116,6 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
     };
 
     populateProfileDetails();
-    // Only re-run when the modal is (re)opened, not on every customer change.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, isAuthenticated]);
 
   // Persist draft to cookie whenever fields change (skip the very first render).

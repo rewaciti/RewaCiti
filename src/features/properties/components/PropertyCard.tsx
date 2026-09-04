@@ -20,9 +20,9 @@ interface PropertyCardProps {
 }
 
 const DOTS_PER_GROUP = 4;
-const DOT_SIZE = 6; // px, matches w-1.5/h-1.5
-const DOT_GAP = 6; // px, gap between dots in the sliding strip
-const SWIPE_THRESHOLD = 40; // px of horizontal drag before we treat it as a swipe
+const DOT_SIZE = 6;
+const DOT_GAP = 6;
+const SWIPE_THRESHOLD = 40;
 
 function PropertyCard({ property }: PropertyCardProps) {
   const { toggleShortlist, shortlistedProperties } = usePropertyStore();
@@ -34,7 +34,7 @@ function PropertyCard({ property }: PropertyCardProps) {
   // Support either a property.images[] array or fall back to the single property.img
   const images: string[] =
     Array.isArray((property as Property).images) &&
-    (property as Property).images.length > 0
+      (property as Property).images.length > 0
       ? (property as Property).images
       : [property.img];
 
@@ -109,11 +109,11 @@ function PropertyCard({ property }: PropertyCardProps) {
     if (isSwipingRef.current && Math.abs(deltaX) > SWIPE_THRESHOLD) {
       e.preventDefault();
       e.stopPropagation();
-      justSwipedRef.current = true; // stops the click that follows from navigating
+      justSwipedRef.current = true;
       if (deltaX < 0) {
-        goToIndex(currentIndex + 1); // swiped left -> next image
+        goToIndex(currentIndex + 1);
       } else {
-        goToIndex(currentIndex - 1); // swiped right -> previous image
+        goToIndex(currentIndex - 1);
       }
     }
     isSwipingRef.current = false;
@@ -211,14 +211,6 @@ function PropertyCard({ property }: PropertyCardProps) {
           ))}
         </div>
 
-        {/* Small transparent overlays — sit only over the arrow button's own
-            footprint (a small circle at the vertical center of each edge),
-            below the arrow in z-index. They swallow a click on just that
-            spot so tapping there never navigates to the property page —
-            even when the arrow itself isn't rendered (first/last image).
-            The rest of the photo is untouched and still navigates normally.
-            Hidden on touch devices via pointer-events so they don't block
-            swiping. */}
         {hasMultipleImages && (
           <>
             <div
@@ -238,8 +230,6 @@ function PropertyCard({ property }: PropertyCardProps) {
           </>
         )}
 
-        {/* Prev / Next Arrows — desktop only (hover-revealed), hidden on touch
-            screens where swiping is the primary way to browse images */}
         {hasMultipleImages && (
           <>
             {!isFirstImage && (
@@ -261,10 +251,6 @@ function PropertyCard({ property }: PropertyCardProps) {
               </button>
             )}
 
-            {/* Dot pagination — Airbnb style: a fixed-width masked strip
-                showing at most DOTS_PER_GROUP dots, with the full dot row
-                sliding smoothly underneath as currentIndex changes, rather
-                than jumping between discrete groups. */}
             <div
               className="absolute z-10 bottom-2 left-1/2 -translate-x-1/2 overflow-hidden"
               style={{
@@ -283,11 +269,10 @@ function PropertyCard({ property }: PropertyCardProps) {
                     key={idx}
                     onClick={(e) => handleDotClick(idx, e)}
                     title={`Image ${idx + 1}`}
-                    className={`rounded-full shrink-0 transition-colors duration-300 ease-in-out cursor-pointer w-1.5 h-1.5 ${
-                      idx === currentIndex
-                        ? "bg-white"
-                        : "bg-white/50 hover:bg-white/80"
-                    }`}
+                    className={`rounded-full shrink-0 transition-colors duration-300 ease-in-out cursor-pointer w-1.5 h-1.5 ${idx === currentIndex
+                      ? "bg-white"
+                      : "bg-white/50 hover:bg-white/80"
+                      }`}
                   />
                 ))}
               </div>
@@ -300,11 +285,10 @@ function PropertyCard({ property }: PropertyCardProps) {
           <button
             onClick={handleShortlist}
             title={isShortlisted ? "Remove from shortlist" : "Add to shortlist"}
-            className={`p-1.5 rounded-full backdrop-blur-md border border-white/20 shadow-lg transition-all hover:scale-110 cursor-pointer ${
-              isShortlisted
-                ? "bg-[#703BF7] text-white"
-                : "bg-black/40 text-white hover:bg-[#703BF7]"
-            }`}
+            className={`p-1.5 rounded-full backdrop-blur-md border border-white/20 shadow-lg transition-all hover:scale-110 cursor-pointer ${isShortlisted
+              ? "bg-[#703BF7] text-white"
+              : "bg-black/40 text-white hover:bg-[#703BF7]"
+              }`}
           >
             <FiHeart
               size={16}
@@ -330,19 +314,19 @@ function PropertyCard({ property }: PropertyCardProps) {
       <a
         href={
           property.geo_location?.lat !== 0 &&
-          property.geo_location?.lat !== null &&
-          property.geo_location?.lng !== 0 &&
-          property.geo_location?.lng !== null
+            property.geo_location?.lat !== null &&
+            property.geo_location?.lng !== 0 &&
+            property.geo_location?.lng !== null
             ? `https://www.google.com/maps/search/?api=1&query=${property.geo_location.lat},${property.geo_location.lng}`
             : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                [
-                  property.location.area,
-                  property.location.city_town || property.location.city,
-                  property.location.state,
-                ]
-                  .filter(Boolean)
-                  .join(", ") + (property.location.state ? " state." : ""),
-              )}`
+              [
+                property.location.area,
+                property.location.city_town || property.location.city,
+                property.location.state,
+              ]
+                .filter(Boolean)
+                .join(", ") + (property.location.state ? " state." : ""),
+            )}`
         }
         target="_blank"
         rel="noopener noreferrer"
@@ -366,13 +350,12 @@ function PropertyCard({ property }: PropertyCardProps) {
 
       {/* Property Info */}
       <div
-        className={`grid gap-2 mb-1 ${
-          hasBedrooms && hasBathrooms
-            ? "grid-cols-2 xl:grid-cols-3"
-            : hasBedrooms || hasBathrooms
-              ? "grid-cols-2"
-              : "grid-cols-1"
-        }`}
+        className={`grid gap-2 mb-1 ${hasBedrooms && hasBathrooms
+          ? "grid-cols-2 xl:grid-cols-3"
+          : hasBedrooms || hasBathrooms
+            ? "grid-cols-2"
+            : "grid-cols-1"
+          }`}
       >
         {hasBedrooms && (
           <p className="border border-purple-100 dark:border-gray-600/30 bg-purple-50 dark:bg-transparent text-gray-700 dark:text-gray-300 rounded-2xl px-2 py-1 flex items-center justify-center gap-2 text-xs sm:text-sm transition">
@@ -389,9 +372,8 @@ function PropertyCard({ property }: PropertyCardProps) {
         )}
 
         <p
-          className={`border border-purple-100 dark:border-gray-600/30 bg-purple-50 dark:bg-transparent text-gray-700 dark:text-gray-300 rounded-xl px-2 py-1 flex items-center justify-center gap-2 text-[11px] sm:text-xs transition ${
-            hasBedrooms && hasBathrooms ? "col-span-2 xl:col-span-1" : ""
-          }`}
+          className={`border border-purple-100 dark:border-gray-600/30 bg-purple-50 dark:bg-transparent text-gray-700 dark:text-gray-300 rounded-xl px-2 py-1 flex items-center justify-center gap-2 text-[11px] sm:text-xs transition ${hasBedrooms && hasBathrooms ? "col-span-2 xl:col-span-1" : ""
+            }`}
         >
           <FaHome />
           {property.category}

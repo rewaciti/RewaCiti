@@ -858,12 +858,12 @@ function PropertySearchSection() {
                     <div className="flex justify-between items-center">
                       <div className="space-y-3">
                         <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-                          Discover properties around campuses
+                          Discover Available Properties
                         </h1>
                         <p className="text-gray-800 dark:text-gray-400 text-[14px]">
-                          Explore properties around your preferred campus and
-                          find convenient accommodation in locations that fit
-                          your needs.
+                          Explore a curated selection of properties and find the
+                          perfect place to live, rent, or invest in locations
+                          that fit your lifestyle.
                         </p>
                       </div>
                     </div>
