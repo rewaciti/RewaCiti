@@ -261,7 +261,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
 
           <form
             onSubmit={handleSubmit}
-            className="space-y-5 border border-gray-600/30 p-4 rounded-xl dark:bg-[#121212] bg-white"
+            className="space-y-5 border border-gray-600/30 p-2 rounded-xl dark:bg-[#121212] bg-white"
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
