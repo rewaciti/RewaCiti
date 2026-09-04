@@ -551,6 +551,8 @@ const Profile = () => {
                         src={profilePicture}
                         alt="Avatar"
                         className="w-full h-full rounded-full object-cover"
+                        loading="lazy"
+                        decoding="async"
                       />
                     ) : (
                       `${firstName?.charAt(0) || ""}${

@@ -28,6 +28,8 @@ function PropertySection() {
         <img
           src="/logo/Abstract Design (1).png"
           alt="Icon"
+          loading="lazy"
+          decoding="async"
           className="w-13 h-13 object-contain"
         />
         <div className="flex justify-between items-center mb-4">

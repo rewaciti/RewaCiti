@@ -143,6 +143,8 @@ const services4 = [
                   src="/logo/Vector 431.png"
                   alt="top arrow"
                   className="w-3 h-3 object-contain"
+                  loading="lazy"
+                  decoding="async"
                 />
                 </div>
 
@@ -151,6 +153,8 @@ const services4 = [
                   src={item.img}
                   alt="Icon"
                   className="w-13 h-13 object-contain mb-3"
+                  loading="lazy"
+                  decoding="async"
                 />
 
                 {/* Text */}
@@ -168,6 +172,8 @@ const services4 = [
                   src="/logo/Abstract Design (1).png"
                   alt="Icon"
                   className="w-13 object-contain"
+                  loading="lazy"
+                  decoding="async"
                 />
               <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl ">
                 Unlock Property Value
@@ -192,6 +198,8 @@ const services4 = [
                   src={service.image}
                   alt="Icon"
                   className="w-13 h-13 object-contain"
+                  loading="lazy"
+                  decoding="async"
                 />
       
                     <h3 className=" text-gray-900 dark:text-white text-lg font-semibold mb-2">
@@ -250,6 +258,8 @@ const services4 = [
                   src="/logo/Abstract Design (1).png"
                   alt="Icon"
                   className="w-13 object-contain"
+                  loading="lazy"
+                  decoding="async"
                 />
               <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
                 Effortless Property Management
@@ -274,6 +284,8 @@ const services4 = [
                       src={service.image}
                       alt="Icon"
                       className="w-13 h-13 object-contain mb-3"
+                      loading="lazy"
+                      decoding="async"
                     />
       
                     <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-2">
@@ -334,6 +346,8 @@ const services4 = [
                   src="/logo/Abstract Design (1).png"
                   alt="Icon"
                   className="w-13 object-contain"
+                  loading="lazy"
+                  decoding="async"
                 />
 
            <div className="flex flex-col md:flex-row gap-7">
@@ -391,6 +405,8 @@ const services4 = [
                       src={service.image}
                       alt="Icon"
                       className="w-13 object-contain"
+                      loading="lazy"
+                      decoding="async"
                     />
 
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white ">

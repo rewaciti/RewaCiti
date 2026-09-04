@@ -250,6 +250,8 @@ function Contact() {
                   src="/logo/Vector 431.png"
                   alt="top arrow"
                   className="w-3 h-3 object-contain"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
 
@@ -258,6 +260,8 @@ function Contact() {
                 src={item.img}
                 alt="Icon"
                 className="w-13 h-13 object-contain mb-3"
+                loading="lazy"
+                decoding="async"
               />
 
               {/* Text */}
@@ -275,6 +279,8 @@ function Contact() {
             src="/logo/Abstract Design (1).png"
             alt="Icon"
             className="w-13 object-contain"
+            loading="lazy"
+            decoding="async"
           />
 
           <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
@@ -477,6 +483,8 @@ function Contact() {
             src="/logo/Abstract Design (1).png"
             alt="Icon"
             className="w-13 object-contain"
+            loading="lazy"
+            decoding="async"
           />
 
           <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">

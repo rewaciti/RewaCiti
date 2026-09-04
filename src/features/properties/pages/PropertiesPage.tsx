@@ -852,6 +852,8 @@ function PropertySearchSection() {
                       src="/logo/Abstract Design (1).png"
                       alt="Icon"
                       className="w-13 object-contain"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="flex justify-between items-center">
                       <div className="space-y-3">

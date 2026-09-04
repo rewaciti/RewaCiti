@@ -32,10 +32,12 @@ function CommentSection() {
     <div className="px-4 mx-auto py-5 md:py-0">
       <div>
           <img
-              src="/logo/Abstract Design (1).png"
-              alt="Icon"
-              className="w-13 h-13 object-contain"
-            />
+            src="/logo/Abstract Design (1).png"
+            alt="Icon"
+            loading="lazy"
+            decoding="async"
+            className="w-13 h-13 object-contain"
+          />
           <div className="flex justify-between items-center mb-4">
         <div className="space-y-2">
           <h1 className="text-4xl font-semibold text-gray-900 dark:text-white">What Our Clients Say </h1>
@@ -89,6 +91,8 @@ function CommentSection() {
                 <img
                   src={comment.img}
                   alt={comment.name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-12 h-12 rounded-full object-cover"
                 />
                 <div>

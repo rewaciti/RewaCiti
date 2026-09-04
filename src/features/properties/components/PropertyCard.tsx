@@ -203,7 +203,9 @@ function PropertyCard({ property }: PropertyCardProps) {
               key={idx}
               src={img}
               alt={`${property.name} ${idx + 1}`}
-              className="w-full h-44 object-cover shrink-0"
+              loading="lazy"
+              decoding="async"
+              className="w-full h-44 object-cover shrink-0 bg-gray-200 dark:bg-neutral-800"
               draggable={false}
             />
           ))}

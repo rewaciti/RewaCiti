@@ -77,6 +77,9 @@ function Home() {
           <img
             src={hero}
             alt="Hero"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
             className="w-full h-full sm:h-[70vh] sm:min-h-[500px] shadow-lg object-cover transition-all duration-300 ease-in-out"
           />
         </div>
@@ -134,6 +137,8 @@ function Home() {
           <img
             src={centerLogo}
             alt="Center Logo"
+            loading="lazy"
+            decoding="async"
             className="w-23 h-auto rounded-md"
           />
         </div>
@@ -152,6 +157,8 @@ function Home() {
                 <img
                   src="/logo/Vector 431.png"
                   alt="top arrow"
+                  loading="lazy"
+                  decoding="async"
                   className="w-3 h-3 object-contain mb-3"
                 />
               </div>
@@ -160,6 +167,8 @@ function Home() {
               <img
                 src={item.img}
                 alt="Icon"
+                loading="lazy"
+                decoding="async"
                 className="w-13 h-13 object-contain mb-3"
               />
 

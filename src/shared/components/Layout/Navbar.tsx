@@ -207,6 +207,8 @@ const Navbar = () => {
                             src={property.img}
                             alt={property.name}
                             className="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform duration-300"
+                            loading="lazy"
+                            decoding="async"
                             onClick={() => {
                               navigate(`/properties/${property.slug}`);
                               setIsShortlistOpen(false);

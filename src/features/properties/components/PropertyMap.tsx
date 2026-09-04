@@ -96,7 +96,13 @@ function PropertyPreview({ property }: { property: Property }) {
   return (
     <div className="w-[270px] bg-white dark:bg-[#1A1A1A] rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-lg cursor-pointer group" onClick={goToProperty}>
       <div className="relative h-[115px] overflow-hidden">
-        <img src={image} alt={property.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+        <img
+          src={image}
+          alt={property.name}
+          loading="lazy"
+          decoding="async"
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
         <span className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm text-white text-[10px] font-medium px-2 py-1 rounded-md">{property.category}</span>
       </div>
 

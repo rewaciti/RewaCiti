@@ -37,6 +37,8 @@ function FAQSection() {
         <img
           src="/logo/Abstract Design (1).png"
           alt="Icon"
+          loading="lazy"
+          decoding="async"
           className="w-13 h-13 object-contain"
         />
 

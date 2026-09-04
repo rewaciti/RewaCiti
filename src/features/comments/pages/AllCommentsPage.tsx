@@ -53,9 +53,11 @@ function AllComments() {
                 <div className="flex">
                       <div className="flex justify-center">
                           <img
-                          src={comment.img}
-                          alt={comment.name}
-                          className="w-20 h-20 rounded-full object-cover "
+                            src={comment.img}
+                            alt={comment.name}
+                            loading="lazy"
+                            decoding="async"
+                            className="w-20 h-20 rounded-full object-cover"
                           />
                       </div>
           

@@ -577,6 +577,9 @@ function PropertyDetails() {
                   <img
                     key={index}
                     src={img}
+                    alt={`Thumbnail ${index + 1}`}
+                    loading="lazy"
+                    decoding="async"
                     onClick={() => setCurrentIndex(index)}
                     className={`h-30 w-30 md:w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-lg cursor-pointer border ${index === currentIndex
                       ? "border-[#703BF7]"
@@ -612,6 +615,8 @@ function PropertyDetails() {
                       >
                         <img
                           src={img}
+                          loading={index === currentIndex ? "eager" : "lazy"}
+                          decoding="async"
                           onLoad={(e) => handleImageLoad(index, e)}
                           className={`w-full dark:bg-[#1A1A1A] bg-gray-200 rounded-xl ${orientation === "portrait"
                             ? "object-contain"
@@ -815,14 +820,17 @@ function PropertyDetails() {
                               : property.videoUrl
                         }
                         title="Property Video Tour"
+                        loading="lazy"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                         className="w-full h-full"
                       ></iframe>
                     ) : (
                       <video
                         src={property.videoUrl}
+                        preload="none"
+                        poster={images[0] || property.img}
                         controls
-                        className="w-full h-full"
+                        className="w-full h-full object-cover"
                       />
                     )}
                   </div>
@@ -990,6 +998,8 @@ function PropertyDetails() {
                 <img
                   src="/logo/Abstract Design (1).png"
                   alt="Icon"
+                  loading="lazy"
+                  decoding="async"
                   className="w-13 object-contain"
                 />
                 <div className="flex items-center justify-between mb-2">

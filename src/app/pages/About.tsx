@@ -205,10 +205,12 @@ function About() {
           <div className="flex-1  flex flex-col justify-center space-y-6 z-10 order-last md:order-first ">
           <div className="space-y-3 z-10">
               <img
-                  src="/logo/Abstract Design (1).png"
-                  alt="Icon"
-                  className="w-13 object-contain"
-                />
+                src="/logo/Abstract Design (1).png"
+                alt="Icon"
+                loading="lazy"
+                decoding="async"
+                className="w-13 object-contain"
+              />
               <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
                 Our Journey
               </h1>
@@ -249,6 +251,8 @@ function About() {
             <img
               src={hero}
               alt="Hero"
+              loading="lazy"
+              decoding="async"
               className="w-full h-[300px] object-cover bg-gray-300 dark:bg-black/10 rounded-2xl sm:rounded-none max-h-[700px] xl:max-h-[500px] sm:min-w-[300px]"
             />
           </div>
@@ -261,6 +265,8 @@ function About() {
           <img
             src="/logo/Abstract Design (1).png"
             alt="Icon"
+            loading="lazy"
+            decoding="async"
             className="w-13 object-contain"
           />
 
@@ -306,6 +312,8 @@ function About() {
           <img
             src="/logo/Abstract Design (1).png"
             alt="Icon"
+            loading="lazy"
+            decoding="async"
             className="w-13 object-contain"
           />
 
@@ -339,6 +347,8 @@ function About() {
           <img
             src="/logo/Abstract Design (1).png"
             alt="Icon"
+            loading="lazy"
+            decoding="async"
             className="w-13 object-contain"
           />
 
@@ -361,6 +371,8 @@ function About() {
           <img
             src="/logo/Abstract Design (1).png"
             alt="Icon"
+            loading="lazy"
+            decoding="async"
             className="w-13 object-contain"
           />
 
@@ -382,7 +394,9 @@ function About() {
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-full h-60 rounded-lg"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-60 rounded-lg object-cover"
                 />
 
                 {/* Floating LinkedIn Icon */}

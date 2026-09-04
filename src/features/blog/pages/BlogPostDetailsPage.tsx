@@ -97,6 +97,8 @@ const BlogPostDetailsPage = () => {
             src={post.image} 
             alt={post.title} 
             className="w-full h-[400px] rounded-3xl mb-8 border border-gray-700/40 object-cover"
+            loading="lazy"
+            decoding="async"
           />
 
           <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 dark:text-gray-400 mb-6">
@@ -156,7 +158,13 @@ const BlogPostDetailsPage = () => {
               {relatedPosts.map((related) => (
                 <Link key={related.id} to={`/blog/${related.slug}`} className="group">
                   <div className="bg-white dark:bg-[#1A1A1A] rounded-2xl border border-gray-700/40 overflow-hidden hover:shadow-lg transition-shadow">
-                    <img src={related.image} alt={related.title} className="w-full h-40 object-cover" />
+                    <img
+                      src={related.image}
+                      alt={related.title}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-40 object-cover"
+                    />
                     <div className="p-4">
                       <h3 className="text-sm font-bold text-gray-900 dark:text-white line-clamp-2 group-hover:text-[#703BF7] transition-colors">
                         {related.title}
