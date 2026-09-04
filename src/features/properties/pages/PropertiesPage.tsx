@@ -7,7 +7,7 @@ import {
   type CustomFieldsResponse,
   type LocationHierarchyItem,
 } from "../services/customFieldsAPI";
-import { FiArrowLeft, FiArrowRight, FiFilter, FiUsers, FiSliders } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiFilter, FiUsers, FiSliders, FiHome } from "react-icons/fi";
 import PropertyCard from "../components/PropertyCard";
 import PropertyMap from "../components/PropertyMap";
 import Footer from "../../../shared/components/Layout/Footer";
@@ -17,6 +17,7 @@ import CustomDropdown from "../../../features/properties/components/CustomDropdo
 import PropertyFiltersModal from "../components/PropertyFiltersModal";
 import PreferenceModal from "../components/PreferenceModal";
 import CoRentModal from "../components/CoRentModal";
+import ListPropertyModal from "../components/ListPropertyModal";
 
 // Height of Navbar (top-16 = 4rem) — used to offset the sticky map panel
 const NAVBAR_HEIGHT_PX = 64;
@@ -59,6 +60,7 @@ function PropertySearchSection() {
   const [showFilters, setShowFilters] = useState(false);
   const [isPreferenceModalOpen, setIsPreferenceModalOpen] = useState(false);
   const [isCoRentModalOpen, setIsCoRentModalOpen] = useState(false);
+  const [isListPropertyOpen, setIsListPropertyOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(
     null,
@@ -899,6 +901,14 @@ function PropertySearchSection() {
                           <FiUsers size={16} />
                           <span>Looking to Co-Rent?</span>
                         </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsListPropertyOpen(true)}
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 text-gray-900 dark:text-white text-sm font-medium transition cursor-pointer border border-gray-300 dark:border-neutral-700"
+                        >
+                          <FiHome size={16} />
+                          <span>List Your Property</span>
+                        </button>
                       </div>
                     </div>
                   ) : (
@@ -984,21 +994,28 @@ function PropertySearchSection() {
         universityOptions={universityOptions}
       />
 
+      <ListPropertyModal
+        open={isListPropertyOpen}
+        onOpenChange={setIsListPropertyOpen}
+      />
+
       <section
         className="bg-gray-300 dark:bg-black/30 px-4 py-8"
         id="Portfolio"
       >
-        <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
           {/* Card 1: Property Preference */}
-          <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-6 md:p-8 shadow-lg flex flex-col justify-between space-y-6">
-            <div className="space-y-3">
-              <div className="w-11 h-11 rounded-2xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
-                <FiSliders size={24} />
+          <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-4 md:p-5 shadow-lg flex flex-col justify-between space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
+                  <FiSliders size={18} />
+                </div>
+                <h2 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
+                  Can't find preference?
+                </h2>
               </div>
-              <h2 className="text-gray-900 dark:text-white text-2xl md:text-3xl font-bold">
-                Can't find your preference?
-              </h2>
-              <p className="text-gray-700 dark:text-gray-400 text-sm md:text-base leading-relaxed">
+              <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
                 Ready to take the first step toward your dream property? Fill out
                 the preference form, and our real estate wizards will work their
                 magic to find your perfect match.
@@ -1009,24 +1026,26 @@ function PropertySearchSection() {
               <button
                 type="button"
                 onClick={() => setIsPreferenceModalOpen(true)}
-                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold transition-all shadow-lg hover:shadow-purple-500/25 cursor-pointer flex items-center justify-center gap-2 "
+                className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold text-sm transition-all shadow-lg hover:shadow-purple-500/25 cursor-pointer flex items-center justify-center gap-2 "
               >
-                <FiSliders size={18} />
+                <FiSliders size={16} />
                 <span>Submit Your Preference</span>
               </button>
             </div>
           </div>
 
           {/* Card 2: Looking to Co-Rent */}
-          <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-6 md:p-8 shadow-lg flex flex-col justify-between space-y-6">
-            <div className="space-y-3">
-              <div className="w-11 h-11 rounded-2xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
-                <FiUsers size={24} />
+          <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-4 md:p-5 shadow-lg flex flex-col justify-between space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
+                  <FiUsers size={18} />
+                </div>
+                <h2 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
+                  Looking to Co-Rent?
+                </h2>
               </div>
-              <h2 className="text-gray-900 dark:text-white text-2xl md:text-3xl font-bold">
-                Looking to Co-Rent?
-              </h2>
-              <p className="text-gray-700 dark:text-gray-400 text-sm md:text-base leading-relaxed">
+              <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
                 Want to split rent and share verified properties near your campus or preferred area?
                 Submit your co-rent request and let us connect you with compatible co-tenants.
               </p>
@@ -1036,10 +1055,38 @@ function PropertySearchSection() {
               <button
                 type="button"
                 onClick={() => setIsCoRentModalOpen(true)}
-                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 border border-gray-700/40"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold text-sm transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 border border-gray-700/40"
               >
-                <FiUsers size={18} />
+                <FiUsers size={16} />
                 <span>Find Co-Rent Partners</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Card 3: List Your Property */}
+          <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-4 md:p-5 shadow-lg flex flex-col justify-between space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
+                  <FiHome size={18} />
+                </div>
+                <h2 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
+                  Have a property to list?
+                </h2>
+              </div>
+              <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
+                Are you a landlord, property owner, or agent? Reach thousands of verified tenants, students, and buyers by listing your property on RewaCiti.
+              </p>
+            </div>
+
+            <div>
+              <button
+                type="button"
+                onClick={() => setIsListPropertyOpen(true)}
+                className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold text-sm transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 border border-gray-700/40"
+              >
+                <FiHome size={16} />
+                <span>Apply to List</span>
               </button>
             </div>
           </div>

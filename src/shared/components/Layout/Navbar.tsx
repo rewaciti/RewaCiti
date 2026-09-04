@@ -6,10 +6,12 @@ import { FiSun, FiMoon, FiHeart, FiTrash2, FiLogOut } from "react-icons/fi";
 import { usePropertyStore } from "../../../features/properties/store/usePropertyStore";
 import { useAuthStore } from "../../../features/auth/store/useAuthStore";
 import { toast } from "sonner";
+import ListPropertyModal from "../../../features/properties/components/ListPropertyModal";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isShortlistOpen, setIsShortlistOpen] = useState(false);
+  const [isListPropertyOpen, setIsListPropertyOpen] = useState(false);
   const shortlistRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useThemeStore();
   const { shortlistedProperties, toggleShortlist } = usePropertyStore();
@@ -52,7 +54,7 @@ const Navbar = () => {
   const navItems = [
     { name: "Home", path: "/" },
     { name: "Properties", path: "/properties" },
-     { name: "Services", path: "/Service" },
+    { name: "Services", path: "/Service" },
     { name: "Contact", path: "/Contact" },
   ];
 
@@ -163,10 +165,9 @@ const Navbar = () => {
               <div
                 className={`absolute right-0 top-4 mt-2 w-72 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-100 overflow-hidden
                   origin-top-right transform transition-all duration-200 ease-out
-                  ${
-                    isShortlistOpen
-                      ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
-                      : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+                  ${isShortlistOpen
+                    ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+                    : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
                   }`}
               >
                 <div className="p-3 border-b border-gray-100 dark:border-gray-800 bg-gray-300/50 dark:bg-white/5 flex justify-between items-center">
@@ -233,7 +234,7 @@ const Navbar = () => {
                               const locationParts = [
                                 property.location.area,
                                 property.location.city_town ||
-                                  property.location.city,
+                                property.location.city,
                               ].filter(Boolean);
 
                               const locationText = locationParts.length
@@ -315,11 +316,10 @@ const Navbar = () => {
                   <NavLink
                     key={item.path}
                     to={item.path}
-                    className={`${
-                      isActive
-                        ? "p-2 px-3 bg-[#703BF7] text-white border border-gray-300 rounded-md"
-                        : "text-gray-800 dark:text-white border-gray-200 dark:border-gray-600 hover:bg-[#9677df] hover:border-[#703BF7] p-2 px-3 rounded-md"
-                    }`}
+                    className={`${isActive
+                      ? "p-2 px-3 bg-[#703BF7] text-white border border-gray-300 rounded-md"
+                      : "text-gray-800 dark:text-white border-gray-200 dark:border-gray-600 hover:bg-[#9677df] hover:border-[#703BF7] p-2 px-3 rounded-md"
+                      }`}
                   >
                     {item.name}
                   </NavLink>
@@ -329,21 +329,13 @@ const Navbar = () => {
 
             {/* Desktop Action Buttons */}
             <div className="hidden md:flex items-center gap-2">
-              <NavLink to="/Contact#Contactform">
-                {({ isActive }) => (
-                  <button
-                    className={`py-2 px-4 rounded-md transition
-                      ${
-                        isActive
-                          ? " black:text-white text-gray-700 hover:bg-gray-100"
-                          : "bg-gray-100 text-gray-800 border-gray-200 dark:hover:bg-[#9677df] hover:bg-[#9677df] hover:text-white hover:border-[#703BF7] dark:bg-black/30 dark:text-white"
-                      }
-                    `}
-                  >
-                    List Property
-                  </button>
-                )}
-              </NavLink>
+              <button
+                type="button"
+                onClick={() => setIsListPropertyOpen(true)}
+                className="py-2 px-4 rounded-md transition bg-gray-100 text-gray-800 border-gray-200 dark:hover:bg-[#9677df] hover:bg-[#9677df] hover:text-white hover:border-[#703BF7] dark:bg-black/30 dark:text-white cursor-pointer"
+              >
+                Apply to List
+              </button>
 
               {isAuthenticated ? (
                 <button
@@ -359,10 +351,9 @@ const Navbar = () => {
                   {({ isActive }) => (
                     <button
                       className={`py-2 px-4 rounded-md border transition
-                        ${
-                          isActive
-                            ? "bg-[#703BF7] text-white border-[#703BF7]"
-                            : "bg-gray-100 text-gray-800 border-gray-200 dark:hover:bg-[#9677df] hover:bg-[#9677df] hover:text-white hover:border-[#703BF7] dark:bg-black/30 dark:text-white"
+                        ${isActive
+                          ? "bg-[#703BF7] text-white border-[#703BF7]"
+                          : "bg-gray-100 text-gray-800 border-gray-200 dark:hover:bg-[#9677df] hover:bg-[#9677df] hover:text-white hover:border-[#703BF7] dark:bg-black/30 dark:text-white"
                         }
                       `}
                     >
@@ -455,17 +446,16 @@ const Navbar = () => {
                 })}
 
                 {/* Mobile Action Links */}
-                <NavLink to="/Contact#Contactform" onClick={() => setIsOpen(false)}>
-                  {({ isActive }) => (
-                    <button
-                      className={`text-left w-full
-                        ${isActive ? "" : ""}
-                      `}
-                    >
-                      List Property
-                    </button>
-                  )}
-                </NavLink>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(false);
+                    setIsListPropertyOpen(true);
+                  }}
+                  className="text-left w-full text-[17px] cursor-pointer hover:text-[#703BF7] transition-colors"
+                >
+                  Become a Lister
+                </button>
 
                 {isAuthenticated && (
                   <NavLink
@@ -515,6 +505,11 @@ const Navbar = () => {
         </div>
         <hr className="h-px dark:bg-gray-700 bg-gray-400 border-0 w-full" />
       </div>
+
+      <ListPropertyModal
+        open={isListPropertyOpen}
+        onOpenChange={setIsListPropertyOpen}
+      />
     </>
   );
 };

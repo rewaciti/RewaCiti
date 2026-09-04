@@ -190,94 +190,107 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
             </Dialog.Close>
           </div>
 
-          <div className="border border-gray-600/30 rounded-lg p-2">
-            <form onSubmit={handleSubmit} className="space-y-2">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-5 border border-gray-600/30 p-4 rounded-xl dark:bg-[#121212] bg-white"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Full Name</label>
+                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                  Full Name
+                </label>
                 <input
                   type="text"
                   placeholder="Enter Full Name"
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Email</label>
-                  <input
-                    type="email"
-                    placeholder="Enter your Email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Phone</label>
-                  <input
-                    type="tel"
-                    placeholder="Enter Phone Number"
-                    required
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm mb-1 block text-gray-700 dark:text-gray-300 font-medium">Selected Property</label>
-                <input
-                  type="text"
-                  value={`${property?.name}, ${property?.location?.area}, ${property?.location?.city_town}, ${property?.location?.state} state.`}
-                  readOnly
-                  className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-2 text-sm focus:outline-none text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
+                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
                 />
               </div>
 
               <div>
-                <label className="text-sm mb-0.5 block text-gray-700 dark:text-gray-300 font-medium">Message</label>
-                <textarea
-                  rows={4}
-                  placeholder="Enter your Message here..."
-                  required
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="w-full bg-gray-600/10 dark:bg-gray-600/30 border border-gray-600/30 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-[#703BF7] text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
-                />
-              </div>
-
-              <div className="flex items-center gap-1 font-medium">
+                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                  Email
+                </label>
                 <input
-                  type="checkbox"
-                  className="mt-0.5"
-                  checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
+                  type="email"
+                  placeholder="Enter your Email"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
                 />
-                <p className="text-sm text-gray-700 dark:text-gray-300">
-                  I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
-                </p>
               </div>
 
+              <div>
+                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                  Phone
+                </label>
+                <input
+                  type="tel"
+                  placeholder="Enter Phone Number"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                Selected Property
+              </label>
+              <input
+                type="text"
+                value={`${property?.name}, ${property?.location?.area}, ${property?.location?.city_town}, ${property?.location?.state} state.`}
+                readOnly
+                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
+              />
+            </div>
+
+            <div>
+              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                Message
+              </label>
+              <textarea
+                rows={3}
+                placeholder="Enter your Message here..."
+                required
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+              />
+            </div>
+
+            <div className="sm:col-span-2 flex items-center gap-3">
+              <input
+                type="checkbox"
+                className="mt-0.5"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                required
+              />
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
+              </p>
+            </div>
+
+            <div className="sm:col-span-2 flex items-center justify-end">
               <button
                 type="submit"
                 disabled={!agreed || isSubmitting || !fullName.trim() || !email.trim() || !phone.trim()}
-                className={`w-full font-medium py-3 rounded-md transition-colors mt-3 disabled:opacity-50 ${
-                  agreed && !isSubmitting && fullName.trim() && email.trim() && phone.trim()
-                    ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
+                className={`px-4 py-3 rounded-lg font-medium transition
+                  ${agreed && !isSubmitting && fullName.trim() && email.trim() && phone.trim()
+                    ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white"
                     : "bg-gray-400 cursor-not-allowed text-gray-200"
-                }`}
+                  }`}
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
               </button>
-            </form>
-          </div>
+            </div>
+          </form>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

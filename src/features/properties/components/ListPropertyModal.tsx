@@ -9,45 +9,22 @@ import { authAPI } from "../../auth/services/authAPI";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
 import CustomDropdown from "./CustomDropdown";
 
-interface PreferenceModalProps {
+interface ListPropertyModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  categories?: { label: string; value: string }[];
 }
 
-const DEFAULT_CATEGORIES = [
-  { label: "None here", value: "none" },
-  { label: "Self Contain", value: "Self Contain" },
-  { label: "Studio Apartment", value: "Studio Apartment" },
-  { label: "Mini Flat", value: "Mini Flat" },
-  { label: "Flat", value: "Flat" },
-  { label: "Bungalow", value: "Bungalow" },
-  { label: "Duplex", value: "Duplex" },
-  { label: "Mansion", value: "Mansion" },
-  { label: "Villa", value: "Villa" },
-  { label: "Smart Home", value: "Smart Home" },
-  { label: "Single Room", value: "Single Room (Shared)" },
-  { label: "Shared Room", value: "Shared Room" },
-  { label: "Land", value: "Land" },
-  { label: "Uncompleted Building", value: "Uncompleted Building" },
+const LISTER_ROLE_OPTIONS = [
+  { label: "Real Estate Agent / Broker", value: "Real Estate Agent" },
+  { label: "Property Owner / Landlord", value: "Property Owner / Landlord" },
+  { label: "Caretaker / Facility Manager", value: "Caretaker" },
+  { label: "Property Developer / Builder", value: "Developer" },
+  { label: "Other", value: "Other" },
 ];
 
-const DEFAULT_PRICE_OPTIONS = [
-  { label: "All Price", value: "All Price" },
-  { label: "Below ₦100k", value: "Below ₦100k" },
-  { label: "₦100k - ₦200k", value: "₦100k - ₦200k" },
-  { label: "₦200k - ₦300k", value: "₦200k - ₦300k" },
-  { label: "₦300k - ₦400k", value: "₦300k - ₦400k" },
-  { label: "₦400k - ₦500k", value: "₦400k - ₦500k" },
-  { label: "₦500k - ₦700k", value: "₦500k - ₦700k" },
-  { label: "₦700k - ₦1M", value: "₦700k - ₦1M" },
-  { label: "Above ₦1M", value: "Above ₦1M" },
-];
-
-const PreferenceModal: React.FC<PreferenceModalProps> = ({
+const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
   open,
   onOpenChange,
-  categories = DEFAULT_CATEGORIES,
 }) => {
   const { isAuthenticated, customer } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,30 +32,24 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [preferedLocation, setPreferedLocation] = useState("");
-  const [preferedCategory, setPreferedCategory] = useState("");
-  const [bedroomsContact, setBedroomsContact] = useState("");
-  const [bathroomsContact, setBathroomsContact] = useState("");
-  const [budget, setBudget] = useState("");
+  const [listerRole, setListerRole] = useState("Real Estate Agent");
+  const [location, setLocation] = useState("");
   const [message, setMessage] = useState("");
   const [agreed, setAgreed] = useState(false);
 
-  const inquiryCookieKey = "rewaciti_property_inquiry";
+  const cookieKey = "rewaciti_become_lister_inquiry";
 
   // Load saved draft from cookie once on mount only.
   useEffect(() => {
-    const savedInquiry = getCookie(inquiryCookieKey);
-    if (savedInquiry) {
+    const savedData = getCookie(cookieKey);
+    if (savedData) {
       try {
-        const parsed = JSON.parse(savedInquiry);
+        const parsed = JSON.parse(savedData);
         setName(parsed.name || "");
         setEmail(parsed.email || "");
         setPhone(parsed.phone || "");
-        setPreferedLocation(parsed.preferedLocation || "");
-        setPreferedCategory(parsed.preferedCategory || "");
-        setBedroomsContact(parsed.bedroomsContact || "");
-        setBathroomsContact(parsed.bathroomsContact || "");
-        setBudget(parsed.budget || "");
+        setListerRole(parsed.listerRole || "Real Estate Agent");
+        setLocation(parsed.location || "");
         setMessage(parsed.message || "");
         setAgreed(parsed.agreed || false);
       } catch {
@@ -111,7 +82,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
           });
         }
       } catch (error) {
-        console.error("Failed to fetch profile for preference form:", error);
+        console.error("Failed to fetch profile for become a lister form:", error);
       }
     };
 
@@ -132,28 +103,14 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
       name,
       email,
       phone,
-      preferedLocation,
-      preferedCategory,
-      bedroomsContact,
-      bathroomsContact,
-      budget,
+      listerRole,
+      location,
       message,
       agreed,
     };
 
-    setCookie(inquiryCookieKey, JSON.stringify(payload));
-  }, [
-    name,
-    email,
-    phone,
-    preferedLocation,
-    preferedCategory,
-    bedroomsContact,
-    bathroomsContact,
-    budget,
-    message,
-    agreed,
-  ]);
+    setCookie(cookieKey, JSON.stringify(payload));
+  }, [name, email, phone, listerRole, location, message, agreed]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -163,15 +120,8 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
       return;
     }
 
-    if (
-      !name.trim() ||
-      !email.trim() ||
-      !phone.trim() ||
-      !preferedLocation.trim()
-    ) {
-      toast.error(
-        "Please enter your name, email, phone number, and preferred location to continue."
-      );
+    if (!name.trim() || !email.trim() || !phone.trim() || !location.trim()) {
+      toast.error("Please enter your name, email, phone number, and location to continue.");
       return;
     }
 
@@ -179,19 +129,18 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
 
     const payload = {
       companyId: COMPANY_ID,
-      pipelineId: "69b49c7541d35d158e336621",
-      title: `Property Preference from ${name.trim()}`,
+      pipelineId: "69cec9f3dd40685bfe20adb2",
+      title: `Become a Lister Request from ${name.trim()} (${listerRole}) - ${location.trim()}`,
       name: name.trim(),
       email: email.trim(),
       phone: phone.trim(),
-      address: preferedLocation.trim(),
-      note: message || "No additional details added",
+      address: location.trim(),
+      note: message || `Application to become a lister (${listerRole}) in ${location.trim()}.`,
       customData: [
-        { label: "Budget", value: budget },
-        { label: "Category", value: preferedCategory },
-        { label: "Preferred Location", value: preferedLocation.trim() },
-        { label: "Bedrooms", value: bedroomsContact },
-        { label: "Bathrooms", value: bathroomsContact },
+        { label: "Inquiry Type", value: "Become a Lister" },
+        { label: "Lister Role", value: listerRole },
+        { label: "Primary Area / Location", value: location.trim() },
+        { label: "About Properties / Experience", value: message || "None" },
       ],
     };
 
@@ -199,39 +148,35 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
       await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
       toast.success(
         <div className="whitespace-pre-wrap">
-          Message sent successfully!
-          <br />A member of our team will get back to you soon.
+          Lister request submitted successfully!
+          <br />A member of our team will contact you shortly to verify your profile.
         </div>
       );
+
+      // Reset form
       setName("");
       setEmail("");
       setPhone("");
-      setPreferedLocation("");
-      setPreferedCategory("");
-      setBedroomsContact("");
-      setBathroomsContact("");
-      setBudget("");
+      setListerRole("Real Estate Agent");
+      setLocation("");
       setMessage("");
       setAgreed(false);
       setCookie(
-        inquiryCookieKey,
+        cookieKey,
         JSON.stringify({
           name: "",
           email: "",
           phone: "",
-          preferedLocation: "",
-          preferedCategory: "",
-          bedroomsContact: "",
-          bathroomsContact: "",
-          budget: "",
+          listerRole: "Real Estate Agent",
+          location: "",
           message: "",
           agreed: false,
         })
       );
       onOpenChange(false);
     } catch (error) {
-      console.error("Error sending message:", error);
-      toast.error("Failed to send message. Please try again.");
+      console.error("Error submitting lister request:", error);
+      toast.error("Failed to submit request. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -243,7 +188,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
     Boolean(name.trim()) &&
     Boolean(email.trim()) &&
     Boolean(phone.trim()) &&
-    Boolean(preferedLocation.trim());
+    Boolean(location.trim());
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -252,7 +197,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-lg dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-3 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto center-modal-animate">
           <div className="flex justify-between items-center mb-4">
             <Dialog.Title className="text-2xl font-semibold dark:text-white text-gray-900">
-              Can't find preference?
+              Become a Lister
             </Dialog.Title>
             <Dialog.Close asChild>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600 cursor-pointer">
@@ -310,78 +255,39 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
 
               <div>
                 <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Preferred Location
+                  I am a...
+                </label>
+                <CustomDropdown
+                  placeholder="Select Lister Role"
+                  value={listerRole}
+                  options={LISTER_ROLE_OPTIONS}
+                  onChange={(val) => setListerRole(val)}
+                  buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                  Primary Location
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Lekki Phase 1, Lagos"
+                  placeholder="e.g. Mayfair, Ede Road, Ile-Ife"
                   required
-                  value={preferedLocation}
-                  onChange={(e) => setPreferedLocation(e.target.value)}
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
                   className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Category
-                </label>
-                <CustomDropdown
-                  placeholder="Select Category"
-                  value={preferedCategory}
-                  options={categories}
-                  onChange={(val) => setPreferedCategory(val)}
-                  buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  No of Bedrooms
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. 2 or Shared"
-                  value={bedroomsContact}
-                  onChange={(e) => setBedroomsContact(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  No of Bathrooms
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. 1 or 2"
-                  value={bathroomsContact}
-                  onChange={(e) => setBathroomsContact(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Budget
-                </label>
-                <CustomDropdown
-                  placeholder="Select Budget Range"
-                  value={budget}
-                  options={DEFAULT_PRICE_OPTIONS}
-                  onChange={(val) => setBudget(val)}
-                  buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
                 />
               </div>
             </div>
 
             <div>
               <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                Describe What You Want
+                About You
               </label>
               <textarea
                 rows={3}
-                placeholder="Describe your ideal property, desired amenities, move-in timeline, or any special requests..."
+                placeholder="Tell us a bit about yourself and your experience as a lister."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
@@ -419,7 +325,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
                     : "bg-gray-400 cursor-not-allowed text-gray-200"
                   }`}
               >
-                {isSubmitting ? "Sending..." : "Send Message"}
+                {isSubmitting ? "Submitting..." : "Become a Lister"}
               </button>
             </div>
           </form>
@@ -429,4 +335,4 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
   );
 };
 
-export default PreferenceModal;
+export default ListPropertyModal;
