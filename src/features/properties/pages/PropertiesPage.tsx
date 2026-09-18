@@ -1057,9 +1057,9 @@ function PropertySearchSection() {
           </div>
         </div>
 
-        <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {/* Card 1: Property Preference */}
-          <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-4 md:p-5 shadow-lg flex flex-col justify-between space-y-4">
+          <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-3 shadow-lg flex flex-col justify-between space-y-4">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
@@ -1089,7 +1089,7 @@ function PropertySearchSection() {
           </div>
 
           {/* Card 2: Looking to Co-Rent */}
-          <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-4 md:p-5 shadow-lg flex flex-col justify-between space-y-4">
+          <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-3 shadow-lg flex flex-col justify-between space-y-4">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
@@ -1118,7 +1118,7 @@ function PropertySearchSection() {
           </div>
 
           {/* Card 3: List Your Property */}
-          <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-4 md:p-5 shadow-lg flex flex-col justify-between space-y-4">
+          <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-3 shadow-lg flex flex-col justify-between space-y-4">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">

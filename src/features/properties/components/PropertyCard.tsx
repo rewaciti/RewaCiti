@@ -161,11 +161,15 @@ function PropertyCard({ property }: PropertyCardProps) {
     void toggleShortlist(property);
   };
 
-  // Word limiter — always ends with "..." when truncated, no expand/collapse
+  // Strip HTML tags then word-limit — prevents raw <p>…</p> tags from the API showing up
   function truncateWords(text: string, limit: number): string {
-    const words = text.split(" ");
+    const plain = text
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    const words = plain.split(" ");
     return words.length <= limit
-      ? text
+      ? plain
       : `${words.slice(0, limit).join(" ")}...`;
   }
 
@@ -274,6 +278,28 @@ function PropertyCard({ property }: PropertyCardProps) {
               </div>
             </div>
           </>
+        )}
+
+        {/* Listing-type badge */}
+        {property.listingType && (
+          <div className="absolute z-10 top-0.5 left-1 pointer-events-none">
+            <span
+              className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-sm shadow ${/sale/i.test(property.listingType)
+                ? "bg-emerald-500 text-white"
+                : /shortlet/i.test(property.listingType)
+                  ? "bg-rose-500 text-white"
+                  : /rent/i.test(property.listingType)
+                    ? "bg-[#703BF7] text-white"
+                    : /lease/i.test(property.listingType)
+                      ? "bg-amber-500 text-white"
+                      : /invest/i.test(property.listingType)
+                        ? "bg-sky-500 text-white"
+                        : "bg-black/60 text-white"
+                }`}
+            >
+              {property.listingType}
+            </span>
+          </div>
         )}
 
         {/* Floating Action Buttons */}

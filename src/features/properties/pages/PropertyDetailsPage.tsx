@@ -594,11 +594,10 @@ function PropertyDetails() {
                           Math.min(index, Math.max(0, images.length - step)),
                         )
                       }
-                      className={`h-30 w-30 md:w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-lg cursor-pointer border transition-colors ${
-                        isThumbActive
-                          ? "border-[#703BF7]"
-                          : "border-gray-600/30"
-                      }`}
+                      className={`h-30 w-30 md:w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-lg cursor-pointer border transition-colors ${isThumbActive
+                        ? "border-[#703BF7]"
+                        : "border-gray-600/30"
+                        }`}
                     />
                   );
                 })}
@@ -633,15 +632,13 @@ function PropertyDetails() {
                           loading={index === currentIndex ? "eager" : "lazy"}
                           decoding="async"
                           onLoad={(e) => handleImageLoad(index, e)}
-                          className={`w-full dark:bg-[#1A1A1A] bg-gray-200 rounded-xl ${
-                            orientation === "portrait"
-                              ? "object-contain"
-                              : "object-cover"
-                          } ${
-                            step === 1
+                          className={`w-full dark:bg-[#1A1A1A] bg-gray-200 rounded-xl ${orientation === "portrait"
+                            ? "object-contain"
+                            : "object-cover"
+                            } ${step === 1
                               ? "h-[55vh] sm:h-[65vh] lg:h-[70vh]"
                               : "h-[45vh] sm:h-[55vh] lg:h-[70vh]"
-                          }`}
+                            }`}
                           alt={`Property image ${index + 1}`}
                         />
 
@@ -676,11 +673,10 @@ function PropertyDetails() {
                         return (
                           <span
                             key={idx}
-                            className={`w-3 h-0.5 border-t-3 transition-colors ${
-                              isIndicatorActive
-                                ? "border-[#703BF7]"
-                                : "border-gray-400 border-t"
-                            }`}
+                            className={`w-3 h-0.5 border-t-3 transition-colors ${isIndicatorActive
+                              ? "border-[#703BF7]"
+                              : "border-gray-400 border-t"
+                              }`}
                           />
                         );
                       })}
@@ -816,7 +812,7 @@ function PropertyDetails() {
                   </div>
 
                   {/* Counter */}
-                  <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-gray-200/80 dark:bg-black/50 text-gray-900 dark:text-white px-6 py-2 rounded-full text-sm font-semibold tracking-wider border border-gray-300 dark:border-white/10 backdrop-blur-md">
+                  <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-gray-200/80 dark:bg-black/50 text-gray-500 dark:text-white px-6 py-2 rounded-full text-sm font-semibold tracking-wider border border-gray-300 dark:border-white/10 backdrop-blur-md">
                     {lightboxIndex + 1} / {images.length}
                   </div>
                 </div>
@@ -875,7 +871,10 @@ function PropertyDetails() {
                   Description
                 </h2>
                 <p className="text-gray-800 dark:text-gray-400 leading-relaxed">
-                  {property?.description}
+                  {(property?.description ?? "")
+                    .replace(/<[^>]+>/g, " ")
+                    .replace(/\s+/g, " ")
+                    .trim()}
                 </p>
               </div>
               {/* Property Details */}

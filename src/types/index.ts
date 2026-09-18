@@ -10,6 +10,7 @@ export interface Property {
   bathrooms: number | string;
   category: string;
   duration?: string;
+  listingType?: string;
   pricing: { 
    LegalFee: number;
    ServiceFee: number;
@@ -64,6 +65,10 @@ export interface PropertyStore {
   apiPage: number;
   totalProperties: number;
   filters: Record<string, string | number | undefined>;
+
+  featuredProperties: Property[];
+  featuredLoading: boolean;
+  fetchFeaturedProperties: () => Promise<void>;
 
   fetchProperties: (apiPage?: number, filters?: Record<string, string | number | undefined>) => Promise<void>;
   fetchPropertyFees: () => Promise<void>;
@@ -243,6 +248,7 @@ export interface SabiFlowProduct {
     visitation_fee: number;
     special_notes?: string[];
     specifications?: { label: string; value: string }[];
+    listing_type?: string;
   };
   createdAt?: string;
   updatedAt?: string;

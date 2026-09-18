@@ -6,18 +6,18 @@ import { NavLink } from "react-router";
 
 function PropertySection() {
   const {
-    properties,
-    loading,
+    featuredProperties,
+    featuredLoading,
     error,
-    fetchProperties,
+    fetchFeaturedProperties,
   } = usePropertyStore();
 
   useEffect(() => {
-    fetchProperties(1);
-  }, [fetchProperties]);
+    fetchFeaturedProperties();
+  }, [fetchFeaturedProperties]);
 
   // fetch/slice the max count you'll ever show (4)
-  const currentProperties = properties.slice(0, 4);
+  const currentProperties = featuredProperties.slice(0, 4);
 
   // sm -> 4, md -> 3, lg -> 4 (only the 4th card needs to toggle)
   const hideOnMdOnly = "hidden sm:block md:hidden lg:block";
@@ -52,7 +52,7 @@ function PropertySection() {
       </div>
       <div className=" py-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-          {loading ? (
+          {featuredLoading ? (
             [...Array(4)].map((_, i) => (
               <div key={i} className={`${i === 3 ? hideOnMdOnly : ""} h-full`}>
                 <PropertyCardSkeleton />
@@ -84,7 +84,7 @@ function PropertySection() {
                 </p>
               </div>
               <button
-                onClick={() => fetchProperties(1)}
+                onClick={() => fetchFeaturedProperties()}
                 className="px-6 py-2 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white transition-all shadow-md active:scale-95"
               >
                 Try Again

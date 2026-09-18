@@ -255,6 +255,7 @@ const mapSabiFlowProductsToProperties = (items: SabiFlowProduct[]): Property[] =
       bathrooms: customData?.bathrooms || 0,
       category: item.categoryId?.name || "Property",
       duration: customData?.duration || "",
+      listingType: customData?.listing_type || "",
       rules: customData?.rules || [],
       pricing: {
         PropertyCost: propertyCost,
@@ -316,6 +317,8 @@ const propertyMatchesQuery = (property: Property, query: string): boolean => {
 export const usePropertyStore = create<PropertyStore>((set, get) => ({
   properties: [],
   filteredProperties: [],
+  featuredProperties: [],
+  featuredLoading: false,
   categories: [],
   categoriesLoading: false,
   filtersData: null as InventoryFilters | null,
@@ -363,6 +366,24 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
     } catch (err) {
       console.error(err);
       set({ error: "Failed to load property data", loading: false });
+    }
+  },
+
+  fetchFeaturedProperties: async () => {
+    // Skip if already loaded — avoid re-fetching on every home page visit
+    if (get().featuredProperties.length > 0) return;
+    set({ featuredLoading: true });
+    try {
+      const res = await sabiFlowApi.get<{ data: SabiFlowProduct[]; total?: number }>("/products", {
+        params: { page: 1, limit: 8 },
+      });
+      set({
+        featuredProperties: mapSabiFlowProductsToProperties(res.data.data),
+        featuredLoading: false,
+      });
+    } catch (err) {
+      console.error("Failed to fetch featured properties", err);
+      set({ featuredLoading: false });
     }
   },
 
