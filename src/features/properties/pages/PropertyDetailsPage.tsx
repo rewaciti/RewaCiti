@@ -683,7 +683,7 @@ function PropertyDetails() {
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-gray-400 font-medium whitespace-nowrap">
+                      <span className="text-[10px] dark:text-gray-400 text-gray-100 font-medium whitespace-nowrap">
                         {Math.min(currentIndex + step, images.length)} /{" "}
                         {images.length}
                       </span>
