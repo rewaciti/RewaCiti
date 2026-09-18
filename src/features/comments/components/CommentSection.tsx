@@ -39,7 +39,7 @@ function CommentSection() {
             className="w-13 h-13 object-contain"
           />
           <div className="flex justify-between items-center mb-4">
-        <div className="space-y-2">
+        <div className="space-y-2 w-[80%]">
           <h1 className="text-4xl font-semibold text-gray-900 dark:text-white">What Our Clients Say </h1>
           <p className="dark:text-gray-400 text-gray-600 w-full">
            Read the success stories and heartfelt testimonials from our valued clients. Discover why they chose RewaCiti for their real estate needs.
