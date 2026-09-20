@@ -26,6 +26,7 @@ import ServiceRatingModal from "../components/ServiceRatingModal";
 import ReportAgentModal from "../components/ReportAgentModal";
 import InquiryModal from "../components/InquiryModal";
 import PropertyCard from "../components/PropertyCard";
+import PropertyMap from "../components/PropertyMap";
 import {
   PropertyDetailsSkeleton,
   PropertyCardSkeleton,
@@ -1015,6 +1016,19 @@ function PropertyDetails() {
                 )}
               </div>
             ) : null}
+          </section>
+          {/* Location Map Section */}
+          <section className="px-4 mb-5">
+            <div className="p-2 border border-gray-600/30 rounded-xl">
+              <h2 className="text-2xl text-gray-900 dark:text-white font-semibold mb-4 flex items-center gap-2">
+                <FiMapPin className="text-[#703BF7]" />
+                Location
+              </h2>
+              <PropertyMap
+                properties={[property]}
+                heightClassName="h-[400px] lg:h-[500px]"
+              />
+            </div>
           </section>
           <hr className="my-2 border-gray-600/50 w-[98%] mx-auto" />
 

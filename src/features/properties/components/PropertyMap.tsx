@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Property } from "../../../types";
-import { FiMapPin, FiArrowRight } from "react-icons/fi";
+import { FiMapPin, FiArrowRight, FiMaximize2, FiMinimize2 } from "react-icons/fi";
 
 interface PropertyMapProps {
   properties: Property[];
@@ -84,6 +85,31 @@ function FitBounds({ points, pointsKey }: { points: [number, number][]; pointsKe
   return null;
 }
 
+function ExpandButton({
+  isFullscreen,
+  onToggle,
+  visibilityClassName,
+}: {
+  isFullscreen: boolean;
+  onToggle: () => void;
+  visibilityClassName: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        onToggle();
+      }}
+      aria-label={isFullscreen ? "Exit fullscreen map" : "Expand map to fullscreen"}
+      title={isFullscreen ? "Exit fullscreen" : "Expand map"}
+      className={`absolute top-3 right-3 z-[1000] w-9 h-9 rounded-full bg-white dark:bg-[#1A1A1A] border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white shadow-md items-center justify-center hover:border-[#703BF7] hover:text-[#703BF7] transition-colors cursor-pointer ${visibilityClassName}`}
+    >
+      {isFullscreen ? <FiMinimize2 size={16} /> : <FiMaximize2 size={16} />}
+    </button>
+  );
+}
+
 function PropertyPreview({ property }: { property: Property }) {
   const image = Array.isArray(property.images) && property.images.length > 0 ? property.images[0] : property.img;
 
@@ -143,6 +169,22 @@ function PropertyPreview({ property }: { property: Property }) {
 
 export default function PropertyMap({ properties, heightClassName = "h-[500px]", hoveredPropertyId, onHoverProperty, onSelectProperty }: PropertyMapProps) {
   const markersRef = useRef<Record<string, L.Marker | null>>({});
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Lock background scroll + allow Escape to exit fullscreen
+  useEffect(() => {
+    if (!isFullscreen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsFullscreen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isFullscreen]);
 
   const pinned = useMemo(
     () =>
@@ -165,8 +207,8 @@ export default function PropertyMap({ properties, heightClassName = "h-[500px]",
 
   const defaultCenter: [number, number] = points[0] ?? [6.5244, 3.3792];
 
-  return (
-    <div className={`${heightClassName} w-full rounded-2xl overflow-hidden border border-gray-300 dark:border-gray-700`}>
+  const mapBody = (
+    <>
       <style>{`
         .property-map-popup {
           background: transparent !important;
@@ -245,6 +287,46 @@ export default function PropertyMap({ properties, heightClassName = "h-[500px]",
           </Marker>
         ))}
       </MapContainer>
+    </>
+  );
+
+  // Fullscreen is portalled to document.body so it escapes ancestor
+  // stacking contexts (e.g. the sticky map panel) and truly covers the
+  // navbar and every other element on the page.
+  if (isFullscreen && typeof document !== "undefined") {
+    return (
+      <>
+        {/* Placeholder keeps the page layout from jumping while fullscreen */}
+        <div className={`${heightClassName} w-full`} aria-hidden="true" />
+        {createPortal(
+          <div className="fixed inset-0 z-[9999] w-full h-full bg-white dark:bg-[#111] p-2 sm:p-4">
+            <div className="relative w-full h-full rounded-2xl overflow-hidden border border-gray-300 dark:border-gray-700">
+              {mapBody}
+              <ExpandButton
+                isFullscreen
+                onToggle={() => setIsFullscreen(false)}
+                visibilityClassName="flex"
+              />
+            </div>
+          </div>,
+          document.body,
+        )}
+      </>
+    );
+  }
+
+  return (
+    <div className={`${heightClassName} w-full rounded-2xl overflow-hidden border border-gray-300 dark:border-gray-700 relative`}>
+      <div className="relative w-full h-full">
+        {mapBody}
+
+        {/* Expand button — top right of the map (large screens only) */}
+        <ExpandButton
+          isFullscreen={false}
+          onToggle={() => setIsFullscreen(true)}
+          visibilityClassName="hidden lg:flex"
+        />
+      </div>
     </div>
   );
 }
