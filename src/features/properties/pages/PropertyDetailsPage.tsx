@@ -594,7 +594,7 @@ function PropertyDetails() {
                           Math.min(index, Math.max(0, images.length - step)),
                         )
                       }
-                      className={`h-30 w-30 md:w-full dark:bg-[#1A1A1A] bg-white object-cover rounded-lg cursor-pointer border transition-colors ${isThumbActive
+                      className={`h-25 w-30 md:w-40 dark:bg-[#1A1A1A] bg-white object-cover rounded-lg cursor-pointer border transition-colors ${isThumbActive
                         ? "border-[#703BF7]"
                         : "border-gray-600/30"
                         }`}
