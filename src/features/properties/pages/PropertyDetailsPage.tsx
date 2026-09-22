@@ -31,7 +31,7 @@ import {
   PropertyCardSkeleton,
 } from "../../../shared/components/ui/Skeletons";
 import { toast } from "sonner";
-import { formatCurrency } from "../../../shared/lib/utils";
+import { formatCurrency, stripHtmlTags } from "../../../shared/lib/utils";
 
 import { useAuthStore } from "../../auth/store/useAuthStore";
 
@@ -89,10 +89,11 @@ function PropertyDetails() {
 
   const handleShare = async () => {
     if (!property) return;
-    const description = property.description;
+    const description = stripHtmlTags(property.description);
     const url = window.location.href;
     const address = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
-    const shareText = `${description}\n\nName: ${property.name}\nAddress: ${address}\nCategory: ${property.category}\nURL: ${url}`;
+    const coverImageUrl = property.img || property.images?.[0] || "";
+    const shareText = `${property.name}\n${address}\n\n${description}\n\nCategory: ${property.category}\nURL: ${url}`;
 
     if (navigator.share) {
       try {
@@ -104,7 +105,6 @@ function PropertyDetails() {
         // Prefer the property video for the attached share file; only fall
         // back to the cover image if no video is available or it fails.
         const videoUrl = property.videoUrl;
-        const coverImageUrl = property.img || property.images?.[0] || "";
 
         if (videoUrl && typeof File !== "undefined") {
           try {
@@ -118,11 +118,16 @@ function PropertyDetails() {
                 { type: blob.type || "video/mp4" },
               );
 
-              await navigator.share({
-                ...shareData,
-                files: [shareFile],
-              });
-              return;
+              if (
+                !navigator.canShare ||
+                navigator.canShare({ files: [shareFile] })
+              ) {
+                await navigator.share({
+                  ...shareData,
+                  files: [shareFile],
+                });
+                return;
+              }
             }
           } catch (videoError) {
             console.error("Error preparing share video:", videoError);
@@ -141,11 +146,16 @@ function PropertyDetails() {
                 { type: blob.type || "image/jpeg" },
               );
 
-              await navigator.share({
-                ...shareData,
-                files: [shareFile],
-              });
-              return;
+              if (
+                !navigator.canShare ||
+                navigator.canShare({ files: [shareFile] })
+              ) {
+                await navigator.share({
+                  ...shareData,
+                  files: [shareFile],
+                });
+                return;
+              }
             }
           } catch (imageError) {
             console.error("Error preparing share image:", imageError);
@@ -386,6 +396,12 @@ function PropertyDetails() {
     };
   }, []);
 
+  // Cover image + clean description for link previews (WhatsApp, Twitter, etc.)
+  const coverImage = property?.img || property?.images?.[0] || "";
+  const cleanDescription = property
+    ? stripHtmlTags(property.description).slice(0, 160)
+    : "View property details on RewaCiti.";
+
   return (
     <div className="bg-gray-300 dark:bg-black/30">
       <Helmet>
@@ -410,15 +426,13 @@ function PropertyDetails() {
               : "Property Details | RewaCiti"
           }
         />
-        <meta
-          property="og:description"
-          content={
-            property
-              ? `Discover ${property.name} in ${property.location.area}, ${property.location.city_town}, ${property.location.state}.`
-              : "View property details on RewaCiti."
-          }
-        />
+        <meta property="og:description" content={cleanDescription} />
         <meta property="og:type" content="website" />
+        {coverImage && <meta property="og:image" content={coverImage} />}
+        {coverImage && <meta name="twitter:card" content="summary_large_image" />}
+        {coverImage && <meta name="twitter:image" content={coverImage} />}
+        {coverImage && <meta name="twitter:title" content={property?.name} />}
+        {coverImage && <meta name="twitter:description" content={cleanDescription} />}
         <link rel="canonical" href={window.location.href} />
       </Helmet>
       <Navbar />

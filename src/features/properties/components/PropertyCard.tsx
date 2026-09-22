@@ -9,7 +9,7 @@ import {
   FiChevronLeft,
   FiChevronRight,
 } from "react-icons/fi";
-import { formatCurrency } from "../../../shared/lib/utils";
+import { formatCurrency, stripHtmlTags } from "../../../shared/lib/utils";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -127,16 +127,47 @@ function PropertyCard({ property, infoLayout = "auto" }: PropertyCardProps) {
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const description = property.description;
+    const description = stripHtmlTags(property.description);
     const url = `${window.location.origin}/properties/${propertySlug}`;
     const address = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
-    const shareText = `${description}\n\nName: ${property.name}\nAddress: ${address}\nCategory: ${property.category}\nURL: ${url}`;
+    const coverImageUrl = property.img || images?.[0] || "";
+    const shareText = `${property.name}\n${address}\n\n${description}\n\nCategory: ${property.category}\nURL: ${url}`;
     if (navigator.share) {
       try {
-        await navigator.share({
+        const shareData = {
           title: property.name,
           text: shareText,
-        });
+        };
+
+        // Attach the cover image so the native share sheet shows a preview.
+        if (coverImageUrl && typeof File !== "undefined") {
+          try {
+            const response = await fetch(coverImageUrl);
+            const blob = await response.blob();
+            if (blob.size) {
+              const shareFile = new File(
+                [blob],
+                `${propertySlug || property.name}.jpg`,
+                { type: blob.type || "image/jpeg" },
+              );
+              // Only attach files if the browser supports it
+              if (
+                !navigator.canShare ||
+                navigator.canShare({ files: [shareFile] })
+              ) {
+                await navigator.share({
+                  ...shareData,
+                  files: [shareFile],
+                });
+                return;
+              }
+            }
+          } catch (imageError) {
+            console.error("Error preparing share image:", imageError);
+          }
+        }
+
+        await navigator.share(shareData);
       } catch (err) {
         console.error("Error sharing:", err);
       }
