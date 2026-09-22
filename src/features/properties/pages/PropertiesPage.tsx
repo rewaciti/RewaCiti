@@ -544,7 +544,7 @@ function PropertySearchSection() {
         id="Categories"
       >
         <div className="px-4 py-3">
-          <div className="relative w-full">
+          <div className="relative w-full max-w-3xl mx-auto">
             <input
               type="text"
               placeholder="Search for properties..."
@@ -567,7 +567,7 @@ function PropertySearchSection() {
             </button>
           </div>
 
-          <div className="mt-3">
+          <div className="mt-3  w-full max-w-5xl mx-auto">
             {/* Small screens: explicit, scrollable Listing Type pills + toggle */}
             <div className="sm:hidden flex items-center gap-1.5">
               <div className="flex-1 min-w-0 flex items-center gap-1.5 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -623,7 +623,7 @@ function PropertySearchSection() {
             </div>
 
             {/* sm to lg: Category pills + toggle */}
-            <div className="hidden sm:flex lg:hidden items-center gap-1.5">
+            <div className="hidden sm:flex lg:hidden items-center gap-1.5 max-w-4xl mx-auto">
               <div className="flex-1 min-w-0 flex items-center gap-1.5 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <button
                   onClick={() => setCategory("")}
@@ -725,14 +725,20 @@ function PropertySearchSection() {
 
                   <div className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]">
                     <CustomDropdown
-                      placeholder={state ? "Area" : "Select State first"}
+                      placeholder={
+                        !state
+                          ? "Select State first"
+                          : !city
+                            ? "Select City first"
+                            : "Area"
+                      }
                       value={area}
                       options={[
                         { label: "All Areas", value: "" },
                         ...areaOptions,
                       ]}
                       onChange={handleAreaChange}
-                      disabled={!state}
+                      disabled={!state || !city}
                       className="w-full"
                       buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 font-bold bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
                     />
@@ -840,7 +846,7 @@ function PropertySearchSection() {
                               onMouseLeave={() => setHoveredPropertyId(null)}
                               className={`rounded-xl transition ${hoveredPropertyId === property.id ? "ring-2 ring-[#703BF7]" : "ring-1 ring-transparent"}`}
                             >
-                              <PropertyCard property={property} />
+                              <PropertyCard property={property} infoLayout="stacked" />
                             </div>
                           ))}
                         </div>

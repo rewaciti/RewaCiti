@@ -17,6 +17,7 @@ import { useAuthStore } from "../../auth/store/useAuthStore";
 
 interface PropertyCardProps {
   property: Property;
+  infoLayout?: "auto" | "stacked";
 }
 
 const DOTS_PER_GROUP = 4;
@@ -24,7 +25,7 @@ const DOT_SIZE = 6;
 const DOT_GAP = 6;
 const SWIPE_THRESHOLD = 40;
 
-function PropertyCard({ property }: PropertyCardProps) {
+function PropertyCard({ property, infoLayout = "auto" }: PropertyCardProps) {
   const { toggleShortlist, shortlistedProperties } = usePropertyStore();
   const propertySlug = property.slug;
 
@@ -373,7 +374,9 @@ function PropertyCard({ property }: PropertyCardProps) {
       {/* Property Info */}
       <div
         className={`grid gap-2 mb-1 ${hasBedrooms && hasBathrooms
-          ? "grid-cols-2 xl:grid-cols-3"
+          ? infoLayout === "stacked"
+            ? "grid-cols-2"
+            : "grid-cols-2 xl:grid-cols-3"
           : hasBedrooms || hasBathrooms
             ? "grid-cols-2"
             : "grid-cols-1"
@@ -394,7 +397,7 @@ function PropertyCard({ property }: PropertyCardProps) {
         )}
 
         <p
-          className={`border border-purple-100 dark:border-gray-600/30 bg-purple-50 dark:bg-transparent text-gray-700 dark:text-gray-300 rounded-xl px-2 py-1 flex items-center justify-center gap-2 text-[11px] sm:text-xs transition ${hasBedrooms && hasBathrooms ? "col-span-2 xl:col-span-1" : ""
+          className={`border border-purple-100 dark:border-gray-600/30 bg-purple-50 dark:bg-transparent text-gray-700 dark:text-gray-300 rounded-xl px-2 py-1 flex items-center justify-center gap-2 text-[11px] sm:text-xs transition ${hasBedrooms && hasBathrooms ? infoLayout === "stacked" ? "col-span-2" : "col-span-2 xl:col-span-1" : ""
             }`}
         >
           <FaHome />

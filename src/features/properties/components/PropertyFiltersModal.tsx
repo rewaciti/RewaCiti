@@ -161,11 +161,17 @@ export default function PropertyFiltersModal({
                   <div>
                     <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">Area</label>
                     <CustomDropdown
-                      placeholder={state ? "All Areas" : "Select State first"}
+                      placeholder={
+                        !state
+                          ? "Select State first"
+                          : !city
+                            ? "Select City first"
+                            : "All Areas"
+                      }
                       value={area}
                       options={[{ label: "All Areas", value: "" }, ...areaOptions]}
                       onChange={(val) => onAreaChange?.(val)}
-                      disabled={!state}
+                      disabled={!state || !city}
                       className="w-full"
                       buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent text-gray-900 dark:text-white text-sm"
                     />
