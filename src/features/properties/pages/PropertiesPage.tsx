@@ -933,22 +933,6 @@ function PropertySearchSection() {
                           <FiSliders size={16} />
                           <span>Tell Us Your Preference</span>
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => setIsCoRentModalOpen(true)}
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 text-gray-900 dark:text-white text-sm font-medium transition cursor-pointer border border-gray-300 dark:border-neutral-700"
-                        >
-                          <FiUsers size={16} />
-                          <span>Looking to Co-Rent?</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setIsListPropertyOpen(true)}
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 text-gray-900 dark:text-white text-sm font-medium transition cursor-pointer border border-gray-300 dark:border-neutral-700"
-                        >
-                          <FiHome size={16} />
-                          <span>List Your Property</span>
-                        </button>
                       </div>
                     </div>
                   ) : (

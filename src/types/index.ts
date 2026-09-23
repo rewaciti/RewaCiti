@@ -106,6 +106,11 @@ export interface PropertyStore {
     limit?: number
   ) => Promise<void>;
 
+  currentProperty: Property | null;
+  detailsLoading: boolean;
+  fetchPropertyBySlug: (slug: string) => Promise<void>;
+  clearCurrentProperty: () => void;
+
 }
 
 export interface PropertyPaymentFees {

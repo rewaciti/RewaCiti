@@ -45,7 +45,7 @@ function PropertyDetails() {
   const { slug } = useParams<{ slug: string }>();
   const {
     properties,
-    fetchProperties,
+    featuredProperties,
     loading,
     toggleShortlist,
     shortlistedProperties,
@@ -54,8 +54,20 @@ function PropertyDetails() {
     totalRelatedProperties,
     fetchRelatedProperties,
     fetchCategories,
+    currentProperty,
+    detailsLoading,
+    fetchPropertyBySlug,
   } = usePropertyStore();
-  const property = properties.find((p) => p.slug === slug);
+  const cachedProperty =
+    properties.find((p) => p.slug === slug) ??
+    relatedProperties.find((p) => p.slug === slug) ??
+    featuredProperties.find((p) => p.slug === slug) ??
+    null;
+  const property =
+    currentProperty && currentProperty.slug === slug
+      ? currentProperty
+      : cachedProperty ?? currentProperty;
+  const showDetailsSkeleton = detailsLoading || (!property && loading);
 
   const isShortlisted = property
     ? shortlistedProperties.some((p) => p.id === property.id)
@@ -284,10 +296,10 @@ function PropertyDetails() {
   };
 
   useEffect(() => {
-    if (properties.length === 0) {
-      fetchProperties();
+    if (slug) {
+      void fetchPropertyBySlug(slug);
     }
-  }, [properties.length, fetchProperties]);
+  }, [slug, fetchPropertyBySlug]);
 
   useEffect(() => {
     fetchCategories();
@@ -437,7 +449,7 @@ function PropertyDetails() {
       </Helmet>
       <Navbar />
 
-      {loading && properties.length === 0 ? (
+      {showDetailsSkeleton ? (
         <PropertyDetailsSkeleton />
       ) : !property ? (
         <div className="dark:bg-black/30 bg-gray min-h-[70vh] flex items-center justify-center">

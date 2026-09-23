@@ -326,6 +326,8 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
   relatedProperties: [],
   relatedPropertiesLoading: false,
   totalRelatedProperties: 0,
+  currentProperty: null,
+  detailsLoading: false,
   loading: false,
   error: null,
   fees: null,
@@ -452,6 +454,46 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
       set({ relatedProperties: [], totalRelatedProperties: 0, relatedPropertiesLoading: false });
     }
   },
+
+  fetchPropertyBySlug: async (slug: string) => {
+    // Serve from cache first so back-navigation is instant,
+    // but still revalidate in the background for fresh data.
+    const { properties, relatedProperties, featuredProperties, currentProperty } = get();
+    const cached =
+      (currentProperty?.slug === slug ? currentProperty : null) ??
+      properties.find((p) => p.slug === slug) ??
+      relatedProperties.find((p) => p.slug === slug) ??
+      featuredProperties.find((p) => p.slug === slug) ??
+      null;
+
+    if (cached) {
+      set({ currentProperty: cached });
+    } else {
+      set({ detailsLoading: true, currentProperty: null });
+    }
+
+    try {
+      const res = await sabiFlowApi.get<SabiFlowProduct>(`/products/${slug}`);
+      const raw = res.data as SabiFlowProduct | { data?: SabiFlowProduct };
+      const item = (raw as { data?: SabiFlowProduct }).data ?? (raw as SabiFlowProduct);
+      if (!item || !item._id) throw new Error("Property not found");
+      const [mapped] = mapSabiFlowProductsToProperties([item]);
+      set((state) => ({
+        currentProperty: mapped,
+        detailsLoading: false,
+        // Upsert into the list cache so find() also works on revisit.
+        properties: state.properties.some((p) => p.slug === mapped.slug)
+          ? state.properties.map((p) => (p.slug === mapped.slug ? mapped : p))
+          : [...state.properties, mapped],
+      }));
+    } catch (err) {
+      console.error(`Failed to fetch property "${slug}":`, err);
+      // If we had a cached copy, keep it; otherwise clear so UI shows Not Found.
+      set({ detailsLoading: false, ...(cached ? {} : { currentProperty: null }) });
+    }
+  },
+
+  clearCurrentProperty: () => set({ currentProperty: null, detailsLoading: false }),
 
   nextPage: () => {
     const { apiPage, totalProperties, ITEMS_PER_PAGE, fetchProperties, filters } = get();
