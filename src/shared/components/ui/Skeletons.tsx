@@ -100,7 +100,7 @@ export function PropertyDetailsSkeleton() {
           <div className="p-2 border border-gray-600/30 rounded-xl">
             {/* Thumbnail Row — matches h-25 w-30 md:w-40 thumbs */}
             <div className="flex gap-2 overflow-x-auto mb-3 p-1 border border-gray-600/30 rounded-xl bg-black/20">
-              {[...Array(5)].map((_, i) => (
+              {[...Array(9)].map((_, i) => (
                 <Skeleton
                   key={i}
                   className="h-[100px] w-[120px] md:w-40 shrink-0 rounded-lg"
