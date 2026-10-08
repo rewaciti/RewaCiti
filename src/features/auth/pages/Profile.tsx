@@ -730,18 +730,6 @@ const Profile = () => {
           </div>
         )}
 
-        {/* Desktop Logout Button for Security Tab (bottom right, only visible on desktop) */}
-        {!isLoading && activeTab === "security" && (
-          <div className="hidden md:flex justify-end mt-6 pb-4">
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl border border-red-200 dark:border-red-800/60 bg-red-50/50 hover:bg-red-100 dark:bg-red-950/10 dark:hover:bg-red-950/20 text-red-500 hover:text-red-600 transition cursor-pointer text-xs font-semibold shadow-sm"
-            >
-              <FiLogOut size={14} /> Logout
-            </button>
-          </div>
-        )}
       </div>
       <section className="bg-gray-300 dark:bg-black/30">
         <Footer/>

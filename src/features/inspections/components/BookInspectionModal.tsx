@@ -373,7 +373,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               </div>
             )}
 
-           <div className="space-y-2 border border-gray-600/30 rounded-lg p-4 bg-gray-500/10">
+           <div className="space-y-2 border border-gray-600/30 rounded-lg p-3 bg-gray-500/10">
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Preferred Date</label>
