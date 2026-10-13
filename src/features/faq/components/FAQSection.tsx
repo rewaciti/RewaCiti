@@ -31,7 +31,7 @@ function FAQSection() {
   }
 
   return (
-    <div className="px-4 mx-auto py-5 md:py-0">
+    <div className="px-4 mx-auto py-2 md:py-1">
       {/* Header */}
       <div className="">
         <img

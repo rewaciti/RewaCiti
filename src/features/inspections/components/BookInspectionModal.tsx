@@ -21,6 +21,40 @@ interface BookInspectionModalProps {
 const API_URL = import.meta.env.VITE_API_URL;
 const API_KEY = import.meta.env.VITE_SABIFLOW_API_KEY;
 const GATEWAY_ID = import.meta.env.VITE_SABIFLOW_GATEWAY_ID;
+const INSPECTION_BOOKING_NOTICE_HOURS = 48;
+
+const formatLocalDate = (date: Date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
+const formatTime = (date: Date) =>
+  `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+
+const getVisitBookingConstraints = () => {
+  const now = new Date();
+  const earliestVisit = new Date(
+    Math.ceil(
+      (now.getTime() + INSPECTION_BOOKING_NOTICE_HOURS * 60 * 60 * 1000) / 60000,
+    ) * 60000,
+  );
+  const minDate = new Date(
+    earliestVisit.getFullYear(),
+    earliestVisit.getMonth(),
+    earliestVisit.getDate(),
+  );
+
+  if (earliestVisit.getHours() > 16 ||
+      (earliestVisit.getHours() === 16 && earliestVisit.getMinutes() > 0)) {
+    minDate.setDate(minDate.getDate() + 1);
+  }
+
+  const minTime =
+    formatLocalDate(minDate) === formatLocalDate(earliestVisit) &&
+    earliestVisit.getHours() >= 8
+      ? formatTime(earliestVisit)
+      : "08:00";
+
+  return { minDate: formatLocalDate(minDate), minTime };
+};
 
 interface PaystackSuccessResponse {
   reference: string;
@@ -47,7 +81,8 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const modalCookieKey = "rewaciti_inspection_modal";
 
   const phone = profilePhone || customer?.phoneNumber || guestPhone;
-  const todayISO = new Date().toISOString().split("T")[0];
+  const { minDate: minVisitDate, minTime: earliestVisitTime } =
+    getVisitBookingConstraints();
 
   React.useEffect(() => {
     const savedForm = getCookie(modalCookieKey);
@@ -133,6 +168,20 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
 
     if (!visitDate || !visitTime) {
       toast.error("Please select your preferred visit date and time.");
+      return;
+    }
+
+    const selectedVisit = new Date(`${visitDate}T${visitTime}:00`);
+    const minimumNoticeMs = INSPECTION_BOOKING_NOTICE_HOURS * 60 * 60 * 1000;
+    if (
+      Number.isNaN(selectedVisit.getTime()) ||
+      visitTime < "08:00" ||
+      visitTime > "16:00" ||
+      selectedVisit.getTime() < Date.now() + minimumNoticeMs
+    ) {
+      toast.error(
+        "Choose a visit between 8:00 AM and 4:00 PM, at least 48 hours from now.",
+      );
       return;
     }
 
@@ -380,7 +429,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                   <input
                     type="date"
                     required
-                    min={todayISO}
+                    min={minVisitDate}
                     value={visitDate}
                     onChange={(e) => setVisitDate(e.target.value)}
                     className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
@@ -391,6 +440,9 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                   <input
                     type="time"
                     required
+                    min={visitDate === minVisitDate ? earliestVisitTime : "08:00"}
+                    max="16:00"
+                    step={60}
                     value={visitTime}
                     onChange={(e) => setVisitTime(e.target.value)}
                     className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
@@ -398,7 +450,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                 </div>
               </div>
               <p className="text-xs dark:text-gray-400 leading-snug text-gray-500">
-                This is just your preferred slot — if the agent isn't available at that time, our team will reach out to reschedule to a time that works for both of you.
+                Inspections are available from 8:00 AM to 4:00 PM and must be booked at least 48 hours in advance. This is your preferred slot — if the agent isn't available, our team will reach out to reschedule.
               </p>
            </div>
 

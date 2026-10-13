@@ -23,7 +23,7 @@ function PropertySection() {
   const hideOnMdOnly = "hidden sm:block md:hidden lg:block";
 
   return (
-    <div className="px-4 mx-auto py-5 md:py-0">
+    <div className="px-4 mx-auto md:py-1 py-2">
       <div className="">
         <img
           src="/logo/Abstract Design (1).png"
@@ -50,7 +50,7 @@ function PropertySection() {
           </NavLink>
         </div>
       </div>
-      <div className=" py-4">
+      <div className=" py-2">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           {featuredLoading ? (
             [...Array(4)].map((_, i) => (
