@@ -366,7 +366,7 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
                   </label>
                   <input
                     type="text"
-                    placeholder="Enter your budget range"
+                    placeholder="e.g. ₦200,000 - ₦350,000 per year"
                     value={budget}
                     onChange={(e) => setBudget(e.target.value)}
                     className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"

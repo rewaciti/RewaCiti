@@ -12,30 +12,13 @@ import CustomDropdown from "./CustomDropdown";
 interface PreferenceModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  categories?: { label: string; value: string }[];
+  categories: { label: string; value: string }[];
 }
-
-const DEFAULT_CATEGORIES = [
-  { label: "None here", value: "none" },
-  { label: "Self Contain", value: "Self Contain" },
-  { label: "Studio Apartment", value: "Studio Apartment" },
-  { label: "Mini Flat", value: "Mini Flat" },
-  { label: "Flat", value: "Flat" },
-  { label: "Bungalow", value: "Bungalow" },
-  { label: "Duplex", value: "Duplex" },
-  { label: "Mansion", value: "Mansion" },
-  { label: "Villa", value: "Villa" },
-  { label: "Smart Home", value: "Smart Home" },
-  { label: "Single Room", value: "Single Room (Shared)" },
-  { label: "Shared Room", value: "Shared Room" },
-  { label: "Land", value: "Land" },
-  { label: "Uncompleted Building", value: "Uncompleted Building" },
-];
 
 const PreferenceModal: React.FC<PreferenceModalProps> = ({
   open,
   onOpenChange,
-  categories = DEFAULT_CATEGORIES,
+  categories,
 }) => {
   const { isAuthenticated } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,7 +35,25 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
   const [message, setMessage] = useState("");
   const [agreed, setAgreed] = useState(false);
 
+  const selectedCategory = categories.find(
+    (category) => category.value === preferedCategory,
+  );
+  const normalizedCategory = (selectedCategory?.label ?? preferedCategory)
+    .toLowerCase()
+    .replace(/[^a-z]/g, "");
+  const roomCountsDisabled =
+    normalizedCategory === "selfcontain" ||
+    normalizedCategory.startsWith("singleroom") ||
+    normalizedCategory.startsWith("land");
+
   const inquiryCookieKey = "rewaciti_property_inquiry";
+
+  useEffect(() => {
+    if (roomCountsDisabled) {
+      setBedroomsContact("");
+      setBathroomsContact("");
+    }
+  }, [roomCountsDisabled]);
 
   // Load saved draft from cookie once on mount only.
   useEffect(() => {
@@ -345,10 +346,11 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
                   </label>
                   <input
                     type="text"
-                    placeholder="Enter number of bedrooms"
+                    placeholder={roomCountsDisabled ? "Not applicable" : "Enter number of bedrooms"}
                     value={bedroomsContact}
                     onChange={(e) => setBedroomsContact(e.target.value)}
-                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                    disabled={roomCountsDisabled}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white disabled:cursor-not-allowed disabled:opacity-50"
                   />
                 </div>
 
@@ -358,10 +360,11 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
                   </label>
                   <input
                     type="text"
-                    placeholder="Enter number of bathrooms"
+                    placeholder={roomCountsDisabled ? "Not applicable" : "Enter number of bathrooms"}
                     value={bathroomsContact}
                     onChange={(e) => setBathroomsContact(e.target.value)}
-                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                    disabled={roomCountsDisabled}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white disabled:cursor-not-allowed disabled:opacity-50"
                   />
                 </div>
 
@@ -371,7 +374,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
                   </label>
                   <input
                     type="text"
-                    placeholder="Enter your budget range"
+                    placeholder="e.g. ₦200,000 - ₦350,000 per year"
                     value={budget}
                     onChange={(e) => setBudget(e.target.value)}
                     className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
