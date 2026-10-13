@@ -364,7 +364,11 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               userEmail: bookingEmail,
               userPhone: phone,
               date: new Date().toISOString().split('T')[0],
-              time: new Date().toLocaleTimeString(),
+              time: new Date().toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+              }),
               amount,
               reference: transaction.reference,
               location: propertyAddress,
