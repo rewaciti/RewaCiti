@@ -23,11 +23,29 @@ const API_KEY = import.meta.env.VITE_SABIFLOW_API_KEY;
 const GATEWAY_ID = import.meta.env.VITE_SABIFLOW_GATEWAY_ID;
 const INSPECTION_BOOKING_NOTICE_HOURS = 48;
 
+// Hourly slots from 08:00 to 16:00 (stored as 24h "HH:00", displayed in 12h)
+const VISIT_SLOTS = Array.from({ length: 9 }, (_, i) =>
+  `${String(i + 8).padStart(2, "0")}:00`,
+);
+
 const formatLocalDate = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
+const isWeekendDate = (date: string) => {
+  if (!date) return false;
+  const day = new Date(`${date}T00:00:00`).getDay();
+  return day === 0 || day === 6;
+};
+
 const formatTime = (date: Date) =>
   `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+
+const formatTwelveHourTime = (time: string) => {
+  const [hours, minutes] = time.split(":").map(Number);
+  const period = hours >= 12 ? "PM" : "AM";
+  const displayHour = hours % 12 || 12;
+  return `${displayHour}:${String(minutes).padStart(2, "0")} ${period}`;
+};
 
 const getVisitBookingConstraints = () => {
   const now = new Date();
@@ -44,6 +62,10 @@ const getVisitBookingConstraints = () => {
 
   if (earliestVisit.getHours() > 16 ||
       (earliestVisit.getHours() === 16 && earliestVisit.getMinutes() > 0)) {
+    minDate.setDate(minDate.getDate() + 1);
+  }
+
+  while (minDate.getDay() === 0 || minDate.getDay() === 6) {
     minDate.setDate(minDate.getDate() + 1);
   }
 
@@ -83,6 +105,28 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const phone = profilePhone || customer?.phoneNumber || guestPhone;
   const { minDate: minVisitDate, minTime: earliestVisitTime } =
     getVisitBookingConstraints();
+  const earliestTimeForDate =
+    visitDate === minVisitDate ? earliestVisitTime : "08:00";
+  const [earliestHour, earliestMinute] = earliestTimeForDate
+    .split(":")
+    .map(Number);
+  const firstAvailableTime = `${String(
+    earliestHour + (earliestMinute > 0 ? 1 : 0),
+  ).padStart(2, "0")}:00`;
+
+  // Hourly slots (8 AM - 4 PM) that respect the 48-hour notice on the earliest day
+  const availableSlots = VISIT_SLOTS.filter((t) => t >= firstAvailableTime);
+
+  React.useEffect(() => {
+    if (
+      visitTime &&
+      (visitTime < firstAvailableTime ||
+        visitTime > "16:00" ||
+        Number(visitTime.slice(3, 5)) !== 0)
+    ) {
+      setVisitTime("");
+    }
+  }, [visitTime, firstAvailableTime]);
 
   React.useEffect(() => {
     const savedForm = getCookie(modalCookieKey);
@@ -93,8 +137,16 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
         setGuestEmail(parsed.guestEmail || "");
         setGuestPhone(parsed.guestPhone || "");
         setAgreed(parsed.agreed || false);
-        setVisitDate(parsed.visitDate || "");
-        setVisitTime(parsed.visitTime || "");
+        const savedVisitDate = parsed.visitDate || "";
+        setVisitDate(isWeekendDate(savedVisitDate) ? "" : savedVisitDate);
+        const savedVisitTime =
+          isWeekendDate(savedVisitDate)
+            ? ""
+            : parsed.visitTime ||
+              (parsed.visitHour && parsed.visitMinute
+                ? `${parsed.visitHour}:${parsed.visitMinute}`
+                : "");
+        setVisitTime(savedVisitTime);
       } catch {
         // ignore malformed cookie data
       }
@@ -123,7 +175,14 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   }, [open, isAuthenticated]);
 
   React.useEffect(() => {
-    setCookie(modalCookieKey, JSON.stringify({ guestName, guestEmail, guestPhone, agreed, visitDate, visitTime }));
+    setCookie(modalCookieKey, JSON.stringify({
+      guestName,
+      guestEmail,
+      guestPhone,
+      agreed,
+      visitDate,
+      visitTime,
+    }));
   }, [guestName, guestEmail, guestPhone, agreed, visitDate, visitTime]);
 
   const addInspection = useInspectionStore((state) => state.addInspection);
@@ -171,12 +230,18 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
       return;
     }
 
+    if (isWeekendDate(visitDate)) {
+      toast.error("Please choose a weekday for your visit.");
+      return;
+    }
+
     const selectedVisit = new Date(`${visitDate}T${visitTime}:00`);
     const minimumNoticeMs = INSPECTION_BOOKING_NOTICE_HOURS * 60 * 60 * 1000;
     if (
       Number.isNaN(selectedVisit.getTime()) ||
       visitTime < "08:00" ||
       visitTime > "16:00" ||
+      !visitTime.endsWith(":00") ||
       selectedVisit.getTime() < Date.now() + minimumNoticeMs
     ) {
       toast.error(
@@ -207,7 +272,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
           }
         ],
         taxRate: 0,
-        notes: `Inspection booking for ${property.name} at ${propertyAddress}.\nPreferred Visit: ${visitDate} at ${visitTime}\nProperty Link: ${propertyUrl}`,
+        notes: `Inspection booking for ${property.name} at ${propertyAddress}.\nPreferred Visit: ${visitDate} at ${formatTwelveHourTime(visitTime)}\nProperty Link: ${propertyUrl}`,
         paymentMethod: "credit_card",
         customerDetails: {
           name: fullName,
@@ -264,11 +329,11 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               email: bookingEmail,
               phone: phone,
               address: propertyAddress,
-              note: `visit/inspection booking for ${property.name} at ${propertyAddress}.\nPreferred Visit: ${visitDate} at ${visitTime}\nProperty Link: ${propertyUrl}.\nBooking Reference: ${transaction.reference}`,
+              note: `visit/inspection booking for ${property.name} at ${propertyAddress}.\nPreferred Visit: ${visitDate} at ${formatTwelveHourTime(visitTime)}\nProperty Link: ${propertyUrl}.\nBooking Reference: ${transaction.reference}`,
               customData: [
                 { label: "Property Name", value: property.name },
                 { label: "Preferred Visit Date", value: visitDate },
-                { label: "Preferred Visit Time", value: visitTime },
+                { label: "Preferred Visit Time", value: formatTwelveHourTime(visitTime) },
                 { label: "Property Link", value: propertyUrl },
                 { label: "Booking Reference", value: transaction.reference },
                 { label: "Inspection Fee", value: `₦${amount.toLocaleString()}` },
@@ -431,22 +496,37 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                     required
                     min={minVisitDate}
                     value={visitDate}
-                    onChange={(e) => setVisitDate(e.target.value)}
+                    onChange={(e) => {
+                      const selectedDate = e.target.value;
+                      if (isWeekendDate(selectedDate)) {
+                        setVisitDate("");
+                        setVisitTime("");
+                        toast.error("Please choose a weekday for your visit.");
+                        return;
+                      }
+                      setVisitDate(selectedDate);
+                    }}
                     className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
                   />
                 </div>
                 <div>
                   <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Preferred Time</label>
-                  <input
-                    type="time"
+                  <select
                     required
-                    min={visitDate === minVisitDate ? earliestVisitTime : "08:00"}
-                    max="16:00"
-                    step={60}
+                    disabled={!visitDate}
                     value={visitTime}
                     onChange={(e) => setVisitTime(e.target.value)}
-                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
-                  />
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] disabled:opacity-60 dark:bg-[#1A1A1A] dark:text-white"
+                  >
+                    <option value="" disabled>
+                      {visitDate ? "Select time" : "Pick a date first"}
+                    </option>
+                    {availableSlots.map((slot) => (
+                      <option key={slot} value={slot}>
+                        {formatTwelveHourTime(slot)}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <p className="text-xs dark:text-gray-400 leading-snug text-gray-500">

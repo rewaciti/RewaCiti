@@ -350,7 +350,7 @@ const services4 = [
                   decoding="async"
                 />
 
-           <div className="flex flex-col md:flex-row gap-7">
+           <div className="flex flex-col md:flex-row gap-2">
               {/* LEFT SIDE (smaller) */}
               <div className="md:w-5/12 space-y-6">
                 <div>
