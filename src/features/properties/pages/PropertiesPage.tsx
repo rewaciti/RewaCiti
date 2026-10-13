@@ -1015,7 +1015,6 @@ function PropertySearchSection() {
       <CoRentModal
         open={isCoRentModalOpen}
         onOpenChange={setIsCoRentModalOpen}
-        universityOptions={universityOptions}
       />
 
       <ListPropertyModal

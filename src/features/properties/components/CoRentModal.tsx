@@ -12,7 +12,6 @@ import CustomDropdown from "./CustomDropdown";
 interface CoRentModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  universityOptions?: { label: string; value: string }[];
 }
 
 const GENDER_OPTIONS = [
@@ -28,32 +27,15 @@ const PREFERRED_GENDER_OPTIONS = [
 
 const ROOM_TYPE_OPTIONS = [
   { label: "Shared Room (2 in a room)", value: "Shared Room (2 in a room)" },
-  { label: "Single Room in Shared Apartment", value: "Single Room (Private Room)" },
+  { label: "Shared Apartment", value: "Shared Apartment" },
   { label: "Self Contain Share", value: "Self Contain Share" },
   { label: "2-Bedroom Flat Share", value: "2-Bedroom Flat Share" },
   { label: "3-Bedroom Flat Share", value: "3-Bedroom Flat Share" },
 ];
 
-const BUDGET_OPTIONS = [
-  { label: "Below ₦150k / year", value: "Below ₦150k" },
-  { label: "₦150k - ₦250k / year", value: "₦150k - ₦250k" },
-  { label: "₦250k - ₦400k / year", value: "₦250k - ₦400k" },
-  { label: "₦400k - ₦600k / year", value: "₦400k - ₦600k" },
-  { label: "₦600k - ₦1M / year", value: "₦600k - ₦1M" },
-  { label: "Above ₦1M / year", value: "Above ₦1M" },
-];
-
-const TIMELINE_OPTIONS = [
-  { label: "Immediately", value: "Immediately" },
-  { label: "Within 2 weeks", value: "Within 2 weeks" },
-  { label: "Next Month", value: "Next Month" },
-  { label: "Next Semester / Session", value: "Next Semester / Session" },
-];
-
 const CoRentModal: React.FC<CoRentModalProps> = ({
   open,
   onOpenChange,
-  universityOptions = [],
 }) => {
   const { isAuthenticated } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,7 +43,6 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [institution, setInstitution] = useState("");
   const [preferedLocation, setPreferedLocation] = useState("");
   const [gender, setGender] = useState("");
   const [preferredPartnerGender, setPreferredPartnerGender] = useState("Any");
@@ -82,7 +63,6 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
         setName(parsed.name || "");
         setEmail(parsed.email || "");
         setPhone(parsed.phone || "");
-        setInstitution(parsed.institution || "");
         setPreferedLocation(parsed.preferedLocation || "");
         setGender(parsed.gender || "");
         setPreferredPartnerGender(parsed.preferredPartnerGender || "Any");
@@ -140,7 +120,6 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
       name,
       email,
       phone,
-      institution,
       preferedLocation,
       gender,
       preferredPartnerGender,
@@ -156,7 +135,6 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
     name,
     email,
     phone,
-    institution,
     preferedLocation,
     gender,
     preferredPartnerGender,
@@ -193,7 +171,6 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
       note: message || "Looking to co-rent a property",
       customData: [
         { label: "Request Type", value: "Co-Rent Match" },
-        { label: "Institution / Campus", value: institution || "N/A" },
         { label: "Preferred Location", value: preferedLocation.trim() },
         { label: "Applicant Gender", value: gender || "Not specified" },
         { label: "Preferred Co-Rent Partner Gender", value: preferredPartnerGender },
@@ -215,7 +192,6 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
       setName("");
       setEmail("");
       setPhone("");
-      setInstitution("");
       setPreferedLocation("");
       setGender("");
       setPreferredPartnerGender("Any");
@@ -230,7 +206,6 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
           name: "",
           email: "",
           phone: "",
-          institution: "",
           preferedLocation: "",
           gender: "",
           preferredPartnerGender: "Any",
@@ -276,169 +251,155 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
 
           <form
             onSubmit={handleSubmit}
-            className="space-y-5 border border-gray-600/30 p-2 rounded-xl dark:bg-[#121212] bg-white"
+            className="space-y-4"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter Full Name"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  placeholder="Enter your Email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  placeholder="Enter Phone Number"
-                  required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Preferred Location
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Akoka, Yaba, Tanke, Lekki"
-                  required
-                  value={preferedLocation}
-                  onChange={(e) => setPreferedLocation(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Target Institution
-                </label>
-                {universityOptions.length > 0 ? (
-                  <CustomDropdown
-                    placeholder="Select Institution"
-                    value={institution}
-                    options={[
-                      { label: "Not a student / Other", value: "Other" },
-                      ...universityOptions,
-                    ]}
-                    onChange={(val) => setInstitution(val)}
-                    buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
-                  />
-                ) : (
+            <section className="space-y-4 rounded-xl border border-gray-600/30 p-4 dark:bg-[#121212] bg-white">
+              <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                User Information
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Full Name
+                  </label>
                   <input
                     type="text"
-                    placeholder="e.g. UNILAG, LASU, OAU or Working"
-                    value={institution}
-                    onChange={(e) => setInstitution(e.target.value)}
+                    placeholder="Enter Full Name"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
                   />
-                )}
-              </div>
+                </div>
 
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Gender
-                </label>
-                <CustomDropdown
-                  placeholder="Select Gender"
-                  value={gender}
-                  options={GENDER_OPTIONS}
-                  onChange={(val) => setGender(val)}
-                  buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
-                />
-              </div>
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="Enter your Email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  />
+                </div>
 
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Preferred Partner Gender
-                </label>
-                <CustomDropdown
-                  placeholder="Preferred Gender"
-                  value={preferredPartnerGender}
-                  options={PREFERRED_GENDER_OPTIONS}
-                  onChange={(val) => setPreferredPartnerGender(val)}
-                  buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
-                />
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Phone
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="Enter Phone Number"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  />
+                </div>
               </div>
+            </section>
 
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Desired Room / Shared Type
-                </label>
-                <CustomDropdown
-                  placeholder="Select Shared Type"
-                  value={roomType}
-                  options={ROOM_TYPE_OPTIONS}
-                  onChange={(val) => setRoomType(val)}
-                  buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
-                />
+            <section className="space-y-4 rounded-xl border border-gray-600/30 p-4 dark:bg-[#121212] bg-white">
+              <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                Co-rent Preferences
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Preferred Location
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter Preferred Location"
+                    required
+                    value={preferedLocation}
+                    onChange={(e) => setPreferedLocation(e.target.value)}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Gender
+                  </label>
+                  <CustomDropdown
+                    placeholder="Select Gender"
+                    value={gender}
+                    options={GENDER_OPTIONS}
+                    onChange={(val) => setGender(val)}
+                    buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Preferred Partner Gender
+                  </label>
+                  <CustomDropdown
+                    placeholder="Preferred Gender"
+                    value={preferredPartnerGender}
+                    options={PREFERRED_GENDER_OPTIONS}
+                    onChange={(val) => setPreferredPartnerGender(val)}
+                    buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Desired Cartegory
+                  </label>
+                  <CustomDropdown
+                    placeholder="Select Shared Type"
+                    value={roomType}
+                    options={ROOM_TYPE_OPTIONS}
+                    onChange={(val) => setRoomType(val)}
+                    buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Your Budget (Per Person)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter your budget range"
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Move-in Timeline
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter your move-in timeline"
+                    value={moveInTimeline}
+                    onChange={(e) => setMoveInTimeline(e.target.value)}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  />
+                </div>
               </div>
+            </section>
 
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Your Budget (Per Person)
-                </label>
-                <CustomDropdown
-                  placeholder="Select Budget Range"
-                  value={budget}
-                  options={BUDGET_OPTIONS}
-                  onChange={(val) => setBudget(val)}
-                  buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Move-in Timeline
-                </label>
-                <CustomDropdown
-                  placeholder="When do you plan to move?"
-                  value={moveInTimeline}
-                  options={TIMELINE_OPTIONS}
-                  onChange={(val) => setMoveInTimeline(val)}
-                  buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                About You & Co-Renting Preferences
-              </label>
+            <section className="space-y-4 rounded-xl border border-gray-600/30 p-4 dark:bg-[#121212] bg-white">
+              <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                Additional Information
+              </h3>
               <textarea
                 rows={3}
-                placeholder="Tell us about yourself"
+                placeholder="Enter any additional information about yourself, lifestyle, or preferences."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
               />
-            </div>
+            </section>
 
             <div className="sm:col-span-2 flex items-center gap-1">
               <input

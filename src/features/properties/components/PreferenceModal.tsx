@@ -32,18 +32,6 @@ const DEFAULT_CATEGORIES = [
   { label: "Uncompleted Building", value: "Uncompleted Building" },
 ];
 
-const DEFAULT_PRICE_OPTIONS = [
-  { label: "All Price", value: "All Price" },
-  { label: "Below ₦100k", value: "Below ₦100k" },
-  { label: "₦100k - ₦200k", value: "₦100k - ₦200k" },
-  { label: "₦200k - ₦300k", value: "₦200k - ₦300k" },
-  { label: "₦300k - ₦400k", value: "₦300k - ₦400k" },
-  { label: "₦400k - ₦500k", value: "₦400k - ₦500k" },
-  { label: "₦500k - ₦700k", value: "₦500k - ₦700k" },
-  { label: "₦700k - ₦1M", value: "₦700k - ₦1M" },
-  { label: "Above ₦1M", value: "Above ₦1M" },
-];
-
 const PreferenceModal: React.FC<PreferenceModalProps> = ({
   open,
   onOpenChange,
@@ -60,6 +48,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
   const [bedroomsContact, setBedroomsContact] = useState("");
   const [bathroomsContact, setBathroomsContact] = useState("");
   const [budget, setBudget] = useState("");
+  const [moveInTimeline, setMoveInTimeline] = useState("");
   const [message, setMessage] = useState("");
   const [agreed, setAgreed] = useState(false);
 
@@ -79,6 +68,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
         setBedroomsContact(parsed.bedroomsContact || "");
         setBathroomsContact(parsed.bathroomsContact || "");
         setBudget(parsed.budget || "");
+        setMoveInTimeline(parsed.moveInTimeline || "");
         setMessage(parsed.message || "");
         setAgreed(parsed.agreed || false);
       } catch {
@@ -135,6 +125,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
       bedroomsContact,
       bathroomsContact,
       budget,
+      moveInTimeline,
       message,
       agreed,
     };
@@ -149,6 +140,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
     bedroomsContact,
     bathroomsContact,
     budget,
+    moveInTimeline,
     message,
     agreed,
   ]);
@@ -190,6 +182,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
         { label: "Preferred Location", value: preferedLocation.trim() },
         { label: "Bedrooms", value: bedroomsContact },
         { label: "Bathrooms", value: bathroomsContact },
+        { label: "Move-in Timeline", value: moveInTimeline },
       ],
     };
 
@@ -209,6 +202,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
       setBedroomsContact("");
       setBathroomsContact("");
       setBudget("");
+      setMoveInTimeline("");
       setMessage("");
       setAgreed(false);
       setCookie(
@@ -222,6 +216,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
           bedroomsContact: "",
           bathroomsContact: "",
           budget: "",
+          moveInTimeline: "",
           message: "",
           agreed: false,
         })
@@ -261,130 +256,155 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
 
           <form
             onSubmit={handleSubmit}
-            className="space-y-5 border border-gray-600/30 p-2 rounded-xl dark:bg-[#121212] bg-white"
+            className="space-y-4"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter Full Name"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-                />
-              </div>
+            <section className="space-y-4 rounded-xl border border-gray-600/30 p-4 dark:bg-[#121212] bg-white">
+              <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                User Information
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter Full Name"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  />
+                </div>
 
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  placeholder="Enter your Email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-                />
-              </div>
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="Enter your Email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  />
+                </div>
 
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  placeholder="Enter Phone Number"
-                  required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-                />
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Phone
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="Enter Phone Number"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  />
+                </div>
               </div>
+            </section>
 
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Preferred Location
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Lekki Phase 1, Lagos"
-                  required
-                  value={preferedLocation}
-                  onChange={(e) => setPreferedLocation(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-                />
+            <section className="space-y-4 rounded-xl border border-gray-600/30 p-4 dark:bg-[#121212] bg-white">
+              <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                Property Preferences
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Preferred Location
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter Preferred Location"
+                    required
+                    value={preferedLocation}
+                    onChange={(e) => setPreferedLocation(e.target.value)}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Category
+                  </label>
+                  <CustomDropdown
+                    placeholder="Select Category"
+                    value={preferedCategory}
+                    options={categories}
+                    onChange={(val) => setPreferedCategory(val)}
+                    buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    No of Bedrooms
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter number of bedrooms"
+                    value={bedroomsContact}
+                    onChange={(e) => setBedroomsContact(e.target.value)}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    No of Bathrooms
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter number of bathrooms"
+                    value={bathroomsContact}
+                    onChange={(e) => setBathroomsContact(e.target.value)}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Budget
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter your budget range"
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Move-in Timeline
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter your move-in timeline"
+                    value={moveInTimeline}
+                    onChange={(e) => setMoveInTimeline(e.target.value)}
+                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  />
+                </div>
               </div>
+            </section>
 
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Category
-                </label>
-                <CustomDropdown
-                  placeholder="Select Category"
-                  value={preferedCategory}
-                  options={categories}
-                  onChange={(val) => setPreferedCategory(val)}
-                  buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  No of Bedrooms
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. 2 or Shared"
-                  value={bedroomsContact}
-                  onChange={(e) => setBedroomsContact(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  No of Bathrooms
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. 1 or 2"
-                  value={bathroomsContact}
-                  onChange={(e) => setBathroomsContact(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Budget
-                </label>
-                <CustomDropdown
-                  placeholder="Select Budget Range"
-                  value={budget}
-                  options={DEFAULT_PRICE_OPTIONS}
-                  onChange={(val) => setBudget(val)}
-                  buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                Describe What You Want
-              </label>
+            <section className="space-y-4 rounded-xl border border-gray-600/30 p-4 dark:bg-[#121212] bg-white">
+              <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                Additional Information
+              </h3>
               <textarea
                 rows={3}
-                placeholder="Describe your ideal property, desired amenities, move-in timeline, or any special requests..."
+                placeholder="Describe your ideal property, desired amenities, or any special requests..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
               />
-            </div>
+            </section>
 
             <div className="sm:col-span-2 flex items-center gap-1">
               <input
