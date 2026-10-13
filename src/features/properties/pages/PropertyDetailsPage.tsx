@@ -40,6 +40,7 @@ function PropertyDetails() {
     Record<number, "landscape" | "portrait">
   >({});
   const [showActionBar, setShowActionBar] = useState(false);
+  const [showAllDescription, setShowAllDescription] = useState(false);
   const [showAllSpecifications, setShowAllSpecifications] = useState(false);
   const [showAllRules, setShowAllRules] = useState(false);
   const [showAllFeatures, setShowAllFeatures] = useState(false);
@@ -49,6 +50,7 @@ function PropertyDetails() {
   const { slug } = useParams<{ slug: string }>();
 
   useEffect(() => {
+    setShowAllDescription(false);
     setShowAllSpecifications(false);
     setShowAllRules(false);
     setShowAllFeatures(false);
@@ -79,6 +81,16 @@ function PropertyDetails() {
     currentProperty && currentProperty.slug === slug
       ? currentProperty
       : cachedProperty ?? currentProperty;
+  const descriptionText = (property?.description ?? "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const descriptionWords = descriptionText ? descriptionText.split(" ") : [];
+  const isLongDescription = descriptionWords.length > 30;
+  const visibleDescription =
+    showAllDescription || !isLongDescription
+      ? descriptionText
+      : `${descriptionWords.slice(0, 30).join(" ")}...`;
   const showDetailsSkeleton = detailsLoading || (!property && loading);
 
   const isShortlisted = property
@@ -909,11 +921,21 @@ function PropertyDetails() {
                   Description
                 </h2>
                 <p className="text-gray-800 dark:text-gray-400 leading-relaxed">
-                  {(property?.description ?? "")
-                    .replace(/<[^>]+>/g, " ")
-                    .replace(/\s+/g, " ")
-                    .trim()}
+                  {visibleDescription}
                 </p>
+                {isLongDescription && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowAllDescription((showAll) => !showAll)
+                    }
+                    className="mt-3 text-sm font-medium text-[#703BF7] hover:underline"
+                  >
+                    {showAllDescription
+                      ? "Show less"
+                      : `View all (${descriptionWords.length} words)`}
+                  </button>
+                )}
               </div>
               {/* Property Details */}
               <div className="flex flex-col gap-4 border-t border-gray-600/30 pt-2">
