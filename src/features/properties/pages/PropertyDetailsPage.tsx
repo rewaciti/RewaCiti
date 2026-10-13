@@ -40,9 +40,21 @@ function PropertyDetails() {
     Record<number, "landscape" | "portrait">
   >({});
   const [showActionBar, setShowActionBar] = useState(false);
+  const [showAllSpecifications, setShowAllSpecifications] = useState(false);
+  const [showAllRules, setShowAllRules] = useState(false);
+  const [showAllFeatures, setShowAllFeatures] = useState(false);
+  const [showAllSpecialNotes, setShowAllSpecialNotes] = useState(false);
   const lastScrollY = useRef(0);
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { slug } = useParams<{ slug: string }>();
+
+  useEffect(() => {
+    setShowAllSpecifications(false);
+    setShowAllRules(false);
+    setShowAllFeatures(false);
+    setShowAllSpecialNotes(false);
+  }, [slug]);
+
   const {
     properties,
     featuredProperties,
@@ -949,20 +961,35 @@ function PropertyDetails() {
                         Specifications
                       </h2>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {property.specifications.map((spec, index) => (
-                          <div
-                            key={index}
-                            className="flex flex-col border-[#703BF7] border-l pl-3 py-1"
-                          >
-                            <span className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">
-                              {spec.label}
-                            </span>
-                            <span className="text-gray-800 dark:text-gray-200 font-medium">
-                              {spec.value}
-                            </span>
-                          </div>
-                        ))}
+                        {property.specifications
+                          .slice(0, showAllSpecifications ? undefined : 5)
+                          .map((spec, index) => (
+                            <div
+                              key={index}
+                              className="flex flex-col border-[#703BF7] border-l pl-3 py-1"
+                            >
+                              <span className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">
+                                {spec.label}
+                              </span>
+                              <span className="text-gray-800 dark:text-gray-200 font-medium">
+                                {spec.value}
+                              </span>
+                            </div>
+                          ))}
                       </div>
+                      {property.specifications.length > 5 && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setShowAllSpecifications((showAll) => !showAll)
+                          }
+                          className="mt-3 text-sm font-medium text-[#703BF7] hover:underline"
+                        >
+                          {showAllSpecifications
+                            ? "Show less"
+                            : `View all (${property.specifications.length})`}
+                        </button>
+                      )}
                     </div>
                   )}
 
@@ -972,20 +999,33 @@ function PropertyDetails() {
                       Property Rules
                     </h2>
                     <ul className="space-y-4">
-                      {property.rules.map((rule, index) => (
-                        <li
-                          key={index}
-                          className="flex items-center gap-2 border-red-500 border-l pl-2 bg-linear-to-r from-red-500/10 to-transparent p-2"
-                        >
-                          <span className="text-red-500 font-bold">
-                            <FaBolt />
-                          </span>
-                          <span className="text-gray-700 dark:text-gray-300">
-                            {rule}
-                          </span>
-                        </li>
-                      ))}
+                      {property.rules
+                        .slice(0, showAllRules ? undefined : 5)
+                        .map((rule, index) => (
+                          <li
+                            key={index}
+                            className="flex items-center gap-2 border-red-500 border-l pl-2 bg-linear-to-r from-red-500/10 to-transparent p-2"
+                          >
+                            <span className="text-red-500 font-bold">
+                              <FaBolt />
+                            </span>
+                            <span className="text-gray-700 dark:text-gray-300">
+                              {rule}
+                            </span>
+                          </li>
+                        ))}
                     </ul>
+                    {property.rules.length > 5 && (
+                      <button
+                        type="button"
+                        onClick={() => setShowAllRules((showAll) => !showAll)}
+                        className="mt-3 text-sm font-medium text-[#703BF7] hover:underline"
+                      >
+                        {showAllRules
+                          ? "Show less"
+                          : `View all (${property.rules.length})`}
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -1000,20 +1040,33 @@ function PropertyDetails() {
                       Key Features and Amenities
                     </h2>
                     <ul className="space-y-4">
-                      {property.keyFeatures.map((feature, index) => (
-                        <li
-                          key={index}
-                          className="flex items-center gap-2 border-[#703BF7] border-l pl-2 bg-linear-to-r from-black/20 to-neutral p-2"
-                        >
-                          <span className="text-gray-700 dark:text-300">
-                            <FaBolt />
-                          </span>
-                          <span className="text-gray-700 dark:text-gray-300">
-                            {feature}
-                          </span>
-                        </li>
-                      ))}
+                      {property.keyFeatures
+                        .slice(0, showAllFeatures ? undefined : 5)
+                        .map((feature, index) => (
+                          <li
+                            key={index}
+                            className="flex items-center gap-2 border-[#703BF7] border-l pl-2 bg-linear-to-r from-black/20 to-neutral p-2"
+                          >
+                            <span className="text-gray-700 dark:text-300">
+                              <FaBolt />
+                            </span>
+                            <span className="text-gray-700 dark:text-gray-300">
+                              {feature}
+                            </span>
+                          </li>
+                        ))}
                     </ul>
+                    {property.keyFeatures.length > 5 && (
+                      <button
+                        type="button"
+                        onClick={() => setShowAllFeatures((showAll) => !showAll)}
+                        className="mt-3 text-sm font-medium text-[#703BF7] hover:underline"
+                      >
+                        {showAllFeatures
+                          ? "Show less"
+                          : `View all (${property.keyFeatures.length})`}
+                      </button>
+                    )}
                   </div>
                 )}
 
@@ -1023,20 +1076,33 @@ function PropertyDetails() {
                       Special Notes
                     </h2>
                     <ul className="space-y-2">
-                      {property.specialNotes.map((note, index) => (
-                        <li
-                          key={index}
-                          className="flex items-center gap-2 border-[#703BF7] border-l bg-linear-to-r from-black/20 to-neutral p-2"
-                        >
-                          <span className="text-gray-700 dark:text-300">
-                            <FaBolt />
-                          </span>
-                          <span className="text-gray-700 dark:text-gray-300">
-                            {note}
-                          </span>
-                        </li>
-                      ))}
+                      {property.specialNotes
+                        .slice(0, showAllSpecialNotes ? undefined : 5)
+                        .map((note, index) => (
+                          <li
+                            key={index}
+                            className="flex items-center gap-2 border-[#703BF7] border-l bg-linear-to-r from-black/20 to-neutral p-2"
+                          >
+                            <span className="text-gray-700 dark:text-300">
+                              <FaBolt />
+                            </span>
+                            <span className="text-gray-700 dark:text-gray-300">
+                              {note}
+                            </span>
+                          </li>
+                        ))}
                     </ul>
+                    {property.specialNotes.length > 5 && (
+                      <button
+                        type="button"
+                        onClick={() => setShowAllSpecialNotes((showAll) => !showAll)}
+                        className="mt-3 text-sm font-medium text-[#703BF7] hover:underline"
+                      >
+                        {showAllSpecialNotes
+                          ? "Show less"
+                          : `View all (${property.specialNotes.length})`}
+                      </button>
+                    )}
                   </div>
                 )}
               </div>

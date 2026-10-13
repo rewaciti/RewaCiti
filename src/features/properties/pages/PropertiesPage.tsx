@@ -1037,7 +1037,7 @@ function PropertySearchSection() {
           <div className="flex justify-between items-center">
             <div className="space-y-2">
               <h2 className="text-gray-900 dark:text-white md:text-4xl text-3xl font-semibold">
-                Tailored Real Estate Services
+                Tailored Services for you
               </h2>
               <p className="text-gray-800 dark:text-gray-400 text-[14px]">
                 Explore specialized solutions designed to meet your housing needs — from submitting custom preferences and co-renting to listing your properties.
