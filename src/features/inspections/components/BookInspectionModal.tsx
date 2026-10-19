@@ -555,16 +555,26 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                 <span>{property.location.area}, {property.location.city_town}, {property.location.state} state.</span>
               </div>
               <div className="flex justify-between items-center border-t border-[#703BF7]/20 pt-2">
-                <span className="text-sm font-medium dark:text-white text-gray-900">Inspection Fee</span>
+                <span className="text-sm font-medium dark:text-white text-gray-900">Visitation Fee</span>
                 <span className="text-lg font-bold text-[#703BF7]">
                   {feeDisplay}
                 </span>
               </div>
-              <p className="text-xs text-[#703BF7] dark:text-[#a78bfa] leading-snug font-semibold">
-                {amount === 0
-                  ? "Since there's no inspection fee, you'll cover your own transportation — but you're free to view as many available properties as you like."
-                  : "This fee covers a visit to up to 2 properties. If you'd like to view more, you'll need to cover transportation for the additional visits."}
-              </p>
+              <div className="text-xs text-[#703BF7] dark:text-[#a78bfa] leading-snug">
+                <p>
+                  The visitation fee covers the agent&apos;s time only,
+                  transportation is not included. See the{" "}
+                  <Link
+                    to="/terms"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline font-semibold"
+                  >
+                    Terms &amp; Conditions
+                  </Link>{" "}
+                  for the full visitation rules.
+                </p>
+              </div>
             </div>
 
             <div className="sm:col-span-2 flex items-center gap-3">

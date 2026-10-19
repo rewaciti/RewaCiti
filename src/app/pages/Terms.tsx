@@ -96,9 +96,46 @@ const Terms = () => {
           </h2>
 
           <p>
-            Property inspections are subject to a visitation fee, which may vary
-            depending on location and logistics. Applicable fees will be clearly
-            displayed at the point of booking.
+            Each agent sets their own visitation fee. Any visitation fee
+            charged covers the agent&apos;s time and is normally paid once per
+            agreed visitation session, not per property visited. Applicable
+            fees will be shown at the point of booking.
+          </p>
+
+          <p className="mt-2">
+            A separate <strong>₦500 RewaCiti service charge</strong> is added
+            to the agent&apos;s visitation fee. This charge is non-refundable,
+            including if a problem occurs with the booking or visitation.
+          </p>
+
+          <p className="mt-2">
+            Customers must complete the booking and pay the displayed
+            visitation fee and service charge first to confirm their commitment
+            to the visit. Transportation is not included in the visitation fee;
+            the customer is responsible for transportation expenses. The
+            customer and agent will discuss and agree on transportation
+            arrangements on-site.
+          </p>
+
+          <p className="mt-2">
+            The number of properties a customer may visit is not subject to a
+            universal limit. The customer and agent will agree on-site, taking
+            into account the agent&apos;s rules, availability, and time. For
+            example, an agent may allow three or four properties in a session;
+            any additional visits depend on availability and mutual agreement.
+          </p>
+
+          <p className="mt-2">
+            A RewaCiti team member may accompany the customer during a
+            visitation to help ensure everything goes smoothly and to protect
+            RewaCiti&apos;s partnership and commission interests.
+          </p>
+
+          <p className="mt-2">
+            The visitation fee and service charge are paid at booking. On-site,
+            the customer and agent must agree on transportation arrangements
+            and the number of properties to visit before proceeding with those
+            arrangements.
           </p>
 
           <p className="mt-2 font-semibold text-blue-600 dark:text-blue-400">
@@ -156,9 +193,11 @@ const Terms = () => {
           </p>
 
           <p className="mt-2">
-            Payments are non-refundable except in cases where failure of service
-            is attributable to the platform or agent (e.g., agent absence or
-            inaccurate property availability).
+            Payments are generally non-refundable. Where failure of service is
+            attributable to the platform or agent (e.g., agent absence or
+            inaccurate property availability), eligible fees may be refunded;
+            however, the ₦500 RewaCiti service charge is non-refundable in all
+            cases.
           </p>
         </section>
 
