@@ -23,12 +23,12 @@ const API_URL = import.meta.env.VITE_API_URL;
 const API_KEY = import.meta.env.VITE_SABIFLOW_API_KEY;
 const GATEWAY_ID = import.meta.env.VITE_SABIFLOW_GATEWAY_ID;
 
-interface PaystackSuccessResponse {
-  reference: string;
-  status: string;
-  trans: string;
-  transaction: string;
-  message: string;
+interface SaleResponse {
+  id?: string;
+  _id?: string;
+  saleNumber?: string;
+  salesOrderNumber?: string;
+  orderNumber?: string;
 }
 
 const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
@@ -93,6 +93,12 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
 
   const price = property.pricing.TotalCost || 0;
   const pricing = property.pricing;
+  const isAgentOwned =
+    (property.creatorClassification ?? property.createdBy?.classification ?? "")
+      .toLowerCase() === "agent";
+  const deductionAmount = isAgentOwned ? pricing.ServiceFee : pricing.AgentFee;
+  const deductionLabel = isAgentOwned ? "Service Charge" : "Agent Fee";
+  const netPayable = price - deductionAmount;
 
   const propertyUrl = window.location.href;
   const propertyAddress = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
@@ -163,11 +169,18 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
         }
       };
 
-      const saleResponse = await axios.post(`${API_URL}/sales`, salePayload, {
+      const saleResponse = await axios.post<SaleResponse>(`${API_URL}/sales`, salePayload, {
         headers: { "x-api-key": API_KEY }
       });
 
       const saleId = saleResponse.data.id || saleResponse.data._id;
+      if (!saleId) {
+        throw new Error("Sale creation response did not include a sale ID.");
+      }
+      const salesOrderNumber =
+        saleResponse.data.saleNumber ??
+        saleResponse.data.salesOrderNumber ??
+        saleResponse.data.orderNumber;
 
       // 2. Initialize Payment
       const initResponse = await axios.post(`${API_URL}/sales/${saleId}/payment/initiate`, {
@@ -182,7 +195,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       // 3. Open Paystack Modal
       const paystack = new PaystackPop();
       paystack.resumeTransaction(accessCode, {
-        onSuccess: async (transaction: PaystackSuccessResponse) => {
+        onSuccess: async () => {
           setIsSubmitting(true);
           try {
             // 4. Verify Payment - Including gatewayId in case it's required for verification
@@ -203,23 +216,31 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
               email: email,
               phone: phone,
               address: propertyAddress,
-              note: `Property payment for ${property.name} at ${propertyAddress}.\nProperty Link: ${propertyUrl}.\nPayment Reference: ${transaction.reference}`,
+              note: `Payment of property for ${property.name} by ${fullName}.`,
               customData: [
                 { label: "Property Name", value: property.name },
                 { label: "Property Link", value: propertyUrl },
-                { label: "Payment Reference", value: transaction.reference },
                 { label: "amount Paid", value: `₦${price.toLocaleString()}` },
-                { label: "Service Fee", value: `₦${pricing.ServiceFee.toLocaleString()}` },
-                ...(property.createdBy?._id || property.createdBy?.id
+                {
+                  label: deductionLabel,
+                  value: `₦${deductionAmount.toLocaleString()}`,
+                },
+                {
+                  label: "Net Payable",
+                  value: `₦${netPayable.toLocaleString()}`,
+                },
+                ...(property.createdBy?.email
                   ? [
                     {
-                      label: "Agent ID",
-                      value: property.createdBy._id ?? property.createdBy.id,
+                      label: "Agent Email",
+                      value: property.createdBy.email,
                     },
                   ]
                   : []),
-                { label: "Property ID", value: property.id },
-                { label: "Sale ID", value: saleId },
+                ...(property.sku ? [{ label: "Property SKU", value: property.sku }] : []),
+                ...(salesOrderNumber
+                  ? [{ label: "Sales Order", value: salesOrderNumber }]
+                  : []),
                 ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
                 ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : [])
               ]

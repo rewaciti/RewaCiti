@@ -84,7 +84,7 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
           { label: "Property Name", value: property.name },
           { label: "Service Rating", value: `${rating} Stars` },
           { label: "Feedback", value: feedback || "No additional feedback provided" },
-          { label: "Property ID", value: property.id }
+          ...(property.sku ? [{ label: "Property SKU", value: property.sku }] : [])
         ]
       };
 

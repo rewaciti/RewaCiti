@@ -138,7 +138,6 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
         { label: "Inquiry Type", value: "Become a Lister" },
         { label: "Lister Role", value: listerRole },
         { label: "Primary Area / Location", value: location.trim() },
-        { label: "About Properties / Experience", value: message || "None" },
       ],
     };
 

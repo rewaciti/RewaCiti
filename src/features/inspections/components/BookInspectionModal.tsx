@@ -23,6 +23,14 @@ const API_KEY = import.meta.env.VITE_SABIFLOW_API_KEY;
 const GATEWAY_ID = import.meta.env.VITE_SABIFLOW_GATEWAY_ID;
 const INSPECTION_BOOKING_NOTICE_HOURS = 48;
 
+interface SaleResponse {
+  id?: string;
+  _id?: string;
+  saleNumber?: string;
+  salesOrderNumber?: string;
+  orderNumber?: string;
+}
+
 // Hourly slots from 08:00 to 16:00 (stored as 24h "HH:00", displayed in 12h)
 const VISIT_SLOTS = Array.from({ length: 9 }, (_, i) =>
   `${String(i + 8).padStart(2, "0")}:00`,
@@ -45,6 +53,16 @@ const formatTwelveHourTime = (time: string) => {
   const period = hours >= 12 ? "PM" : "AM";
   const displayHour = hours % 12 || 12;
   return `${displayHour}:${String(minutes).padStart(2, "0")} ${period}`;
+};
+
+const formatPreferredVisit = (date: string, time: string) => {
+  const visitDate = new Date(`${date}T00:00:00`);
+  const day = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(visitDate);
+  const formattedDate = `${String(visitDate.getDate()).padStart(2, "0")}-${String(
+    visitDate.getMonth() + 1,
+  ).padStart(2, "0")}-${String(visitDate.getFullYear()).slice(-2)}`;
+
+  return `${day}, ${formattedDate} by ${formatTwelveHourTime(time)}`;
 };
 
 const getVisitBookingConstraints = () => {
@@ -256,6 +274,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
     }
 
     setIsSubmitting(true);
+    const preferredVisit = formatPreferredVisit(visitDate, visitTime);
 
     try {
       // 1. Create Sale
@@ -272,7 +291,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
           }
         ],
         taxRate: 0,
-        notes: `Inspection booking for ${property.name} at ${propertyAddress}.\nPreferred Visit: ${visitDate} at ${formatTwelveHourTime(visitTime)}\nProperty Link: ${propertyUrl}`,
+        notes: `Inspection booking for ${property.name} at ${propertyAddress}.\nPreferred Visit: ${preferredVisit}`,
         paymentMethod: "credit_card",
         customerDetails: {
           name: fullName,
@@ -281,7 +300,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
         }
       };
 
-      const saleResponse = await axios.post(`${API_URL}/sales`, salePayload, {
+      const saleResponse = await axios.post<SaleResponse>(`${API_URL}/sales`, salePayload, {
         headers: {
           "x-api-key": API_KEY,
           Authorization: `Bearer ${token}`,
@@ -289,6 +308,13 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
       });
 
       const saleId = saleResponse.data.id || saleResponse.data._id;
+      if (!saleId) {
+        throw new Error("Sale creation response did not include a sale ID.");
+      }
+      const salesOrderNumber =
+        saleResponse.data.saleNumber ??
+        saleResponse.data.salesOrderNumber ??
+        saleResponse.data.orderNumber;
 
       // 2. Initialize Payment
       const initResponse = await axios.post(`${API_URL}/sales/${saleId}/payment/initiate`, {
@@ -329,25 +355,25 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               email: bookingEmail,
               phone: phone,
               address: propertyAddress,
-              note: `visit/inspection booking for ${property.name} at ${propertyAddress}.\nPreferred Visit: ${visitDate} at ${formatTwelveHourTime(visitTime)}\nProperty Link: ${propertyUrl}.\nBooking Reference: ${transaction.reference}`,
+              note: `visit/inspection booking for ${property.name} at ${propertyAddress}.\nPreferred Visit: ${preferredVisit}`,
               customData: [
                 { label: "Property Name", value: property.name },
-                { label: "Preferred Visit Date", value: visitDate },
-                { label: "Preferred Visit Time", value: formatTwelveHourTime(visitTime) },
+                { label: "Preferred Visit", value: preferredVisit },
                 { label: "Property Link", value: propertyUrl },
-                { label: "Booking Reference", value: transaction.reference },
                 { label: "Inspection Fee", value: `₦${amount.toLocaleString()}` },
-                ...(property.createdBy?._id || property.createdBy?.id
+                ...(property.createdBy?.email
                   ? [
                     {
-                      label: "Agent ID",
-                      value: property.createdBy._id ?? property.createdBy.id,
+                      label: "Agent Email",
+                      value: property.createdBy.email,
                     },
                   ]
                   : []),
-                { label: "Property ID", value: property.id },
+                ...(property.sku ? [{ label: "Property SKU", value: property.sku }] : []),
                 { label: "Category", value: property.category },
-                { label: "Sale ID", value: saleId },
+                ...(salesOrderNumber
+                  ? [{ label: "Sales Order", value: salesOrderNumber }]
+                  : []),
                 ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
                 ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : [])
               ]

@@ -6,7 +6,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
-import { formatCurrency, getCookie, setCookie } from "../../../shared/lib/utils";
+import { getCookie, setCookie } from "../../../shared/lib/utils";
 import type { Property } from "../../../types";
 
 interface InquiryModalProps {
@@ -111,7 +111,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
     const payload = {
       companyId: COMPANY_ID,
       pipelineId: "69b49c7541d35d158e336621",
-      title: `${trimmedName} interested in ${property.name} (₦${formatCurrency(price)})`,
+      title: `${trimmedName} interested in ${property.name}`,
       name: trimmedName,
       amount: price,
       email,
@@ -121,7 +121,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
       ...(ownerId ? { ownerId } : {}),
       customData: [
         {
-          label: "Property",
+          label: "Property Name",
           value: property.name,
         },
         {
@@ -136,8 +136,10 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
           label: "Location",
           value: `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`,
         },
-        ...(ownerId ? [{ label: "Agent ID", value: ownerId }] : []),
-        { label: "Property ID", value: property.id },
+        ...(property.createdBy?.email
+          ? [{ label: "Agent Email", value: property.createdBy.email }]
+          : []),
+        ...(property.sku ? [{ label: "Property SKU", value: property.sku }] : []),
         ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
         ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : []),
       ],

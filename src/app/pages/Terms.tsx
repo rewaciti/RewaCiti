@@ -192,6 +192,16 @@ const Terms = () => {
             <strong>48 hours in advance</strong> and are subject to confirmation.
           </p>
 
+          <h3 className="mt-4 text-lg font-semibold">
+            Agent Availability and Agreed Visitation Time
+          </h3>
+          <p className="mt-2">
+            The requested visitation time is subject to the agent&apos;s
+            availability and must be confirmed. Any cancellation or request to
+            reschedule must be made at least <strong>2 hours before</strong>{" "}
+            the agreed visitation time.
+          </p>
+
           <p className="mt-2">
             Payments are generally non-refundable. Where failure of service is
             attributable to the platform or agent (e.g., agent absence or

@@ -65,6 +65,7 @@ const emptyGeoLocation = { lat: 0, lng: 0 };
 
 interface WishlistProductResponse {
   _id: string;
+  sku?: string;
   name?: string;
   slug?: string;
   thumbnail?: string;
@@ -181,6 +182,7 @@ const fetchAvailableWishlistIds = async (
 const mapWishlistProductToProperty = (item: WishlistProductResponse): Property => ({
   ...item,
   id: item._id,
+  sku: item.sku,
   img: item.thumbnail || item.images?.[0] || "",
   slug: item.slug || "",
   // Prefer the real product name; fall back to slug/id only if name is genuinely missing.
@@ -213,7 +215,7 @@ const mapSabiFlowProductsToProperties = (items: SabiFlowProduct[]): Property[] =
   items.map((item) => {
     const customData = item.customData;
     const apiPricing = customData?.pricing;
-    const itemSku = (item as SabiFlowProduct & { sku?: string }).sku;
+    const itemSku = item.sku;
 
     const propertyCost = apiPricing?.property_cost || 0;
     const agentFee = apiPricing?.agent_fee || 0;
@@ -239,6 +241,7 @@ const mapSabiFlowProductsToProperties = (items: SabiFlowProduct[]): Property[] =
             id: item.createdBy.id ?? item.createdBy._id ?? "",
             firstName: item.createdBy.firstName ?? "",
             lastName: item.createdBy.lastName ?? "",
+            email: item.createdBy.email ?? undefined,
             classification: item.createdBy.classification ?? null,
           }
         : null;

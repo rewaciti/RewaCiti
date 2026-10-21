@@ -24,6 +24,7 @@ export interface Property {
     id: string;
     firstName: string;
     lastName: string;
+    email?: string;
     classification: string | null;
   } | null;
   creatorClassification?: string | null;
@@ -217,6 +218,7 @@ export interface SabiFlowProduct {
     firstName: string;
     lastName: string;
     id: string;
+    email?: string;
     classification?: string;
   } | string | null;
   customData?: {

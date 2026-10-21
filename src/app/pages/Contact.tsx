@@ -374,7 +374,6 @@ function Contact() {
                   { label: "Rent Property", value: "renting" },
                   { label: "Property Management", value: "management" },
                   { label: "Investment", value: "investment" },
-                  { label: "List Property", value: "agent" },
                   { label: "Others", value: "others" },
                 ]}
                 onChange={(val) => setInquiryType(val)}
@@ -534,7 +533,7 @@ function Contact() {
               className="flex items-center gap-3 text-gray-300 hover:text-[#703BF7] transition bg-black p-2 px-4 rounded-full w-full border border-gray-600/70 md:w-fit justify-center"
             >
               <FaPhone />
-              <span>+234 706 530 4417</span>
+              <span>+234 706 530 6417</span>
             </a>
 
             {/* City */}
