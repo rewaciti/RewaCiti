@@ -22,6 +22,10 @@ import ListPropertyModal from "../components/ListPropertyModal";
 // Height of Navbar (top-16 = 4rem) — used to offset the sticky map panel
 const NAVBAR_HEIGHT_PX = 64;
 
+// Shared page container: centered, capped width, side padding that grows with screen size.
+// Use the SAME classes inside your Navbar so the logo lines up with the content.
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+
 function PropertySearchSection() {
   useScrollToHash();
   const {
@@ -543,7 +547,7 @@ function PropertySearchSection() {
         className="border-b border-gray-400 dark:border-neutral-800 bg-gray-300 dark:bg-[#1A1A1A] text-gray-900 dark:text-white sticky top-16 z-20 p-0.5"
         id="Categories"
       >
-        <div className="px-4 py-3">
+        <div className={`${PAGE_CONTAINER} py-3`}>
           <div className="relative w-full max-w-3xl mx-auto">
             <input
               type="text"
@@ -796,8 +800,8 @@ function PropertySearchSection() {
         </div>
       </div>
 
-      <div className="bg-gray-300 dark:bg-black/30 px-4">
-        <div className="pt-3 mx-auto">
+      <div className="bg-gray-300 dark:bg-black/30">
+        <div className={`${PAGE_CONTAINER} pt-3`}>
           <section>
             {viewMode === "map" ? (
               loading ? (
@@ -835,7 +839,7 @@ function PropertySearchSection() {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
+                        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                           {currentProperties.map((property) => (
                             <div
                               key={property.id}
@@ -908,7 +912,7 @@ function PropertySearchSection() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
                   {loading ? (
                     [...Array(6)].map((_, i) => (
                       <PropertyCardSkeleton key={i} />
@@ -1023,114 +1027,116 @@ function PropertySearchSection() {
       />
 
       <section
-        className="bg-gray-300 dark:bg-black/30 px-4 py-8"
+        className="bg-gray-300 dark:bg-black/30 py-8"
         id="AddedServices"
       >
-        <div className="mb-6 space-y-3">
-          <img
-            src="/logo/Abstract Design (1).png"
-            alt="Icon"
-            className="w-13 object-contain"
-            loading="lazy"
-            decoding="async"
-          />
-          <div className="flex justify-between items-center">
-            <div className="space-y-2">
-              <h2 className="text-gray-900 dark:text-white md:text-4xl text-3xl font-semibold">
-                Tailored Services for you
-              </h2>
-              <p className="text-gray-800 dark:text-gray-400 text-[14px]">
-                Explore specialized solutions designed to meet your housing needs — from submitting custom preferences and co-renting to listing your properties.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-          {/* Card 1: Property Preference */}
-          <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-3 shadow-lg flex flex-col justify-between space-y-4">
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
-                  <FiSliders size={18} />
-                </div>
-                <h3 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
-                  Can't find preference?
-                </h3>
+        <div className={PAGE_CONTAINER}>
+          <div className="mb-6 space-y-3">
+            <img
+              src="/logo/Abstract Design (1).png"
+              alt="Icon"
+              className="w-13 object-contain"
+              loading="lazy"
+              decoding="async"
+            />
+            <div className="flex justify-between items-center">
+              <div className="space-y-2">
+                <h2 className="text-gray-900 dark:text-white md:text-4xl text-3xl font-semibold">
+                  Tailored Services for you
+                </h2>
+                <p className="text-gray-800 dark:text-gray-400 text-[14px]">
+                  Explore specialized solutions designed to meet your housing needs — from submitting custom preferences and co-renting to listing your properties.
+                </p>
               </div>
-              <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
-                Ready to take the first step toward your dream property? Fill out
-                the preference form, and our real estate experts will work to
-                find your perfect match.
-              </p>
-            </div>
-
-            <div>
-              <button
-                type="button"
-                onClick={() => setIsPreferenceModalOpen(true)}
-                className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold text-sm transition-all shadow-lg hover:shadow-purple-500/25 cursor-pointer flex items-center justify-center gap-2 "
-              >
-                <FiSliders size={16} />
-                <span>Submit Your Preference</span>
-              </button>
             </div>
           </div>
 
-          {/* Card 2: Looking to Co-Rent */}
-          <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-3 shadow-lg flex flex-col justify-between space-y-4">
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
-                  <FiUsers size={18} />
+          <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+            {/* Card 1: Property Preference */}
+            <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-4 shadow-lg flex flex-col justify-between space-y-4">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
+                    <FiSliders size={18} />
+                  </div>
+                  <h3 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
+                    Can't find preference?
+                  </h3>
                 </div>
-                <h3 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
-                  Looking to Co-Rent?
-                </h3>
+                <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
+                  Ready to take the first step toward your dream property? Fill out
+                  the preference form, and our real estate experts will work to
+                  find your perfect match.
+                </p>
               </div>
-              <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
-                Want to split rent and share verified properties in your preferred area?
-                Submit your co-rent request and let us connect you with compatible co-tenants.
-              </p>
+
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setIsPreferenceModalOpen(true)}
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold text-sm transition-all shadow-lg hover:shadow-purple-500/25 cursor-pointer flex items-center justify-center gap-2 "
+                >
+                  <FiSliders size={16} />
+                  <span>Submit Your Preference</span>
+                </button>
+              </div>
             </div>
 
-            <div>
-              <button
-                type="button"
-                onClick={() => setIsCoRentModalOpen(true)}
-                className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold text-sm transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 border border-gray-700/40"
-              >
-                <FiUsers size={16} />
-                <span>Find Co-Rent Partners</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Card 3: List Your Property */}
-          <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-3 shadow-lg flex flex-col justify-between space-y-4">
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
-                  <FiHome size={18} />
+            {/* Card 2: Looking to Co-Rent */}
+            <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-4 shadow-lg flex flex-col justify-between space-y-4">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
+                    <FiUsers size={18} />
+                  </div>
+                  <h3 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
+                    Looking to Co-Rent?
+                  </h3>
                 </div>
-                <h3 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
-                  Have a property to list?
-                </h3>
+                <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
+                  Want to split rent and share verified properties in your preferred area?
+                  Submit your co-rent request and let us connect you with compatible co-tenants.
+                </p>
               </div>
-              <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
-                Are you a landlord, property owner, or agent? Reach thousands of verified tenants, professionals, and buyers by listing your property on RewaCiti.
-              </p>
+
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setIsCoRentModalOpen(true)}
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold text-sm transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 border border-gray-700/40"
+                >
+                  <FiUsers size={16} />
+                  <span>Find Co-Rent Partners</span>
+                </button>
+              </div>
             </div>
 
-            <div>
-              <button
-                type="button"
-                onClick={() => setIsListPropertyOpen(true)}
-                className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold text-sm transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 border border-gray-700/40"
-              >
-                <FiHome size={16} />
-                <span>Apply to List</span>
-              </button>
+            {/* Card 3: List Your Property */}
+            <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-4 shadow-lg flex flex-col justify-between space-y-4">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
+                    <FiHome size={18} />
+                  </div>
+                  <h3 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
+                    Have a property to list?
+                  </h3>
+                </div>
+                <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
+                  Are you a landlord, property owner, or agent? Reach thousands of verified tenants, professionals, and buyers by listing your property on RewaCiti.
+                </p>
+              </div>
+
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setIsListPropertyOpen(true)}
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold text-sm transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 border border-gray-700/40"
+                >
+                  <FiHome size={16} />
+                  <span>Apply to List</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

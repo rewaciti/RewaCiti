@@ -4,6 +4,9 @@ import PropertyCard from "./PropertyCard";
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
 import { NavLink } from "react-router";
 
+// Shared page container: centered, capped width, side padding that grows with screen size.
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+
 function PropertySection() {
   const {
     featuredProperties,
@@ -20,10 +23,10 @@ function PropertySection() {
   const currentProperties = featuredProperties.slice(0, 4);
 
   // sm -> 4, md -> 3, lg -> 4 (only the 4th card needs to toggle)
-  const hideOnMdOnly = "hidden sm:block md:hidden lg:block";
+  const hideOnMdOnly = "hidden sm:block md:hidden xl:block";
 
   return (
-    <div className="px-4 mx-auto md:py-1 py-2">
+    <div className={`${PAGE_CONTAINER} md:py-1 py-2`}>
       <div className="">
         <img
           src="/logo/Abstract Design (1).png"
@@ -51,7 +54,7 @@ function PropertySection() {
         </div>
       </div>
       <div className=" py-2">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
           {featuredLoading ? (
             [...Array(4)].map((_, i) => (
               <div key={i} className={`${i === 3 ? hideOnMdOnly : ""} h-full`}>

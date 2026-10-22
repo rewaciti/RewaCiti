@@ -9,6 +9,10 @@ import { ProfilePageSkeleton } from "../../../shared/components/ui/Skeletons";
 import {FiUser, FiMapPin, FiEdit2, FiMail, FiSave, FiX, FiLock, FiCamera, FiPhone, FiEye, FiEyeOff, FiLogOut} from "react-icons/fi";
 import { useNavigate } from "react-router";
 
+// Account pages are forms, so they use a narrower container than listing pages.
+// Still centered, with the same responsive side padding as the rest of the site.
+const PROFILE_CONTAINER = "mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-10";
+
 const getErrorMessage = (error: unknown, fallback: string) => {
   if (typeof error === "object" && error !== null) {
     const errorWithMessage = error as {
@@ -408,7 +412,8 @@ const Profile = () => {
   return (
     <div>
       <Navbar />
-      <div className="mx-auto p-4 bg-gray-300 dark:bg-[#1A1A1A]">
+      <div className="bg-gray-300 dark:bg-[#1A1A1A] py-4">
+       <div className={PROFILE_CONTAINER}>
         {/* Tab buttons */}
         <div className="flex w-full max-w-xs bg-gray-100 dark:bg-black/20 p-1 rounded-lg mb-4">
           <button
@@ -540,7 +545,7 @@ const Profile = () => {
           </div>
         ) : (
           /* Profile tab: left column (avatar + basic info) + right column */
-          <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-4 justify-center items-start">
+          <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-4 lg:gap-6 justify-center items-start">
             {/* Left column — only rendered on the Profile tab */}
             <div className="space-y-4">
               <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex flex-col items-center text-center">
@@ -730,6 +735,7 @@ const Profile = () => {
           </div>
         )}
 
+       </div>
       </div>
       <section className="bg-gray-300 dark:bg-black/30">
         <Footer/>

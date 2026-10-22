@@ -37,6 +37,10 @@ import PropertyFeatureItem from "../components/PropertyFeatureItem";
 
 import { useAuthStore } from "../../auth/store/useAuthStore";
 
+// Shared page container: centered, capped width, side padding that grows with screen size.
+// Use the SAME classes inside your Navbar so the logo lines up with the content.
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+
 function PropertyDetails() {
   const [orientations, setOrientations] = useState<
     Record<number, "landscape" | "portrait">
@@ -499,7 +503,7 @@ function PropertyDetails() {
         </div>
       ) : (
         <>
-          <div className="mx-auto px-4">
+          <div className={PAGE_CONTAINER}>
             {/* Name, Location & Price Section */}
             <div className="py-5 sm:flex sm:justify-between sm:items-center sm:gap-6 sm:py-6">
               {/* Name & Location */}
@@ -627,7 +631,7 @@ function PropertyDetails() {
             onOpenChange={setIsInquiryModalOpen}
           />
 
-          <section className="mx-auto px-4 pb-10">
+          <section className={`${PAGE_CONTAINER} pb-10`}>
             <div className="rounded-xl">
               {/* Thumbnail Row */}
               <div className="flex gap-2 overflow-x-auto mb-3 p-1 border border-gray-600/30 rounded-xl dark:bg-black/20 bg-gray-200 no-scrollbar">
@@ -877,7 +881,7 @@ function PropertyDetails() {
           <section>
             {/* Property Video Section */}
             {property?.videoUrl && (
-              <div className="mx-auto  px-4 pb-10">
+              <div className={`${PAGE_CONTAINER} pb-10`}>
                 <div className="rounded-xl">
                   <h2 className="text-2xl text-gray-900 dark:text-white font-semibold mb-4">
                     Property Video Tour
@@ -917,7 +921,9 @@ function PropertyDetails() {
             )}
           </section>
 
-          <section className="mx-auto mb-8 grid grid-cols-1 gap-6 px-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:gap-10">
+          <section
+            className={`${PAGE_CONTAINER} mb-8 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:gap-10`}
+          >
             <div className="h-fit rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-white/10 dark:bg-[#1A1A1A] sm:px-7">
               {/* Description */}
               <div className="mb-8">
@@ -1226,11 +1232,14 @@ function PropertyDetails() {
               </Dialog.Content>
             </Dialog.Portal>
           </Dialog.Root>
-          <hr className="my-2 border-gray-600/50 w-[98%] mx-auto" />
+
+          <div className={PAGE_CONTAINER}>
+            <hr className="my-2 border-gray-600/50" />
+          </div>
 
           {/* Related Properties Section */}
           {property && (
-            <section className="mx-auto p-4">
+            <section className={`${PAGE_CONTAINER} py-4`}>
               <div className="mb-8 space-y-3">
                 <img
                   src="/logo/Abstract Design (1).png"
@@ -1278,7 +1287,7 @@ function PropertyDetails() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
                 {relatedPropertiesLoading
                   ? Array.from({ length: 3 }).map((_, index) => (
                     <PropertyCardSkeleton key={index} />

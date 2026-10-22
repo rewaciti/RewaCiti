@@ -6,6 +6,9 @@ import { NavLink } from "react-router";
 
 import { CommentCardSkeleton } from "../../../shared/components/ui/Skeletons";
 
+// Shared page container: centered, capped width, side padding that grows with screen size.
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+
 function CommentSection() {
   const { comments, loading, page, ITEMS_PER_PAGE, fetchComments, nextPage, prevPage } = useCommentStore();
   const [expanded, setExpanded] = useState<Record<number, boolean>>({});
@@ -29,7 +32,7 @@ function CommentSection() {
   }
 
   return (
-    <div className="px-4 mx-auto py-2 md:py-1">
+    <div className={`${PAGE_CONTAINER} py-2 md:py-1`}>
       <div>
           <img
             src="/logo/Abstract Design (1).png"
@@ -55,7 +58,7 @@ function CommentSection() {
       </div>  
        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
         {loading ? (
           [...Array(3)].map((_, i) => (
             <CommentCardSkeleton key={i} />

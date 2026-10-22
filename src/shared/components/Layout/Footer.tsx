@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import axios from "axios";
 import { COMPANY_ID } from "../../../features/auth/store/useAuthStore";
 
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+
 function Footer() {
   const currentYear = new Date().getFullYear();
   const [email, setEmail] = useState("");
@@ -48,7 +50,7 @@ function Footer() {
   return (
     <div className="">
       <div
-        className="relative py-10 px-5 bg-cover"
+        className="relative py-10 bg-cover"
         style={{
           backgroundImage: "url('/logo/CTA.png')",
         }}
@@ -56,7 +58,7 @@ function Footer() {
         {/* overlay */}
         <div className="absolute inset-0 bg-black/80 dark:bg-transparent"></div>
 
-        <div className="relative sm:flex justify-between items-center space-y-6 sm:space-y-0">
+        <div className={`${PAGE_CONTAINER} relative sm:flex justify-between items-center gap-8 space-y-6 sm:space-y-0`}>
           <div className="space-y-3">
             <h1 className="text-3xl font-semibold text-white">
               Start Your Real Estate Journey Today
@@ -81,8 +83,9 @@ function Footer() {
       </div>
       <hr className=" dark:border-gray-600/30 border-gray-900/30 border" />
 
-      <div className="py-8 px-4 lg:flex space-y-10 lg:space-y-0 justify-between">
-        <div className="mr-[5%]  space-y-4">
+      <div className="py-8">
+        <div className={`${PAGE_CONTAINER} lg:flex gap-8 space-y-10 lg:space-y-0 justify-between`}>
+        <div className="space-y-4 lg:w-1/4">
           <Link
             to="/"
             className="flex items-center space-x-2 text-gray-800 text-[30px] font-bold dark:text-white"
@@ -117,7 +120,7 @@ function Footer() {
           </form>
         </div>
 
-        <div className="w-full lg:w-[90%] mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 xl:gap-8 lg:gap-4 h-fit divide-x md:divide-x-0 dark:divide-gray-400/30 divide-gray-900/30">
+        <div className="w-full lg:flex-1 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 xl:gap-8 lg:gap-4 h-fit divide-x md:divide-x-0 dark:divide-gray-400/30 divide-gray-900/30">
           {/* COLUMN 1 — Home */}
           <div className="p-4">
             <h3 className="dark:text-gray-400 text-gray-600 font-semibold mb-5">
@@ -346,9 +349,10 @@ function Footer() {
           </div>
         </div>
       </div>
+      </div>
 
       <div className="w-full dark:bg-[#1A1A1A] bg-gray-400 py-4">
-        <div className="w-[95%] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className={`${PAGE_CONTAINER} flex flex-col md:flex-row justify-between items-center gap-4`}>
           {/* Left side: Year and Terms */}
           <div className="text-gray-900 dark:text-gray-500 text-sm flex flex-col md:flex-row items-center gap-2">
             <span>© {currentYear} RewaCiti. All rights reserved.</span>

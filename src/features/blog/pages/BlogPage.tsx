@@ -6,6 +6,8 @@ import { Link } from "react-router";
 import { FiArrowLeft, FiArrowRight, FiCalendar, FiUser } from "react-icons/fi";
 import { Helmet } from "react-helmet-async";
 
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+
 const BlogPage = () => {
   const { posts, loading, page, ITEMS_PER_PAGE, fetchPosts, nextPage, prevPage } = useBlogStore();
 
@@ -30,8 +32,8 @@ const BlogPage = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 py-10 space-y-6 border-b border-gray-600">
-        <div className="max-w-7xl mx-auto">
+      <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 py-10 border-b border-gray-600">
+        <div className={`${PAGE_CONTAINER} space-y-6`}>
           <h1 className="text-gray-900 dark:text-white md:text-5xl text-3xl font-bold mb-4">
             RewaCiti Blog
           </h1>
@@ -41,7 +43,7 @@ const BlogPage = () => {
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 py-12">
+      <main className={`${PAGE_CONTAINER} py-12`}>
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#703BF7]"></div>

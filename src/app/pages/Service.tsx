@@ -4,6 +4,9 @@ import useScrollToHash from "../../shared/hooks/useScrollToHash";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router";
 
+// Shared page container: centered, capped width, side padding that grows with screen size.
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+
 function Service() {
   useScrollToHash();
        const services1 = [
@@ -119,7 +122,8 @@ const services4 = [
         <link rel="canonical" href="https://rewaciti.com/service" />
       </Helmet>
         <Navbar />
-         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 space-y-1">
+         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 py-5">
+            <div className={`${PAGE_CONTAINER} space-y-1`}>
                 <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
                Elevate Your Real Estate Experience
             </h1>
@@ -127,9 +131,11 @@ const services4 = [
             <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
                 Welcome to RewaCiti, where your real estate aspirations meet expert guidance. Explore our comprehensive range of services, each designed to cater to your unique needs and dreams.
             </p> 
+            </div>
         </div>
-        <section className="p-4 bg-gray-300 dark:bg-black/30 border-t-5 border-b-5 border-gray-600/30" id="whatweoffer">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+        <section className="py-4 bg-gray-300 dark:bg-black/30 border-t-5 border-b-5 border-gray-600/30" id="whatweoffer">
+          <div className={PAGE_CONTAINER}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
             
             {/* BOX ITEM */}
             {services1.map((item, index) => (
@@ -164,9 +170,11 @@ const services4 = [
               </div>
             ))}
           </div>
+          </div>
         </section>
 
-        <section className="bg-gray-300 dark:bg-black/30 p-4 space-y-6" id="valuation">
+        <section className="bg-gray-300 dark:bg-black/30 py-4" id="valuation">
+          <div className={`${PAGE_CONTAINER} space-y-6`}>
            <div className="space-y-2">
                 <img
                   src="/logo/Abstract Design (1).png"
@@ -185,7 +193,7 @@ const services4 = [
            </div>
 
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2"> 
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6"> 
             {/* BOX ITEM */}
             {services2.map((service, index) => (
               <div
@@ -250,9 +258,11 @@ const services4 = [
               </div>
             </div>
              </div>
+          </div>
         </section>
 
-        <section className="bg-gray-300 dark:bg-black/30 p-4 space-y-6" id="Management">
+        <section className="bg-gray-300 dark:bg-black/30 py-4" id="Management">
+          <div className={`${PAGE_CONTAINER} space-y-6`}>
            <div className="space-y-3">
                 <img
                   src="/logo/Abstract Design (1).png"
@@ -271,7 +281,7 @@ const services4 = [
            </div>
 
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2"> 
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6"> 
             {/* BOX ITEM */}
             {services3.map((service, index) => (
               <div
@@ -339,9 +349,11 @@ const services4 = [
             </div>
 
           </div>
+          </div>
         </section>
 
-        <section className="bg-gray-300 dark:bg-black/30 p-4 space-y-3" id="marketing">
+        <section className="bg-gray-300 dark:bg-black/30 py-4" id="marketing">
+          <div className={`${PAGE_CONTAINER} space-y-3`}>
            <img
                   src="/logo/Abstract Design (1).png"
                   alt="Icon"
@@ -350,7 +362,7 @@ const services4 = [
                   decoding="async"
                 />
 
-           <div className="flex flex-col md:flex-row gap-2">
+           <div className="flex flex-col md:flex-row gap-4 lg:gap-6">
               {/* LEFT SIDE (smaller) */}
               <div className="md:w-5/12 space-y-6">
                 <div>
@@ -394,7 +406,7 @@ const services4 = [
               </div>
 
               {/* RIGHT SIDE (larger) */}
-              <div className="md:w-7/12 grid grid-cols-1 md:grid-cols-2 gap-2 bg-neutral-800/50 p-2 rounded-xl ">
+              <div className="md:w-7/12 grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4 bg-neutral-800/50 p-3 rounded-xl ">
                 {services4.map((service, index) => (
                   <div
                     key={index}
@@ -421,6 +433,7 @@ const services4 = [
                 ))}
               </div>
             </div>     
+          </div>
         </section>
         <section className="bg-gray-300 dark:bg-black/30">
         <Footer/>

@@ -16,6 +16,8 @@ import { authAPI } from "../../features/auth/services/authAPI";
 import CustomDropdown from "../../features/properties/components/CustomDropdown";
 import { getCookie, setCookie } from "../../shared/lib/utils";
 
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+
 function Contact() {
   const { isAuthenticated, customer } = useAuthStore();
 
@@ -222,9 +224,10 @@ function Contact() {
       </Helmet>
       <Navbar />
       <div
-        className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 p-5 space-y-1"
+        className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 py-5"
         id="Contactinfo"
       >
+        <div className={`${PAGE_CONTAINER} space-y-1`}>
         <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
           Get in Touch with Us
         </h1>
@@ -234,10 +237,12 @@ function Contact() {
           feedback? Whether you're buying, selling, or exploring properties,
           we're here to help. Reach out and let's connect.
         </p>
+        </div>
       </div>
 
-      <section className="px-4 py-2 bg-gray-300 dark:bg-black/30 border-t-5 border-b-5 border-gray-600/30">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <section className="py-4 bg-gray-300 dark:bg-black/30 border-t-5 border-b-5 border-gray-600/30">
+        <div className={PAGE_CONTAINER}>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
           {/* BOX ITEM */}
           {services1.map((item, index) => (
             <div
@@ -271,9 +276,11 @@ function Contact() {
             </div>
           ))}
         </div>
+        </div>
       </section>
 
-      <section className="bg-gray-300 dark:bg-black/30 p-4" id="Contactform">
+      <section className="bg-gray-300 dark:bg-black/30 py-4" id="Contactform">
+        <div className={PAGE_CONTAINER}>
         <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
           <img
             src="/logo/Abstract Design (1).png"
@@ -474,9 +481,11 @@ function Contact() {
             </button>
           </div>
         </form>
+        </div>
       </section>
 
-      <section className="bg-gray-300 dark:bg-black/30 p-4" id="Ouroffices">
+      <section className="bg-gray-300 dark:bg-black/30 py-4" id="Ouroffices">
+        <div className={PAGE_CONTAINER}>
         <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
           <img
             src="/logo/Abstract Design (1).png"
@@ -553,6 +562,7 @@ function Contact() {
             <FaDirections />
             Get Direction
           </a>
+        </div>
         </div>
       </section>
       <section className="bg-gray-300 dark:bg-black/30">

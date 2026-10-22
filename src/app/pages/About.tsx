@@ -8,7 +8,8 @@ import useScrollToHash from "../../shared/hooks/useScrollToHash";
 import { Helmet } from "react-helmet-async";
 import { Send } from "lucide-react";
 
-
+// Shared page container: centered, capped width, side padding that grows with screen size.
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
 
 
 const valuesData:ValueItem[] = [
@@ -201,7 +202,8 @@ function About() {
         <link rel="canonical" href="https://rewaciti.com/about" />
       </Helmet>
         <Navbar />
-        <section className="relative flex flex-col md:flex-row bg-gray-300 dark:bg-black/30 py-3 px-4 lg:gap-10 md:gap-3" id="Journey">
+        <section className="bg-gray-300 dark:bg-black/30 py-3" id="Journey">
+         <div className={`${PAGE_CONTAINER} relative flex flex-col md:flex-row lg:gap-10 md:gap-3`}>
           <div className="flex-1  flex flex-col justify-center space-y-6 z-10 order-last md:order-first ">
           <div className="space-y-3 z-10">
               <img
@@ -257,9 +259,11 @@ function About() {
             />
           </div>
       </div>
+     </div>
     </section>
 
-    <section className="bg-gray-300 dark:bg-black/30 py-3 px-4 lg:gap-12 flex flex-col md:flex-row gap-8 md:gap-0" id="Values">
+    <section className="bg-gray-300 dark:bg-black/30 py-3" id="Values">
+      <div className={`${PAGE_CONTAINER} flex flex-col md:flex-row gap-8 md:gap-0 lg:gap-12`}>
         {/* LEFT SIDE — 1 PART WIDTH */}
         <div className="flex-1 flex flex-col justify-center space-y-3 z-10 ">
           <img
@@ -305,9 +309,11 @@ function About() {
             </div>
           </div>
         </div>
+       </div>
       </section>
 
-      <section className="bg-gray-300 dark:bg-black/30 py-3 px-4 lg:gap-10" id="Achievements">
+      <section className="bg-gray-300 dark:bg-black/30 py-3" id="Achievements">
+       <div className={PAGE_CONTAINER}>
          <div className="flex-1 flex flex-col justify-center space-y-3 z-10 ">
           <img
             src="/logo/Abstract Design (1).png"
@@ -324,7 +330,7 @@ function About() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-2 mx-auto mt-8">
+        <div className="grid md:grid-cols-3 gap-4 lg:gap-6 mx-auto mt-8">
             {Achievements.map((item: AchievementItem) => (
               <div
                 key={item.id}
@@ -340,9 +346,11 @@ function About() {
               </div>
             ))}
         </div>
+       </div>
       </section>
 
-      <section className="bg-gray-300 dark:bg-black/30 py-3 px-4 lg:gap-10" id="Process">
+      <section className="bg-gray-300 dark:bg-black/30 py-3" id="Process">
+       <div className={PAGE_CONTAINER}>
          <div className="flex-1 flex flex-col justify-center space-y-3 z-10 ">
           <img
             src="/logo/Abstract Design (1).png"
@@ -359,14 +367,16 @@ function About() {
           </p>
         </div>
 
-         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2 mx-auto mt-8">
+         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mx-auto mt-8">
           {stepsData.map((item) => (
               <StepCard key={item.id} item={item} />
           ))}
         </div>
+       </div>
       </section>
 
-      <section className="bg-gray-300 dark:bg-black/30 py-3 px-4 lg:gap-10 space-y-5" id="Team">
+      <section className="bg-gray-300 dark:bg-black/30 py-3" id="Team">
+       <div className={`${PAGE_CONTAINER} space-y-5`}>
           <div className="flex-1 flex flex-col justify-center space-y-3 z-10 ">
           <img
             src="/logo/Abstract Design (1).png"
@@ -383,7 +393,7 @@ function About() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mx-auto">
           {teamData.map((member: TeamMember) => (
             <div
               key={member.id}
@@ -454,6 +464,7 @@ function About() {
             </div>
           ))}
       </div>
+     </div>
     </section>
     <section className="bg-gray-300 dark:bg-black/30 pt-5">
         <Footer/>

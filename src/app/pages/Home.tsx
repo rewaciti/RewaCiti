@@ -9,6 +9,10 @@ import { Link } from "react-router";
 import useScrollToHash from "../../shared/hooks/useScrollToHash";
 import { Helmet } from "react-helmet-async";
 
+// Shared page container: centered, capped width, side padding that grows with screen size.
+// Use the SAME classes inside your Navbar, PropertySection, CommentSection and FAQSection.
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+
 function Home() {
   useScrollToHash();
 
@@ -56,6 +60,7 @@ function Home() {
       </Helmet>
       <Navbar />
 
+      {/* Hero stays full-bleed on purpose: the image panel runs edge to edge */}
       <section
         className="relative flex flex-col sm:flex-row h-[calc(95vh-6.5rem)] sm:h-auto sm:min-h-0 overflow-hidden"
         id="hero"
@@ -85,7 +90,7 @@ function Home() {
         </div>
 
         {/* LEFT SECTION (TEXT) — overlays the image on mobile, normal panel on desktop */}
-        <div className="relative z-10 flex-1 flex flex-col justify-center p-4 pb-8 py-6 sm:px-8 sm:py-10 space-y-6 sm:order-first bg-linear-to-t dark:from-black/95 from-gray-400 via-black/70 to-transparent sm:bg-none sm:bg-gray-300 sm:dark:bg-black/30">
+        <div className="relative z-10 flex-1 flex flex-col justify-center p-4 pb-8 py-6 sm:px-8 lg:pl-10 sm:py-10 space-y-6 sm:order-first bg-linear-to-t dark:from-black/95 from-gray-400 via-black/70 to-transparent sm:bg-none sm:bg-gray-300 sm:dark:bg-black/30">
           <h1 className="text-white sm:text-gray-900 sm:dark:text-white md:text-4xl text-3xl">
             Find Your Dream Property with RewaCiti
           </h1>
@@ -144,40 +149,42 @@ function Home() {
         </div>
       </div>
 
-      <section className="px-4 py-2 bg-gray-300 dark:bg-black/30" id="features">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {/* BOX ITEM */}
-          {services.map((item, index) => (
-            <div
-              key={index}
-              className="relative bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-600/30 rounded-xl p-6 flex flex-col items-center hover:scale-[1.02] transition"
-            >
-              {/* Arrow at top-right */}
-              <div className="absolute top-3 right-3">
+      <section className="py-2 bg-gray-300 dark:bg-black/30" id="features">
+        <div className={PAGE_CONTAINER}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+            {/* BOX ITEM */}
+            {services.map((item, index) => (
+              <div
+                key={index}
+                className="relative bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-600/30 rounded-xl p-6 flex flex-col items-center hover:scale-[1.02] transition"
+              >
+                {/* Arrow at top-right */}
+                <div className="absolute top-3 right-3">
+                  <img
+                    src="/logo/Vector 431.png"
+                    alt="top arrow"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-3 h-3 object-contain mb-3"
+                  />
+                </div>
+
+                {/* Center Image */}
                 <img
-                  src="/logo/Vector 431.png"
-                  alt="top arrow"
+                  src={item.img}
+                  alt="Icon"
                   loading="lazy"
                   decoding="async"
-                  className="w-3 h-3 object-contain mb-3"
+                  className="w-13 h-13 object-contain mb-3"
                 />
+
+                {/* Text */}
+                <p className="text-gray-900 dark:text-white text-center text-sm">
+                  {item.text}
+                </p>
               </div>
-
-              {/* Center Image */}
-              <img
-                src={item.img}
-                alt="Icon"
-                loading="lazy"
-                decoding="async"
-                className="w-13 h-13 object-contain mb-3"
-              />
-
-              {/* Text */}
-              <p className="text-gray-900 dark:text-white text-center text-sm">
-                {item.text}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
