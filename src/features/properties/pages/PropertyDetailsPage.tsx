@@ -18,7 +18,7 @@ import {
 import * as Dialog from "@radix-ui/react-dialog";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { FaBed, FaBath, FaHome, FaBolt } from "react-icons/fa";
+import { FaBed, FaBath, FaHome } from "react-icons/fa";
 import Footer from "../../../shared/components/Layout/Footer";
 import BookInspectionModal from "../../inspections/components/BookInspectionModal";
 import PropertyPaymentModal from "../components/PropertyPaymentModal";
@@ -32,6 +32,8 @@ import {
 } from "../../../shared/components/ui/Skeletons";
 import { toast } from "sonner";
 import { formatCurrency, stripHtmlTags } from "../../../shared/lib/utils";
+import FeatureSection from "../components/FeatureSection";
+import PropertyFeatureItem from "../components/PropertyFeatureItem";
 
 import { useAuthStore } from "../../auth/store/useAuthStore";
 
@@ -40,21 +42,19 @@ function PropertyDetails() {
     Record<number, "landscape" | "portrait">
   >({});
   const [showActionBar, setShowActionBar] = useState(false);
-  const [showAllDescription, setShowAllDescription] = useState(false);
   const [showAllSpecifications, setShowAllSpecifications] = useState(false);
-  const [showAllRules, setShowAllRules] = useState(false);
-  const [showAllFeatures, setShowAllFeatures] = useState(false);
   const [showAllSpecialNotes, setShowAllSpecialNotes] = useState(false);
+  const [activeFeatureModal, setActiveFeatureModal] = useState<
+    "amenities" | "rules" | "bills" | null
+  >(null);
   const lastScrollY = useRef(0);
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { slug } = useParams<{ slug: string }>();
 
   useEffect(() => {
-    setShowAllDescription(false);
     setShowAllSpecifications(false);
-    setShowAllRules(false);
-    setShowAllFeatures(false);
     setShowAllSpecialNotes(false);
+    setActiveFeatureModal(null);
   }, [slug]);
 
   const {
@@ -85,12 +85,6 @@ function PropertyDetails() {
     .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
-  const descriptionWords = descriptionText ? descriptionText.split(" ") : [];
-  const isLongDescription = descriptionWords.length > 30;
-  const visibleDescription =
-    showAllDescription || !isLongDescription
-      ? descriptionText
-      : `${descriptionWords.slice(0, 30).join(" ")}...`;
   const showDetailsSkeleton = detailsLoading || (!property && loading);
 
   const isShortlisted = property
@@ -438,8 +432,18 @@ function PropertyDetails() {
     ? stripHtmlTags(property.description).slice(0, 160)
     : "View property details on RewaCiti.";
 
+  const hasSidebarContent =
+    !!property &&
+    ((property.keyFeatures?.length ?? 0) > 0 ||
+      (property.additionalFeatures?.length ?? 0) > 0 ||
+      (property.rules?.length ?? 0) > 0 ||
+      (property.additionalRules?.length ?? 0) > 0 ||
+      (property.billsAndCharges?.length ?? 0) > 0 ||
+      (property.additionalBillsAndCharges?.length ?? 0) > 0 ||
+      (property.specialNotes?.length ?? 0) > 0);
+
   return (
-    <div className="bg-gray-300 dark:bg-black/30">
+    <div className="bg-white dark:bg-[#101010]">
       <Helmet>
         <title>
           {property
@@ -495,9 +499,9 @@ function PropertyDetails() {
         </div>
       ) : (
         <>
-          <div className="mx-auto">
+          <div className="mx-auto px-4">
             {/* Name, Location & Price Section */}
-            <div className="px-4 py-5 sm:flex sm:justify-between sm:items-center sm:gap-6 sm:py-6">
+            <div className="py-5 sm:flex sm:justify-between sm:items-center sm:gap-6 sm:py-6">
               {/* Name & Location */}
               <div className="min-w-0 flex-1">
                 <div className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
@@ -623,8 +627,8 @@ function PropertyDetails() {
             onOpenChange={setIsInquiryModalOpen}
           />
 
-          <section className="px-4 pb-10 ">
-            <div className="p-2 border border-gray-600/30 rounded-xl">
+          <section className="mx-auto px-4 pb-10">
+            <div className="rounded-xl">
               {/* Thumbnail Row */}
               <div className="flex gap-2 overflow-x-auto mb-3 p-1 border border-gray-600/30 rounded-xl dark:bg-black/20 bg-gray-200 no-scrollbar">
                 {images.map((img, index) => {
@@ -873,8 +877,8 @@ function PropertyDetails() {
           <section>
             {/* Property Video Section */}
             {property?.videoUrl && (
-              <div className="px-4 pb-10 ">
-                <div className="p-2 border border-gray-600/30 rounded-xl">
+              <div className="mx-auto  px-4 pb-10">
+                <div className="rounded-xl">
                   <h2 className="text-2xl text-gray-900 dark:text-white font-semibold mb-4">
                     Property Video Tour
                   </h2>
@@ -913,33 +917,20 @@ function PropertyDetails() {
             )}
           </section>
 
-          <section className="md:flex justify-between md:gap-1.5  px-4 mb-5 md:flex-row flex-col space-y-6 md:space-y-0">
-            <div className="px-4 py-10 border border-gray-600/30 rounded-xl flex-1 h-fit dark:bg-[#1A1A1A] bg-white">
+          <section className="mx-auto mb-8 grid grid-cols-1 gap-6 px-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:gap-10">
+            <div className="h-fit rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-white/10 dark:bg-[#1A1A1A] sm:px-7">
               {/* Description */}
               <div className="mb-8">
                 <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
                   Description
                 </h2>
                 <p className="text-gray-800 dark:text-gray-400 leading-relaxed">
-                  {visibleDescription}
+                  {descriptionText}
                 </p>
-                {isLongDescription && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setShowAllDescription((showAll) => !showAll)
-                    }
-                    className="mt-3 text-sm font-medium text-[#703BF7] hover:underline"
-                  >
-                    {showAllDescription
-                      ? "Show less"
-                      : `View all (${descriptionWords.length} words)`}
-                  </button>
-                )}
               </div>
               {/* Property Details */}
               <div className="flex flex-col gap-4 border-t border-gray-600/30 pt-2">
-                <div className="grid grid-cols-2 gap-4 sm:flex sm:flex-row sm:items-center sm:justify-start sm:gap-[20%] md:gap-[3%] lg:gap-[15%] xl:*:gap-[20%]">
+                <div className="grid grid-cols-2 gap-4 sm:flex sm:flex-row sm:items-center sm:justify-start sm:gap-[20%] lg:gap-[15%] xl:*:gap-[20%]">
                   {hasBedrooms && (
                     <div className="flex flex-col px-2">
                       <span className="text-gray-800 dark:text-gray-400 mt-1 flex items-center gap-1">
@@ -1014,38 +1005,30 @@ function PropertyDetails() {
                       )}
                     </div>
                   )}
-
-                {property?.rules && property.rules.length > 0 && (
-                  <div className="mt-2 pt-8 border-t border-gray-600/30">
-                    <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">
-                      Property Rules
+                {property.specialNotes && property.specialNotes.length > 0 && (
+                  <div className="border-t border-gray-600/30 pt-5">
+                    <h2 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">
+                      Things to know
                     </h2>
-                    <ul className="space-y-4">
-                      {property.rules
-                        .slice(0, showAllRules ? undefined : 5)
-                        .map((rule, index) => (
-                          <li
-                            key={index}
-                            className="flex items-center gap-2 border-red-500 border-l pl-2 bg-linear-to-r from-red-500/10 to-transparent p-2"
-                          >
-                            <span className="text-red-500 font-bold">
-                              <FaBolt />
-                            </span>
-                            <span className="text-gray-700 dark:text-gray-300">
-                              {rule}
-                            </span>
-                          </li>
+                    <ul>
+                      {property.specialNotes
+                        .slice(0, showAllSpecialNotes ? undefined : 3)
+                        .map((note, index) => (
+                          <PropertyFeatureItem
+                            key={`${note}-${index}`}
+                            label={note}
+                          />
                         ))}
                     </ul>
-                    {property.rules.length > 5 && (
+                    {property.specialNotes.length > 3 && (
                       <button
                         type="button"
-                        onClick={() => setShowAllRules((showAll) => !showAll)}
-                        className="mt-3 text-sm font-medium text-[#703BF7] hover:underline"
+                        onClick={() => setShowAllSpecialNotes((showAll) => !showAll)}
+                        className="mt-4 text-base font-semibold underline underline-offset-2 text-gray-900 dark:text-white hover:text-[#703BF7] cursor-pointer"
                       >
-                        {showAllRules
+                        {showAllSpecialNotes
                           ? "Show less"
-                          : `View all (${property.rules.length})`}
+                          : `Show all ${property.specialNotes.length}`}
                       </button>
                     )}
                   </div>
@@ -1053,88 +1036,201 @@ function PropertyDetails() {
               </div>
             </div>
 
-            {(property?.keyFeatures && property.keyFeatures.length > 0) ||
-              (property?.specialNotes && property.specialNotes.length > 0) ? (
-              <div className="flex-1 px-4 py-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl h-fit space-y-6">
-                {property?.keyFeatures && property.keyFeatures.length > 0 && (
-                  <div>
-                    <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">
-                      Key Features and Amenities
-                    </h2>
-                    <ul className="space-y-4">
-                      {property.keyFeatures
-                        .slice(0, showAllFeatures ? undefined : 5)
-                        .map((feature, index) => (
-                          <li
-                            key={index}
-                            className="flex items-center gap-2 border-[#703BF7] border-l pl-2 bg-linear-to-r from-black/20 to-neutral p-2"
-                          >
-                            <span className="text-gray-700 dark:text-300">
-                              <FaBolt />
-                            </span>
-                            <span className="text-gray-700 dark:text-gray-300">
-                              {feature}
-                            </span>
-                          </li>
-                        ))}
-                    </ul>
-                    {property.keyFeatures.length > 5 && (
-                      <button
-                        type="button"
-                        onClick={() => setShowAllFeatures((showAll) => !showAll)}
-                        className="mt-3 text-sm font-medium text-[#703BF7] hover:underline"
-                      >
-                        {showAllFeatures
-                          ? "Show less"
-                          : `View all (${property.keyFeatures.length})`}
-                      </button>
-                    )}
-                  </div>
-                )}
+            {hasSidebarContent ? (
+              <div className="h-fit rounded-2xl border border-gray-200 bg-white px-5 py-7 shadow-sm dark:border-white/10 dark:bg-[#1A1A1A] lg:sticky lg:top-24">
+                <FeatureSection
+                  title="What this place offers"
+                  items={property.keyFeatures}
+                  extraItems={property.additionalFeatures}
+                  limit={6}
+                  noun="amenities"
+                  onShowAll={() => setActiveFeatureModal("amenities")}
+                />
 
-                {property?.specialNotes && property.specialNotes.length > 0 && (
-                  <div className="py-4 pb-0">
-                    <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
-                      Special Notes
-                    </h2>
-                    <ul className="space-y-2">
-                      {property.specialNotes
-                        .slice(0, showAllSpecialNotes ? undefined : 5)
-                        .map((note, index) => (
-                          <li
-                            key={index}
-                            className="flex items-center gap-2 border-[#703BF7] border-l bg-linear-to-r from-black/20 to-neutral p-2"
-                          >
-                            <span className="text-gray-700 dark:text-300">
-                              <FaBolt />
-                            </span>
-                            <span className="text-gray-700 dark:text-gray-300">
-                              {note}
-                            </span>
-                          </li>
-                        ))}
-                    </ul>
-                    {property.specialNotes.length > 5 && (
-                      <button
-                        type="button"
-                        onClick={() => setShowAllSpecialNotes((showAll) => !showAll)}
-                        className="mt-3 text-sm font-medium text-[#703BF7] hover:underline"
-                      >
-                        {showAllSpecialNotes
-                          ? "Show less"
-                          : `View all (${property.specialNotes.length})`}
-                      </button>
-                    )}
-                  </div>
-                )}
+                <FeatureSection
+                  title="Bills & fees"
+                  items={property.billsAndCharges}
+                  extraItems={property.additionalBillsAndCharges}
+                  limit={4}
+                  noun="bills & fees"
+                  variant="bill"
+                  onShowAll={() => setActiveFeatureModal("bills")}
+                />
+
+                <FeatureSection
+                  title="House rules"
+                  items={property.rules}
+                  extraItems={property.additionalRules}
+                  limit={4}
+                  noun="rules"
+                  variant="rule"
+                  onShowAll={() => setActiveFeatureModal("rules")}
+                />
+
               </div>
             ) : null}
           </section>
+
+          {/* Features / Rules / Bills modal */}
+          <Dialog.Root
+            open={activeFeatureModal !== null}
+            onOpenChange={(open) => {
+              if (!open) setActiveFeatureModal(null);
+            }}
+          >
+            <Dialog.Portal>
+              <Dialog.Overlay className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm dialog-overlay-animate" />
+              <Dialog.Content className="fixed left-1/2 top-1/2 z-50 flex max-h-[85vh] w-[92vw] max-w-2xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-2xl border border-gray-600/30 bg-white shadow-2xl dark:bg-[#1A1A1A]">
+                <div className="flex items-center justify-between border-b border-gray-600/20 px-5 py-4">
+                  <Dialog.Title className="text-xl font-semibold text-gray-900 dark:text-white">
+                    {activeFeatureModal === "amenities"
+                      ? "What this place offers"
+                      : activeFeatureModal === "rules"
+                        ? "House rules"
+                        : "Bills & fees"}
+                  </Dialog.Title>
+                  <Dialog.Description className="sr-only">
+                    Full list of details for {property.name}.
+                  </Dialog.Description>
+                  <Dialog.Close asChild>
+                    <button
+                      type="button"
+                      aria-label="Close"
+                      className="rounded-full p-2 text-gray-700 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10 cursor-pointer"
+                    >
+                      <FiX size={20} />
+                    </button>
+                  </Dialog.Close>
+                </div>
+
+                <div className="overflow-y-auto px-6 py-4">
+                  {activeFeatureModal === "amenities" && (
+                    <div className="space-y-8">
+                      {(property.keyFeatures?.length ?? 0) > 0 && (
+                        <div>
+                          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
+                            Main amenities
+                          </h3>
+                          <ul>
+                            {property.keyFeatures.map((f, i) => (
+                              <PropertyFeatureItem
+                                key={`${f}-${i}`}
+                                label={f}
+                                showIcon
+                                divided
+                              />
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {(property.additionalFeatures?.length ?? 0) > 0 && (
+                        <div>
+                          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
+                            Additional features
+                          </h3>
+                          <ul>
+                            {property.additionalFeatures!.map((f, i) => (
+                              <PropertyFeatureItem
+                                key={`${f}-${i}`}
+                                label={f}
+                                divided
+                              />
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {activeFeatureModal === "rules" && (
+                    <div className="space-y-8">
+                      {(property.rules?.length ?? 0) > 0 && (
+                        <div>
+                          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
+                            During your stay
+                          </h3>
+                          <ul>
+                            {property.rules!.map((r, i) => (
+                              <PropertyFeatureItem
+                                key={`${r}-${i}`}
+                                label={r}
+                                variant="rule"
+                                showIcon
+                                divided
+                              />
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {(property.additionalRules?.length ?? 0) > 0 && (
+                        <div>
+                          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
+                            Additional rules
+                          </h3>
+                          <ul>
+                            {property.additionalRules!.map((r, i) => (
+                              <PropertyFeatureItem
+                                key={`${r}-${i}`}
+                                label={r}
+                                variant="rule"
+                                divided
+                              />
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {activeFeatureModal === "bills" && (
+                    <div className="space-y-8">
+                      {(property.billsAndCharges?.length ?? 0) > 0 && (
+                        <div>
+                          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
+                            Bills &amp; fees
+                          </h3>
+                          <ul>
+                            {property.billsAndCharges!.map((c, i) => (
+                              <PropertyFeatureItem
+                                key={`${c}-${i}`}
+                                label={c}
+                                variant="bill"
+                                showIcon
+                                divided
+                              />
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {(property.additionalBillsAndCharges?.length ?? 0) >
+                        0 && (
+                        <div>
+                          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
+                            Additional bills &amp; fees
+                          </h3>
+                          <ul>
+                            {property.additionalBillsAndCharges!.map((c, i) => (
+                              <PropertyFeatureItem
+                                key={`${c}-${i}`}
+                                label={c}
+                                variant="bill"
+                                divided
+                              />
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </Dialog.Content>
+            </Dialog.Portal>
+          </Dialog.Root>
           <hr className="my-2 border-gray-600/50 w-[98%] mx-auto" />
 
           {/* Related Properties Section */}
           {property && (
-            <section className="p-4 ">
+            <section className="mx-auto p-4">
               <div className="mb-8 space-y-3">
                 <img
                   src="/logo/Abstract Design (1).png"

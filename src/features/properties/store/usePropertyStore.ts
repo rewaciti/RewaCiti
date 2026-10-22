@@ -13,6 +13,19 @@ import { useAuthStore } from "../../auth/store/useAuthStore";
 const firstTruthy = (...values: (string | undefined | null)[]): string =>
   values.find((v) => !!v) ?? "";
 
+const collectStringItems = (...groups: (string[] | undefined)[]): string[] => {
+  const seen = new Set<string>();
+  return groups.flatMap((group) =>
+    (group ?? []).flatMap((item) => {
+      const value = item.trim();
+      const normalized = value.toLowerCase();
+      if (!value || seen.has(normalized)) return [];
+      seen.add(normalized);
+      return [value];
+    }),
+  );
+};
+
 const readJSON = <T,>(key: string, fallback: T): T => {
   if (typeof window === "undefined") return fallback;
   try {
@@ -233,6 +246,33 @@ const mapSabiFlowProductsToProperties = (items: SabiFlowProduct[]): Property[] =
     const serviceFee = (apiPricing?.service_fee || 0) + (isAgent ? propertyCost * 0.05 : 0);
 
     const totalPrice = propertyCost + agentFee + legalFee + serviceFee + cautionFee;
+    const rawRules = customData?.rules;
+    const rawFeatures = customData?.key_features_and_amenities;
+    const featuresAndAmenities = customData?.features_and_amenities;
+    const billsAndCharges = customData?.bills_and_charges;
+    const keyFeatures = collectStringItems(
+      Array.isArray(rawFeatures) ? rawFeatures : undefined,
+      featuresAndAmenities?.key_features_and_amenities,
+    );
+    const additionalFeatures = collectStringItems(
+      featuresAndAmenities?.additional_features_and_amenities,
+      !Array.isArray(rawFeatures)
+        ? rawFeatures?.other_features_and_amenities
+        : undefined,
+    );
+    const rules = Array.isArray(rawRules)
+      ? collectStringItems(rawRules)
+      : collectStringItems(rawRules?.key_rules);
+    const additionalRules = Array.isArray(rawRules)
+      ? []
+      : collectStringItems(rawRules?.additional_rules);
+    const primaryBillsAndCharges = collectStringItems(
+      billsAndCharges?.baic_bills_and_charges,
+      billsAndCharges?.basic_bills_and_charges,
+    );
+    const additionalBillsAndCharges = collectStringItems(
+      billsAndCharges?.additional_bills_and_charges,
+    );
 
     const normalizedCreatedBy =
       item.createdBy && typeof item.createdBy === "object"
@@ -259,7 +299,8 @@ const mapSabiFlowProductsToProperties = (items: SabiFlowProduct[]): Property[] =
       category: item.categoryId?.name || "Property",
       duration: customData?.duration || "",
       listingType: customData?.listing_type || "",
-      rules: customData?.rules || [],
+      rules,
+      additionalRules,
       pricing: {
         PropertyCost: propertyCost,
         AgentFee: agentFee,
@@ -283,7 +324,10 @@ const mapSabiFlowProductsToProperties = (items: SabiFlowProduct[]): Property[] =
         address: customData?.geo_location?.address || "",
       },
       yearBuilt: customData?.yearBuilt || 0,
-      keyFeatures: customData?.key_features_and_amenities || [],
+      keyFeatures,
+      additionalFeatures,
+      billsAndCharges: primaryBillsAndCharges,
+      additionalBillsAndCharges,
       specialNotes: customData?.special_notes || [],
       specifications: [
         ...(item.specifications ? Object.entries(item.specifications).map(([label, value]) => ({ label, value })) : []),

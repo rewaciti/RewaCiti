@@ -42,7 +42,11 @@ export interface Property {
   };
   yearBuilt: number; 
   keyFeatures: string[]; 
+  additionalFeatures?: string[];
+  billsAndCharges?: string[];
+  additionalBillsAndCharges?: string[];
   rules?: string[];
+  additionalRules?: string[];
   specialNotes?: string[];
   specifications?: { label: string; value: string }[];
   videoUrl?: string; 
@@ -226,7 +230,10 @@ export interface SabiFlowProduct {
     bathrooms?: number|string;
     yearBuilt?: number;
     duration?: string;
-    rules?: string[];
+    rules?: string[] | {
+      key_rules?: string[];
+      additional_rules?: string[];
+    };
     creatorClassification?: string;
     pricing?: {
       agent_fee?: number;
@@ -235,7 +242,18 @@ export interface SabiFlowProduct {
       caution_fee?: number;
       property_cost?: number;
     };
-    key_features_and_amenities?: string[];
+    key_features_and_amenities?: string[] | {
+      other_features_and_amenities?: string[];
+    };
+    features_and_amenities?: {
+      key_features_and_amenities?: string[];
+      additional_features_and_amenities?: string[];
+    };
+    bills_and_charges?: {
+      baic_bills_and_charges?: string[];
+      basic_bills_and_charges?: string[];
+      additional_bills_and_charges?: string[];
+    };
     location?: {
       area?: string;
       city?: string;

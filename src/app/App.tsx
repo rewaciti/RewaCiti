@@ -23,6 +23,7 @@ import VerifyEmail from "../features/auth/pages/VerifyEmail";
 import ForgotPassword from "../features/auth/pages/ForgotPassword";
 import ResetPassword from "../features/auth/pages/ResetPassword";
 import Profile from "../features/auth/pages/Profile";
+import PropertyFeatureIconsPage from "../features/properties/pages/PropertyFeatureIconsPage";
 
 
 
@@ -79,6 +80,7 @@ function App() {
           <Route path="/About" element={<About />} />
           <Route path="/properties" element={<Properties />} />
           <Route path="/properties/:slug" element={<PropertyDetails />} />
+          <Route path="/property-feature-icons" element={<PropertyFeatureIconsPage />} />
           <Route path="/Service" element={<Service />} />
           <Route path="/Contact" element={<Contact />} />
           <Route path="/Studentarea" element={<Navigate to="/properties" replace />} />
