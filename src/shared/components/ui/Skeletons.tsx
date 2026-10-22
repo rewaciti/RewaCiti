@@ -1,5 +1,7 @@
 import { Skeleton } from "./Skeleton";
 
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+
 export function PropertyCardSkeleton() {
   return (
     <div className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 rounded-lg p-2 h-full flex flex-col justify-between">
@@ -72,9 +74,8 @@ export function FAQCardSkeleton() {
 export function PropertyDetailsSkeleton() {
   return (
     <div className="bg-gray-300 dark:bg-black/30 min-h-screen">
-      <div className="mx-auto">
         {/* Header Section — mirrors Name/Location pill + share/heart + price */}
-        <div className="px-4 py-5 sm:flex sm:justify-between sm:items-center sm:gap-6 sm:py-6">
+        <div className={`${PAGE_CONTAINER} py-5 sm:flex sm:justify-between sm:items-center sm:gap-6 sm:py-6`}>
           {/* Title + location pill */}
           <div className="min-w-0 flex-1 space-y-2">
             <Skeleton className="h-7 w-2/3 sm:w-1/2" />
@@ -93,10 +94,8 @@ export function PropertyDetailsSkeleton() {
             </div>
           </div>
         </div>
-      </div>
-      <div>
         {/* Gallery Section */}
-        <section className="px-4 pb-10">
+        <section className={`${PAGE_CONTAINER} pb-10`}>
           <div className="p-2 border border-gray-600/30 rounded-xl">
             {/* Thumbnail Row — matches h-25 w-30 md:w-40 thumbs */}
             <div className="flex gap-2 overflow-x-auto mb-3 p-1 border border-gray-600/30 rounded-xl bg-black/20">
@@ -122,7 +121,7 @@ export function PropertyDetailsSkeleton() {
         </section>
 
         {/* Property Video Tour placeholder */}
-        <section className="px-4 pb-10">
+        <section className={`${PAGE_CONTAINER} pb-10`}>
           <div className="p-2 border border-gray-600/30 rounded-xl">
             <Skeleton className="h-7 w-48 mb-4" />
             <Skeleton className="w-full h-[40vh] md:h-[70vh] rounded-xl" />
@@ -130,7 +129,7 @@ export function PropertyDetailsSkeleton() {
         </section>
 
         {/* Description & Features Section */}
-        <section className="md:flex justify-between md:gap-1.5 px-4 mb-5 md:flex-row flex-col space-y-6 md:space-y-0">
+        <section className={`${PAGE_CONTAINER} mb-8 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:gap-10`}>
           <div className="px-4 py-10 border border-gray-600/30 rounded-xl flex-1 h-fit dark:bg-[#1A1A1A] bg-white">
             <Skeleton className="h-7 w-32 mb-3" />
             <div className="space-y-2 mb-8">
@@ -163,7 +162,7 @@ export function PropertyDetailsSkeleton() {
         </section>
 
         {/* Related Properties Section Skeleton */}
-        <section className="p-4 mb-8">
+        <section className={`${PAGE_CONTAINER} py-4 mb-8`}>
           <div className="mb-8 space-y-3">
             <Skeleton className="h-8 w-12 rounded" />
             <div className="flex items-center justify-between gap-3">
@@ -184,7 +183,7 @@ export function PropertyDetailsSkeleton() {
 
         {/* Actions Bottom Bar Skeleton (mirrors price summary + 4 buttons) */}
         <div className="sticky bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-[#1A1A1A]/90 backdrop-blur-md border-t border-gray-300/30 dark:border-gray-800/80 py-2 px-4 shadow-[0_-8px_30px_rgb(0,0,0,0.12)]">
-          <div className="max-w-6xl mx-auto">
+          <div className={PAGE_CONTAINER}>
             {/* Price / visitation summary */}
             <div className="flex items-center justify-between gap-3 mb-2 pb-2 border-b border-gray-300/30 dark:border-gray-800/60">
               <div className="space-y-1.5">
@@ -204,7 +203,6 @@ export function PropertyDetailsSkeleton() {
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 }
