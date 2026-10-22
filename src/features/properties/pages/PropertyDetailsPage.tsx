@@ -19,6 +19,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { FaBed, FaBath, FaHome } from "react-icons/fa";
+import { Zap } from "lucide-react";
 import Footer from "../../../shared/components/Layout/Footer";
 import BookInspectionModal from "../../inspections/components/BookInspectionModal";
 import PropertyPaymentModal from "../components/PropertyPaymentModal";
@@ -1016,13 +1017,15 @@ function PropertyDetails() {
                     <h2 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">
                       Things to know
                     </h2>
-                    <ul>
+                    <ul className="space-y-2">
                       {property.specialNotes
                         .slice(0, showAllSpecialNotes ? undefined : 3)
                         .map((note, index) => (
                           <PropertyFeatureItem
                             key={`${note}-${index}`}
                             label={note}
+                            icon={Zap}
+                            highlighted
                           />
                         ))}
                     </ul>
