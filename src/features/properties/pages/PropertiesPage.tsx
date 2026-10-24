@@ -683,8 +683,8 @@ function PropertySearchSection() {
             {/* Large screens: unchanged dropdown row */}
             <div className="hidden lg:flex items-center justify-between gap-1.5 overflow-visible">
               <div className="flex-1 min-w-0 overflow-visible">
-                <div className="flex flex-nowrap items-center gap-1.5 overflow-visible">
-                  <div className="min-w-[110px] sm:min-w-[170px] md:min-w-[190px] lg:min-w-[220px]">
+                <div className="flex flex-nowrap items-center gap-1 overflow-visible">
+                  <div className="min-w-[110px] sm:min-w-[170px] md:min-w-[180px] lg:min-w-[200px]">
                     <CustomDropdown
                       placeholder="University"
                       value={university}
@@ -698,7 +698,7 @@ function PropertySearchSection() {
                     />
                   </div>
 
-                  <div className="min-w-[95px] sm:min-w-[150px] md:min-w-[170px] lg:min-w-[200px]">
+                  <div className="min-w-[95px] sm:min-w-[150px] md:min-w-[170px] lg:min-w-[190px]">
                     <CustomDropdown
                       placeholder="State"
                       value={state}

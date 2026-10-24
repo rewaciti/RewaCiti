@@ -84,7 +84,9 @@ export default function PropertyFeatureIconsPage() {
           </div>
         </div>
       </main>
-      <Footer />
+      <div className="bg-gray-50 dark:bg-[#121212]">
+        <Footer />
+      </div>
     </>
   );
 }
