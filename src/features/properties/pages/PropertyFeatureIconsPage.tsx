@@ -41,9 +41,6 @@ export default function PropertyFeatureIconsPage() {
       <main className="min-h-screen bg-gray-50 px-4 py-12 dark:bg-[#121212] sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <header className="mb-10 max-w-3xl">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-[#703BF7]">
-              Design reference
-            </p>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
               Property features & amenities
             </h1>
