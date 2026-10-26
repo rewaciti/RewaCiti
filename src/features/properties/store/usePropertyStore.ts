@@ -336,7 +336,7 @@ const mapSabiFlowProductsToProperties = (items: SabiFlowProduct[]): Property[] =
       videoUrl: ensureHttps(item.videoUrl || ""),
       caretakerContact: customData?.care_taker_contact_optional
         ? {
-            whatsapp: customData.care_taker_contact_optional.wattsapp_contact,
+            whatsapp: customData.care_taker_contact_optional.whatsapp_contact,
             phone: customData.care_taker_contact_optional.call_contact,
           }
         : undefined,

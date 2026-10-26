@@ -267,7 +267,7 @@ export interface SabiFlowProduct {
       address?: string;
     };
     care_taker_contact_optional?: {
-      wattsapp_contact?: string;
+      whatsapp_contact?: string;
       call_contact?: string;
     };
     visitation_fee: number;

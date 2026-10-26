@@ -723,7 +723,7 @@ const Profile = () => {
           </div>
         )}
         {/* Mobile Logout Button (always bottom right on small screens) */}
-        {!isLoading && (
+        {!isLoading && activeTab === "info" && (
           <div className="flex md:hidden justify-end mt-6 pb-4">
             <button
               type="button"

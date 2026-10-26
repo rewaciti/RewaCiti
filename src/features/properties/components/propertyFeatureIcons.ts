@@ -40,12 +40,31 @@ import {
   Users,
   Venus,
   VolumeX,
+  Warehouse,
   Waves,
   Wifi,
   Zap,
   BrickWall,
+  createLucideIcon,
   type LucideIcon,
 } from "lucide-react";
+
+const ShowerCubicle = createLucideIcon("ShowerCubicle", [
+  ["path", { key: "center", d: "M12 22V11.5" }],
+  ["path", { key: "top", d: "m2.5 6 9.5 5.5L21.5 6" }],
+  ["path", { key: "walls", d: "M2.5 6v11L12 22l9.5-5V6" }],
+  ["path", { key: "pipe", d: "M5.5 10V5a2.5 2.5 0 0 1 2.5-2.5h1" }],
+  ["path", { key: "showerhead", d: "M9 2.5a1.5 1.5 0 1 1 3 0v1h2a1 1 0 0 1 0 2h-4" }],
+  ["path", { key: "control", d: "M4.5 10.5h2" }],
+]);
+
+const BuiltInKitchen = createLucideIcon("BuiltInKitchen", [
+  ["rect", { key: "upper-cabinets", x: "2.5", y: "3", width: "19", height: "5", rx: "0.5" }],
+  ["path", { key: "upper-dividers", d: "M8.5 3v5M15.5 3v5M1.5 10.5h21" }],
+  ["rect", { key: "lower-cabinets", x: "2.5", y: "13", width: "19", height: "8", rx: "0.5" }],
+  ["path", { key: "lower-dividers", d: "M8.5 13v8M15.5 13v8M2.5 17h6M8.5 17h7M15.5 17h6" }],
+  ["path", { key: "handles", d: "M6.5 5.5v.01M13.5 5.5v.01M5.5 15v.01M12 15v.01M19 15v.01M5.5 19v.01M19 19v.01" }],
+]);
 
 export interface PropertyFeatureIconItem {
   label: string;
@@ -76,6 +95,9 @@ export const propertyFeatureIconGroups: PropertyFeatureIconGroup[] = [
       { label: "Inverter", icon: BatteryCharging },
       { label: "Wardrobes", icon: Shirt },
       { label: "En-suite bathroom", icon: Bath },
+      { label: "Bathtub", icon: Bath },
+      { label: "Shower cubicle", icon: ShowerCubicle },
+      { label: "Store room", icon: Warehouse },
       { label: "Gym", icon: Dumbbell },
       { label: "Balcony", icon: DoorOpen },
       { label: "Garden", icon: Flower2 },
@@ -84,7 +106,7 @@ export const propertyFeatureIconGroups: PropertyFeatureIconGroup[] = [
       { label: "POP ceiling", icon: LampCeiling },
       { label: "Elevator", icon: ArrowUpDown },
       { label: "Boys’ quarters (BQ)", icon: House },
-      { label: "Fitted kitchen", icon: CookingPot },
+      { label: "Fitted kitchen", icon: BuiltInKitchen },
       { label: "Fenced compound", icon: Fence },
       { label: "Fire extinguisher", icon: FireExtinguisher },
       { label: "Interlocked compound", icon: BrickWall },
