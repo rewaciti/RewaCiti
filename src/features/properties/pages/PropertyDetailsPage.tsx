@@ -565,7 +565,7 @@ function PropertyDetails() {
                 {/* Price */}
                 <div className="flex flex-col items-end">
                   <p className="text-xs text-gray-800 dark:text-gray-400">
-                    Price ({property?.duration})
+                    Price{property?.duration ? ` (${property.duration})` : ""}
                   </p>
 
                   <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white whitespace-nowrap">
@@ -1236,24 +1236,27 @@ function PropertyDetails() {
                   <h2 className="text-3xl font-semibold text-gray-900 dark:text-white">
                     Related Properties
                   </h2>
-                  <div className="flex items-center gap-1 flex-col">
-                    <span
-                      className={`text-sm font-medium ${sameAgentOnly ? "text-[#703BF7]" : "text-gray-700 dark:text-gray-400"}`}
-                    >
-                      Same agent
-                    </span>
-                    <button
-                      type="button"
-                      role="switch"
-                      aria-checked={sameAgentOnly}
-                      onClick={() => setSameAgentOnly((prev) => !prev)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${sameAgentOnly ? "bg-[#703BF7]" : "bg-gray-400 dark:bg-gray-600"}`}
-                    >
+                  {/* RewaCiti's own listings have no agent */}
+                  {property.agentId && (
+                    <div className="flex items-center gap-1 flex-col">
                       <span
-                        className={`inline-block h-5 w-5 transform rounded-full bg-white transition ${sameAgentOnly ? "translate-x-5" : "translate-x-1"}`}
-                      />
-                    </button>
-                  </div>
+                        className={`text-sm font-medium ${sameAgentOnly ? "text-[#703BF7]" : "text-gray-700 dark:text-gray-400"}`}
+                      >
+                        Same agent
+                      </span>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={sameAgentOnly}
+                        onClick={() => setSameAgentOnly((prev) => !prev)}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${sameAgentOnly ? "bg-[#703BF7]" : "bg-gray-400 dark:bg-gray-600"}`}
+                      >
+                        <span
+                          className={`inline-block h-5 w-5 transform rounded-full bg-white transition ${sameAgentOnly ? "translate-x-5" : "translate-x-1"}`}
+                        />
+                      </button>
+                    </div>
+                  )}
                   {(totalRelatedProperties > RELATED_ITEMS_PER_PAGE ||
                     showAllRelated) && (
                       <button

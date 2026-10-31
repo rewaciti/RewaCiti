@@ -155,7 +155,7 @@ export interface PublicForms {
     maxPropertiesPerVisit: number;
     minNoticeHours: number;
     changeNoticeHours: number;
-    confirmation: "on_payment" | "by_team";
+    confirmation: "on_payment" | "team_confirms";
     serviceCharge: number;
   };
   payment: { onlineLimit: number; depositPercent: number };

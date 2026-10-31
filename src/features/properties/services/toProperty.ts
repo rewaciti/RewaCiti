@@ -106,7 +106,7 @@ export const toProperty = (listing: PublicListing | PublicListingDetail, fields:
     specialNotes: listOf(listing.customFields[SPECIAL_NOTES_KEY]),
     specifications: specificationsOf(listing, fields),
     videoUrl: listing.videoUrl ? ensureHttps(listing.videoUrl) : undefined,
-    visitationfee: detail?.visitFee ?? 0,
+    visitationfee: detail ? detail.visitFee : null,
   };
 };
 

@@ -94,6 +94,8 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   const propertyAddress = addressOf(property);
 
   const finish = () => {
+    // Paying or a bank transfer holds the place, so the page should show it
+    void usePropertyStore.getState().fetchPropertyBySlug(property.slug);
     requestKey.renew();
     setHeldUntil(0);
     setCookie(modalCookieKey, JSON.stringify({ guestName: "", guestEmail: "", guestPhone: "", agreed: false }));

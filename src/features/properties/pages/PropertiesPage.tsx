@@ -45,6 +45,8 @@ function PropertySearchSection() {
   const {
     properties,
     loading,
+    error,
+    filters,
     ITEMS_PER_PAGE,
     fetchProperties,
     nextPage,
@@ -194,7 +196,8 @@ function PropertySearchSection() {
 
     if (Number.isNaN(min) || Number.isNaN(max)) return;
 
-    setPriceRange([min, max]);
+    // A new array with the same values would search again
+    setPriceRange((current) => (current[0] === min && current[1] === max ? current : [min, max]));
   }, [minPriceInput, maxPriceInput]);
 
   useEffect(() => {
@@ -853,6 +856,25 @@ function PropertySearchSection() {
                     [...Array(6)].map((_, i) => (
                       <PropertyCardSkeleton key={i} />
                     ))
+                  ) : error ? (
+                    // Not "no results": the search didn't reach us, so changing filters won't help
+                    <div className="col-span-full py-10 flex flex-col items-center justify-center text-center space-y-4 bg-white dark:bg-[#1A1A1A] border border-red-100 dark:border-red-900/30 rounded-xl">
+                      <div className="space-y-1">
+                        <p className="text-lg font-medium text-gray-900 dark:text-white">
+                          We couldn't load properties
+                        </p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Check your internet connection and try again.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => fetchProperties(apiPage, filters)}
+                        className="px-6 py-2 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white transition-all shadow-md active:scale-95 cursor-pointer"
+                      >
+                        Try Again
+                      </button>
+                    </div>
                   ) : currentProperties.length === 0 ? (
                     <div className="col-span-full text-center py-10">
                       <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">

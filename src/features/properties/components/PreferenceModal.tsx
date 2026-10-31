@@ -262,6 +262,9 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
             <Dialog.Title className="text-2xl font-semibold dark:text-white text-gray-900">
               Can't find preference?
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Tell us what you're looking for, and we'll email you when a property that fits comes up.
+            </Dialog.Description>
             <Dialog.Close asChild>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600 cursor-pointer">
                 <FiX size={20} />

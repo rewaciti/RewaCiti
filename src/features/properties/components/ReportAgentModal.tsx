@@ -35,7 +35,8 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
   const [agreed, setAgreed] = useState(false);
   const modalCookieKey = "rewaciti_report_modal";
   const requestKey = useRequestKey();
-  const reasons = usePropertyStore((state) => state.forms?.reportReasons ?? []);
+  // A fallback inside the selector would be a new list on every render, which re-renders forever
+  const reasons = usePropertyStore((state) => state.forms?.reportReasons) ?? [];
 
   const name = customer
     ? `${customer.firstName} ${customer.lastName}`.trim()

@@ -197,6 +197,9 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
             <Dialog.Title className="text-2xl font-semibold dark:text-white text-gray-900">
               Become a Lister
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Apply to list your properties on RewaCiti.
+            </Dialog.Description>
             <Dialog.Close asChild>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600 cursor-pointer">
                 <FiX size={20} />

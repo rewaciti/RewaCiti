@@ -15,8 +15,12 @@ import { toProperty } from "../services/toProperty";
 let formsRequest: Promise<PublicForms | null> | null = null;
 let locationsRequest: Promise<PropertyLocations["data"]> | null = null;
 
-// Related listings come in one go and are paged here
-const relatedCache = new Map<string, Property[]>();
+// Related listings come in one go and are paged here. Holding the request lets
+// several renders share one.
+const relatedCache = new Map<string, Promise<Property[]>>();
+
+// Only the newest search may fill the list: replies can arrive out of order
+let listRequest = 0;
 
 const withoutBlanks = (query: Record<string, string | number | boolean | undefined>) =>
   Object.fromEntries(Object.entries(query).filter(([, value]) => value !== undefined && value !== null && value !== ""));
@@ -48,6 +52,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
   filters: {},
 
   fetchProperties: async (apiPage = 1, filters) => {
+    const request = ++listRequest;
     set({ loading: true, error: null });
 
     try {
@@ -55,6 +60,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
       const { ITEMS_PER_PAGE } = get();
       const res = await propertiesAPI.list({ ...withoutBlanks(resolvedFilters), page: apiPage, limit: ITEMS_PER_PAGE });
       const properties = res.data.map((listing) => toProperty(listing));
+      if (request !== listRequest) return;
 
       set({
         properties,
@@ -66,6 +72,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
       });
     } catch (err) {
       console.error(err);
+      if (request !== listRequest) return;
       set({ error: "Failed to load property data", loading: false });
     }
   },
@@ -141,17 +148,18 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
       });
 
     const key = `${property.id}:${sameAgentOnly}`;
-    const cached = relatedCache.get(key);
-    if (cached) return show(cached);
+    let request = relatedCache.get(key);
+    if (!request) {
+      set({ relatedPropertiesLoading: true });
+      request = propertiesAPI.related(property.id, sameAgentOnly).then((listings) => listings.map((listing) => toProperty(listing)));
+      relatedCache.set(key, request);
+    }
 
-    set({ relatedPropertiesLoading: true });
     try {
-      const listings = await propertiesAPI.related(property.id, sameAgentOnly);
-      const all = listings.map((listing) => toProperty(listing));
-      relatedCache.set(key, all);
-      show(all);
+      show(await request);
     } catch (err) {
       console.error("Failed to fetch related properties:", err);
+      relatedCache.delete(key);
       set({ relatedProperties: [], totalRelatedProperties: 0, relatedPropertiesLoading: false });
     }
   },

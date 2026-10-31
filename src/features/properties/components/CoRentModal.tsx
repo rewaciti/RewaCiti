@@ -249,6 +249,9 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
             <Dialog.Title className="text-2xl font-semibold dark:text-white text-gray-900">
               Looking to Co-Rent?
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Tell us where and how you want to share, and we'll match you with someone looking for the same.
+            </Dialog.Description>
             <Dialog.Close asChild>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600 cursor-pointer">
                 <FiX size={20} />

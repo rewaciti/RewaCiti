@@ -9,7 +9,8 @@ export const formatCurrency = (amount: number) => {
   if (amount >= 1000000000) {
     return `${(amount / 1000000000).toFixed(3).replace(/\.?0+$/, "")}B`;
   }
-  if (amount >= 1000000) {
+  // Totals include charges, so they aren't round: rounding here would misstate what's owed
+  if (amount >= 10000000) {
     return `${(amount / 1000000).toFixed(3).replace(/\.?0+$/, "")}M`;
   }
   return amount.toLocaleString();

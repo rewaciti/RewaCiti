@@ -54,8 +54,8 @@ export interface Property {
   specialNotes: string[];
   specifications: { label: string; value: string }[];
   videoUrl?: string;
-  /** The visit fee, service charge included. Only on the property page. */
-  visitationfee: number;
+  /** The visit fee, service charge included. Null until the property page has loaded it. */
+  visitationfee: number | null;
 }
 
 export interface PropertyStore {

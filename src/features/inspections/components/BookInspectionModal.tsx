@@ -141,8 +141,8 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   }, [open, visitDate, property.id]);
 
   const amount = property.visitationfee;
-  const feeDisplay = amount === 0 ? "inspection is free" : `₦${amount.toLocaleString()}`;
-  const confirmedByTeam = visitRules?.confirmation === "by_team";
+  const feeDisplay = amount === null ? "Loading..." : amount === 0 ? "inspection is free" : `₦${amount.toLocaleString()}`;
+  const confirmedByTeam = visitRules?.confirmation === "team_confirms";
 
   const fullName = customer ? `${customer.firstName} ${customer.lastName}`.trim() : guestName;
   const bookingEmail = customer?.email ?? guestEmail;
@@ -430,7 +430,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                 : "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
                 }`}
             >
-              {isSubmitting ? "Processing..." : amount > 0 ? "Pay & Book a Visit" : "Book a Visit"}
+              {isSubmitting ? "Processing..." : amount === 0 ? "Book a Visit" : "Pay & Book a Visit"}
             </button>
           </form>
         </Dialog.Content>
