@@ -2,11 +2,8 @@ import Navbar from "../../../shared/components/Layout/Navbar";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { usePropertyStore } from "../store/usePropertyStore";
-import {
-  customFieldsAPI,
-  type CustomFieldsResponse,
-  type LocationHierarchyItem,
-} from "../services/customFieldsAPI";
+import { propertiesAPI } from "../services/propertiesAPI";
+import type { PropertyLocations } from "../../../types/realEstate";
 import { FiArrowLeft, FiArrowRight, FiFilter, FiUsers, FiSliders, FiHome } from "react-icons/fi";
 import PropertyCard from "../components/PropertyCard";
 import PropertyMap from "../components/PropertyMap";
@@ -26,11 +23,30 @@ const NAVBAR_HEIGHT_PX = 64;
 // Use the SAME classes inside your Navbar so the logo lines up with the content.
 const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
 
+interface LocationHierarchyItem {
+  state: string;
+  city: string;
+  area: string;
+  university?: string;
+}
+
+/** One row per area, and per nearby university or landmark, under its state and city. */
+const flattenLocations = (states: PropertyLocations["data"]): LocationHierarchyItem[] =>
+  states.flatMap(({ state, cities }) =>
+    cities.flatMap(({ city, areas, nearby }) => [
+      ...areas.map(({ area }) => ({ state, city, area })),
+      ...nearby.map(({ name }) => ({ state, city, area: "", university: name })),
+      ...(areas.length || nearby.length ? [] : [{ state, city, area: "" }]),
+    ]),
+  );
+
 function PropertySearchSection() {
   useScrollToHash();
   const {
     properties,
     loading,
+    error,
+    filters,
     ITEMS_PER_PAGE,
     fetchProperties,
     nextPage,
@@ -69,7 +85,7 @@ function PropertySearchSection() {
   const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(
     null,
   );
-  const [listingTypes, setListingTypes] = useState<string[]>([]);
+  const [listingTypes, setListingTypes] = useState<{ label: string; value: string }[]>([]);
 
   // Measures the sticky top bar's real height so the map panel sits exactly below it
   const topBarRef = useRef<HTMLDivElement>(null);
@@ -127,27 +143,24 @@ function PropertySearchSection() {
   const [locationHierarchy, setLocationHierarchy] = useState<
     LocationHierarchyItem[]
   >([]);
-  const [customFilterValues, setCustomFilterValues] =
-    useState<CustomFieldsResponse | null>(null);
 
-  // Fetch custom fields data and location hierarchy from backend
+  // Where there are listings, and the listing types in use, to filter by
   useEffect(() => {
-    const fetchCustomFields = async () => {
+    const fetchFilterOptions = async () => {
       try {
-        const [filterData, hierarchyData] = await Promise.all([
-          customFieldsAPI.getFilterValues(),
-          customFieldsAPI.getLocationHierarchy(),
+        const [filters, locations] = await Promise.all([
+          propertiesAPI.filters(),
+          usePropertyStore.getState().fetchLocations(),
         ]);
 
-        setCustomFilterValues(filterData);
-        setLocationHierarchy(hierarchyData);
-        setListingTypes(filterData.listing_type || []);
+        setLocationHierarchy(flattenLocations(locations));
+        setListingTypes(filters.purposes.map((p) => ({ label: p.label, value: p.value })));
       } catch (error) {
-        console.error("Failed to fetch custom fields:", error);
+        console.error("Failed to fetch filter options:", error);
       }
     };
 
-    fetchCustomFields();
+    fetchFilterOptions();
   }, []);
 
   useEffect(() => {
@@ -183,30 +196,24 @@ function PropertySearchSection() {
 
     if (Number.isNaN(min) || Number.isNaN(max)) return;
 
-    setPriceRange([min, max]);
+    // A new array with the same values would search again
+    setPriceRange((current) => (current[0] === min && current[1] === max ? current : [min, max]));
   }, [minPriceInput, maxPriceInput]);
 
   useEffect(() => {
-    const isCategoryId = categories.some(
-      (option) => String(option.id) === String(category),
-    );
-
     fetchProperties(1, {
       search: searchTerm || undefined,
-      "customData.location.state": state || undefined,
-      "customData.location.city_town": city || undefined,
-      "customData.location.area": area || undefined,
-      "customData.location.nearest_institution_in_full":
-        university || undefined,
-      ...(category
-        ? isCategoryId
-          ? { categoryId: category }
-          : { category }
-        : {}),
-      "customData.bedrooms": bedrooms || undefined,
+      state: state || undefined,
+      city: city || undefined,
+      area: area || undefined,
+      nearby: university || undefined,
+      typeId: category || undefined,
+      ...(bedrooms === "shared"
+        ? { sharing: "shared_room" }
+        : { bedrooms: bedrooms ? Number(bedrooms) : undefined }),
       minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
       maxPrice: priceRange[1] < 999999999 ? priceRange[1] : undefined,
-      "customData.listing_type": listingType || undefined,
+      purpose: listingType || undefined,
     });
   }, [
     searchTerm,
@@ -219,7 +226,6 @@ function PropertySearchSection() {
     priceRange,
     fetchProperties,
     listingType,
-    categories,
   ]);
 
   const totalApiPages = Math.max(
@@ -240,7 +246,7 @@ function PropertySearchSection() {
     }
   };
 
-  // 1. Available States (from hierarchy & custom filter values)
+  // 1. Available States
   const stateOptions = useMemo(() => {
     const stateMap = new Map<string, string>();
 
@@ -253,19 +259,10 @@ function PropertySearchSection() {
       }
     });
 
-    (customFilterValues?.["location.state"] || []).forEach((s) => {
-      if (s) {
-        const lower = s.toLowerCase();
-        if (!stateMap.has(lower)) {
-          stateMap.set(lower, s);
-        }
-      }
-    });
-
     return Array.from(stateMap.entries())
       .sort((a, b) => a[1].localeCompare(b[1]))
       .map(([_, val]) => ({ label: val, value: val }));
-  }, [locationHierarchy, customFilterValues]);
+  }, [locationHierarchy]);
 
   // 2. Available Cities (only when state is selected)
   const cityOptions = useMemo(() => {
@@ -282,26 +279,10 @@ function PropertySearchSection() {
       }
     });
 
-    (customFilterValues?.["location.city_town"] || []).forEach((c) => {
-      if (c) {
-        const matching = locationHierarchy.some(
-          (item) =>
-            item.state.toLowerCase() === stateLower &&
-            item.city.toLowerCase() === c.toLowerCase(),
-        );
-        if (matching) {
-          const lower = c.toLowerCase();
-          if (!cityMap.has(lower)) {
-            cityMap.set(lower, c);
-          }
-        }
-      }
-    });
-
     return Array.from(cityMap.entries())
       .sort((a, b) => a[1].localeCompare(b[1]))
       .map(([_, val]) => ({ label: val, value: val }));
-  }, [state, locationHierarchy, customFilterValues]);
+  }, [state, locationHierarchy]);
 
   // 3. Available Areas (only when state is selected, filtered further if city is chosen)
   const areaOptions = useMemo(() => {
@@ -323,27 +304,10 @@ function PropertySearchSection() {
       }
     });
 
-    (customFilterValues?.["location.area"] || []).forEach((a) => {
-      if (a) {
-        const matching = locationHierarchy.some(
-          (item) =>
-            item.state.toLowerCase() === stateLower &&
-            (!cityLower || item.city.toLowerCase() === cityLower) &&
-            item.area.toLowerCase() === a.toLowerCase(),
-        );
-        if (matching) {
-          const lower = a.toLowerCase();
-          if (!areaMap.has(lower)) {
-            areaMap.set(lower, a);
-          }
-        }
-      }
-    });
-
     return Array.from(areaMap.entries())
       .sort((a, b) => a[1].localeCompare(b[1]))
       .map(([_, val]) => ({ label: val, value: val }));
-  }, [state, city, locationHierarchy, customFilterValues]);
+  }, [state, city, locationHierarchy]);
 
   // 4. Available Universities (filtered by state if state is selected)
   const universityOptions = useMemo(() => {
@@ -361,35 +325,10 @@ function PropertySearchSection() {
       }
     });
 
-    (
-      customFilterValues?.["location.nearest_institution_in_full"] || []
-    ).forEach((u) => {
-      if (u) {
-        if (!stateLower) {
-          const lower = u.toLowerCase();
-          if (!uniMap.has(lower)) {
-            uniMap.set(lower, u);
-          }
-        } else {
-          const matching = locationHierarchy.some(
-            (item) =>
-              item.state.toLowerCase() === stateLower &&
-              item.university?.toLowerCase() === u.toLowerCase(),
-          );
-          if (matching) {
-            const lower = u.toLowerCase();
-            if (!uniMap.has(lower)) {
-              uniMap.set(lower, u);
-            }
-          }
-        }
-      }
-    });
-
     return Array.from(uniMap.entries())
       .sort((a, b) => a[1].localeCompare(b[1]))
       .map(([_, val]) => ({ label: val, value: val }));
-  }, [state, locationHierarchy, customFilterValues]);
+  }, [state, locationHierarchy]);
 
   // Cascading Selection Handlers
   const handleStateChange = (selectedState: string) => {
@@ -491,7 +430,7 @@ function PropertySearchSection() {
 
   const listingTypeOptions = [
     { label: "Listing Type", value: "" },
-    ...listingTypes.map((lt) => ({ label: lt, value: lt })),
+    ...listingTypes,
   ];
 
   const activeFilterCount = [
@@ -917,6 +856,25 @@ function PropertySearchSection() {
                     [...Array(6)].map((_, i) => (
                       <PropertyCardSkeleton key={i} />
                     ))
+                  ) : error ? (
+                    // Not "no results": the search didn't reach us, so changing filters won't help
+                    <div className="col-span-full py-10 flex flex-col items-center justify-center text-center space-y-4 bg-white dark:bg-[#1A1A1A] border border-red-100 dark:border-red-900/30 rounded-xl">
+                      <div className="space-y-1">
+                        <p className="text-lg font-medium text-gray-900 dark:text-white">
+                          We couldn't load properties
+                        </p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Check your internet connection and try again.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => fetchProperties(apiPage, filters)}
+                        className="px-6 py-2 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white transition-all shadow-md active:scale-95 cursor-pointer"
+                      >
+                        Try Again
+                      </button>
+                    </div>
                   ) : currentProperties.length === 0 ? (
                     <div className="col-span-full text-center py-10">
                       <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">

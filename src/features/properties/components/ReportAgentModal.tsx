@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { FiX, FiAlertTriangle } from "react-icons/fi";
 import type { Property } from "../../../types";
-import axios from "axios";
 import { toast } from "sonner";
-import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
+import { useAuthStore } from "../../auth/store/useAuthStore";
 import CustomDropdown from "./CustomDropdown";
 import { authAPI } from "../../auth/services/authAPI";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
+import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
+import useRequestKey from "../../../shared/hooks/useRequestKey";
+import { usePropertyStore } from "../store/usePropertyStore";
+import { requestsAPI } from "../services/requestsAPI";
 import { Link } from "react-router";
 
 interface ReportAgentModalProps {
@@ -31,6 +34,9 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
   const [guestPhone, setGuestPhone] = useState("");
   const [agreed, setAgreed] = useState(false);
   const modalCookieKey = "rewaciti_report_modal";
+  const requestKey = useRequestKey();
+  // A fallback inside the selector would be a new list on every render, which re-renders forever
+  const reasons = usePropertyStore((state) => state.forms?.reportReasons) ?? [];
 
   const name = customer
     ? `${customer.firstName} ${customer.lastName}`.trim()
@@ -46,7 +52,8 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
         setGuestName(parsed.guestName || "");
         setGuestEmail(parsed.guestEmail || "");
         setGuestPhone(parsed.guestPhone || "");
-        setReason(parsed.reason || "");
+        // Reasons saved before they came from SabiFlow used other values
+        setReason(parsed.reason?.replace("-", "_") || "");
         setDescription(parsed.description || "");
         setAgreed(parsed.agreed || false);
       } catch {
@@ -100,6 +107,11 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
       return;
     }
 
+    if (!reason || !description.trim()) {
+      toast.error("Please choose a reason and tell us what happened.");
+      return;
+    }
+
     if (!agreed) {
       toast.error(
         "Please agree to the Terms and Privacy Policy before submitting your report.",
@@ -109,107 +121,42 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
 
     setIsSubmitting(true);
 
-    const payload = {
-      companyId: COMPANY_ID,
-      pipelineId: "6a2a0b1ff19944ca7f9aa4b9",
-      title: `AGENT REPORT: ${property.name} - ${reason}`,
-      name: name,
-      email: email,
-      phone: phone,
-      address: `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`,
-      note: `Description: ${description || "No additional details provided"}`,
-      customData: [
-        {
-          label: "Property Name",
-          value: property.name,
-        },
-        ...(property.createdBy?.email
-          ? [
-              {
-                label: "Agent Email",
-                value: property.createdBy.email,
-              },
-            ]
-          : []),
-        ...(property.sku
-          ? [
-              {
-                label: "Property SKU",
-                value: property.sku,
-              },
-            ]
-          : []),
-        {
-          label: "Report Reason",
-          value: reason,
-        },
-        ...(property.caretakerContact?.whatsapp
-          ? [
-              {
-                label: "Caretaker WhatsApp",
-                value: property.caretakerContact.whatsapp,
-              },
-            ]
-          : []),
-        ...(property.caretakerContact?.phone
-          ? [
-              {
-                label: "Caretaker Phone",
-                value: property.caretakerContact.phone,
-              },
-            ]
-          : []),
-      ],
-    };
-
-    const apiBaseUrl =
-      import.meta.env.VITE_API_URL || "https://api.sabiflow.com/api";
-    const candidateUrls = [
-      `${apiBaseUrl}/crm/deals/guest`,
-      `${apiBaseUrl}/crm/deals`,
-      "https://api.sabiflow.com/api/crm/deals/guest",
-    ];
-
     try {
-      let lastError: unknown;
-
-      for (const url of candidateUrls) {
-        try {
-          await axios.post(url, payload);
-          toast.success(
-            "Report submitted successfully.\nThank you for your feedback. We will investigate the issue appropriately.",
-          );
-          onOpenChange(false);
-          setReason("");
-          setDescription("");
-          setCookie(
-            modalCookieKey,
-            JSON.stringify({
-              guestName: "",
-              guestEmail: "",
-              guestPhone: "",
-              reason: "",
-              description: "",
-              agreed: false,
-            }),
-          );
-          return;
-        } catch (error) {
-          lastError = error;
-          const isMissingEndpoint =
-            axios.isAxiosError(error) && error.response?.status === 404;
-          if (!isMissingEndpoint) {
-            throw error;
-          }
-        }
-      }
-
-      throw lastError;
+      // The report goes on the agent's record, alongside the listing
+      const reply = await requestsAPI.agentReport(
+        {
+          propertyId: property.id,
+          reason,
+          message: description.trim(),
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          consent: agreed,
+        },
+        requestKey.current(),
+      );
+      requestKey.renew();
+      noteTestMode(reply);
+      toast.success(
+        "Report submitted successfully.\nThank you for your feedback. We will investigate the issue appropriately.",
+      );
+      onOpenChange(false);
+      setReason("");
+      setDescription("");
+      setCookie(
+        modalCookieKey,
+        JSON.stringify({
+          guestName: "",
+          guestEmail: "",
+          guestPhone: "",
+          reason: "",
+          description: "",
+          agreed: false,
+        }),
+      );
     } catch (error) {
       console.error("Error submitting report:", error);
-      toast.error(
-        "The report service is currently unavailable. Please try again later.",
-      );
+      toast.error(errorMessage(error, "We couldn't send your report. Please try again."));
     } finally {
       setIsSubmitting(false);
     }
@@ -307,13 +254,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
               <CustomDropdown
                 placeholder="Select a reason"
                 value={reason}
-                options={[
-                  { label: "Unprofessional Behavior", value: "unprofessional" },
-                  { label: "Misleading Information", value: "misleading" },
-                  { label: "Agent No-show", value: "no-show" },
-                  { label: "Suspected Scam", value: "scam" },
-                  { label: "Other", value: "other" },
-                ]}
+                options={reasons}
                 onChange={(val) => setReason(val)}
               />
             </div>
@@ -324,6 +265,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
               </label>
               <textarea
                 rows={4}
+                required
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Please provide more details..."
@@ -374,6 +316,8 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                 !name.trim() ||
                 !email.trim() ||
                 !phone.trim() ||
+                !reason ||
+                !description.trim() ||
                 !agreed
               }
               className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-md transition-colors mt-3 disabled:opacity-50"

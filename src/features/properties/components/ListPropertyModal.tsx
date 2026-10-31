@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { FiX } from "react-icons/fi";
 import { Link } from "react-router";
-import axios from "axios";
 import { toast } from "sonner";
-import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
+import { useAuthStore } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
+import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
+import useRequestKey from "../../../shared/hooks/useRequestKey";
+import { requestsAPI } from "../services/requestsAPI";
 import CustomDropdown from "./CustomDropdown";
 
 interface ListPropertyModalProps {
@@ -38,6 +40,7 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
   const [agreed, setAgreed] = useState(false);
 
   const cookieKey = "rewaciti_become_lister_inquiry";
+  const requestKey = useRequestKey();
 
   // Load saved draft from cookie once on mount only.
   useEffect(() => {
@@ -125,24 +128,22 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
 
     setIsSubmitting(true);
 
-    const payload = {
-      companyId: COMPANY_ID,
-      pipelineId: "6a9eb52b21202229fbb9eb00",
-      title: `Become a Lister Request from ${name.trim()} (${listerRole}) - ${location.trim()}`,
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim(),
-      address: location.trim(),
-      note: message || `Application to become a lister (${listerRole}) in ${location.trim()}.`,
-      customData: [
-        { label: "Inquiry Type", value: "Become a Lister" },
-        { label: "Lister Role", value: listerRole },
-        { label: "Primary Area / Location", value: location.trim() },
-      ],
-    };
-
     try {
-      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
+      // Approving it in SabiFlow invites them to the agent portal
+      const reply = await requestsAPI.agentApplication(
+        {
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          consent: agreed,
+          role: LISTER_ROLE_OPTIONS.find((option) => option.value === listerRole)?.label ?? listerRole,
+          location: location.trim(),
+          message: message.trim() || undefined,
+        },
+        requestKey.current(),
+      );
+      requestKey.renew();
+      noteTestMode(reply);
       toast.success(
         <div className="whitespace-pre-wrap">
           Lister request submitted successfully!
@@ -173,7 +174,7 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
       onOpenChange(false);
     } catch (error) {
       console.error("Error submitting lister request:", error);
-      toast.error("Failed to submit request. Please try again.");
+      toast.error(errorMessage(error, "Failed to submit request. Please try again."));
     } finally {
       setIsSubmitting(false);
     }
@@ -196,6 +197,9 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
             <Dialog.Title className="text-2xl font-semibold dark:text-white text-gray-900">
               Become a Lister
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Apply to list your properties on RewaCiti.
+            </Dialog.Description>
             <Dialog.Close asChild>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600 cursor-pointer">
                 <FiX size={20} />

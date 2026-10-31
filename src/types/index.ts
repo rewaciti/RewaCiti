@@ -1,105 +1,97 @@
+import type { ListingCharge, ListingPurpose, PropertyLocations, PublicForms, PublicListingDetail, SharingType } from "./realEstate";
+
+/** A listing as the pages show it, made from the Real Estate API by `toProperty`. */
 export interface Property {
   id: string;
-  sku?: string;
   slug: string;
+  /** RewaCiti's own reference, e.g. RE-IFE-0012. */
+  reference?: string;
   name: string;
   img: string;
   images: string[];
   description: string;
-  bedrooms: number ;
-  bathrooms: number | string;
+  bedrooms: number;
+  bathrooms: number;
+  /** The property type, e.g. "Self-contain". */
   category: string;
-  duration?: string;
-  listingType?: string;
-  pricing: { 
-   LegalFee: number;
-   ServiceFee: number;
-   CautionFee: number;
-   PropertyCost: number;
-   AgentFee:number;
-   TotalCost: number;
+  purpose: ListingPurpose;
+  /** The purpose in words, e.g. "For rent". */
+  listingType: string;
+  /** How long the price covers, e.g. "1 year" or "per month". Empty for a one-off price. */
+  duration: string;
+  sharing: SharingType;
+  places: { total: number; left: number };
+  /** Someone is paying for it right now. */
+  reserved: boolean;
+  /** Worked out by SabiFlow: the property cost, its charges and the service charge. */
+  pricing: {
+    base: number;
+    charges: ListingCharge[];
+    serviceCharge: number;
+    total: number;
   };
-  createdBy?: {
-    _id: string;
-    id: string;
-    firstName: string;
-    lastName: string;
-    email?: string;
-    classification: string | null;
-  } | null;
-  creatorClassification?: string | null;
+  agentId: string | null;
+  /** Only on the property page. Null when RewaCiti lists it itself. */
+  agent?: PublicListingDetail["agent"];
   location: {
-    area: string;
-    city: string;
-    city_town?: string;
     state: string;
-    nearest_university?: string;
+    city: string;
+    area: string;
+    /** The nearest university or landmark. */
+    nearby: string;
   };
+  /** 0 when there's no map pin. */
   geo_location: {
     lat: number;
     lng: number;
-    address?: string;
   };
-  yearBuilt: number; 
-  keyFeatures: string[]; 
-  additionalFeatures?: string[];
-  billsAndCharges?: string[];
-  additionalBillsAndCharges?: string[];
-  rules?: string[];
-  additionalRules?: string[];
-  specialNotes?: string[];
-  specifications?: { label: string; value: string }[];
-  videoUrl?: string; 
-  caretakerContact?: {
-    whatsapp?: string;
-    phone?: string;
-  };
-  visitationfee: number;
+  keyFeatures: string[];
+  additionalFeatures: string[];
+  billsAndCharges: string[];
+  additionalBillsAndCharges: string[];
+  rules: string[];
+  additionalRules: string[];
+  specialNotes: string[];
+  specifications: { label: string; value: string }[];
+  videoUrl?: string;
+  /** The visit fee, service charge included. Null until the property page has loaded it. */
+  visitationfee: number | null;
 }
-
 
 export interface PropertyStore {
   properties: Property[];
-  filteredProperties: Property[];
   loading: boolean;
   error: string | null;
-  fees: PropertyPaymentFees | null;
 
   ITEMS_PER_PAGE: number;
   page: number;
   apiPage: number;
   totalProperties: number;
-  filters: Record<string, string | number | undefined>;
+  filters: Record<string, string | number | boolean | undefined>;
 
   featuredProperties: Property[];
   featuredLoading: boolean;
   fetchFeaturedProperties: () => Promise<void>;
 
-  fetchProperties: (apiPage?: number, filters?: Record<string, string | number | undefined>) => Promise<void>;
-  fetchPropertyFees: () => Promise<void>;
+  fetchProperties: (apiPage?: number, filters?: Record<string, string | number | boolean | undefined>) => Promise<void>;
   nextPage: () => void;
   prevPage: () => void;
   setPage: (page: number) => void;
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
   shortlistedProperties: Property[];
   fetchWishlist: () => Promise<void>;
   toggleShortlist: (property: Property) => Promise<void>;
-  filterProperties: (filters: {
-    location?: string;
-    category?: string;
-    priceRange?: string;
-    rooms?: number;
-    buildYear?: number;
-  }) => void;
-  
+
   categories: Category[];
   categoriesLoading: boolean;
   fetchCategories: () => Promise<void>;
 
-  filtersData: InventoryFilters | null;
-  filtersLoading: boolean;
-  fetchFilters: () => Promise<void>;
+  /** Form fields, visit and payment rules, and which features RewaCiti has on. */
+  forms: PublicForms | null;
+  fetchForms: () => Promise<PublicForms | null>;
+
+  /** Where there are listings, from state down to area. */
+  locations: PropertyLocations["data"];
+  fetchLocations: () => Promise<PropertyLocations["data"]>;
 
   relatedProperties: Property[];
   relatedPropertiesLoading: boolean;
@@ -116,10 +108,6 @@ export interface PropertyStore {
   fetchPropertyBySlug: (slug: string) => Promise<void>;
   clearCurrentProperty: () => void;
 
-}
-
-export interface PropertyPaymentFees {
-  agent_fee_ranges: { min: number; max: number | null; percentage: number }[];
 }
 
 export interface Comment {
@@ -199,109 +187,6 @@ export interface AchievementItem {
   description: string;
 }
 
-export interface SabiFlowProduct {
-  _id: string;
-  sku?: string;
-  name: string;
-  slug: string;
-  description: string;
-  price: number;
-  images: string[];
-  thumbnail: string;
-  videoUrl?: string;
-  specifications?: Record<string, string>;
-  productType?: string;
-  categoryId?: {
-    _id?: string;
-    name: string;
-    id?: string;
-  };
-  creatorClassification?: string;
-  createdBy?:{
-    _id: string;
-    firstName: string;
-    lastName: string;
-    id: string;
-    email?: string;
-    classification?: string;
-  } | string | null;
-  customData?: {
-    bedrooms?: number;
-    bathrooms?: number|string;
-    yearBuilt?: number;
-    duration?: string;
-    rules?: string[] | {
-      key_rules?: string[];
-      additional_rules?: string[];
-    };
-    creatorClassification?: string;
-    pricing?: {
-      agent_fee?: number;
-      legal_fee?: number;
-      service_fee?: number;
-      caution_fee?: number;
-      property_cost?: number;
-    };
-    key_features_and_amenities?: string[] | {
-      other_features_and_amenities?: string[];
-    };
-    features_and_amenities?: {
-      key_features_and_amenities?: string[];
-      additional_features_and_amenities?: string[];
-    };
-    bills_and_charges?: {
-      baic_bills_and_charges?: string[];
-      basic_bills_and_charges?: string[];
-      additional_bills_and_charges?: string[];
-    };
-    location?: {
-      area?: string;
-      city?: string;
-      city_town?: string;
-      state?: string;
-      nearest_university?: string;
-    };
-    geo_location?: {
-      lat: number;
-      lng: number;
-      address?: string;
-    };
-    care_taker_contact_optional?: {
-      whatsapp_contact?: string;
-      call_contact?: string;
-    };
-    visitation_fee: number;
-    special_notes?: string[];
-    specifications?: { label: string; value: string }[];
-    listing_type?: string;
-  };
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface Inspection {
-  id: string;
-  propertyId: string;
-  propertyName: string;
-  userName: string;
-  userEmail: string;
-  userPhone: string;
-  date: string;
-  time: string;
-  status: "pending" | "confirmed" | "completed" | "cancelled";
-  paymentStatus: "pending" | "paid" | "failed";
-  amount: number;
-  reference: string;
-  location: string;
-}
-
-export interface InspectionStore {
-  inspections: Inspection[];
-  loading: boolean;
-  addInspection: (inspection: Omit<Inspection, "id" | "status" | "paymentStatus">) => void;
-  updatePaymentStatus: (reference: string, status: "paid" | "failed") => void;
-}
-
 export interface BlogPost {
   id: string;
   title: string;
@@ -332,27 +217,4 @@ export interface Category {
   id: string;
   name: string;
   slug: string;
-}
-
-export interface InventoryFilters {
-  creators: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    classification: string;
-  }[];
-
-  vendorTracking: {
-    enabled: boolean;
-    classifications: string[];
-  };
-
-  customFields: {
-    key: string;
-    name: string;
-    type: string;
-    options: string[] | null;
-    queryParam: string;
-    operators: string[];
-  }[];
 }

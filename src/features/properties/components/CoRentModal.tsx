@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { FiX } from "react-icons/fi";
 import { Link } from "react-router";
-import axios from "axios";
 import { toast } from "sonner";
-import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
+import { useAuthStore } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
+import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
+import useRequestKey from "../../../shared/hooks/useRequestKey";
+import { requestsAPI, type CoRentRequest } from "../services/requestsAPI";
 import CustomDropdown from "./CustomDropdown";
 
 interface CoRentModalProps {
@@ -15,14 +17,14 @@ interface CoRentModalProps {
 }
 
 const GENDER_OPTIONS = [
-  { label: "Male", value: "Male" },
-  { label: "Female", value: "Female" },
+  { label: "Male", value: "male" },
+  { label: "Female", value: "female" },
 ];
 
 const PREFERRED_GENDER_OPTIONS = [
-  { label: "Any / No Preference", value: "Any" },
-  { label: "Male Only", value: "Male" },
-  { label: "Female Only", value: "Female" },
+  { label: "Any / No Preference", value: "any" },
+  { label: "Male Only", value: "male" },
+  { label: "Female Only", value: "female" },
 ];
 
 const ROOM_TYPE_OPTIONS = [
@@ -32,6 +34,12 @@ const ROOM_TYPE_OPTIONS = [
   { label: "2-Bedroom Flat Share", value: "2-Bedroom Flat Share" },
   { label: "3-Bedroom Flat Share", value: "3-Bedroom Flat Share" },
 ];
+
+/** Only a shared room means sharing the room itself; the rest share a home. */
+const sharingOf = (roomType: string): CoRentRequest["sharing"] =>
+  !roomType ? undefined : roomType.startsWith("Shared Room") ? "shared_room" : "shared_apartment";
+
+const digits = (value: string) => value.replace(/[^\d]/g, "");
 
 const CoRentModal: React.FC<CoRentModalProps> = ({
   open,
@@ -45,7 +53,7 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
   const [phone, setPhone] = useState("");
   const [preferedLocation, setPreferedLocation] = useState("");
   const [gender, setGender] = useState("");
-  const [preferredPartnerGender, setPreferredPartnerGender] = useState("Any");
+  const [preferredPartnerGender, setPreferredPartnerGender] = useState("any");
   const [roomType, setRoomType] = useState("");
   const [budget, setBudget] = useState("");
   const [moveInTimeline, setMoveInTimeline] = useState("");
@@ -53,6 +61,7 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
   const [agreed, setAgreed] = useState(false);
 
   const coRentCookieKey = "rewaciti_corent_request";
+  const requestKey = useRequestKey();
 
   // Load saved draft from cookie once on mount only.
   useEffect(() => {
@@ -64,10 +73,11 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
         setEmail(parsed.email || "");
         setPhone(parsed.phone || "");
         setPreferedLocation(parsed.preferedLocation || "");
-        setGender(parsed.gender || "");
-        setPreferredPartnerGender(parsed.preferredPartnerGender || "Any");
+        // Drafts saved before the form changed used capitalised values
+        setGender((parsed.gender || "").toLowerCase());
+        setPreferredPartnerGender((parsed.preferredPartnerGender || "any").toLowerCase());
         setRoomType(parsed.roomType || "");
-        setBudget(parsed.budget || "");
+        setBudget(digits(parsed.budget || ""));
         setMoveInTimeline(parsed.moveInTimeline || "");
         setMessage(parsed.message || "");
         setAgreed(parsed.agreed || false);
@@ -160,29 +170,26 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
 
     setIsSubmitting(true);
 
-    const payload = {
-      companyId: COMPANY_ID,
-      pipelineId: "6a9a70d121202229fbb92a98",
-      title: `Co-Rent Request: ${name.trim()} (${gender || "Unspecified"} looking for ${preferredPartnerGender}) - ${preferedLocation.trim()}`,
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim(),
-      address: preferedLocation.trim(),
-      note: message || "Looking to co-rent a property",
-      customData: [
-        { label: "Request Type", value: "Co-Rent Match" },
-        { label: "Preferred Location", value: preferedLocation.trim() },
-        { label: "Applicant Gender", value: gender || "Not specified" },
-        { label: "Preferred Co-Rent Partner Gender", value: preferredPartnerGender },
-        { label: "Room / Share Type", value: roomType || "Any" },
-        { label: "Budget per Person", value: budget || "Flexible" },
-        { label: "Move-in Timeline", value: moveInTimeline || "Flexible" },
-        { label: "Lifestyle / About Applicant", value: message || "No extra notes" },
-      ],
-    };
-
     try {
-      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
+      // The team matches people asking for the same kind of place
+      const reply = await requestsAPI.coRent(
+        {
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          consent: agreed,
+          location: preferedLocation.trim(),
+          gender: (gender || undefined) as CoRentRequest["gender"],
+          partnerGender: preferredPartnerGender as CoRentRequest["partnerGender"],
+          sharing: sharingOf(roomType),
+          budgetPerPerson: budget ? Number(budget) : undefined,
+          moveIn: moveInTimeline.trim() || undefined,
+          message: [roomType && `Share type: ${roomType}`, message.trim()].filter(Boolean).join("\n\n") || undefined,
+        },
+        requestKey.current(),
+      );
+      requestKey.renew();
+      noteTestMode(reply);
       toast.success(
         <div className="whitespace-pre-wrap">
           Co-rent request submitted successfully!
@@ -194,7 +201,7 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
       setPhone("");
       setPreferedLocation("");
       setGender("");
-      setPreferredPartnerGender("Any");
+      setPreferredPartnerGender("any");
       setRoomType("");
       setBudget("");
       setMoveInTimeline("");
@@ -208,7 +215,7 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
           phone: "",
           preferedLocation: "",
           gender: "",
-          preferredPartnerGender: "Any",
+          preferredPartnerGender: "any",
           roomType: "",
           budget: "",
           moveInTimeline: "",
@@ -219,7 +226,7 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
       onOpenChange(false);
     } catch (error) {
       console.error("Error submitting co-rent request:", error);
-      toast.error("Failed to submit co-rent request. Please try again.");
+      toast.error(errorMessage(error, "Failed to submit co-rent request. Please try again."));
     } finally {
       setIsSubmitting(false);
     }
@@ -242,6 +249,9 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
             <Dialog.Title className="text-2xl font-semibold dark:text-white text-gray-900">
               Looking to Co-Rent?
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Tell us where and how you want to share, and we'll match you with someone looking for the same.
+            </Dialog.Description>
             <Dialog.Close asChild>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600 cursor-pointer">
                 <FiX size={20} />
@@ -349,7 +359,7 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
 
                 <div>
                   <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                    Desired Cartegory
+                    Desired Category
                   </label>
                   <CustomDropdown
                     placeholder="Select Shared Type"
@@ -362,13 +372,14 @@ const CoRentModal: React.FC<CoRentModalProps> = ({
 
                 <div>
                   <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                    Your Budget (Per Person)
+                    Your Budget per Person (₦)
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. ₦200,000 - ₦350,000 per year"
-                    value={budget}
-                    onChange={(e) => setBudget(e.target.value)}
+                    inputMode="numeric"
+                    placeholder="e.g. 250,000"
+                    value={budget ? Number(budget).toLocaleString() : ""}
+                    onChange={(e) => setBudget(digits(e.target.value))}
                     className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
                   />
                 </div>

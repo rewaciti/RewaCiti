@@ -113,7 +113,7 @@ function ExpandButton({
 function PropertyPreview({ property }: { property: Property }) {
   const image = Array.isArray(property.images) && property.images.length > 0 ? property.images[0] : property.img;
 
-  const location = [property.location?.area, property.location?.city_town || property.location?.city, property.location?.state].filter(Boolean).join(", ");
+  const location = [property.location?.area, property.location?.city, property.location?.state].filter(Boolean).join(", ");
 
   const goToProperty = () => {
     window.location.href = `/properties/${property.slug}`;
@@ -147,7 +147,7 @@ function PropertyPreview({ property }: { property: Property }) {
         <div className="flex items-center justify-between gap-2">
           <div className="min-w-0">
             {property.duration && <p className="text-[9px] text-gray-500 dark:text-gray-400 leading-none mb-0.5">{property.duration}</p>}
-            <p className="text-sm font-bold text-[#703BF7] truncate">{formatPrice(property.pricing?.TotalCost)}</p>
+            <p className="text-sm font-bold text-[#703BF7] truncate">{formatPrice(property.pricing.total)}</p>
           </div>
 
           <button
@@ -271,7 +271,7 @@ export default function PropertyMap({ properties, heightClassName = "h-[500px]",
           <Marker
             key={property.id}
             position={coords}
-            icon={makePriceIcon(formatPrice(property.pricing?.TotalCost), hoveredPropertyId === property.id)}
+            icon={makePriceIcon(formatPrice(property.pricing.total), hoveredPropertyId === property.id)}
             ref={(ref) => {
               markersRef.current[property.id] = ref;
             }}

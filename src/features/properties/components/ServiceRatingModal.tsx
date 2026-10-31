@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { FiX, FiStar } from "react-icons/fi";
 import { toast } from "sonner";
-import axios from "axios";
 import { useNavigate } from "react-router";
 import type { Property } from "../../../types";
-import { COMPANY_ID } from "../../auth/store/useAuthStore";
+import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
+import { requestsAPI } from "../services/requestsAPI";
 
 // The inline bootstrap script in index.html defines `window.tp` synchronously
 // (queuing calls until the real Trustpilot script finishes loading), so this
@@ -21,10 +21,11 @@ interface ServiceRatingModalProps {
   property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Who paid, and the deal their payment is on. */
   userData?: {
     name: string;
     email: string;
-    phone: string;
+    dealNumber: string;
   };
 }
 
@@ -71,24 +72,16 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
     setIsSubmitting(true);
 
     try {
-      const feedbackPayload = {
-        companyId: COMPANY_ID,
-        pipelineId: "6a27f05df19944ca7f9a87dd",
-        title: `FEEDBACK: ${property.name}${userData ? ` - ${userData.name}` : ""}`,
-        name: userData?.name || "Anonymous",
-        email: userData?.email || "",
-        phone: userData?.phone || "",
-        amount: 0,
-        note: `Rating: ${rating}/5\nFeedback: ${feedback}`,
-        customData: [
-          { label: "Property Name", value: property.name },
-          { label: "Service Rating", value: `${rating} Stars` },
-          { label: "Feedback", value: feedback || "No additional feedback provided" },
-          ...(property.sku ? [{ label: "Property SKU", value: property.sku }] : [])
-        ]
-      };
-
-      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", feedbackPayload);
+      if (!userData) throw new Error("Nothing to rate");
+      // Counts towards the property's rating and its agent's
+      const reply = await requestsAPI.rating({
+        type: "deal",
+        reference: userData.dealNumber,
+        email: userData.email,
+        stars: rating,
+        comment: feedback.trim() || undefined,
+      });
+      noteTestMode(reply);
 
       sendTrustpilotInvitation();
 
@@ -98,10 +91,7 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
       setFeedback("");
     } catch (error) {
       console.error("Error submitting feedback:", error);
-      if (axios.isAxiosError(error)) {
-        console.error("API Error Details:", error.response?.data);
-      }
-      toast.error("Failed to submit feedback. Thank you anyway!");
+      toast.error(errorMessage(error, "Failed to submit feedback. Thank you anyway!"));
       handleClose(false);
     } finally {
       setIsSubmitting(false);

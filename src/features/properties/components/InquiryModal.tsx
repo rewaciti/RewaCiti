@@ -2,11 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { FiX } from "react-icons/fi";
 import { Link } from "react-router";
-import axios from "axios";
 import { toast } from "sonner";
-import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
+import { useAuthStore } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
+import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
+import useRequestKey from "../../../shared/hooks/useRequestKey";
+import { requestsAPI } from "../services/requestsAPI";
+import { addressOf } from "../services/toProperty";
 import type { Property } from "../../../types";
 
 interface InquiryModalProps {
@@ -26,6 +29,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
 
   const inquiryCookieKey = "rewaciti_property_details_inquiry";
   const cookieLoaded = useRef(false);
+  const requestKey = useRequestKey();
 
   useEffect(() => {
     const savedInquiry = getCookie(inquiryCookieKey);
@@ -87,8 +91,6 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
     setCookie(inquiryCookieKey, JSON.stringify(payload));
   }, [fullName, email, phone, message, agreed]);
 
-  const price = property.pricing.TotalCost ?? 0;
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -104,49 +106,21 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
 
     setIsSubmitting(true);
 
-    const trimmedName = fullName.trim();
-    const propertyUrl = window.location.href;
-    const ownerId = property.createdBy?._id ?? property.createdBy?.id;
-
-    const payload = {
-      companyId: COMPANY_ID,
-      pipelineId: "69b49c7541d35d158e336621",
-      title: `${trimmedName} interested in ${property.name}`,
-      name: trimmedName,
-      amount: price,
-      email,
-      phone,
-      address: `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`,
-      note: message,
-      ...(ownerId ? { ownerId } : {}),
-      customData: [
-        {
-          label: "Property Name",
-          value: property.name,
-        },
-        {
-          label: "Property Link",
-          value: propertyUrl,
-        },
-        {
-          label: "Category",
-          value: property.category,
-        },
-        {
-          label: "Location",
-          value: `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`,
-        },
-        ...(property.createdBy?.email
-          ? [{ label: "Agent Email", value: property.createdBy.email }]
-          : []),
-        ...(property.sku ? [{ label: "Property SKU", value: property.sku }] : []),
-        ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
-        ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : []),
-      ],
-    };
-
     try {
-      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
+      // SabiFlow links the property, its agent and the customer's record
+      const reply = await requestsAPI.inquiry(
+        {
+          propertyId: property.id,
+          name: fullName.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          message: message.trim(),
+          consent: agreed,
+        },
+        requestKey.current(),
+      );
+      requestKey.renew();
+      noteTestMode(reply);
       toast.success(
         <div className="whitespace-pre-wrap">
           Message sent successfully!
@@ -170,7 +144,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
       onOpenChange(false);
     } catch (error) {
       console.error("Error sending message:", error);
-      toast.error("Failed to send message. Please try again.");
+      toast.error(errorMessage(error, "Failed to send message. Please try again."));
     } finally {
       setIsSubmitting(false);
     }
@@ -185,6 +159,9 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
             <Dialog.Title className="text-2xl font-semibold dark:text-white text-gray-900">
               Inquire About This Property
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Send a question about {property.name} to the RewaCiti team.
+            </Dialog.Description>
             <Dialog.Close asChild>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600 cursor-pointer">
                 <FiX size={20} />
@@ -246,7 +223,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
               </label>
               <input
                 type="text"
-                value={`${property?.name}, ${property?.location?.area}, ${property?.location?.city_town}, ${property?.location?.state} state.`}
+                value={[property.name, addressOf(property)].filter(Boolean).join(", ")}
                 readOnly
                 className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
               />

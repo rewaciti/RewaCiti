@@ -5,18 +5,34 @@ import Footer from "../../shared/components/Layout/Footer";
 import useScrollToHash from "../../shared/hooks/useScrollToHash";
 import { Helmet } from "react-helmet-async";
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router";
 import { toast } from "sonner";
-import {
-  COMPANY_ID,
-  useAuthStore,
-} from "../../features/auth/store/useAuthStore";
+import { useAuthStore } from "../../features/auth/store/useAuthStore";
 import { authAPI } from "../../features/auth/services/authAPI";
+import { requestsAPI } from "../../features/properties/services/requestsAPI";
+import { errorMessage, noteTestMode } from "../../shared/lib/realEstateApi";
+import useRequestKey from "../../shared/hooks/useRequestKey";
 import CustomDropdown from "../../features/properties/components/CustomDropdown";
 import { getCookie, setCookie } from "../../shared/lib/utils";
 
 const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+
+const INQUIRY_TYPE_OPTIONS = [
+  { label: "Buy Property", value: "buying" },
+  { label: "Sell Property", value: "selling" },
+  { label: "Rent Property", value: "renting" },
+  { label: "Property Management", value: "management" },
+  { label: "Investment", value: "investment" },
+  { label: "Others", value: "others" },
+];
+
+const SOURCE_OPTIONS = [
+  { label: "Social Media", value: "social" },
+  { label: "Google Search", value: "google" },
+  { label: "Friend / Referral", value: "friend" },
+  { label: "Online Ads", value: "ads" },
+  { label: "Other", value: "other" },
+];
 
 function Contact() {
   const { isAuthenticated, customer } = useAuthStore();
@@ -31,6 +47,7 @@ function Contact() {
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const inquiryCookieKey = "rewaciti_contact_inquiry";
+  const requestKey = useRequestKey();
   const cookieLoaded = useRef(false);
 
   useScrollToHash();
@@ -112,34 +129,36 @@ function Contact() {
       !firstName.trim() ||
       !lastName.trim() ||
       !email.trim() ||
-      !phone.trim()
+      !phone.trim() ||
+      !message.trim()
     ) {
       toast.error(
-        "Please enter your full name, email, and phone number to send a message.",
+        "Please enter your full name, email, phone number and message to send a message.",
       );
       return;
     }
 
     setIsSubmitting(true);
 
-    const fullName = `${firstName} ${lastName}`.trim();
-
-    const payload = {
-      companyId: COMPANY_ID,
-      pipelineId: "69cec9f3dd40685bfe20adb2",
-      title: `Contact Inquiry from ${fullName}`,
-      name: fullName,
-      email: email,
-      phone: phone,
-      note: message || "No additional message added",
-      customData: [
-        { label: "Inquiry Type", value: inquiryType },
-        { label: "Source", value: source },
-      ],
-    };
+    const fullName = `${firstName.trim()} ${lastName.trim()}`;
+    const labelOf = (options: { label: string; value: string }[], value: string) =>
+      options.find((option) => option.value === value)?.label ?? (value || undefined);
 
     try {
-      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
+      const reply = await requestsAPI.contact(
+        {
+          name: fullName,
+          email: email.trim(),
+          phone: phone.trim(),
+          consent: agreed,
+          message: message.trim(),
+          topic: labelOf(INQUIRY_TYPE_OPTIONS, inquiryType),
+          heardFrom: labelOf(SOURCE_OPTIONS, source),
+        },
+        requestKey.current(),
+      );
+      requestKey.renew();
+      noteTestMode(reply);
       toast.success(
         <div className="whitespace-pre-wrap">
           Message sent successfully!
@@ -170,7 +189,7 @@ function Contact() {
       );
     } catch (error) {
       console.error("Error sending message:", error);
-      toast.error("Failed to send message. Please try again.");
+      toast.error(errorMessage(error, "Failed to send message. Please try again."));
     } finally {
       setIsSubmitting(false);
     }
@@ -375,14 +394,7 @@ function Contact() {
               <CustomDropdown
                 placeholder="Select Inquiry Type"
                 value={inquiryType}
-                options={[
-                  { label: "Buy Property", value: "buying" },
-                  { label: "Sell Property", value: "selling" },
-                  { label: "Rent Property", value: "renting" },
-                  { label: "Property Management", value: "management" },
-                  { label: "Investment", value: "investment" },
-                  { label: "Others", value: "others" },
-                ]}
+                options={INQUIRY_TYPE_OPTIONS}
                 onChange={(val) => setInquiryType(val)}
               />
             </div>
@@ -395,13 +407,7 @@ function Contact() {
               <CustomDropdown
                 placeholder="Select Option"
                 value={source}
-                options={[
-                  { label: "Social Media", value: "social" },
-                  { label: "Google Search", value: "google" },
-                  { label: "Friend / Referral", value: "friend" },
-                  { label: "Online Ads", value: "ads" },
-                  { label: "Other", value: "other" },
-                ]}
+                options={SOURCE_OPTIONS}
                 onChange={(val) => setSource(val)}
               />
             </div>
@@ -414,6 +420,7 @@ function Contact() {
             </label>
             <textarea
               rows={3}
+              required
               placeholder="Enter your Message here..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -463,7 +470,8 @@ function Contact() {
                 !firstName.trim() ||
                 !lastName.trim() ||
                 !email.trim() ||
-                !phone.trim()
+                !phone.trim() ||
+                !message.trim()
               }
               className={`px-4 py-3 rounded-lg font-medium transition
                   ${
@@ -472,7 +480,8 @@ function Contact() {
                     firstName.trim() &&
                     lastName.trim() &&
                     email.trim() &&
-                    phone.trim()
+                    phone.trim() &&
+                    message.trim()
                       ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white"
                       : "bg-gray-400 cursor-not-allowed text-gray-200"
                   }`}

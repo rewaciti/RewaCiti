@@ -235,7 +235,6 @@ const Navbar = () => {
                             {(() => {
                               const locationParts = [
                                 property.location.area,
-                                property.location.city_town ||
                                 property.location.city,
                               ].filter(Boolean);
 
@@ -256,6 +255,8 @@ const Navbar = () => {
                             toast.success("Removed from shortlist");
                             void toggleShortlist(property);
                           }}
+                          aria-label={`Remove ${property.name} from shortlist`}
+                          title="Remove from shortlist"
                           className="p-1.5 text-black hover:text-red-500 dark:text-white dark:hover:text-red-400 transition-colors cursor-pointer"
                         >
                           <FiTrash2 size={14} />
