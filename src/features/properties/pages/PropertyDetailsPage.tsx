@@ -37,6 +37,7 @@ import FeatureSection from "../components/FeatureSection";
 import PropertyFeatureItem from "../components/PropertyFeatureItem";
 
 import { useAuthStore } from "../../auth/store/useAuthStore";
+import { addressOf } from "../services/toProperty";
 
 // Shared page container: centered, capped width, side padding that grows with screen size.
 // Use the SAME classes inside your Navbar so the logo lines up with the content.
@@ -72,7 +73,7 @@ function PropertyDetails() {
     relatedPropertiesLoading,
     totalRelatedProperties,
     fetchRelatedProperties,
-    fetchCategories,
+    forms,
     currentProperty,
     detailsLoading,
     fetchPropertyBySlug,
@@ -126,9 +127,11 @@ function PropertyDetails() {
     if (!property) return;
     const description = stripHtmlTags(property.description);
     const url = window.location.href;
-    const address = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
+    const address = addressOf(property);
     const coverImageUrl = property.img || property.images?.[0] || "";
-    const shareText = `${property.name}\n${address}\n\n${description}\n\nCategory: ${property.category}\nURL: ${url}`;
+    const shareText = [property.name, address, description, `Category: ${property.category}\nURL: ${url}`]
+      .filter(Boolean)
+      .join("\n\n");
 
     if (navigator.share) {
       try {
@@ -207,15 +210,11 @@ function PropertyDetails() {
     }
   };
 
-  const price = property?.pricing.TotalCost ?? 0;
+  const price = property?.pricing.total ?? 0;
   const images = property?.images ?? [];
 
   const hasBedrooms = !!property && property.bedrooms !== 0;
-  const hasBathrooms =
-    !!property &&
-    !!property.bathrooms &&
-    property.bathrooms !== 0 &&
-    property.bathrooms !== "0";
+  const hasBathrooms = !!property && property.bathrooms > 0;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [step, setStep] = useState(
@@ -325,10 +324,6 @@ function PropertyDetails() {
   }, [slug, fetchPropertyBySlug]);
 
   useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
-
-  useEffect(() => {
     window.scrollTo(0, 0);
   }, [slug]);
 
@@ -336,7 +331,7 @@ function PropertyDetails() {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
   const [paymentUserData, setPaymentUserData] = useState<
-    { name: string; email: string; phone: string } | undefined
+    { name: string; email: string; dealNumber: string } | undefined
   >(undefined);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
@@ -437,6 +432,12 @@ function PropertyDetails() {
     ? stripHtmlTags(property.description).slice(0, 160)
     : "View property details on RewaCiti.";
 
+  const canPay = !!forms?.features.onlinePayments;
+  const placeAvailable = !!property && property.places.left > 0;
+  // RewaCiti's own listings have no agent to report
+  const canReport = !!property?.agentId && !!forms?.features.requests.includes("report");
+  const actionCount = 2 + (canPay ? 1 : 0) + (canReport ? 1 : 0);
+
   const hasSidebarContent =
     !!property &&
     ((property.keyFeatures?.length ?? 0) > 0 ||
@@ -518,19 +519,7 @@ function PropertyDetails() {
                         property?.geo_location?.lng !== 0 &&
                         property?.geo_location?.lng !== null
                         ? `https://www.google.com/maps/search/?api=1&query=${property.geo_location.lat},${property.geo_location.lng}`
-                        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                          property
-                            ? [
-                              property.location.area,
-                              property.location.city_town ||
-                              property.location.city,
-                              property.location.state,
-                            ]
-                              .filter(Boolean)
-                              .join(", ") +
-                            (property.location.state ? " state." : "")
-                            : "",
-                        )}`
+                        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressOf(property))}`
                     }
                     target="_blank"
                     rel="noopener noreferrer"
@@ -538,17 +527,7 @@ function PropertyDetails() {
                   >
                     <FiMapPin className="shrink-0" />
 
-                    <span>
-                      {property &&
-                        [
-                          property.location.area,
-                          property.location.city_town || property.location.city,
-                          property.location.state,
-                        ]
-                          .filter(Boolean)
-                          .join(", ") +
-                        (property.location.state ? " state." : "")}
-                    </span>
+                    <span>{addressOf(property)}</span>
                   </a>
                 </div>
               </div>
@@ -608,6 +587,8 @@ function PropertyDetails() {
             open={isPaymentModalOpen}
             onOpenChange={setIsPaymentModalOpen}
             onPaymentSuccess={(userData) => {
+              // A deal can be rated once a payment on it is confirmed
+              if (!forms?.features.ratings) return;
               setPaymentUserData(userData);
               setIsRatingModalOpen(true);
             }}
@@ -1286,7 +1267,7 @@ function PropertyDetails() {
                 <p className="text-gray-800 dark:text-gray-400">
                   {sameAgentOnly
                     ? `These are other listings posted by the same agent as ${property.name}.`
-                    : `You might also be interested in these similar ${property.category}s at ${property.location.city_town} .`}
+                    : `You might also be interested in these similar ${property.category}s in ${property.location.city}.`}
                 </p>
               </div>
 
@@ -1395,7 +1376,7 @@ function PropertyDetails() {
           </div>
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className={`grid grid-cols-2 gap-3 ${actionCount === 4 ? "md:grid-cols-4" : actionCount === 3 ? "md:grid-cols-3" : ""}`}>
             {/* Inquire Button */}
             <button
               onClick={() => setIsInquiryModalOpen(true)}
@@ -1413,20 +1394,26 @@ function PropertyDetails() {
             </button>
 
             {/* Pay Button */}
-            <button
-              onClick={() => setIsPaymentModalOpen(true)}
-              className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-2 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
-            >
-              <FiCreditCard size={18} /> Make Payment
-            </button>
+            {canPay && (
+              <button
+                onClick={() => setIsPaymentModalOpen(true)}
+                disabled={!placeAvailable}
+                title={placeAvailable ? undefined : "Someone is paying for this property right now"}
+                className="bg-white dark:bg-[#1A1A1A] border border-gray-600/30 hover:border-[#703BF7] hover:text-[#703BF7] text-gray-900 dark:text-white px-2 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-gray-600/30 disabled:hover:text-gray-900 dark:disabled:hover:text-white"
+              >
+                <FiCreditCard size={18} /> {placeAvailable ? "Make Payment" : "Reserved"}
+              </button>
+            )}
 
             {/* Report Agent Button */}
-            <button
-              onClick={() => setIsReportModalOpen(true)}
-              className="bg-white dark:bg-[#1A1A1A] hover:bg-red-50 dark:hover:bg-red-950/20 border border-gray-600/30 hover:border-red-500 text-gray-900 dark:text-white hover:text-red-500 px-4 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-            >
-              <FiFlag size={18} /> Report Agent
-            </button>
+            {canReport && (
+              <button
+                onClick={() => setIsReportModalOpen(true)}
+                className="bg-white dark:bg-[#1A1A1A] hover:bg-red-50 dark:hover:bg-red-950/20 border border-gray-600/30 hover:border-red-500 text-gray-900 dark:text-white hover:text-red-500 px-4 py-3 rounded-xl text-sm md:text-base font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              >
+                <FiFlag size={18} /> Report Agent
+              </button>
+            )}
           </div>
         </div>
       </div>

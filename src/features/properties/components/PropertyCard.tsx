@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 import { formatCurrency, stripHtmlTags } from "../../../shared/lib/utils";
 import { usePropertyStore } from "../store/usePropertyStore";
+import { addressOf } from "../services/toProperty";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useAuthStore } from "../../auth/store/useAuthStore";
@@ -129,9 +130,11 @@ function PropertyCard({ property, infoLayout = "auto" }: PropertyCardProps) {
     e.stopPropagation();
     const description = stripHtmlTags(property.description);
     const url = `${window.location.origin}/properties/${propertySlug}`;
-    const address = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
+    const address = addressOf(property);
     const coverImageUrl = property.img || images?.[0] || "";
-    const shareText = `${property.name}\n${address}\n\n${description}\n\nCategory: ${property.category}\nURL: ${url}`;
+    const shareText = [property.name, address, description, `Category: ${property.category}\nURL: ${url}`]
+      .filter(Boolean)
+      .join("\n\n");
     if (navigator.share) {
       try {
         const shareData = {
@@ -205,14 +208,11 @@ function PropertyCard({ property, infoLayout = "auto" }: PropertyCardProps) {
       : `${words.slice(0, limit).join(" ")}...`;
   }
 
-  const price = property?.pricing.TotalCost ?? 0;
+  const price = property.pricing.total;
 
   const hasBedrooms =
     property.bedrooms !== undefined && property.bedrooms !== 0;
-  const hasBathrooms =
-    !!property.bathrooms &&
-    property.bathrooms !== 0 &&
-    property.bathrooms !== "0";
+  const hasBathrooms = property.bathrooms > 0;
 
   return (
     <div
@@ -318,7 +318,7 @@ function PropertyCard({ property, infoLayout = "auto" }: PropertyCardProps) {
             <span
               className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-sm shadow ${/sale/i.test(property.listingType)
                 ? "bg-emerald-500 text-white"
-                : /shortlet/i.test(property.listingType)
+                : /short-?let/i.test(property.listingType)
                   ? "bg-rose-500 text-white"
                   : /rent/i.test(property.listingType)
                     ? "bg-[#703BF7] text-white"
@@ -372,15 +372,7 @@ function PropertyCard({ property, infoLayout = "auto" }: PropertyCardProps) {
             property.geo_location?.lng !== 0 &&
             property.geo_location?.lng !== null
             ? `https://www.google.com/maps/search/?api=1&query=${property.geo_location.lat},${property.geo_location.lng}`
-            : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-              [
-                property.location.area,
-                property.location.city_town || property.location.city,
-                property.location.state,
-              ]
-                .filter(Boolean)
-                .join(", ") + (property.location.state ? " state." : ""),
-            )}`
+            : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressOf(property))}`
         }
         target="_blank"
         rel="noopener noreferrer"
@@ -388,18 +380,14 @@ function PropertyCard({ property, infoLayout = "auto" }: PropertyCardProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <FiMapPin size={12} />
-        {[
-          property.location.area,
-          property.location.city_town || property.location.city,
-          property.location.state,
-        ]
-          .filter(Boolean)
-          .join(", ") + (property.location.state ? " state." : "")}
+        {addressOf(property)}
       </a>
 
-      {/* Description */}
+      {/* Description: lists come without one, so the nearest university or landmark stands in */}
       <p className="text-xs text-gray-600 dark:text-gray-300 mb-1 leading-relaxed">
-        {truncateWords(property.description, 7)}
+        {property.description
+          ? truncateWords(property.description, 7)
+          : property.location.nearby && `Near ${property.location.nearby}`}
       </p>
 
       {/* Property Info */}

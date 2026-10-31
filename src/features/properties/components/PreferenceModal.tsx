@@ -1,19 +1,28 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { FiX } from "react-icons/fi";
 import { Link } from "react-router";
-import axios from "axios";
 import { toast } from "sonner";
-import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
+import { useAuthStore } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
+import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
+import useRequestKey from "../../../shared/hooks/useRequestKey";
+import { usePropertyStore } from "../store/usePropertyStore";
+import { requestsAPI } from "../services/requestsAPI";
+import { PURPOSE_LABELS } from "../services/toProperty";
 import CustomDropdown from "./CustomDropdown";
 
 interface PreferenceModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Property types, with their ids as values. */
   categories: { label: string; value: string }[];
 }
+
+const PURPOSE_OPTIONS = Object.entries(PURPOSE_LABELS).map(([value, label]) => ({ label, value }));
+
+const digits = (value: string) => value.replace(/[^\d]/g, "");
 
 const PreferenceModal: React.FC<PreferenceModalProps> = ({
   open,
@@ -21,16 +30,20 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
   categories,
 }) => {
   const { isAuthenticated } = useAuthStore();
+  const { locations, fetchLocations } = usePropertyStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const requestKey = useRequestKey();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [preferedLocation, setPreferedLocation] = useState("");
+  const [purpose, setPurpose] = useState("");
+  const [preferredCity, setPreferredCity] = useState("");
+  const [nearby, setNearby] = useState("");
   const [preferedCategory, setPreferedCategory] = useState("");
   const [bedroomsContact, setBedroomsContact] = useState("");
   const [bathroomsContact, setBathroomsContact] = useState("");
-  const [budget, setBudget] = useState("");
+  const [maxBudget, setMaxBudget] = useState("");
   const [moveInTimeline, setMoveInTimeline] = useState("");
   const [message, setMessage] = useState("");
   const [agreed, setAgreed] = useState(false);
@@ -46,7 +59,21 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
     normalizedCategory.startsWith("singleroom") ||
     normalizedCategory.startsWith("land");
 
+  // Places with listings, offered as suggestions. Anywhere else can still be typed.
+  const cities = useMemo(
+    () => locations.flatMap(({ state, cities }) => cities.map(({ city }) => ({ city, state }))),
+    [locations],
+  );
+  const landmarks = useMemo(
+    () => [...new Set(locations.flatMap(({ cities }) => cities.flatMap((c) => c.nearby.map((n) => n.name))))].sort(),
+    [locations],
+  );
+
   const inquiryCookieKey = "rewaciti_property_inquiry";
+
+  useEffect(() => {
+    if (open) void fetchLocations();
+  }, [open, fetchLocations]);
 
   useEffect(() => {
     if (roomCountsDisabled) {
@@ -64,11 +91,14 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
         setName(parsed.name || "");
         setEmail(parsed.email || "");
         setPhone(parsed.phone || "");
-        setPreferedLocation(parsed.preferedLocation || "");
+        setPurpose(parsed.purpose || "");
+        // Drafts saved before the form changed kept the location as `preferedLocation`
+        setPreferredCity(parsed.preferredCity || parsed.preferedLocation || "");
+        setNearby(parsed.nearby || "");
         setPreferedCategory(parsed.preferedCategory || "");
-        setBedroomsContact(parsed.bedroomsContact || "");
-        setBathroomsContact(parsed.bathroomsContact || "");
-        setBudget(parsed.budget || "");
+        setBedroomsContact(digits(parsed.bedroomsContact || ""));
+        setBathroomsContact(digits(parsed.bathroomsContact || ""));
+        setMaxBudget(digits(parsed.maxBudget || ""));
         setMoveInTimeline(parsed.moveInTimeline || "");
         setMessage(parsed.message || "");
         setAgreed(parsed.agreed || false);
@@ -111,40 +141,30 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
 
   // Persist draft to cookie whenever fields change (skip the very first render).
   const isFirstRender = useRef(true);
+  const draft = {
+    name,
+    email,
+    phone,
+    purpose,
+    preferredCity,
+    nearby,
+    preferedCategory,
+    bedroomsContact,
+    bathroomsContact,
+    maxBudget,
+    moveInTimeline,
+    message,
+    agreed,
+  };
+  const draftJson = JSON.stringify(draft);
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
 
-    const payload = {
-      name,
-      email,
-      phone,
-      preferedLocation,
-      preferedCategory,
-      bedroomsContact,
-      bathroomsContact,
-      budget,
-      moveInTimeline,
-      message,
-      agreed,
-    };
-
-    setCookie(inquiryCookieKey, JSON.stringify(payload));
-  }, [
-    name,
-    email,
-    phone,
-    preferedLocation,
-    preferedCategory,
-    bedroomsContact,
-    bathroomsContact,
-    budget,
-    moveInTimeline,
-    message,
-    agreed,
-  ]);
+    setCookie(inquiryCookieKey, draftJson);
+  }, [draftJson]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,74 +178,63 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
       !name.trim() ||
       !email.trim() ||
       !phone.trim() ||
-      !preferedLocation.trim()
+      !preferredCity.trim()
     ) {
       toast.error(
-        "Please enter your name, email, phone number, and preferred location to continue."
+        "Please enter your name, email, phone number, and preferred city to continue."
       );
       return;
     }
 
     setIsSubmitting(true);
 
-    const payload = {
-      companyId: COMPANY_ID,
-      pipelineId: "69b49c7541d35d158e336621",
-      title: `Property Preference from ${name.trim()}`,
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim(),
-      address: preferedLocation.trim(),
-      note: message || "No additional details added",
-      customData: [
-        { label: "Budget", value: budget },
-        { label: "Category", value: preferedCategory },
-        { label: "Preferred Location", value: preferedLocation.trim() },
-        { label: "Bedrooms", value: bedroomsContact },
-        { label: "Bathrooms", value: bathroomsContact },
-        { label: "Move-in Timeline", value: moveInTimeline },
-      ],
-    };
+    // A known city brings its state, so new listings there can be matched
+    const city = preferredCity.trim();
+    const known = cities.find((c) => c.city.toLowerCase() === city.toLowerCase());
+    const toNumber = (value: string) => (value ? Number(value) : undefined);
 
     try {
-      await axios.post("https://api.sabiflow.com/api/crm/deals/guest", payload);
+      const reply = await requestsAPI.propertyRequest(
+        {
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          consent: agreed,
+          purpose: purpose || undefined,
+          typeId: preferedCategory || undefined,
+          state: known?.state,
+          city: known?.city ?? city,
+          nearby: nearby.trim() || undefined,
+          bedrooms: toNumber(bedroomsContact),
+          bathrooms: toNumber(bathroomsContact),
+          maxBudget: toNumber(maxBudget),
+          moveIn: moveInTimeline.trim() || undefined,
+          message: message.trim() || undefined,
+        },
+        requestKey.current(),
+      );
+      requestKey.renew();
+      noteTestMode(reply);
       toast.success(
         <div className="whitespace-pre-wrap">
-          Message sent successfully!
-          <br />A member of our team will get back to you soon.
+          Preference sent successfully!
+          <br />We'll email you when a property that fits comes up.
         </div>
       );
-      setName("");
-      setEmail("");
-      setPhone("");
-      setPreferedLocation("");
+      setPurpose("");
+      setPreferredCity("");
+      setNearby("");
       setPreferedCategory("");
       setBedroomsContact("");
       setBathroomsContact("");
-      setBudget("");
+      setMaxBudget("");
       setMoveInTimeline("");
       setMessage("");
       setAgreed(false);
-      setCookie(
-        inquiryCookieKey,
-        JSON.stringify({
-          name: "",
-          email: "",
-          phone: "",
-          preferedLocation: "",
-          preferedCategory: "",
-          bedroomsContact: "",
-          bathroomsContact: "",
-          budget: "",
-          moveInTimeline: "",
-          message: "",
-          agreed: false,
-        })
-      );
       onOpenChange(false);
     } catch (error) {
       console.error("Error sending message:", error);
-      toast.error("Failed to send message. Please try again.");
+      toast.error(errorMessage(error, "Failed to send message. Please try again."));
     } finally {
       setIsSubmitting(false);
     }
@@ -237,7 +246,12 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
     Boolean(name.trim()) &&
     Boolean(email.trim()) &&
     Boolean(phone.trim()) &&
-    Boolean(preferedLocation.trim());
+    Boolean(preferredCity.trim());
+
+  const inputClass =
+    "w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white";
+  const dropdownClass =
+    "w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm";
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -274,7 +288,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                    className={inputClass}
                   />
                 </div>
 
@@ -288,7 +302,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                    className={inputClass}
                   />
                 </div>
 
@@ -302,7 +316,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                    className={inputClass}
                   />
                 </div>
               </div>
@@ -315,15 +329,14 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                    Preferred Location
+                    Looking To
                   </label>
-                  <input
-                    type="text"
-                    placeholder="Enter Preferred Location"
-                    required
-                    value={preferedLocation}
-                    onChange={(e) => setPreferedLocation(e.target.value)}
-                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  <CustomDropdown
+                    placeholder="Rent, buy..."
+                    value={purpose}
+                    options={PURPOSE_OPTIONS}
+                    onChange={(val) => setPurpose(val)}
+                    buttonClassName={dropdownClass}
                   />
                 </div>
 
@@ -336,8 +349,49 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
                     value={preferedCategory}
                     options={categories}
                     onChange={(val) => setPreferedCategory(val)}
-                    buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
+                    buttonClassName={dropdownClass}
                   />
+                </div>
+
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Preferred City / Town
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Ile-Ife"
+                    required
+                    list="preference-cities"
+                    value={preferredCity}
+                    onChange={(e) => setPreferredCity(e.target.value)}
+                    className={inputClass}
+                  />
+                  <datalist id="preference-cities">
+                    {cities.map(({ city, state }) => (
+                      <option key={`${state}-${city}`} value={city}>
+                        {state}
+                      </option>
+                    ))}
+                  </datalist>
+                </div>
+
+                <div>
+                  <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                    Nearest University or Landmark
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. OAU"
+                    list="preference-landmarks"
+                    value={nearby}
+                    onChange={(e) => setNearby(e.target.value)}
+                    className={inputClass}
+                  />
+                  <datalist id="preference-landmarks">
+                    {landmarks.map((landmark) => (
+                      <option key={landmark} value={landmark} />
+                    ))}
+                  </datalist>
                 </div>
 
                 <div>
@@ -346,11 +400,12 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
                   </label>
                   <input
                     type="text"
+                    inputMode="numeric"
                     placeholder={roomCountsDisabled ? "Not applicable" : "Enter number of bedrooms"}
                     value={bedroomsContact}
-                    onChange={(e) => setBedroomsContact(e.target.value)}
+                    onChange={(e) => setBedroomsContact(digits(e.target.value))}
                     disabled={roomCountsDisabled}
-                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                    className={`${inputClass} disabled:cursor-not-allowed disabled:opacity-50`}
                   />
                 </div>
 
@@ -360,24 +415,26 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
                   </label>
                   <input
                     type="text"
+                    inputMode="numeric"
                     placeholder={roomCountsDisabled ? "Not applicable" : "Enter number of bathrooms"}
                     value={bathroomsContact}
-                    onChange={(e) => setBathroomsContact(e.target.value)}
+                    onChange={(e) => setBathroomsContact(digits(e.target.value))}
                     disabled={roomCountsDisabled}
-                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                    className={`${inputClass} disabled:cursor-not-allowed disabled:opacity-50`}
                   />
                 </div>
 
                 <div>
                   <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                    Budget
+                    Maximum Budget (₦)
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. ₦200,000 - ₦350,000 per year"
-                    value={budget}
-                    onChange={(e) => setBudget(e.target.value)}
-                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                    inputMode="numeric"
+                    placeholder="e.g. 350,000"
+                    value={maxBudget ? Number(maxBudget).toLocaleString() : ""}
+                    onChange={(e) => setMaxBudget(digits(e.target.value))}
+                    className={inputClass}
                   />
                 </div>
 
@@ -387,10 +444,10 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
                   </label>
                   <input
                     type="text"
-                    placeholder="Enter your move-in timeline"
+                    placeholder="e.g. January"
                     value={moveInTimeline}
                     onChange={(e) => setMoveInTimeline(e.target.value)}
-                    className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                    className={inputClass}
                   />
                 </div>
               </div>
@@ -405,7 +462,7 @@ const PreferenceModal: React.FC<PreferenceModalProps> = ({
                 placeholder="Describe your ideal property, desired amenities, or any special requests..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                className={inputClass}
               />
             </section>
 

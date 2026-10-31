@@ -2,13 +2,17 @@ import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { FiX, FiInfo } from "react-icons/fi";
 import type { Property } from "../../../types";
-import axios from "axios";
-import { useNavigate } from "react-router";
+import type { PurchaseResult } from "../../../types/realEstate";
 import { toast } from "sonner";
-import PaystackPop from "@paystack/inline-js";
-import { COMPANY_ID, useAuthStore } from "../../auth/store/useAuthStore";
+import { useAuthStore } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
+import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
+import { payInvoice } from "../../../shared/lib/payments";
+import useRequestKey from "../../../shared/hooks/useRequestKey";
+import { usePropertyStore } from "../store/usePropertyStore";
+import { propertiesAPI } from "../services/propertiesAPI";
+import { addressOf } from "../services/toProperty";
 import { Link } from "react-router";
 
 interface PropertyPaymentModalProps {
@@ -16,19 +20,7 @@ interface PropertyPaymentModalProps {
   property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onPaymentSuccess?: (userData: { name: string; email: string; phone: string }) => void;
-}
-
-const API_URL = import.meta.env.VITE_API_URL;
-const API_KEY = import.meta.env.VITE_SABIFLOW_API_KEY;
-const GATEWAY_ID = import.meta.env.VITE_SABIFLOW_GATEWAY_ID;
-
-interface SaleResponse {
-  id?: string;
-  _id?: string;
-  saleNumber?: string;
-  salesOrderNumber?: string;
-  orderNumber?: string;
+  onPaymentSuccess?: (userData: { name: string; email: string; dealNumber: string }) => void;
 }
 
 const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
@@ -38,14 +30,19 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   onPaymentSuccess,
 }) => {
   const { isAuthenticated, customer } = useAuthStore();
+  const onlineLimit = usePropertyStore((state) => state.forms?.payment.onlineLimit ?? 0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [profilePhone, setProfilePhone] = useState("");
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [guestPhone, setGuestPhone] = useState("");
   const [agreed, setAgreed] = useState(false);
-  const navigate = useNavigate();
+  const [bankTransfer, setBankTransfer] = useState<PurchaseResult | null>(null);
   const modalCookieKey = "rewaciti_payment_modal";
+
+  // Paying again after closing the popup reuses the same held place, until the hold runs out
+  const requestKey = useRequestKey();
+  const [heldUntil, setHeldUntil] = useState(0);
 
   const fullName = customer ? `${customer.firstName} ${customer.lastName}`.trim() : guestName;
   const email = customer?.email ?? guestEmail;
@@ -91,36 +88,15 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
     setCookie(modalCookieKey, JSON.stringify({ guestName, guestEmail, guestPhone, agreed }));
   }, [guestName, guestEmail, guestPhone, agreed]);
 
-  const price = property.pricing.TotalCost || 0;
   const pricing = property.pricing;
-  const isAgentOwned =
-    (property.creatorClassification ?? property.createdBy?.classification ?? "")
-      .toLowerCase() === "agent";
-  const deductionAmount = isAgentOwned ? pricing.ServiceFee : pricing.AgentFee;
-  const deductionLabel = isAgentOwned ? "Service Charge" : "Agent Fee";
-  const netPayable = price - deductionAmount;
+  const price = pricing.total;
+  const byBankTransfer = onlineLimit > 0 && price > onlineLimit;
+  const propertyAddress = addressOf(property);
 
-  const propertyUrl = window.location.href;
-  const propertyAddress = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
-
-  const handleDownloadReceipt = async (saleId: string) => {
-    try {
-      const response = await axios.get(`${API_URL}/sales/${saleId}/invoice/download?format=pdf`, {
-        headers: { "x-api-key": API_KEY },
-        responseType: 'blob'
-      });
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `receipt-${saleId}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } catch (error) {
-      console.error("Error downloading receipt:", error);
-      toast.error("Failed to download receipt. Please contact support.");
-    }
+  const finish = () => {
+    requestKey.renew();
+    setHeldUntil(0);
+    setCookie(modalCookieKey, JSON.stringify({ guestName: "", guestEmail: "", guestPhone: "", agreed: false }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -136,182 +112,81 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       return;
     }
 
-    if (price > 5000000) {
-      toast.warning("For payments above ₦5,000,000, please contact our support team directly for secure bank transfer options.", {
-        duration: 6000,
-      });
-      return;
-    }
-
     setIsSubmitting(true);
+    if (heldUntil && Date.now() > heldUntil) requestKey.renew();
 
     try {
-      // 1. Create Sale
-      const salePayload = {
-        initiateInvoice: true,
-        gatewayId: GATEWAY_ID,
-        items: [
+      // 1. Hold a place. SabiFlow works out what's owed from the listing.
+      const purchase = await propertiesAPI.purchase(
+        property.id,
+        { name: fullName.trim(), email: email.trim(), phone: phone.trim(), consent: agreed },
+        requestKey.current(),
+      );
+      noteTestMode(purchase);
+      if (purchase.test) return;
+      if (purchase.data.holdUntil) setHeldUntil(new Date(purchase.data.holdUntil).getTime());
+
+      // Above the online limit: show where to send it, and the team confirms it
+      if (purchase.bankTransfer) {
+        setBankTransfer(purchase);
+        finish();
+        return;
+      }
+
+      const payment = purchase.data.payments.find((p) => p.status !== "paid");
+      if (!payment) throw new Error("There's nothing to pay on this property.");
+
+      // 2. Pay in the Paystack popup, or on the invoice's own page
+      const outcome = await payInvoice({ invoiceId: payment.invoiceId, email: email.trim(), paymentLink: payment.paymentLink });
+
+      if (outcome === "paid" || outcome === "pending") {
+        toast.success(
+          <div className="whitespace-pre-wrap">
+            {outcome === "paid"
+              ? `Payment successful!\nYour receipt is on its way to ${email.trim()}. A member of our team will contact you shortly.`
+              : `We've received your payment.\nIt will show as paid once Paystack confirms it, and your receipt will be emailed to you.`}
+          </div>,
           {
-            description: `Property Payment: ${property.name}, ${propertyAddress}`,
-            quantity: 1,
-            unitPrice: price,
-            inventoryItemId: property.id,
-            productId: property.id,
-          }
-        ],
-        taxRate: 0,
-        notes: `Payment for ${property.name} at ${propertyAddress}. Property Link: ${propertyUrl}`,
-        paymentMethod: "credit_card",
-        customerDetails: {
-          name: fullName,
-          email: email,
-          phone: phone
-        }
-      };
-
-      const saleResponse = await axios.post<SaleResponse>(`${API_URL}/sales`, salePayload, {
-        headers: { "x-api-key": API_KEY }
-      });
-
-      const saleId = saleResponse.data.id || saleResponse.data._id;
-      if (!saleId) {
-        throw new Error("Sale creation response did not include a sale ID.");
-      }
-      const salesOrderNumber =
-        saleResponse.data.saleNumber ??
-        saleResponse.data.salesOrderNumber ??
-        saleResponse.data.orderNumber;
-
-      // 2. Initialize Payment
-      const initResponse = await axios.post(`${API_URL}/sales/${saleId}/payment/initiate`, {
-        gatewayId: GATEWAY_ID,
-        initiateGateway: true,
-      }, {
-        headers: { "x-api-key": API_KEY }
-      });
-
-      const accessCode = initResponse.data.data.accessCode;
-
-      // 3. Open Paystack Modal
-      const paystack = new PaystackPop();
-      paystack.resumeTransaction(accessCode, {
-        onSuccess: async () => {
-          setIsSubmitting(true);
-          try {
-            // 4. Verify Payment - Including gatewayId in case it's required for verification
-            await axios.post(`${API_URL}/sales/${saleId}/payment/verify`, {
-              gatewayId: GATEWAY_ID
-            }, {
-              headers: { "x-api-key": API_KEY }
-            });
-
-            // 5. CRM Payload
-            const crmPayload = {
-              companyId: COMPANY_ID,
-              pipelineId: "69ed7a4ac09e9388ba096f1f",
-              inventoryItemId: property.id,
-              title: `PROPERTY PAYMENT: ${property.name} - ${fullName}`,
-              name: fullName,
-              amount: price,
-              email: email,
-              phone: phone,
-              address: propertyAddress,
-              note: `Payment of property for ${property.name} by ${fullName}.`,
-              customData: [
-                { label: "Property Name", value: property.name },
-                { label: "Property Link", value: propertyUrl },
-                { label: "amount Paid", value: `₦${price.toLocaleString()}` },
-                {
-                  label: deductionLabel,
-                  value: `₦${deductionAmount.toLocaleString()}`,
-                },
-                {
-                  label: "Net Payable",
-                  value: `₦${netPayable.toLocaleString()}`,
-                },
-                ...(property.createdBy?.email
-                  ? [
-                    {
-                      label: "Agent Email",
-                      value: property.createdBy.email,
-                    },
-                  ]
-                  : []),
-                ...(property.sku ? [{ label: "Property SKU", value: property.sku }] : []),
-                ...(salesOrderNumber
-                  ? [{ label: "Sales Order", value: salesOrderNumber }]
-                  : []),
-                ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
-                ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : [])
-              ]
-            };
-
-            console.log("Submitting CRM Payload:", crmPayload);
-            await axios.post("https://api.sabiflow.com/api/crm/deals/guest", crmPayload);
-
-            toast.success(
-              <div className="whitespace-pre-wrap">
-                {`Payment successful!\nA member of our team will contact you shortly.`}
-              </div>,
-              {
-                duration: 5000,
-              }
-            );
-
-            // 6. Download Receipt
-            await handleDownloadReceipt(saleId);
-
-            onOpenChange(false);
-            setCookie(modalCookieKey, JSON.stringify({ guestName: "", guestEmail: "", guestPhone: "", agreed: false }));
-
-            // Trigger Rating Modal
-            if (onPaymentSuccess) {
-              onPaymentSuccess({ name: fullName, email: email, phone: phone });
-            }
-          } catch (error) {
-            console.error("Verification/CRM error:", error);
-            toast.error("Payment successful, but verification failed. Please contact support.");
-            navigate("/properties");
-          } finally {
-            setIsSubmitting(false);
-          }
-        },
-        onCancel: () => {
-          toast.info("Payment cancelled.");
-          setIsSubmitting(false);
-        }
-      });
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("Payment flow error:", error);
-        const errorMessage = error.response?.data?.message || "";
-
-        if (errorMessage.toLowerCase().includes("stock") || errorMessage.toLowerCase().includes("available")) {
-          toast.error("This property is no longer available. Please check out our other listings.", {
             duration: 6000,
-          });
-        } else {
-          toast.error(errorMessage || "An error occurred during the payment process.");
+          }
+        );
+        onOpenChange(false);
+        finish();
+        // Trigger Rating Modal
+        if (outcome === "paid") {
+          onPaymentSuccess?.({ name: fullName.trim(), email: email.trim(), dealNumber: purchase.data.number });
         }
-      } else {
-        console.error("Unexpected error:", error);
-        toast.error("An unexpected error occurred.");
+      } else if (outcome === "cancelled") {
+        toast.info("Payment cancelled. Your place is held for a short while if you'd like to try again.");
+      } else if (outcome === "failed") {
+        toast.error("The payment didn't go through. Please try again.");
       }
+    } catch (error) {
+      console.error("Payment flow error:", error);
+      toast.error(errorMessage(error, "An error occurred during the payment process."), { duration: 6000 });
+    } finally {
       setIsSubmitting(false);
     }
   };
 
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange} modal={false}>
+    <Dialog.Root
+      open={open}
+      onOpenChange={(next) => {
+        onOpenChange(next);
+        if (!next) setBankTransfer(null);
+      }}
+      modal={false}
+    >
       <Dialog.Portal>
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-4 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto center-modal-animate" aria-describedby="property-payment-description">
           <div className="flex justify-between items-center mb-4">
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900">
-              Pay for Property
+              {bankTransfer ? "Pay by Bank Transfer" : "Pay for Property"}
             </Dialog.Title>
             <Dialog.Description className="sr-only">
-              Complete your payment for {property.name} securely through Paystack.
+              Complete your payment for {property.name} securely.
             </Dialog.Description>
             <Dialog.Close asChild>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600">
@@ -320,7 +195,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
             </Dialog.Close>
           </div>
 
-          <p id="property-payment-description" className="sr-only">Complete your property payment securely using Paystack. All details are required for processing.</p>
+          <p id="property-payment-description" className="sr-only">Complete your property payment securely. All details are required for processing.</p>
 
           <div className="mb-3 p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
             <h4 className="text-sm font-semibold dark:text-white text-gray-900 mb-2">Property Details</h4>
@@ -339,136 +214,167 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
             </div>
           </div>
 
-          <div className="mb-3 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-            <h4 className="text-xs font-bold text-blue-500 uppercase mb-2 flex items-center gap-2">
-              <FiInfo /> Safety Tips & Payment Info
-            </h4>
-            <ul className="text-[11px] text-gray-600 dark:text-gray-400 space-y-1 list-disc pl-4">
-              <li>Ensure your daily transfer limit covers the total amount.</li>
-              <li>High-value transactions may require additional bank authorization.</li>
-              <li>Payments above ₦5M should be handled via direct bank transfer.</li>
-              <li>Screenshot your receipt after a successful transaction.</li>
-            </ul>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {isAuthenticated && customer ? (
-              <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-2">
-                <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Billing Information</h4>
-                <div className="text-sm dark:text-gray-300 text-gray-700 space-y-1">
-                  <p><span className="font-semibold">Name:</span> {fullName}</p>
-                  <p><span className="font-semibold">Email:</span> {email}</p>
-                  <p><span className="font-semibold">Phone:</span> {phone || <span className="italic text-red-500">No phone number listed in profile</span>}</p>
+          {bankTransfer?.bankTransfer ? (
+            <div className="space-y-4">
+              <div className="p-4 bg-[#703BF7]/10 rounded-lg border border-[#703BF7]/30 space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Amount</span>
+                  <span className="text-lg font-bold text-[#703BF7]">₦{bankTransfer.bankTransfer.amount.toLocaleString()}</span>
                 </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Payment reference</span>
+                  <span className="font-semibold dark:text-white text-gray-900">{bankTransfer.data.number}</span>
+                </div>
+                {bankTransfer.bankTransfer.details && (
+                  <div className="border-t border-[#703BF7]/20 pt-3">
+                    <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Pay into</p>
+                    <p className="text-sm dark:text-white text-gray-900 whitespace-pre-line">{bankTransfer.bankTransfer.details}</p>
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="space-y-2 rounded-lg border border-gray-600/30 bg-gray-500/10 p-3">
-                <div>
-                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Full Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={guestName}
-                    onChange={(e) => setGuestName(e.target.value)}
-                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Email</label>
-                  <input
-                    type="email"
-                    required
-                    value={guestEmail}
-                    onChange={(e) => setGuestEmail(e.target.value)}
-                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Phone Number</label>
-                  <input
-                    type="tel"
-                    required
-                    value={guestPhone}
-                    onChange={(e) => setGuestPhone(e.target.value)}
-                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
-              <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
-                Once your payment is confirmed, a verified agent will be assigned and our team will contact you within{" "}
-                <span className="font-semibold text-[#703BF7]">24 hours</span> to schedule a meeting for necessary documentation and activities.
-              </p>
+              <p className="text-sm dark:text-gray-300 text-gray-700">{bankTransfer.message}</p>
+              <button
+                type="button"
+                onClick={() => {
+                  onOpenChange(false);
+                  setBankTransfer(null);
+                }}
+                className="w-full font-medium py-3 rounded-md transition-colors bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
+              >
+                Done
+              </button>
             </div>
-
-            {/* Breakdown Section */}
-            <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-3">
-              <h3 className="text-sm font-semibold dark:text-white text-gray-900 flex items-center gap-2">
-                <FiInfo className="text-[#703BF7]" />
-                Payment Breakdown
-              </h3>
-
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400">Property Cost</span>
-                <span className="font-medium dark:text-white text-gray-900">₦{pricing.PropertyCost.toLocaleString()}</span>
+          ) : (
+            <>
+              <div className="mb-3 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                <h4 className="text-xs font-bold text-blue-500 uppercase mb-2 flex items-center gap-2">
+                  <FiInfo /> Safety Tips & Payment Info
+                </h4>
+                <ul className="text-[11px] text-gray-600 dark:text-gray-400 space-y-1 list-disc pl-4">
+                  <li>Ensure your daily transfer limit covers the total amount.</li>
+                  <li>High-value transactions may require additional bank authorization.</li>
+                  {onlineLimit > 0 && <li>Payments above ₦{onlineLimit.toLocaleString()} are made by direct bank transfer.</li>}
+                  <li>Your receipt is emailed to you once the payment is confirmed.</li>
+                </ul>
               </div>
-              {pricing.LegalFee > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Legal Fee</span>
-                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.LegalFee.toLocaleString()}</span>
-                </div>
-              )}
-              {pricing.AgentFee > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Agent Fee</span>
-                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.AgentFee.toLocaleString()}</span>
-                </div>
-              )}
-              {pricing.ServiceFee > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Service Fee</span>
-                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.ServiceFee.toLocaleString()}</span>
-                </div>
-              )}
-              {pricing.CautionFee > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Caution Fee</span>
-                  <span className="font-medium dark:text-white text-gray-900">₦{pricing.CautionFee.toLocaleString()}</span>
-                </div>
-              )}
 
-              <div className="flex justify-between text-lg font-bold border-t border-[#703BF7]/50 pt-2 text-[#703BF7]">
-                <span>Total Due</span>
-                <span>₦{price.toLocaleString()}</span>
-              </div>
-            </div>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {isAuthenticated && customer ? (
+                  <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-2">
+                    <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Billing Information</h4>
+                    <div className="text-sm dark:text-gray-300 text-gray-700 space-y-1">
+                      <p><span className="font-semibold">Name:</span> {fullName}</p>
+                      <p><span className="font-semibold">Email:</span> {email}</p>
+                      <p><span className="font-semibold">Phone:</span> {phone || <span className="italic text-red-500">No phone number listed in profile</span>}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-2 rounded-lg border border-gray-600/30 bg-gray-500/10 p-3">
+                    <div>
+                      <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Full Name</label>
+                      <input
+                        type="text"
+                        required
+                        value={guestName}
+                        onChange={(e) => setGuestName(e.target.value)}
+                        className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Email</label>
+                      <input
+                        type="email"
+                        required
+                        value={guestEmail}
+                        onChange={(e) => setGuestEmail(e.target.value)}
+                        className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Phone Number</label>
+                      <input
+                        type="tel"
+                        required
+                        value={guestPhone}
+                        onChange={(e) => setGuestPhone(e.target.value)}
+                        className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                      />
+                    </div>
+                  </div>
+                )}
 
-            <div className="sm:col-span-2 flex items-center gap-3">
-              <input
-                type="checkbox"
-                className="mt-0.5"
-                checked={agreed}
-                onChange={(e) => setAgreed(e.target.checked)}
-                required
-              />
-              <p className="text-sm text-gray-700 dark:text-gray-300 ">
-                I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
-              </p>
-            </div>
+                <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
+                  <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
+                    Once your payment is confirmed, a verified agent will be assigned and our team will contact you within{" "}
+                    <span className="font-semibold text-[#703BF7]">24 hours</span> to schedule a meeting for necessary documentation and activities.
+                  </p>
+                </div>
 
-            <button
-              type="submit"
-              disabled={isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed}
-              className={`w-full font-medium py-3 rounded-md transition-colors mt-3 disabled:opacity-50 ${isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed
-                ? "bg-gray-400 cursor-not-allowed text-gray-200"
-                : "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
-                }`}
-            >
-              {isSubmitting ? "Processing..." : `Pay Total: ₦${price.toLocaleString()}`}
-            </button>
-          </form>
+                {/* Breakdown Section */}
+                <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-3">
+                  <h3 className="text-sm font-semibold dark:text-white text-gray-900 flex items-center gap-2">
+                    <FiInfo className="text-[#703BF7]" />
+                    Payment Breakdown
+                  </h3>
+
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Property Cost</span>
+                    <span className="font-medium dark:text-white text-gray-900">₦{pricing.base.toLocaleString()}</span>
+                  </div>
+                  {pricing.charges
+                    .filter((charge) => charge.amount > 0)
+                    .map((charge) => (
+                      <div key={charge.name} className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">
+                          {charge.name}
+                          {charge.refundable && <span className="text-xs"> (refundable)</span>}
+                        </span>
+                        <span className="font-medium dark:text-white text-gray-900">₦{charge.amount.toLocaleString()}</span>
+                      </div>
+                    ))}
+                  {pricing.serviceCharge > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600 dark:text-gray-400">Service Charge</span>
+                      <span className="font-medium dark:text-white text-gray-900">₦{pricing.serviceCharge.toLocaleString()}</span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between text-lg font-bold border-t border-[#703BF7]/50 pt-2 text-[#703BF7]">
+                    <span>Total Due</span>
+                    <span>₦{price.toLocaleString()}</span>
+                  </div>
+                </div>
+
+                <div className="sm:col-span-2 flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    className="mt-0.5"
+                    checked={agreed}
+                    onChange={(e) => setAgreed(e.target.checked)}
+                    required
+                  />
+                  <p className="text-sm text-gray-700 dark:text-gray-300 ">
+                    I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
+                  </p>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed}
+                  className={`w-full font-medium py-3 rounded-md transition-colors mt-3 disabled:opacity-50 ${isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed
+                    ? "bg-gray-400 cursor-not-allowed text-gray-200"
+                    : "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
+                    }`}
+                >
+                  {isSubmitting
+                    ? "Processing..."
+                    : byBankTransfer
+                      ? "Get Bank Transfer Details"
+                      : `Pay Total: ₦${price.toLocaleString()}`}
+                </button>
+              </form>
+            </>
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

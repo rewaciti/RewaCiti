@@ -235,7 +235,6 @@ const Navbar = () => {
                             {(() => {
                               const locationParts = [
                                 property.location.area,
-                                property.location.city_town ||
                                 property.location.city,
                               ].filter(Boolean);
 

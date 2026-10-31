@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../../auth/store/useAuthStore";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useInspectionStore } from "../store/useInspectionStore";
 import type { Property } from "../../../types";
+import type { VisitMode, VisitSlot } from "../../../types/realEstate";
 import { FiX, FiMapPin } from "react-icons/fi";
-import axios from "axios";
 import { toast } from "sonner";
-import PaystackPop from "@paystack/inline-js";
-import { COMPANY_ID } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
 import { getCookie, setCookie } from "../../../shared/lib/utils";
+import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
+import { payInvoice } from "../../../shared/lib/payments";
+import useRequestKey from "../../../shared/hooks/useRequestKey";
+import { usePropertyStore } from "../../properties/store/usePropertyStore";
+import { addressOf } from "../../properties/services/toProperty";
+import { visitsAPI } from "../services/visitsAPI";
 import { Link } from "react-router";
 
 interface BookInspectionModalProps {
@@ -18,35 +21,13 @@ interface BookInspectionModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const API_URL = import.meta.env.VITE_API_URL;
-const API_KEY = import.meta.env.VITE_SABIFLOW_API_KEY;
-const GATEWAY_ID = import.meta.env.VITE_SABIFLOW_GATEWAY_ID;
-const INSPECTION_BOOKING_NOTICE_HOURS = 48;
-
-interface SaleResponse {
-  id?: string;
-  _id?: string;
-  saleNumber?: string;
-  salesOrderNumber?: string;
-  orderNumber?: string;
-}
-
-// Hourly slots from 08:00 to 16:00 (stored as 24h "HH:00", displayed in 12h)
-const VISIT_SLOTS = Array.from({ length: 9 }, (_, i) =>
-  `${String(i + 8).padStart(2, "0")}:00`,
-);
+const MODE_LABELS: Record<VisitMode, string> = {
+  in_person: "In person",
+  virtual: "Video call",
+};
 
 const formatLocalDate = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-
-const isWeekendDate = (date: string) => {
-  if (!date) return false;
-  const day = new Date(`${date}T00:00:00`).getDay();
-  return day === 0 || day === 6;
-};
-
-const formatTime = (date: Date) =>
-  `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 
 const formatTwelveHourTime = (time: string) => {
   const [hours, minutes] = time.split(":").map(Number);
@@ -55,61 +36,18 @@ const formatTwelveHourTime = (time: string) => {
   return `${displayHour}:${String(minutes).padStart(2, "0")} ${period}`;
 };
 
-const formatPreferredVisit = (date: string, time: string) => {
-  const visitDate = new Date(`${date}T00:00:00`);
-  const day = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(visitDate);
-  const formattedDate = `${String(visitDate.getDate()).padStart(2, "0")}-${String(
-    visitDate.getMonth() + 1,
-  ).padStart(2, "0")}-${String(visitDate.getFullYear()).slice(-2)}`;
-
-  return `${day}, ${formattedDate} by ${formatTwelveHourTime(time)}`;
+const formatVisit = (date: string, time: string) => {
+  const day = new Intl.DateTimeFormat("en-NG", { weekday: "long", day: "numeric", month: "long" }).format(new Date(`${date}T00:00:00`));
+  return `${day} at ${formatTwelveHourTime(time)}`;
 };
-
-const getVisitBookingConstraints = () => {
-  const now = new Date();
-  const earliestVisit = new Date(
-    Math.ceil(
-      (now.getTime() + INSPECTION_BOOKING_NOTICE_HOURS * 60 * 60 * 1000) / 60000,
-    ) * 60000,
-  );
-  const minDate = new Date(
-    earliestVisit.getFullYear(),
-    earliestVisit.getMonth(),
-    earliestVisit.getDate(),
-  );
-
-  if (earliestVisit.getHours() > 16 ||
-      (earliestVisit.getHours() === 16 && earliestVisit.getMinutes() > 0)) {
-    minDate.setDate(minDate.getDate() + 1);
-  }
-
-  while (minDate.getDay() === 0 || minDate.getDay() === 6) {
-    minDate.setDate(minDate.getDate() + 1);
-  }
-
-  const minTime =
-    formatLocalDate(minDate) === formatLocalDate(earliestVisit) &&
-    earliestVisit.getHours() >= 8
-      ? formatTime(earliestVisit)
-      : "08:00";
-
-  return { minDate: formatLocalDate(minDate), minTime };
-};
-
-interface PaystackSuccessResponse {
-  reference: string;
-  status: string;
-  trans: string;
-  transaction: string;
-  message: string;
-}
 
 const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   property,
   open,
   onOpenChange,
 }) => {
-  const { isAuthenticated, customer, token } = useAuthStore();
+  const { isAuthenticated, customer } = useAuthStore();
+  const visitRules = usePropertyStore((state) => state.forms?.visit);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [profilePhone, setProfilePhone] = useState("");
   const [guestName, setGuestName] = useState("");
@@ -118,33 +56,20 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
   const [agreed, setAgreed] = useState(false);
   const [visitDate, setVisitDate] = useState("");
   const [visitTime, setVisitTime] = useState("");
+  const [mode, setMode] = useState<VisitMode>("in_person");
+  const [slots, setSlots] = useState<VisitSlot[]>([]);
+  const [slotsLoading, setSlotsLoading] = useState(false);
   const modalCookieKey = "rewaciti_inspection_modal";
 
+  // Paying again after closing the popup reuses the same held time, until the hold runs out
+  const requestKey = useRequestKey();
+  const [heldUntil, setHeldUntil] = useState(0);
+
   const phone = profilePhone || customer?.phoneNumber || guestPhone;
-  const { minDate: minVisitDate, minTime: earliestVisitTime } =
-    getVisitBookingConstraints();
-  const earliestTimeForDate =
-    visitDate === minVisitDate ? earliestVisitTime : "08:00";
-  const [earliestHour, earliestMinute] = earliestTimeForDate
-    .split(":")
-    .map(Number);
-  const firstAvailableTime = `${String(
-    earliestHour + (earliestMinute > 0 ? 1 : 0),
-  ).padStart(2, "0")}:00`;
-
-  // Hourly slots (8 AM - 4 PM) that respect the 48-hour notice on the earliest day
-  const availableSlots = VISIT_SLOTS.filter((t) => t >= firstAvailableTime);
-
-  React.useEffect(() => {
-    if (
-      visitTime &&
-      (visitTime < firstAvailableTime ||
-        visitTime > "16:00" ||
-        Number(visitTime.slice(3, 5)) !== 0)
-    ) {
-      setVisitTime("");
-    }
-  }, [visitTime, firstAvailableTime]);
+  const minNoticeHours = visitRules?.minNoticeHours ?? 0;
+  const modes = visitRules?.modes ?? ["in_person"];
+  const minVisitDate = formatLocalDate(new Date(Date.now() + minNoticeHours * 60 * 60 * 1000));
+  const freeSlots = slots.filter((slot) => slot.available);
 
   React.useEffect(() => {
     const savedForm = getCookie(modalCookieKey);
@@ -155,16 +80,6 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
         setGuestEmail(parsed.guestEmail || "");
         setGuestPhone(parsed.guestPhone || "");
         setAgreed(parsed.agreed || false);
-        const savedVisitDate = parsed.visitDate || "";
-        setVisitDate(isWeekendDate(savedVisitDate) ? "" : savedVisitDate);
-        const savedVisitTime =
-          isWeekendDate(savedVisitDate)
-            ? ""
-            : parsed.visitTime ||
-              (parsed.visitHour && parsed.visitMinute
-                ? `${parsed.visitHour}:${parsed.visitMinute}`
-                : "");
-        setVisitTime(savedVisitTime);
       } catch {
         // ignore malformed cookie data
       }
@@ -198,41 +113,47 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
       guestEmail,
       guestPhone,
       agreed,
-      visitDate,
-      visitTime,
     }));
-  }, [guestName, guestEmail, guestPhone, agreed, visitDate, visitTime]);
+  }, [guestName, guestEmail, guestPhone, agreed]);
 
-  const addInspection = useInspectionStore((state) => state.addInspection);
-  const updatePaymentStatus = useInspectionStore((state) => state.updatePaymentStatus);
+  // The free times on the chosen day: notice, visiting hours and booked times are already applied
+  React.useEffect(() => {
+    if (!open || !visitDate) {
+      setSlots([]);
+      return;
+    }
+
+    let current = true;
+    setSlotsLoading(true);
+    setVisitTime("");
+    visitsAPI
+      .slots(property.id, visitDate)
+      .then((result) => current && setSlots(result))
+      .catch((error) => {
+        console.error("Failed to load visit times:", error);
+        if (current) setSlots([]);
+      })
+      .finally(() => current && setSlotsLoading(false));
+
+    return () => {
+      current = false;
+    };
+  }, [open, visitDate, property.id]);
 
   const amount = property.visitationfee;
   const feeDisplay = amount === 0 ? "inspection is free" : `₦${amount.toLocaleString()}`;
+  const confirmedByTeam = visitRules?.confirmation === "by_team";
 
   const fullName = customer ? `${customer.firstName} ${customer.lastName}`.trim() : guestName;
   const bookingEmail = customer?.email ?? guestEmail;
 
-  const propertyAddress = `${property.location.area}, ${property.location.city_town}, ${property.location.state} state.`;
-  const propertyUrl = window.location.href;
-
-  const handleDownloadReceipt = async (saleId: string) => {
-    try {
-      const response = await axios.get(`${API_URL}/sales/${saleId}/invoice/download?format=pdf`, {
-        headers: { "x-api-key": API_KEY },
-        responseType: 'blob'
-      });
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `receipt-${saleId}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } catch (error) {
-      console.error("Error downloading receipt:", error);
-      toast.error("Failed to download receipt. Please contact support.");
-    }
+  const done = (message: string) => {
+    toast.success(<div className="whitespace-pre-wrap">{message}</div>, { duration: 6000 });
+    requestKey.renew();
+    setHeldUntil(0);
+    setVisitDate("");
+    setVisitTime("");
+    onOpenChange(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -248,203 +169,62 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
       return;
     }
 
-    if (isWeekendDate(visitDate)) {
-      toast.error("Please choose a weekday for your visit.");
-      return;
-    }
-
-    const selectedVisit = new Date(`${visitDate}T${visitTime}:00`);
-    const minimumNoticeMs = INSPECTION_BOOKING_NOTICE_HOURS * 60 * 60 * 1000;
-    if (
-      Number.isNaN(selectedVisit.getTime()) ||
-      visitTime < "08:00" ||
-      visitTime > "16:00" ||
-      !visitTime.endsWith(":00") ||
-      selectedVisit.getTime() < Date.now() + minimumNoticeMs
-    ) {
-      toast.error(
-        "Choose a visit between 8:00 AM and 4:00 PM, at least 48 hours from now.",
-      );
-      return;
-    }
-
     if (!agreed) {
       toast.error("Please agree to the Terms and Privacy Policy to continue.");
       return;
     }
 
     setIsSubmitting(true);
-    const preferredVisit = formatPreferredVisit(visitDate, visitTime);
+    if (heldUntil && Date.now() > heldUntil) requestKey.renew();
+    const when = formatVisit(visitDate, visitTime);
+    const confirmation = confirmedByTeam
+      ? `We'll confirm your visit on ${when} once the agent is available.`
+      : `Your visit is booked for ${when}.`;
 
     try {
-      // 1. Create Sale
-      const salePayload = {
-        initiateInvoice: true,
-        gatewayId: GATEWAY_ID,
-        items: [
-          {
-            description: `Inspection Fee: ${property.name}, ${propertyAddress}`,
-            quantity: 1,
-            unitPrice: amount,
-            inventoryItemId: undefined,
-            productId: undefined,
-          }
-        ],
-        taxRate: 0,
-        notes: `Inspection booking for ${property.name} at ${propertyAddress}.\nPreferred Visit: ${preferredVisit}`,
-        paymentMethod: "credit_card",
-        customerDetails: {
-          name: fullName,
-          email: bookingEmail,
-          phone: phone
-        }
-      };
-
-      const saleResponse = await axios.post<SaleResponse>(`${API_URL}/sales`, salePayload, {
-        headers: {
-          "x-api-key": API_KEY,
-          Authorization: `Bearer ${token}`,
+      // 1. Book the time. It's held while the fee is paid.
+      const reply = await visitsAPI.book(
+        {
+          propertyId: property.id,
+          name: fullName.trim(),
+          email: bookingEmail.trim(),
+          phone: phone.trim(),
+          date: visitDate,
+          start: visitTime,
+          mode,
+          consent: agreed,
         },
-      });
+        requestKey.current(),
+      );
+      noteTestMode(reply);
+      if (reply.test) return;
 
-      const saleId = saleResponse.data.id || saleResponse.data._id;
-      if (!saleId) {
-        throw new Error("Sale creation response did not include a sale ID.");
+      const booking = reply.data;
+      if (booking.holdExpiresAt) setHeldUntil(new Date(booking.holdExpiresAt).getTime());
+
+      if (booking.status !== "pending_payment" || !booking.invoiceId) {
+        done(`${confirmation}\nThe details are on their way to ${bookingEmail.trim()}.`);
+        return;
       }
-      const salesOrderNumber =
-        saleResponse.data.saleNumber ??
-        saleResponse.data.salesOrderNumber ??
-        saleResponse.data.orderNumber;
 
-      // 2. Initialize Payment
-      const initResponse = await axios.post(`${API_URL}/sales/${saleId}/payment/initiate`, {
-        gatewayId: GATEWAY_ID,
-        initiateGateway: true,
-      }, {
-        headers: {
-          "x-api-key": API_KEY,
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // 2. Pay the fee in the Paystack popup, or on the visit's own page
+      const outcome = await payInvoice({ invoiceId: booking.invoiceId, email: bookingEmail.trim(), paymentLink: booking.paymentLink });
 
-      const accessCode = initResponse.data.data.accessCode;
-
-      // 3. Open Paystack Modal
-      const paystack = new PaystackPop();
-      paystack.resumeTransaction(accessCode, {
-        onSuccess: async (transaction: PaystackSuccessResponse) => {
-          setIsSubmitting(true);
-          try {
-            // 4. Verify Payment - Including gatewayId in case it's required for verification
-            await axios.post(`${API_URL}/sales/${saleId}/payment/verify`, {
-              gatewayId: GATEWAY_ID
-            }, {
-              headers: {
-                "x-api-key": API_KEY,
-                Authorization: `Bearer ${token}`,
-              },
-            });
-
-            // 5. CRM and Local Store
-            const crmPayload = {
-              companyId: COMPANY_ID,
-              pipelineId: "6a4c98cbeb058fac4420ea43",
-              title: `VISIT BOOKING: ${property.name} - ${fullName}`,
-              name: fullName,
-              amount: amount, // Changed from string to numeric amount
-              email: bookingEmail,
-              phone: phone,
-              address: propertyAddress,
-              note: `visit/inspection booking for ${property.name} at ${propertyAddress}.\nPreferred Visit: ${preferredVisit}`,
-              customData: [
-                { label: "Property Name", value: property.name },
-                { label: "Preferred Visit", value: preferredVisit },
-                { label: "Property Link", value: propertyUrl },
-                { label: "Inspection Fee", value: `₦${amount.toLocaleString()}` },
-                ...(property.createdBy?.email
-                  ? [
-                    {
-                      label: "Agent Email",
-                      value: property.createdBy.email,
-                    },
-                  ]
-                  : []),
-                ...(property.sku ? [{ label: "Property SKU", value: property.sku }] : []),
-                { label: "Category", value: property.category },
-                ...(salesOrderNumber
-                  ? [{ label: "Sales Order", value: salesOrderNumber }]
-                  : []),
-                ...(property.caretakerContact?.whatsapp ? [{ label: "Caretaker WhatsApp", value: property.caretakerContact.whatsapp }] : []),
-                ...(property.caretakerContact?.phone ? [{ label: "Caretaker Phone", value: property.caretakerContact.phone }] : [])
-              ]
-            };
-
-            console.log("Submitting CRM Payload:", crmPayload);
-            await axios.post("https://api.sabiflow.com/api/crm/deals/guest", crmPayload);
-            console.log("CRM submission successful");
-
-            addInspection({
-              propertyId: property.id,
-              propertyName: property.name,
-              userName: fullName,
-              userEmail: bookingEmail,
-              userPhone: phone,
-              date: new Date().toISOString().split('T')[0],
-              time: new Date().toLocaleTimeString("en-US", {
-                hour: "numeric",
-                minute: "2-digit",
-                hour12: true,
-              }),
-              amount,
-              reference: transaction.reference,
-              location: propertyAddress,
-            });
-
-            updatePaymentStatus(transaction.reference, "paid");
-
-            toast.success(
-              <div className="whitespace-pre-wrap">
-                {`Payment successful! \nA member of our team will contact you shortly.`}
-              </div>,
-              {
-                duration: 5000,
-              }
-            );
-
-            // 6. Download Receipt
-            await handleDownloadReceipt(saleId);
-
-            onOpenChange(false);
-            setCookie(modalCookieKey, JSON.stringify({ guestName: "", guestEmail: "", guestPhone: "", agreed: false, visitDate: "", visitTime: "" }));
-          } catch (error) {
-            console.error("Verification/CRM error:", error);
-            toast.error("Payment successful, but verification failed. Please contact support.");
-          } finally {
-            setIsSubmitting(false);
-          }
-        },
-        onCancel: () => {
-          toast.info("Payment cancelled.");
-          setIsSubmitting(false);
-        }
-      });
-
+      if (outcome === "paid") {
+        done(`Payment successful!\n${confirmation} Your receipt is on its way to ${bookingEmail.trim()}.`);
+      } else if (outcome === "pending") {
+        done(`We've received your payment.\nYour visit on ${when} will be confirmed once Paystack confirms it.`);
+      } else if (outcome === "cancelled") {
+        toast.info("Payment cancelled. Your time is held for a short while if you'd like to try again.");
+      } else if (outcome === "failed") {
+        toast.error("The payment didn't go through. Please try again.");
+      }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("Payment flow error:", error);
-        const errorMessage = error.response?.data?.message || "";
-
-        if (errorMessage.toLowerCase().includes("stock") || errorMessage.toLowerCase().includes("available")) {
-          toast.error("This property is no longer available. Please check out our other listings.", {
-            duration: 6000,
-          });
-        } else {
-          toast.error(errorMessage || "An error occurred during the payment process.");
-        }
-      } else {
-        console.error("Unexpected error:", error);
-        toast.error("An unexpected error occurred.");
-      }
+      console.error("Payment flow error:", error);
+      toast.error(errorMessage(error, "An error occurred during the payment process."), { duration: 6000 });
+      // A time that was just taken is gone from the list
+      if (visitDate) visitsAPI.slots(property.id, visitDate).then(setSlots).catch(() => undefined);
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -467,7 +247,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
             </Dialog.Close>
           </div>
 
-          <p id="inspection-modal-description" className="sr-only">Book a property inspection and pay securely using Paystack. All details are required for processing.</p>
+          <p id="inspection-modal-description" className="sr-only">Book a property inspection and pay securely. All details are required for processing.</p>
           <form onSubmit={handleSubmit} className="space-y-4">
             {isAuthenticated && customer ? (
               <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-1">
@@ -518,6 +298,27 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
             )}
 
            <div className="space-y-2 border border-gray-600/30 rounded-lg p-3 bg-gray-500/10">
+              {modes.length > 1 && (
+                <div>
+                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">How would you like to visit?</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {modes.map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => setMode(option)}
+                        aria-pressed={mode === option}
+                        className={`rounded-md border px-2 py-1.5 text-sm transition-colors ${mode === option
+                          ? "border-[#703BF7] bg-[#703BF7] text-white"
+                          : "border-gray-600/30 bg-white/80 text-gray-900 hover:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                          }`}
+                      >
+                        {MODE_LABELS[option]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Preferred Date</label>
@@ -526,16 +327,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                     required
                     min={minVisitDate}
                     value={visitDate}
-                    onChange={(e) => {
-                      const selectedDate = e.target.value;
-                      if (isWeekendDate(selectedDate)) {
-                        setVisitDate("");
-                        setVisitTime("");
-                        toast.error("Please choose a weekday for your visit.");
-                        return;
-                      }
-                      setVisitDate(selectedDate);
-                    }}
+                    onChange={(e) => setVisitDate(e.target.value)}
                     className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
                   />
                 </div>
@@ -543,42 +335,53 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                   <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Preferred Time</label>
                   <select
                     required
-                    disabled={!visitDate}
+                    disabled={!visitDate || slotsLoading || freeSlots.length === 0}
                     value={visitTime}
                     onChange={(e) => setVisitTime(e.target.value)}
                     className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] disabled:opacity-60 dark:bg-[#1A1A1A] dark:text-white"
                   >
                     <option value="" disabled>
-                      {visitDate ? "Select time" : "Pick a date first"}
+                      {!visitDate
+                        ? "Pick a date first"
+                        : slotsLoading
+                          ? "Loading times..."
+                          : freeSlots.length === 0
+                            ? "No times this day"
+                            : "Select time"}
                     </option>
-                    {availableSlots.map((slot) => (
-                      <option key={slot} value={slot}>
-                        {formatTwelveHourTime(slot)}
+                    {freeSlots.map((slot) => (
+                      <option key={slot.start} value={slot.start}>
+                        {formatTwelveHourTime(slot.start)}
                       </option>
                     ))}
                   </select>
                 </div>
               </div>
               <p className="text-xs dark:text-gray-400 leading-snug text-gray-500">
-                Inspections are available from 8:00 AM to 4:00 PM and must be booked at least 48 hours in advance. This is your preferred slot — if the agent isn't available, our team will reach out to reschedule.
+                {visitDate && !slotsLoading && freeSlots.length === 0
+                  ? "There are no visit times left on this day. Please try another day."
+                  : `Only times that are still free are shown${minNoticeHours > 0 ? `, and visits need at least ${minNoticeHours} hours' notice` : ""}.${confirmedByTeam ? " Your visit is confirmed once our team checks the agent is available." : ""}`}
               </p>
            </div>
 
            <div className="p-2 bg-gray-500/10 border border-gray-600/30 rounded-lg">
               <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
                 A member of our team will contact you within{" "}
-                <span className="font-semibold text-[#703BF7]">24 hours</span> to confirm your property details and schedule a suitable viewing time.
+                <span className="font-semibold text-[#703BF7]">24 hours</span> to confirm your property details and the viewing.
               </p>
             </div>
 
             <div className="p-2 bg-[#703BF7]/10 rounded-lg border border-[#703BF7]/30 space-y-2">
               <div className="border-b border-[#703BF7]/20 pb-2 mb-2">
                 <h4 className="font-semibold dark:text-white text-gray-900">{property.name}</h4>
-                <p className="text-xs dark:text-gray-400 text-gray-600">{property.category} • {property.bedrooms} Bedrooms</p>
+                <p className="text-xs dark:text-gray-400 text-gray-600">
+                  {property.category}
+                  {property.bedrooms > 0 && ` • ${property.bedrooms} Bedrooms`}
+                </p>
               </div>
               <div className="flex items-start gap-2 text-sm dark:text-gray-300 text-gray-700">
                 <FiMapPin className="text-[#703BF7] mt-1 shrink-0" />
-                <span>{property.location.area}, {property.location.city_town}, {property.location.state} state.</span>
+                <span>{addressOf(property)}</span>
               </div>
               <div className="flex justify-between items-center border-t border-[#703BF7]/20 pt-2">
                 <span className="text-sm font-medium dark:text-white text-gray-900">Visitation Fee</span>
@@ -589,7 +392,10 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
               <div className="text-xs text-[#703BF7] dark:text-[#a78bfa] leading-snug">
                 <p>
                   The visitation fee covers the agent&apos;s time only,
-                  transportation is not included. See the{" "}
+                  transportation is not included.
+                  {(visitRules?.serviceCharge ?? 0) > 0 &&
+                    ` It includes a ₦${visitRules?.serviceCharge.toLocaleString()} service charge that isn't refundable.`}{" "}
+                  See the{" "}
                   <Link
                     to="/terms"
                     target="_blank"
@@ -624,7 +430,7 @@ const BookInspectionModal: React.FC<BookInspectionModalProps> = ({
                 : "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
                 }`}
             >
-              {isSubmitting ? "Processing..." : "Pay & Book a Visit"}
+              {isSubmitting ? "Processing..." : amount > 0 ? "Pay & Book a Visit" : "Book a Visit"}
             </button>
           </form>
         </Dialog.Content>
