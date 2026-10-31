@@ -33,6 +33,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
   properties: [],
   featuredProperties: [],
   featuredLoading: false,
+  featuredError: null,
   categories: [],
   categoriesLoading: false,
   forms: null,
@@ -80,17 +81,21 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
   fetchFeaturedProperties: async () => {
     // Skip if already loaded — avoid re-fetching on every home page visit
     if (get().featuredProperties.length > 0) return;
-    set({ featuredLoading: true });
+    set({ featuredLoading: true, featuredError: null });
     try {
       // Featured listings come first
       const res = await propertiesAPI.list({ page: 1, limit: 8 });
       set({
         featuredProperties: res.data.map((listing) => toProperty(listing)),
         featuredLoading: false,
+        featuredError: null,
       });
     } catch (err) {
       console.error("Failed to fetch featured properties", err);
-      set({ featuredLoading: false });
+      set({
+        featuredLoading: false,
+        featuredError: errorMessage(err, "Failed to load featured properties."),
+      });
     }
   },
 

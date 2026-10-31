@@ -71,6 +71,7 @@ export interface PropertyStore {
 
   featuredProperties: Property[];
   featuredLoading: boolean;
+  featuredError: string | null;
   fetchFeaturedProperties: () => Promise<void>;
 
   fetchProperties: (apiPage?: number, filters?: Record<string, string | number | boolean | undefined>) => Promise<void>;

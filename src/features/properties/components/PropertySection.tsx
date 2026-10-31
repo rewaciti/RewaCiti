@@ -11,7 +11,7 @@ function PropertySection() {
   const {
     featuredProperties,
     featuredLoading,
-    error,
+    featuredError,
     fetchFeaturedProperties,
   } = usePropertyStore();
 
@@ -61,7 +61,7 @@ function PropertySection() {
                 <PropertyCardSkeleton />
               </div>
             ))
-          ) : error ? (
+          ) : featuredError ? (
             <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 py-10 flex flex-col items-center justify-center text-center space-y-4 bg-white dark:bg-[#1A1A1A] border border-red-100 dark:border-red-900/30 rounded-xl">
               <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-full">
                 <svg
@@ -83,7 +83,7 @@ function PropertySection() {
                   Something went wrong
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {error}
+                  {featuredError}
                 </p>
               </div>
               <button
