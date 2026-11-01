@@ -21,10 +21,10 @@ export function PropertyCardSkeleton() {
           <Skeleton className="h-3 w-2/3" />
         </div>
         {/* Bedrooms / bathrooms / category — mirrors card grid */}
-        <div className="grid grid-cols-2 xl:grid-cols-3 gap-2 mb-3">
+        <div className="grid grid-cols-2 gap-2 mb-3">
           <Skeleton className="h-8 rounded-2xl" />
           <Skeleton className="h-8 rounded-2xl" />
-          <Skeleton className="h-7 rounded-xl col-span-2 xl:col-span-1" />
+          <Skeleton className="h-7 rounded-xl col-span-2" />
         </div>
       </div>
       <div className="flex justify-between items-center mt-auto">

@@ -18,7 +18,6 @@ import { useAuthStore } from "../../auth/store/useAuthStore";
 
 interface PropertyCardProps {
   property: Property;
-  infoLayout?: "auto" | "stacked";
 }
 
 const DOTS_PER_GROUP = 4;
@@ -26,7 +25,7 @@ const DOT_SIZE = 6;
 const DOT_GAP = 6;
 const SWIPE_THRESHOLD = 40;
 
-function PropertyCard({ property, infoLayout = "auto" }: PropertyCardProps) {
+function PropertyCard({ property }: PropertyCardProps) {
   const { toggleShortlist, shortlistedProperties } = usePropertyStore();
   const propertySlug = property.slug;
 
@@ -391,16 +390,7 @@ function PropertyCard({ property, infoLayout = "auto" }: PropertyCardProps) {
       </p>
 
       {/* Property Info */}
-      <div
-        className={`grid gap-2 mb-1 ${hasBedrooms && hasBathrooms
-          ? infoLayout === "stacked"
-            ? "grid-cols-2"
-            : "grid-cols-2 xl:grid-cols-3"
-          : hasBedrooms || hasBathrooms
-            ? "grid-cols-2"
-            : "grid-cols-1"
-          }`}
-      >
+      <div className="grid grid-cols-2 gap-2 mb-1">
         {hasBedrooms && (
           <p className="border border-purple-100 dark:border-gray-600/30 bg-purple-50 dark:bg-transparent text-gray-700 dark:text-gray-300 rounded-2xl px-2 py-1 flex items-center justify-center gap-2 text-xs sm:text-sm transition">
             <FaBed />
@@ -415,10 +405,7 @@ function PropertyCard({ property, infoLayout = "auto" }: PropertyCardProps) {
           </p>
         )}
 
-        <p
-          className={`border border-purple-100 dark:border-gray-600/30 bg-purple-50 dark:bg-transparent text-gray-700 dark:text-gray-300 rounded-xl px-2 py-1 flex items-center justify-center gap-2 text-[11px] sm:text-xs transition ${hasBedrooms && hasBathrooms ? infoLayout === "stacked" ? "col-span-2" : "col-span-2 xl:col-span-1" : ""
-            }`}
-        >
+        <p className="col-span-2 border border-purple-100 dark:border-gray-600/30 bg-purple-50 dark:bg-transparent text-gray-700 dark:text-gray-300 rounded-xl px-2 py-1 flex items-center justify-center gap-2 text-[11px] sm:text-xs transition">
           <FaHome />
           {property.category}
         </p>

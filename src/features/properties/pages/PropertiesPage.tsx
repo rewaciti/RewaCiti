@@ -789,7 +789,7 @@ function PropertySearchSection() {
                               onMouseLeave={() => setHoveredPropertyId(null)}
                               className={`rounded-xl transition ${hoveredPropertyId === property.id ? "ring-2 ring-[#703BF7]" : "ring-1 ring-transparent"}`}
                             >
-                              <PropertyCard property={property} infoLayout="stacked" />
+                              <PropertyCard property={property} />
                             </div>
                           ))}
                         </div>
