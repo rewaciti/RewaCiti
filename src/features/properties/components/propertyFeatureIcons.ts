@@ -146,6 +146,7 @@ export const propertyFeatureIconGroups: PropertyFeatureIconGroup[] = [
       { label: "Waste disposal fee", icon: Trash2 },
       { label: "Security fee", icon: ShieldCheck },
       { label: "Service charge", icon: Receipt },
+      { label: "Internet bill", icon: Wifi },
     ],
   },
 ];
@@ -160,12 +161,26 @@ const propertyFeatureByLabel = new Map(
 );
 
 const featureLabelAliases = new Map([
-  ["mariedcouplesonly", "marriedcouplesonly"],
+  ["marriedcoupleonly", "marriedcouplesonly"],
+  ["24hourelectricity", "24hourelectricitysupply"],
+  ["prepaidmeter", "personalprepaidmeter"],
+  ["nopets", "nopetsallowed"],
+  ["noloudmusic", "nonoise"],
   ["noloudmusicorexcessivenoise", "nonoise"],
   ["noexcessivenoise", "nonoise"],
   ["nosmokinginsidetheproperty", "nosmoking"],
+  ["nounauthorisedalterations", "nounauthorizedalterations"],
+  ["visitinghoursapply", "visitationtimeapplies"],
+  ["femalesonly", "femaleonly"],
+  ["malesonly", "menonly"],
+  ["electricity", "electricbill"],
+  ["water", "waterbill"],
+  ["wastedisposal", "wastedisposalfee"],
+  ["security", "securityfee"],
+  ["internet", "internetbill"],
   ["visitorsarenotallowed", "visitorsnotallowed"],
   ["unauthorizedvisitorsnotallowed", "nounauthorizedvisitors"],
+  ["boysquarters", "boysquartersbq"],
   ["interlock", "interlockedcompound"],
   ["hometheater", "cinema"],
 ]);

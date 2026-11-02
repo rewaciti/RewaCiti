@@ -1,4 +1,4 @@
-import { Ban, House } from "lucide-react";
+import { Ban, House, Receipt, ShieldCheck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { getPropertyFeatureItem } from "./propertyFeatureIcons";
 
@@ -20,7 +20,9 @@ export default function PropertyFeatureItem({
   highlighted = false,
 }: PropertyFeatureItemProps) {
   const feature = getPropertyFeatureItem(label);
-  const Icon = icon ?? feature?.icon ?? (showIcon ? House : null);
+  const fallbackIcon =
+    variant === "rule" ? ShieldCheck : variant === "bill" ? Receipt : showIcon ? House : null;
+  const Icon = icon ?? feature?.icon ?? fallbackIcon;
   const isProhibited = variant === "rule" && (feature?.prohibited ?? false);
 
   return (

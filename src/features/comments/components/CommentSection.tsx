@@ -13,7 +13,7 @@ const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
 const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };
 
 const viewAllClass =
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#9677df]";
+  "shrink-0 items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#9677df]";
 const roundButton =
   "cursor-pointer rounded-full border border-gray-300 bg-white p-2.5 text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:bg-[#101010] dark:text-white";
 
@@ -55,7 +55,7 @@ function CommentSection() {
           </p>
         </div>
 
-        <NavLink to="/AllComments" className={`${viewAllClass} hidden md:inline-flex`}>
+        <NavLink to="/AllComments" className={`${viewAllClass} hidden lg:inline-flex`}>
           View all <FiArrowRight size={16} />
         </NavLink>
       </div>
@@ -131,12 +131,12 @@ function CommentSection() {
       </div>
 
       {/* Pagination */}
-      <div className="mt-8 flex items-center justify-between gap-4 border-t border-gray-400/60 pt-6 dark:border-white/10">
+      <div className="mt-8 flex items-center justify-between gap-4 border-t border-gray-400 pt-6 dark:border-white/10">
         <p className="text-sm text-gray-800 dark:text-gray-300">
           {page + 1} of {Math.max(1, totalPages)}
         </p>
 
-        <NavLink to="/AllComments" className={`${viewAllClass} md:hidden`}>
+        <NavLink to="/AllComments" className={`${viewAllClass} inline-flex lg:hidden`}>
           View all
         </NavLink>
 

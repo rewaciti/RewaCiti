@@ -523,19 +523,36 @@ function PropertyDetails() {
             >
               <FiChevronLeft /> All properties
             </Link>
-            <div className="flex items-start justify-between gap-4 pb-5 pt-3 sm:pt-4">
-              <div className="min-w-0">
-                <div className="mb-2 flex flex-wrap items-center gap-2">
-                  <span className="inline-flex rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-gray-700 dark:bg-white/10 dark:text-gray-300">
-                    {property.category}
-                  </span>
-                  {property.listingType && (
-                    <span className="inline-flex rounded-full bg-[#703BF7]/10 px-3 py-1 text-xs font-semibold text-[#703BF7] dark:bg-[#703BF7]/20 dark:text-[#b69bff]">
-                      {property.listingType}
+            <div className="pb-5 pt-3 sm:pt-4">
+              <div className="w-full min-w-0">
+                <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="inline-flex rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-gray-700 dark:bg-white/10 dark:text-gray-300">
+                      {property.category}
                     </span>
-                  )}
+                    {property.listingType && (
+                      <span className="inline-flex rounded-full bg-[#703BF7]/10 px-3 py-1 text-xs font-semibold text-[#703BF7] dark:bg-[#703BF7]/20 dark:text-[#b69bff]">
+                        {property.listingType}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex shrink-0 items-center">
+                    <button type="button" onClick={handleShare} className={GHOST_BTN}>
+                      <FiShare2 size={16} />
+                      <span className="hidden sm:inline">Share</span>
+                    </button>
+                    <button type="button" onClick={handleShortlist} className={GHOST_BTN}>
+                      <FiHeart
+                        size={16}
+                        className={isShortlisted ? "fill-current text-[#703BF7]" : ""}
+                      />
+                      <span className="hidden sm:inline">
+                        {isShortlisted ? "Saved" : "Save"}
+                      </span>
+                    </button>
+                  </div>
                 </div>
-                <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                <h1 className="break-words text-3xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
                   {property.name}
                 </h1>
                 <a
@@ -546,24 +563,13 @@ function PropertyDetails() {
                   }
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-start gap-2 text-sm text-gray-700 underline-offset-2 hover:underline dark:text-gray-300"
+                  className="mt-2 inline-flex w-full min-w-0 items-start gap-2 text-sm text-gray-700 underline-offset-2 hover:underline dark:text-gray-300"
                 >
                   <FiMapPin className="mt-0.5 shrink-0" />
-                  <span>{locationText(addressOf(property), property.location.nearby)}</span>
+                  <span className="min-w-0 break-words">
+                    {locationText(addressOf(property), property.location.nearby)}
+                  </span>
                 </a>
-              </div>
-              <div className="flex shrink-0 items-center">
-                <button type="button" onClick={handleShare} className={GHOST_BTN}>
-                  <FiShare2 size={16} />
-                  <span className="hidden sm:inline">Share</span>
-                </button>
-                <button type="button" onClick={handleShortlist} className={GHOST_BTN}>
-                  <FiHeart
-                    size={16}
-                    className={isShortlisted ? "fill-current text-[#703BF7]" : ""}
-                  />
-                  <span className="hidden sm:inline">{isShortlisted ? "Saved" : "Save"}</span>
-                </button>
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { Ban, House } from "lucide-react";
+import { Ban, House, Receipt, ShieldCheck } from "lucide-react";
 import { getPropertyFeatureItem } from "./propertyFeatureIcons";
 
 interface PropertyFeatureCardProps {
@@ -13,7 +13,9 @@ export default function PropertyFeatureCard({
   variant,
 }: PropertyFeatureCardProps) {
   const feature = getPropertyFeatureItem(label);
-  const Icon = feature?.icon ?? House;
+  const Icon =
+    feature?.icon ??
+    (variant === "rule" ? ShieldCheck : variant === "bill" ? Receipt : House);
   const isProhibited = variant === "rule" && (feature?.prohibited ?? false);
 
   return (

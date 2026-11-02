@@ -12,7 +12,7 @@ const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
 const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };
 
 const viewAllClass =
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#9677df]";
+  "shrink-0 items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#9677df]";
 
 function PropertySection() {
   const { featuredProperties, featuredLoading, featuredError, fetchFeaturedProperties } =
@@ -84,8 +84,9 @@ function PropertySection() {
         )}
       </div>
 
-      <div className="mt-8 sm:hidden">
-        <NavLink to="/properties" className={`${viewAllClass} w-full`}>
+      {/* Small screens only: the top "View all" is hidden below sm */}
+      <div className="mt-8 flex justify-end border-t border-gray-400 pt-6 dark:border-white/10 sm:hidden">
+        <NavLink to="/properties" className={`${viewAllClass} inline-flex`}>
           View all <FiArrowRight size={16} />
         </NavLink>
       </div>

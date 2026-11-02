@@ -8,6 +8,8 @@ import { usePropertyStore } from "../../properties/store/usePropertyStore";
 import Navbar from "../../../shared/components/Layout/Navbar";
 import { Helmet } from "react-helmet-async";
 
+const REMEMBERED_EMAIL_KEY = "rewaciti_remembered_email";
+
 const getErrorMessage = (error: unknown, fallback: string) => {
   if (typeof error === "object" && error !== null) {
     const errorWithMessage = error as {
@@ -36,7 +38,12 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Form states for login
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(
+    () => localStorage.getItem(REMEMBERED_EMAIL_KEY) ?? ""
+  );
+  const [rememberEmail, setRememberEmail] = useState(
+    () => localStorage.getItem(REMEMBERED_EMAIL_KEY) !== null
+  );
   const [password, setPassword] = useState("");
 
   // Form states for signup
@@ -66,6 +73,12 @@ const Login = () => {
     e.preventDefault();
 
     if (!isSignInValid) return;
+
+    if (rememberEmail) {
+      localStorage.setItem(REMEMBERED_EMAIL_KEY, email);
+    } else {
+      localStorage.removeItem(REMEMBERED_EMAIL_KEY);
+    }
 
     setIsLoading(true);
     try {
@@ -238,6 +251,7 @@ const Login = () => {
               <input
                 type="email"
                 placeholder="Email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={inputStyle}
@@ -265,6 +279,7 @@ const Login = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
+                  autoComplete={isSignUp ? "new-password" : "current-password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={inputStyle}
@@ -281,6 +296,26 @@ const Login = () => {
                 </button>
               </div>
             </div>
+
+            {!isSignUp && (
+              <label className="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <input
+                  type="checkbox"
+                  checked={rememberEmail}
+                  onChange={(event) => {
+                    const shouldRemember = event.target.checked;
+                    setRememberEmail(shouldRemember);
+                    if (!shouldRemember) {
+                      localStorage.removeItem(REMEMBERED_EMAIL_KEY);
+                    } else if (email) {
+                      localStorage.setItem(REMEMBERED_EMAIL_KEY, email);
+                    }
+                  }}
+                  className="h-4 w-4 rounded border-gray-300 accent-[#703BF7]"
+                />
+                Remember my email on this device
+              </label>
+            )}
 
             {/* Confirm Password */}
             {isSignUp && (

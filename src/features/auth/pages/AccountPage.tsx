@@ -746,8 +746,8 @@ const VisitCard = ({
 
   return (
     <article className={cardClass}>
-      <div className="flex items-start justify-between gap-4">
-        <h2 style={SERIF} className={`text-xl sm:text-2xl ${headingClass}`}>
+      <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <h2 style={SERIF} className={`self-start text-xl sm:text-2xl ${headingClass}`}>
           {visit.propertyTitle}
         </h2>
         <StatusChip status={visit.status} />
