@@ -26,7 +26,7 @@ export default function PropertyFeatureItem({
   return (
     <li
       className={`flex items-center gap-3 py-3 text-gray-700 dark:text-gray-300 ${
-        divided ? "border-b border-gray-200 last:border-b-0 dark:border-white/10" : ""
+        divided ? "border-b border-gray-200 last:border-b-0 dark:border-gray-600/30" : ""
       } ${
         highlighted
           ? "gap-0 rounded-md border-l border-[#703BF7] bg-[#703BF7]/5 p-2"

@@ -15,7 +15,16 @@ import useRequestKey from "../../shared/hooks/useRequestKey";
 import CustomDropdown from "../../features/properties/components/CustomDropdown";
 import { getCookie, setCookie } from "../../shared/lib/utils";
 
-const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+// Same container as the Navbar, Property Details, Account, Request and Service pages.
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
+
+// Same serif as the Navbar / Home hero (Fraunces is loaded in index.html)
+const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };
+
+const EMAIL = "rewaciti@gmail.com";
+const PHONE_DISPLAY = "+234 706 530 4417";
+const PHONE_TEL = "+2347065304417";
+const MAP_COORDS = "7.492329,4.537698";
 
 const INQUIRY_TYPE_OPTIONS = [
   { label: "Buy Property", value: "buying" },
@@ -33,6 +42,21 @@ const SOURCE_OPTIONS = [
   { label: "Online Ads", value: "ads" },
   { label: "Other", value: "other" },
 ];
+
+const inputClass =
+  "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#703BF7] focus:ring-2 focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white";
+const dropdownClass =
+  "flex h-[46px] w-full cursor-pointer items-center justify-between rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-900 transition hover:border-[#703BF7] dark:border-white/15 dark:bg-[#101010] dark:text-white";
+const labelClass = "mb-1.5 block text-sm font-medium text-gray-900 dark:text-white";
+const cardClass =
+  "rounded-3xl border border-gray-200 bg-white p-6 dark:border-white/10 dark:bg-[#1A1A1A] sm:p-8";
+const infoCardClass =
+  "group flex flex-col rounded-3xl border border-gray-200 bg-white p-6 transition duration-200 dark:border-white/10 dark:bg-[#1A1A1A]";
+const infoCardLinkClass = "hover:-translate-y-0.5 hover:shadow-lg";
+const pillLinkClass =
+  "inline-flex items-center justify-center gap-3 rounded-full border border-gray-300 bg-gray-100 px-5 py-2.5 text-sm text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] dark:border-white/15 dark:bg-white/5 dark:text-white";
+
+const Required = () => <span className="ml-1 text-red-600">*</span>;
 
 function Contact() {
   const { isAuthenticated, customer } = useAuthStore();
@@ -118,6 +142,15 @@ function Contact() {
     setCookie(inquiryCookieKey, JSON.stringify(payload));
   }, [firstName, lastName, email, phone, inquiryType, source, message, agreed]);
 
+  const canSubmit =
+    agreed &&
+    !isSubmitting &&
+    !!firstName.trim() &&
+    !!lastName.trim() &&
+    !!email.trim() &&
+    !!phone.trim() &&
+    !!message.trim();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreed) {
@@ -195,26 +228,35 @@ function Contact() {
     }
   };
 
-  const services1 = [
+  const contactCards = [
     {
       img: "/logo/servicecontainer/Icon Container (17).png",
-      text: "rewaciti@gmail.com",
+      label: "Email us",
+      text: EMAIL,
+      href: `mailto:${EMAIL}`,
     },
     {
       img: "/logo/servicecontainer/Icon Container (16).png",
-      text: "+234 706 530 4417",
+      label: "Call us",
+      text: PHONE_DISPLAY,
+      href: `tel:${PHONE_TEL}`,
     },
     {
       img: "/logo/servicecontainer/Icon Container (15).png",
-      text: "Location",
+      label: "Visit us",
+      text: "Parakin, Ile-Ife",
+      href: "#Ouroffices",
     },
     {
       img: "/logo/servicecontainer/Icon Container (14).png",
+      label: "Follow us",
       text: "Social Media",
+      href: undefined,
     },
   ];
+
   return (
-    <div className="">
+    <div className="bg-gray-300 text-gray-900 dark:bg-black/30 dark:text-white">
       <Helmet>
         <title>Contact RewaCiti | Real Estate Support in Ile-Ife</title>
         <meta
@@ -242,341 +284,304 @@ function Contact() {
         <link rel="canonical" href="https://rewaciti.com/contact" />
       </Helmet>
       <Navbar />
-      <div
-        className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 py-5"
+
+      {/* Quick contact cards */}
+      <section
         id="Contactinfo"
+        className="scroll-mt-24 bg-gray-200 pb-12 pt-10 dark:bg-black/50 sm:pb-16 sm:pt-14"
       >
-        <div className={`${PAGE_CONTAINER} space-y-1`}>
-        <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-          Get in Touch with Us
-        </h1>
-
-        <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-          Welcome to RewaCiti's Contact Us page. Have questions, requests, or
-          feedback? Whether you're buying, selling, or exploring properties,
-          we're here to help. Reach out and let's connect.
-        </p>
-        </div>
-      </div>
-
-      <section className="py-4 bg-gray-300 dark:bg-black/30 border-t-5 border-b-5 border-gray-600/30">
         <div className={PAGE_CONTAINER}>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
-          {/* BOX ITEM */}
-          {services1.map((item, index) => (
-            <div
-              key={index}
-              className="relative bg-white dark:bg-[#1A1A1A] border border-gray-600/30 rounded-xl p-6 flex flex-col items-center hover:scale-[1.02] transition"
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            {contactCards.map((item) => {
+              const content = (
+                <>
+                  <img
+                    src={item.img}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    className="h-12 w-12 object-contain"
+                  />
+                  <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">{item.label}</p>
+                  <p
+                    style={SERIF}
+                    className="mt-1 wrap-break-words text-lg font-semibold leading-snug text-gray-900 dark:text-white"
+                  >
+                    {item.text}
+                  </p>
+                </>
+              );
+              return item.href ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className={`${infoCardClass} ${infoCardLinkClass}`}
+                >
+                  {content}
+                </a>
+              ) : (
+                <div key={item.label} className={infoCardClass}>
+                  {content}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Form */}
+      <section
+        id="Contactform"
+        className="scroll-mt-24 py-14 sm:py-20"
+      >
+        <div className={`${PAGE_CONTAINER} grid gap-8 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:gap-12`}>
+          <div className="h-fit lg:sticky lg:top-28">
+            <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">
+              Get in touch
+            </p>
+            <h1
+              style={SERIF}
+              className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl"
             >
-              {/* Arrow at top-right */}
-              <div className="absolute top-3 right-3">
-                <img
-                  src="/logo/Vector 431.png"
-                  alt="top arrow"
-                  className="w-3 h-3 object-contain"
-                  loading="lazy"
-                  decoding="async"
+              Let's connect
+            </h1>
+            <p className="mt-4 leading-7 text-gray-700 dark:text-gray-400">
+              We're excited to connect with you and learn more about your real estate goals. Use
+              the form to get in touch with RewaCiti. Whether you're a prospective client, partner,
+              or simply curious about our services, we're here to answer your questions and
+              provide the assistance you need.
+            </p>
+            <a
+              href="#Ouroffices"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#703BF7] underline-offset-2 hover:underline dark:text-[#b79bff]"
+            >
+              <FiMapPin size={16} /> Find our office
+            </a>
+          </div>
+
+          <form onSubmit={handleSubmit} className={`${cardClass} space-y-6`}>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className={labelClass} htmlFor="contact-first-name">
+                  First name
+                  <Required />
+                </label>
+                <input
+                  id="contact-first-name"
+                  type="text"
+                  placeholder="Enter first name"
+                  required
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className={inputClass}
                 />
               </div>
 
-              {/* Center Image */}
-              <img
-                src={item.img}
-                alt="Icon"
-                className="w-13 h-13 object-contain mb-3"
-                loading="lazy"
-                decoding="async"
-              />
+              <div>
+                <label className={labelClass} htmlFor="contact-last-name">
+                  Last name
+                  <Required />
+                </label>
+                <input
+                  id="contact-last-name"
+                  type="text"
+                  placeholder="Enter last name"
+                  required
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className={inputClass}
+                />
+              </div>
 
-              {/* Text */}
-              <p className="text-gray-900 dark:text-white text-center text-sm">
-                {item.text}
-              </p>
+              <div>
+                <label className={labelClass} htmlFor="contact-email">
+                  Email
+                  <Required />
+                </label>
+                <input
+                  id="contact-email"
+                  type="email"
+                  placeholder="Enter your email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label className={labelClass} htmlFor="contact-phone">
+                  Phone
+                  <Required />
+                </label>
+                <input
+                  id="contact-phone"
+                  type="tel"
+                  placeholder="0803 123 4567"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label className={labelClass}>Inquiry type</label>
+                <CustomDropdown
+                  placeholder="Select inquiry type"
+                  value={inquiryType}
+                  options={INQUIRY_TYPE_OPTIONS}
+                  onChange={(val) => setInquiryType(val)}
+                  buttonClassName={dropdownClass}
+                />
+              </div>
+
+              <div>
+                <label className={labelClass}>How did you hear about us?</label>
+                <CustomDropdown
+                  placeholder="Select option"
+                  value={source}
+                  options={SOURCE_OPTIONS}
+                  onChange={(val) => setSource(val)}
+                  buttonClassName={dropdownClass}
+                />
+              </div>
             </div>
-          ))}
-        </div>
+
+            <div>
+              <label className={labelClass} htmlFor="contact-message">
+                Message
+                <Required />
+              </label>
+              <textarea
+                id="contact-message"
+                rows={5}
+                required
+                placeholder="Enter your message here..."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className={`${inputClass} resize-y`}
+              />
+            </div>
+
+            <div className="space-y-5 border-t border-gray-200 pt-6 dark:border-white/10">
+              <label className="flex cursor-pointer items-start gap-3 text-sm text-gray-700 dark:text-gray-400">
+                <input
+                  type="checkbox"
+                  className="mt-0.5 h-4 w-4 cursor-pointer accent-[#703BF7]"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  required
+                />
+                <span>
+                  I agree with the{" "}
+                  <Link
+                    to="/terms"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#9677df] dark:text-[#b79bff]"
+                  >
+                    Terms
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    to="/privacy-policy"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#9677df] dark:text-[#b79bff]"
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </span>
+              </label>
+
+              <button
+                type="submit"
+                disabled={!canSubmit}
+                className="w-full cursor-pointer rounded-full bg-[#703BF7] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#9677df] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+              >
+                {isSubmitting ? "Sending..." : "Send your message"}
+              </button>
+            </div>
+          </form>
         </div>
       </section>
 
-      <section className="bg-gray-300 dark:bg-black/30 py-4" id="Contactform">
+      {/* Office */}
+      <section
+        id="Ouroffices"
+        className="scroll-mt-24 bg-gray-200 py-14 dark:bg-black/50 sm:py-20"
+      >
         <div className={PAGE_CONTAINER}>
-        <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
-          <img
-            src="/logo/Abstract Design (1).png"
-            alt="Icon"
-            className="w-13 object-contain"
-            loading="lazy"
-            decoding="async"
-          />
-
-          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-            Let's Connect
-          </h1>
-
-          <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-            We're excited to connect with you and learn more about your real
-            estate goals. Use the form below to get in touch with RewaCitty.
-            Whether you're a prospective client, partner, or simply curious
-            about our services, we're here to answer your questions and provide
-            the assistance you need.
-          </p>
-        </div>
-
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-5 border border-gray-600/30 p-4 rounded-xl dark:bg-[#121212] bg-white"
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {/* First & Last Name */}
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                First Name
-              </label>
-              <input
-                type="text"
-                placeholder="Enter First Name"
-                required
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-              />
-            </div>
-
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                Last Name
-              </label>
-              <input
-                type="text"
-                placeholder="Enter Last Name"
-                required
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-              />
-            </div>
-
-            {/* Email & Phone */}
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="Enter your Email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-              />
-            </div>
-
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                Phone
-              </label>
-              <input
-                type="tel"
-                placeholder="Enter Phone Number"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-              />
-            </div>
-
-            {/* Inquiry Type & Source */}
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                Inquiry Type
-              </label>
-
-              <CustomDropdown
-                placeholder="Select Inquiry Type"
-                value={inquiryType}
-                options={INQUIRY_TYPE_OPTIONS}
-                onChange={(val) => setInquiryType(val)}
-              />
-            </div>
-
-            <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                How Did You Hear About Us?
-              </label>
-
-              <CustomDropdown
-                placeholder="Select Option"
-                value={source}
-                options={SOURCE_OPTIONS}
-                onChange={(val) => setSource(val)}
-              />
-            </div>
-          </div>
-
-          {/* Message */}
-          <div>
-            <label className=" text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-              Message
-            </label>
-            <textarea
-              rows={3}
-              required
-              placeholder="Enter your Message here..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-            />
-          </div>
-
-          {/* Agreement */}
-          <div className="sm:col-span-2 flex items-center gap-3">
-            <input
-              type="checkbox"
-              className="mt-0.5"
-              checked={agreed}
-              onChange={(e) => setAgreed(e.target.checked)}
-              required
-            />
-            <p className="text-sm text-gray-700 dark:text-gray-300 ">
-              I agree with the{" "}
-              <Link
-                to="/terms"
-                target="_blank"
-                rel="noreferrer"
-                className="text-[#703BF7] underline"
-              >
-                Terms
-              </Link>{" "}
-              and{" "}
-              <Link
-                to="/privacy-policy"
-                target="_blank"
-                rel="noreferrer"
-                className="text-[#703BF7] underline"
-              >
-                Privacy Policy
-              </Link>
-              .
+          <div className="max-w-2xl">
+            <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">Our office</p>
+            <h2
+              style={SERIF}
+              className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl"
+            >
+              Discover our office location
+            </h2>
+            <p className="mt-4 leading-7 text-gray-700 dark:text-gray-400">
+              RewaCiti is here to serve you. Whether you're looking to meet our team, discuss real
+              estate opportunities, or simply drop by for a chat, you're welcome at our office.
             </p>
           </div>
 
-          {/* Submit Button */}
-          <div className="sm:col-span-2 flex items-center justify-end">
-            <button
-              type="submit"
-              disabled={
-                !agreed ||
-                isSubmitting ||
-                !firstName.trim() ||
-                !lastName.trim() ||
-                !email.trim() ||
-                !phone.trim() ||
-                !message.trim()
-              }
-              className={`px-4 py-3 rounded-lg font-medium transition
-                  ${
-                    agreed &&
-                    !isSubmitting &&
-                    firstName.trim() &&
-                    lastName.trim() &&
-                    email.trim() &&
-                    phone.trim() &&
-                    message.trim()
-                      ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white"
-                      : "bg-gray-400 cursor-not-allowed text-gray-200"
-                  }`}
-            >
-              {isSubmitting ? "Sending..." : "Send Your Message"}
-            </button>
-          </div>
-        </form>
-        </div>
-      </section>
+          <div className="mt-10 grid gap-6 lg:grid-cols-2">
+            <div className={`${cardClass} flex flex-col`}>
+              <h3 style={SERIF} className="text-2xl font-semibold text-gray-900 dark:text-white">
+                Main Headquarters
+              </h3>
+              <p className="mt-2 text-gray-700 dark:text-gray-400">
+                51, Ramon Adedoyin way, Parakin, Ile-Ife, Osun State, Nigeria
+              </p>
+              <p className="mt-4 text-sm leading-6 text-gray-700 dark:text-gray-300">
+                Our main headquarters serve as the heart of RewaCiti. Located in the bustling city
+                center, this is where our core team of experts operates, driving the excellence and
+                innovation that define us.
+              </p>
 
-      <section className="bg-gray-300 dark:bg-black/30 py-4" id="Ouroffices">
-        <div className={PAGE_CONTAINER}>
-        <div className="flex-1 flex flex-col justify-center space-y-3 z-10 mb-6">
-          <img
-            src="/logo/Abstract Design (1).png"
-            alt="Icon"
-            className="w-13 object-contain"
-            loading="lazy"
-            decoding="async"
-          />
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <a href={`mailto:${EMAIL}`} className={pillLinkClass}>
+                  <FaEnvelope />
+                  <span>{EMAIL}</span>
+                </a>
+                <a href={`tel:${PHONE_TEL}`} className={pillLinkClass}>
+                  <FaPhone />
+                  <span>{PHONE_DISPLAY}</span>
+                </a>
+                <div className={`${pillLinkClass} hover:border-gray-300 hover:text-gray-900 dark:hover:text-white`}>
+                  <FiMapPin />
+                  <span>Parakin, Ile-Ife, Osun State</span>
+                </div>
+              </div>
 
-          <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-            Discover Our Office Location
-          </h1>
+              <a
+                href={`https://maps.google.com/?q=${MAP_COORDS}&entry=gps&g_st=awb`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#703BF7] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#9677df] sm:w-fit"
+              >
+                <FaDirections />
+                Get directions
+              </a>
+            </div>
 
-          <p className="text-gray-800 dark:text-gray-400 text-[14px] max-w-[95%]">
-            RewaCitty is here to serve you across multiple locations. Whether
-            you're looking to meet our team, discuss real estate opportunities,
-            or simply drop by for a chat, we have offices conveniently located
-            to serve your needs. Explore the categories below to find the
-            RewaCitty office nearest to you
-          </p>
-        </div>
-        <div className="border border-gray-600/30 rounded-xl p-6 dark:bg-[#1A1A1A] bg-white space-y-5">
-          {/* Title */}
-          <div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
-              Main Headquarters
-            </h3>
-            <span className="text-gray-800 dark:text-gray-400">
-              51, Ramon Adedoyin way, parakin, ile-ife, Osun State, Nigeria
-            </span>
-          </div>
-
-          {/* Description */}
-          <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-            Our main headquarters serve as the heart of RewaCiti.Located in the
-            bustling city center, this is where our core team of experts
-            operates, driving the excellence and innovation that define us.
-          </p>
-
-          {/* Contact Info */}
-          <div className="space-y-3 md:flex gap-5">
-            {/* Email */}
-            <a
-              href="mailto:info@RewaCiti.com"
-              className="flex items-center gap-3 text-gray-300 hover:text-[#703BF7] transition bg-black p-2 px-4 rounded-full w-full  border border-gray-600/70 md:w-fit justify-center"
-            >
-              <FaEnvelope />
-              <span>rewaciti@gmail.com</span>
-            </a>
-
-            {/* Phone */}
-            <a
-              href="tel:+2347065304417"
-              className="flex items-center gap-3 text-gray-300 hover:text-[#703BF7] transition bg-black p-2 px-4 rounded-full w-full border border-gray-600/70 md:w-fit justify-center"
-            >
-              <FaPhone />
-              <span>+234 706 530 6417</span>
-            </a>
-
-            {/* City */}
-            <div className="flex items-center gap-3 text-gray-300 bg-black  px-4 rounded-full w-full border border-gray-600/70 h-11 md:w-fit justify-center ">
-              <FiMapPin />
-              <span> parakin, ile-ife, Osun State.</span>
+            <div className="min-h-80 overflow-hidden rounded-3xl border border-gray-200 bg-white dark:border-white/10 dark:bg-[#1A1A1A]">
+              <iframe
+                title="RewaCiti office location"
+                src={`https://www.google.com/maps?q=${MAP_COORDS}&z=16&output=embed`}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-full min-h-80 w-full border-0"
+              />
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Action Button */}
-          <a
-            href="https://maps.google.com/?q=7.492329,4.537698&entry=gps&g_st=awb"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-3 bg-[#703BF7] hover:bg-[#5c2fe0] transition rounded-lg text-white font-medium w-full justify-center mt-4 lg:w-fit"
-          >
-            <FaDirections />
-            Get Direction
-          </a>
-        </div>
-        </div>
-      </section>
-      <section className="bg-gray-300 dark:bg-black/30">
-        <Footer />
-      </section>
+      <Footer />
     </div>
   );
 }

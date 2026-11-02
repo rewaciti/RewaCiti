@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { FiX, FiInfo } from "react-icons/fi";
+import { FiX, FiInfo, FiChevronDown } from "react-icons/fi";
 import type { Property } from "../../../types";
 import type { PurchaseResult } from "../../../types/realEstate";
 import { toast } from "sonner";
@@ -15,8 +15,18 @@ import { propertiesAPI } from "../services/propertiesAPI";
 import { addressOf } from "../services/toProperty";
 import { Link } from "react-router";
 
-interface PropertyPaymentModalProps {
+// Same serif as the Navbar (Fraunces is loaded in index.html)
+const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };
 
+const inputClass =
+  "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#703BF7] focus:ring-2 focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white";
+const labelClass = "mb-1.5 block text-sm font-medium text-gray-900 dark:text-white";
+const boxClass = "rounded-2xl bg-gray-100 p-4 dark:bg-white/5";
+const mutedClass = "text-gray-600 dark:text-gray-400";
+const primaryButtonClass =
+  "w-full cursor-pointer rounded-full bg-[#703BF7] px-5 py-3.5 text-base font-semibold text-white transition hover:bg-[#9677df] disabled:cursor-not-allowed disabled:opacity-50";
+
+interface PropertyPaymentModalProps {
   property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -92,7 +102,6 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
   const price = pricing.total;
   const byBankTransfer = onlineLimit > 0 && price > onlineLimit;
   const propertyAddress = addressOf(property);
-
   const finish = () => {
     // Paying or a bank transfer holds the place, so the page should show it
     void usePropertyStore.getState().fetchPropertyBySlug(property.slug);
@@ -171,6 +180,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
     }
   };
 
+  const canSubmit = !isSubmitting && !!fullName.trim() && !!email.trim() && !!phone.trim() && agreed;
 
   return (
     <Dialog.Root
@@ -182,201 +192,265 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
       modal={false}
     >
       <Dialog.Portal>
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-4 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto center-modal-animate" aria-describedby="property-payment-description">
-          <div className="flex justify-between items-center mb-4">
-            <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900">
-              {bankTransfer ? "Pay by Bank Transfer" : "Pay for Property"}
-            </Dialog.Title>
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm dialog-overlay-animate" />
+        <Dialog.Content
+          className="property-dialog-content responsive-sheet-animate fixed inset-x-0 bottom-0 z-50 max-h-[92dvh] w-full overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-t-3xl border border-gray-200 bg-white text-gray-900 shadow-2xl outline-none dark:border-white/10 dark:bg-[#1A1A1A] dark:text-white sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[90vh] sm:w-[calc(100%-2rem)] sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-3xl"
+          aria-describedby="property-payment-description"
+        >
+          <div className="sticky top-0 z-20 border-b border-gray-200 bg-white px-5 py-5 dark:border-white/10 dark:bg-[#1A1A1A] sm:px-6">
+          <div className="property-dialog-header flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <Dialog.Title style={SERIF} className="text-2xl font-semibold">
+                {bankTransfer ? "Pay by bank transfer" : "Pay for this property"}
+              </Dialog.Title>
+              <p className={`property-dialog-subtitle mt-1 truncate ${mutedClass}`}>
+                {property.name}
+              </p>
+            </div>
             <Dialog.Description className="sr-only">
               Complete your payment for {property.name} securely.
             </Dialog.Description>
             <Dialog.Close asChild>
-              <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600">
-                <FiX />
+              <button
+                type="button"
+                aria-label="Close"
+                className="cursor-pointer rounded-full p-2 transition hover:bg-gray-100 dark:hover:bg-white/10"
+              >
+                <FiX size={20} />
               </button>
             </Dialog.Close>
           </div>
-
-          <p id="property-payment-description" className="sr-only">Complete your property payment securely. All details are required for processing.</p>
-
-          <div className="mb-3 p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
-            <h4 className="text-sm font-semibold dark:text-white text-gray-900 mb-2">Property Details</h4>
-            <div className="space-y-1">
-              <p className="text-sm dark:text-gray-300 text-gray-700">
-                <span className="font-medium">Name:</span> {property.name}
-              </p>
-              <p className="text-sm dark:text-gray-300 text-gray-700">
-                <span className="font-medium">Location:</span> {propertyAddress}
-              </p>
-              {property.duration && (
-                <p className="text-sm dark:text-gray-300 text-gray-700">
-                  <span className="font-medium">Duration:</span> {property.duration}
-                </p>
-              )}
-            </div>
           </div>
 
-          {bankTransfer?.bankTransfer ? (
-            <div className="space-y-4">
-              <div className="p-4 bg-[#703BF7]/10 rounded-lg border border-[#703BF7]/30 space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Amount</span>
-                  <span className="text-lg font-bold text-[#703BF7]">₦{bankTransfer.bankTransfer.amount.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Payment reference</span>
-                  <span className="font-semibold dark:text-white text-gray-900">{bankTransfer.data.number}</span>
-                </div>
-                {bankTransfer.bankTransfer.details && (
-                  <div className="border-t border-[#703BF7]/20 pt-3">
-                    <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Pay into</p>
-                    <p className="text-sm dark:text-white text-gray-900 whitespace-pre-line">{bankTransfer.bankTransfer.details}</p>
-                  </div>
-                )}
-              </div>
-              <p className="text-sm dark:text-gray-300 text-gray-700">{bankTransfer.message}</p>
-              <button
-                type="button"
-                onClick={() => {
-                  onOpenChange(false);
-                  setBankTransfer(null);
-                }}
-                className="w-full font-medium py-3 rounded-md transition-colors bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
-              >
-                Done
-              </button>
-            </div>
-          ) : (
-            <>
-              <div className="mb-3 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                <h4 className="text-xs font-bold text-blue-500 uppercase mb-2 flex items-center gap-2">
-                  <FiInfo /> Safety Tips & Payment Info
-                </h4>
-                <ul className="text-[11px] text-gray-600 dark:text-gray-400 space-y-1 list-disc pl-4">
-                  <li>Ensure your daily transfer limit covers the total amount.</li>
-                  <li>High-value transactions may require additional bank authorization.</li>
-                  {onlineLimit > 0 && <li>Payments above ₦{onlineLimit.toLocaleString()} are made by direct bank transfer.</li>}
-                  <li>Your receipt is emailed to you once the payment is confirmed.</li>
-                </ul>
-              </div>
+          <p id="property-payment-description" className="sr-only">
+            Complete your property payment securely. All details are required for processing.
+          </p>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {isAuthenticated && customer ? (
-                  <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-2">
-                    <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Billing Information</h4>
-                    <div className="text-sm dark:text-gray-300 text-gray-700 space-y-1">
-                      <p><span className="font-semibold">Name:</span> {fullName}</p>
-                      <p><span className="font-semibold">Email:</span> {email}</p>
-                      <p><span className="font-semibold">Phone:</span> {phone || <span className="italic text-red-500">No phone number listed in profile</span>}</p>
+          <div className="px-5 pb-6 pt-5 sm:px-6">
+            {bankTransfer?.bankTransfer ? (
+              <div className="space-y-5">
+                <div className={`${boxClass} space-y-3`}>
+                  <div className="flex items-baseline justify-between gap-4">
+                    <span className={`text-sm ${mutedClass}`}>Amount</span>
+                    <span className="text-xl font-semibold text-[#703BF7] dark:text-[#b79bff]">
+                      ₦{bankTransfer.bankTransfer.amount.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-4">
+                    <span className={`text-sm ${mutedClass}`}>Payment reference</span>
+                    <span className="font-semibold">{bankTransfer.data.number}</span>
+                  </div>
+                  {bankTransfer.bankTransfer.details && (
+                    <div className="border-t border-gray-300 pt-3 dark:border-white/10">
+                      <p className={`mb-1 text-sm ${mutedClass}`}>Pay into</p>
+                      <p className="whitespace-pre-line text-sm font-medium">
+                        {bankTransfer.bankTransfer.details}
+                      </p>
                     </div>
+                  )}
+                </div>
+                <p className="text-sm leading-6 text-gray-700 dark:text-gray-300">
+                  {bankTransfer.message}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onOpenChange(false);
+                    setBankTransfer(null);
+                  }}
+                  className={primaryButtonClass}
+                >
+                  Done
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Property summary */}
+                <div className={boxClass}>
+                  <p style={SERIF} className="text-lg font-semibold">
+                    {property.name}
+                  </p>
+                  <p className={`mt-1 text-sm ${mutedClass}`}>
+                    {propertyAddress}
+                    {property.duration ? ` · ${property.duration}` : ""}
+                  </p>
+                </div>
+
+                {/* Billing information */}
+                {isAuthenticated && customer ? (
+                  <div className={boxClass}>
+                    <h4 className="mb-2 text-sm font-semibold">Billing information</h4>
+                    <dl className="space-y-1 text-sm">
+                      <div className="flex justify-between gap-4">
+                        <dt className={mutedClass}>Name</dt>
+                        <dd className="text-right font-medium">{fullName}</dd>
+                      </div>
+                      <div className="flex justify-between gap-4">
+                        <dt className={mutedClass}>Email</dt>
+                        <dd className="break-all text-right font-medium">{email}</dd>
+                      </div>
+                      <div className="flex justify-between gap-4">
+                        <dt className={mutedClass}>Phone</dt>
+                        <dd className="text-right font-medium">
+                          {phone || (
+                            <span className="font-normal italic text-red-500">
+                              No phone number in your profile
+                            </span>
+                          )}
+                        </dd>
+                      </div>
+                    </dl>
                   </div>
                 ) : (
-                  <div className="space-y-2 rounded-lg border border-gray-600/30 bg-gray-500/10 p-3">
+                  <div className="space-y-4">
                     <div>
-                      <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Full Name</label>
+                      <label className={labelClass} htmlFor="pay-name">
+                        Full name <span className="text-red-600">*</span>
+                      </label>
                       <input
+                        id="pay-name"
                         type="text"
                         required
                         value={guestName}
                         onChange={(e) => setGuestName(e.target.value)}
-                        className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                        className={inputClass}
                       />
                     </div>
                     <div>
-                      <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Email</label>
+                      <label className={labelClass} htmlFor="pay-email">
+                        Email <span className="text-red-600">*</span>
+                      </label>
                       <input
+                        id="pay-email"
                         type="email"
                         required
                         value={guestEmail}
                         onChange={(e) => setGuestEmail(e.target.value)}
-                        className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                        className={inputClass}
                       />
                     </div>
                     <div>
-                      <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Phone Number</label>
+                      <label className={labelClass} htmlFor="pay-phone">
+                        Phone number <span className="text-red-600">*</span>
+                      </label>
                       <input
+                        id="pay-phone"
                         type="tel"
                         required
                         value={guestPhone}
                         onChange={(e) => setGuestPhone(e.target.value)}
-                        className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                        placeholder="0803 123 4567"
+                        className={inputClass}
                       />
                     </div>
                   </div>
                 )}
 
-                <div className="p-3 bg-gray-500/10 border border-gray-600/30 rounded-lg">
-                  <p className="text-sm dark:text-gray-300 text-gray-700 text-center">
-                    Once your payment is confirmed, a verified agent will be assigned and our team will contact you within{" "}
-                    <span className="font-semibold text-[#703BF7]">24 hours</span> to schedule a meeting for necessary documentation and activities.
-                  </p>
-                </div>
-
-                {/* Breakdown Section */}
-                <div className="p-4 bg-gray-500/10 border border-gray-600/30 rounded-lg space-y-3">
-                  <h3 className="text-sm font-semibold dark:text-white text-gray-900 flex items-center gap-2">
-                    <FiInfo className="text-[#703BF7]" />
-                    Payment Breakdown
-                  </h3>
-
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">Property Cost</span>
-                    <span className="font-medium dark:text-white text-gray-900">₦{pricing.base.toLocaleString()}</span>
-                  </div>
-                  {pricing.charges
-                    .filter((charge) => charge.amount > 0)
-                    .map((charge) => (
-                      <div key={charge.name} className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">
-                          {charge.name}
-                          {charge.refundable && <span className="text-xs"> (refundable)</span>}
-                        </span>
-                        <span className="font-medium dark:text-white text-gray-900">₦{charge.amount.toLocaleString()}</span>
-                      </div>
-                    ))}
-                  {pricing.serviceCharge > 0 && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600 dark:text-gray-400">Service Charge</span>
-                      <span className="font-medium dark:text-white text-gray-900">₦{pricing.serviceCharge.toLocaleString()}</span>
+                {/* Payment breakdown */}
+                <div className={boxClass}>
+                  <h3 className="mb-3 text-sm font-semibold">Payment breakdown</h3>
+                  <dl className="space-y-2 border-b border-gray-300 pb-3 dark:border-white/10">
+                    <div className="flex items-baseline justify-between gap-4 text-sm">
+                      <dt className={mutedClass}>Property cost</dt>
+                      <dd>₦{pricing.base.toLocaleString()}</dd>
                     </div>
-                  )}
-
-                  <div className="flex justify-between text-lg font-bold border-t border-[#703BF7]/50 pt-2 text-[#703BF7]">
-                    <span>Total Due</span>
-                    <span>₦{price.toLocaleString()}</span>
+                    {pricing.charges
+                      .filter((charge) => charge.amount > 0)
+                      .map((charge) => (
+                        <div
+                          key={charge.name}
+                          className="flex items-baseline justify-between gap-4 text-sm"
+                        >
+                          <dt className={mutedClass}>
+                            {charge.name}
+                            {charge.refundable && <span className="text-xs"> (refundable)</span>}
+                          </dt>
+                          <dd>₦{charge.amount.toLocaleString()}</dd>
+                        </div>
+                      ))}
+                    {pricing.serviceCharge > 0 && (
+                      <div className="flex items-baseline justify-between gap-4 text-sm">
+                        <dt className={mutedClass}>Service charge</dt>
+                        <dd>₦{pricing.serviceCharge.toLocaleString()}</dd>
+                      </div>
+                    )}
+                  </dl>
+                  <div className="mt-3 flex items-baseline justify-between gap-4 font-semibold">
+                    <span>Total due</span>
+                    <span className="text-lg">₦{price.toLocaleString()}</span>
                   </div>
                 </div>
 
-                <div className="sm:col-span-2 flex items-center gap-3">
+                <p className="text-center text-sm leading-6 text-gray-700 dark:text-gray-300">
+                  Once your payment is confirmed, a verified agent will be assigned and our team
+                  will contact you within{" "}
+                  <span className="font-semibold text-[#703BF7] dark:text-[#b79bff]">24 hours</span>{" "}
+                  to schedule a meeting for necessary documentation and activities.
+                </p>
+
+                {/* Safety tips, collapsed by default */}
+                <details className="group rounded-2xl border border-gray-200 px-4 py-3 dark:border-white/10">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-sm font-semibold">
+                    <span className="flex items-center gap-2">
+                      <FiInfo className="text-[#703BF7] dark:text-[#b79bff]" /> Safety tips &amp;
+                      payment info
+                    </span>
+                    <FiChevronDown className="transition group-open:rotate-180" />
+                  </summary>
+                  <ul className={`mt-3 list-disc space-y-1.5 pl-5 text-xs leading-5 ${mutedClass}`}>
+                    <li>Ensure your daily transfer limit covers the total amount.</li>
+                    <li>High-value transactions may require additional bank authorization.</li>
+                    {onlineLimit > 0 && (
+                      <li>
+                        Payments above ₦{onlineLimit.toLocaleString()} are made by direct bank
+                        transfer.
+                      </li>
+                    )}
+                    <li>Your receipt is emailed to you once the payment is confirmed.</li>
+                  </ul>
+                </details>
+
+                <label className="flex cursor-pointer items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
                   <input
                     type="checkbox"
-                    className="mt-0.5"
+                    className="mt-0.5 h-4 w-4 cursor-pointer accent-[#703BF7]"
                     checked={agreed}
                     onChange={(e) => setAgreed(e.target.checked)}
                     required
                   />
-                  <p className="text-sm text-gray-700 dark:text-gray-300 ">
-                    I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
-                  </p>
-                </div>
+                  <span>
+                    I agree with the{" "}
+                    <Link
+                      to="/terms"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#9677df] dark:text-[#b79bff]"
+                    >
+                      Terms
+                    </Link>{" "}
+                    and{" "}
+                    <Link
+                      to="/privacy-policy"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#9677df] dark:text-[#b79bff]"
+                    >
+                      Privacy Policy
+                    </Link>
+                    .
+                  </span>
+                </label>
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed}
-                  className={`w-full font-medium py-3 rounded-md transition-colors mt-3 disabled:opacity-50 ${isSubmitting || !fullName.trim() || !email.trim() || !phone.trim() || !agreed
-                    ? "bg-gray-400 cursor-not-allowed text-gray-200"
-                    : "bg-[#703BF7] hover:bg-[#5c2fe0] text-white cursor-pointer"
-                    }`}
-                >
+                <button type="submit" disabled={!canSubmit} className={primaryButtonClass}>
                   {isSubmitting
                     ? "Processing..."
                     : byBankTransfer
-                      ? "Get Bank Transfer Details"
-                      : `Pay Total: ₦${price.toLocaleString()}`}
+                      ? "Get bank transfer details"
+                      : `Pay ₦${price.toLocaleString()}`}
                 </button>
               </form>
-            </>
-          )}
+            )}
+          </div>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

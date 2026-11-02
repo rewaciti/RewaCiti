@@ -149,15 +149,6 @@ export interface FAQ {
   answer: string;
 }
 
-export interface AreaMap {
-  id: string;
-  name: string;
-  city: string;
-  city_town?: string;
-  state: string;
-  areas: string[];
-}
-
 export interface ValueItem {
   id: number;
   title: string;

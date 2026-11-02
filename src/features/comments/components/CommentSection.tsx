@@ -6,11 +6,20 @@ import { NavLink } from "react-router";
 
 import { CommentCardSkeleton } from "../../../shared/components/ui/Skeletons";
 
-// Shared page container: centered, capped width, side padding that grows with screen size.
-const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+// Same container as the Navbar, Footer and every inner page.
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
+
+// Same serif as the Navbar (Fraunces is loaded in index.html)
+const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };
+
+const viewAllClass =
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#9677df]";
+const roundButton =
+  "cursor-pointer rounded-full border border-gray-300 bg-white p-2.5 text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:bg-[#101010] dark:text-white";
 
 function CommentSection() {
-  const { comments, loading, page, ITEMS_PER_PAGE, fetchComments, nextPage, prevPage } = useCommentStore();
+  const { comments, loading, page, ITEMS_PER_PAGE, fetchComments, nextPage, prevPage } =
+    useCommentStore();
   const [expanded, setExpanded] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
@@ -21,127 +30,135 @@ function CommentSection() {
 
   const currentComments: Comment[] = comments.slice(
     page * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE + ITEMS_PER_PAGE
+    page * ITEMS_PER_PAGE + ITEMS_PER_PAGE,
   );
 
   function truncateWords(text: string, limit: number): string {
     const words = text.split(" ");
-    return words.length <= limit
-      ? text
-      : words.slice(0, limit).join(" ");
+    return words.length <= limit ? text : words.slice(0, limit).join(" ");
   }
 
   return (
-    <div className={`${PAGE_CONTAINER} py-2 md:py-1`}>
-      <div>
-          <img
-            src="/logo/Abstract Design (1).png"
-            alt="Icon"
-            loading="lazy"
-            decoding="async"
-            className="w-13 h-13 object-contain"
-          />
-          <div className="flex justify-between items-center mb-4">
-        <div className="space-y-2 md:w-[80%]">
-          <h1 className="text-4xl font-semibold text-gray-900 dark:text-white">What Our Clients Say </h1>
-          <p className="dark:text-gray-400 text-gray-600 w-full">
-           Read the success stories and heartfelt testimonials from our valued clients. Discover why they chose RewaCiti for their real estate needs.
+    <div className={PAGE_CONTAINER}>
+      <div className="mb-8 flex items-end justify-between gap-4">
+        <div className="max-w-2xl">
+          <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">Testimonials</p>
+          <h2
+            style={SERIF}
+            className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl"
+          >
+            What our clients say
+          </h2>
+          <p className="mt-3 text-gray-700 dark:text-gray-400">
+            Read the success stories and heartfelt testimonials from our valued clients. Discover
+            why they chose RewaCiti for their real estate needs.
           </p>
         </div>
 
-        <NavLink
-          to="/AllComments"
-          className="border bg-[#703BF7] hover:bg-[#9677df] text-white px-4 py-2 rounded hover:text-white transition text-center hidden md:block"
-        >
-          View All
+        <NavLink to="/AllComments" className={`${viewAllClass} hidden md:inline-flex`}>
+          View all <FiArrowRight size={16} />
         </NavLink>
-      </div>  
-       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-        {loading ? (
-          [...Array(3)].map((_, i) => (
-            <CommentCardSkeleton key={i} />
-          ))
-        ) : (
-          currentComments.map((comment) => (
-            <div key={comment.id} className="rounded-xl p-5 text-gray-900 dark:text-white bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30">
-              {/* Rating */}
-              <p className="text-yellow-400 text-lg">
-                {"★".repeat(comment.rating)}{"☆".repeat(5 - comment.rating)}
-              </p>
-
-              {/* Summary */}
-              <h3 className="text-lg font-semibold mb-2">{comment.summary}</h3>
-
-              {/* Description */}
-              <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                {expanded[comment.id] ? comment.description : truncateWords(comment.description, 10)}
-                {comment.description.split(" ").length > 10 && (
-                  <button
-                    onClick={() =>
-                      setExpanded((prev) => ({ ...prev, [comment.id]: !prev[comment.id] }))
-                    }
-                    className="text-[#703BF7] ml-2 hover:underline"
-                  >
-                    {expanded[comment.id] ? "Show less" : "... Read more"}
-                  </button>
-                )}
-              </p>
-
-              {/* Reviewer Info */}
-              <div className="flex items-center gap-3 mt-4">
-                <img
-                  src={comment.img}
-                  alt={comment.name}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div>
-                  <p className="font-semibold">{comment.name}</p>
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                      comment.location
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 text-sm hover:text-[#703BF7] transition-colors"
-                  >
-                    {comment.location}
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
       </div>
-      <hr className="h-px bg-gray-600/50 border-0 w-full my-5" />
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:gap-6">
+        {loading
+          ? [...Array(3)].map((_, i) => <CommentCardSkeleton key={i} />)
+          : currentComments.map((comment) => {
+              const isLong = comment.description.split(" ").length > 10;
+              return (
+                <article
+                  key={comment.id}
+                  className="flex flex-col rounded-3xl border border-gray-200 bg-white p-6 text-gray-900 dark:border-white/10 dark:bg-[#1A1A1A] dark:text-white"
+                >
+                  {/* Rating */}
+                  <p
+                    className="text-lg tracking-wide text-amber-400"
+                    aria-label={`${comment.rating} out of 5 stars`}
+                  >
+                    {"★".repeat(comment.rating)}
+                    {"☆".repeat(5 - comment.rating)}
+                  </p>
+
+                  {/* Summary */}
+                  <h3 style={SERIF} className="mb-2 mt-2 text-lg font-semibold">
+                    {comment.summary}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-sm leading-6 text-gray-600 dark:text-gray-300">
+                    {expanded[comment.id]
+                      ? comment.description
+                      : truncateWords(comment.description, 10)}
+                    {isLong && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setExpanded((prev) => ({ ...prev, [comment.id]: !prev[comment.id] }))
+                        }
+                        className="ml-2 cursor-pointer font-semibold text-[#703BF7] hover:underline dark:text-[#b79bff]"
+                      >
+                        {expanded[comment.id] ? "Show less" : "... Read more"}
+                      </button>
+                    )}
+                  </p>
+
+                  {/* Reviewer Info */}
+                  <div className="mt-auto flex items-center gap-3 border-t border-gray-200 pt-5 dark:border-white/10">
+                    <img
+                      src={comment.img}
+                      alt={comment.name}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                    <div className="min-w-0">
+                      <p className="truncate font-semibold">{comment.name}</p>
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                          comment.location,
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block truncate text-sm text-gray-500 transition-colors hover:text-[#703BF7] dark:text-gray-400"
+                      >
+                        {comment.location}
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+      </div>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center gap-4 text-white">
-        <p className="text-sm text-black dark:text-white">{page + 1} of {totalPages}</p>
-        <NavLink
-          to="/AllComments"
-          className="border bg-[#703BF7] text-white px-4 py-2 rounded hover:bg-[#703BF7] hover:text-white transition text-center md:hidden"
-        >
-          View All
+      <div className="mt-8 flex items-center justify-between gap-4 border-t border-gray-400/60 pt-6 dark:border-white/10">
+        <p className="text-sm text-gray-800 dark:text-gray-300">
+          {page + 1} of {Math.max(1, totalPages)}
+        </p>
+
+        <NavLink to="/AllComments" className={`${viewAllClass} md:hidden`}>
+          View all
         </NavLink>
-        <div className="flex gap-2">
+
+        <div className="flex gap-3">
           <button
+            type="button"
             onClick={prevPage}
-            className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
+            className={roundButton}
             disabled={page === 0}
+            aria-label="Previous testimonials"
           >
-            <FiArrowLeft size={20} />
+            <FiArrowLeft size={18} />
           </button>
 
           <button
+            type="button"
             onClick={nextPage}
-            className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
+            className={roundButton}
             disabled={page >= totalPages - 1}
+            aria-label="Next testimonials"
           >
-            <FiArrowRight size={20} />
+            <FiArrowRight size={18} />
           </button>
         </div>
       </div>

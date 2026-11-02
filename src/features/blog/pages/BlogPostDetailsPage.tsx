@@ -6,7 +6,9 @@ import { useBlogStore } from "../store/useBlogStore";
 import type { BlogPost } from "../../../types";
 import { FiArrowLeft, FiCalendar, FiUser, FiTag } from "react-icons/fi";
 import { Helmet } from "react-helmet-async";
+import { Skeleton } from "../../../shared/components/ui/Skeleton";
 
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
 const BlogPostDetailsPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const { getPostBySlug, fetchPosts, loading, posts } = useBlogStore();
@@ -33,30 +35,43 @@ const BlogPostDetailsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-300 dark:bg-black/30 flex justify-center items-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#703BF7]"></div>
+      <div className="min-h-screen bg-gray-300 text-gray-900 dark:bg-black/30 dark:text-white">
+        <Navbar />
+        <main className={`${PAGE_CONTAINER} py-8 sm:py-10`}>
+          <Skeleton className="mb-8 h-5 w-28" />
+          <Skeleton className="mb-6 h-10 w-3/4" />
+          <Skeleton className="mb-8 h-72 w-full rounded-3xl sm:h-[400px]" />
+          <div className="mx-auto max-w-3xl space-y-4">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-4/5" />
+            <Skeleton className="mt-8 h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+          </div>
+        </main>
+        <Footer />
       </div>
     );
   }
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-gray-300 dark:bg-black/30">
+      <div className="min-h-screen bg-gray-300 text-gray-900 dark:bg-black/30 dark:text-white">
         <Navbar />
-        <div className="max-w-7xl mx-auto px-4 py-20 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Post Not Found</h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">The blog post you are looking for does not exist.</p>
-          <Link to="/blog" className="text-[#703BF7] hover:underline flex items-center justify-center gap-2">
-            <FiArrowLeft /> Back to Blog
+        <main className={`${PAGE_CONTAINER} py-20 text-center`}>
+          <h1 className="mb-4 text-3xl font-semibold text-gray-900 dark:text-white">Post not found</h1>
+          <p className="mb-8 text-gray-600 dark:text-gray-400">The blog post you are looking for does not exist.</p>
+          <Link to="/blog" className="inline-flex items-center justify-center gap-2 text-[#703BF7] hover:underline dark:text-[#b79bff]">
+            <FiArrowLeft /> Back to blog
           </Link>
-        </div>
+        </main>
         <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-300 dark:bg-black/30">
+    <div className="min-h-screen bg-gray-300 text-gray-900 dark:bg-black/30 dark:text-white">
       <Helmet>
         <title>{post.title} | RewaCiti Blog</title>
         <meta name="description" content={post.summary} />
@@ -86,22 +101,33 @@ const BlogPostDetailsPage = () => {
       </Helmet>
 
       <Navbar />
-      
-      <main className="max-w-4xl mx-auto px-4 py-12">
-        <Link to="/blog" className="inline-flex items-center gap-2 text-[#703BF7] hover:underline mb-8 font-medium">
-          <FiArrowLeft /> Back to Blog
-        </Link>
 
-        <article>
+      <header className="border-b border-gray-900/20 bg-linear-to-r from-gray-300/50 to-gray-400 py-5 dark:border-white/10 dark:from-neutral-600/20 dark:to-black/60">
+        <div className={`${PAGE_CONTAINER} space-y-1`}>
+          <Link to="/blog" className="mb-2 inline-flex items-center gap-2 text-sm font-medium text-[#703BF7] hover:underline dark:text-[#b79bff]">
+            <FiArrowLeft /> Back to blog
+          </Link>
+          <p className="text-xs font-semibold uppercase tracking-wide text-[#703BF7] dark:text-[#b79bff]">
+            {post.category}
+          </p>
+          <h1 className="max-w-4xl text-3xl font-semibold leading-tight text-gray-900 dark:text-white md:text-4xl">
+            {post.title}
+          </h1>
+        </div>
+      </header>
+
+      <main className={`${PAGE_CONTAINER} py-8 sm:py-10`}>
+        <article className="mx-auto max-w-4xl">
+
           <img 
             src={post.image} 
             alt={post.title} 
-            className="w-full h-[400px] rounded-3xl mb-8 border border-gray-700/40 object-cover"
+            className="mb-8 h-72 w-full rounded-3xl border border-gray-900/15 object-cover dark:border-white/10 sm:h-[400px]"
             loading="lazy"
             decoding="async"
           />
 
-          <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 dark:text-gray-400 mb-6">
+          <div className="mb-6 flex flex-wrap items-center gap-6 text-sm text-gray-600 dark:text-gray-400">
             <div className="flex items-center gap-2">
               <FiUser className="text-[#703BF7]" />
               <span>{post.author}</span>
@@ -116,11 +142,7 @@ const BlogPostDetailsPage = () => {
             </div>
           </div>
 
-          <h1 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">
-            {post.title}
-          </h1>
-
-          <div className="prose prose-lg dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed">
+          <div className="prose prose-lg dark:prose-invert max-w-none leading-relaxed text-gray-700 dark:text-gray-300">
             {post.content.split('\n').map((paragraph, index) => {
               if (!paragraph.trim()) return <div key={index} className="h-4" />;
               
@@ -138,11 +160,11 @@ const BlogPostDetailsPage = () => {
             })}
           </div>
 
-          <div className="mt-12 pt-8 border-t border-gray-700/40">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Tags:</h3>
+          <div className="mt-12 border-t border-gray-900/20 pt-8 dark:border-white/10">
+            <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Tags</h2>
             <div className="flex flex-wrap gap-2">
               {post.tags.map((tag) => (
-                <span key={tag} className="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-xs font-medium">
+                <span key={tag} className="rounded-full bg-gray-200 px-3 py-1 text-xs font-medium text-gray-700 dark:bg-white/10 dark:text-gray-300">
                   #{tag}
                 </span>
               ))}
@@ -152,21 +174,21 @@ const BlogPostDetailsPage = () => {
 
         {/* Related Posts Section */}
         {relatedPosts.length > 0 && (
-          <section className="mt-10 pt-7 border-t border-gray-700/40">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Related Posts</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <section className="mx-auto mt-10 max-w-4xl border-t border-gray-900/20 pt-8 dark:border-white/10">
+            <h2 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">Related posts</h2>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               {relatedPosts.map((related) => (
                 <Link key={related.id} to={`/blog/${related.slug}`} className="group">
-                  <div className="bg-white dark:bg-[#1A1A1A] rounded-2xl border border-gray-700/40 overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="h-full overflow-hidden rounded-2xl border border-gray-900/15 bg-white transition-shadow hover:shadow-lg dark:border-white/10 dark:bg-[#1A1A1A]">
                     <img
                       src={related.image}
                       alt={related.title}
                       loading="lazy"
                       decoding="async"
-                      className="w-full h-40 object-cover"
+                      className="h-40 w-full object-cover"
                     />
                     <div className="p-4">
-                      <h3 className="text-sm font-bold text-gray-900 dark:text-white line-clamp-2 group-hover:text-[#703BF7] transition-colors">
+                      <h3 className="line-clamp-2 text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#703BF7] dark:text-white">
                         {related.title}
                       </h3>
                     </div>

@@ -58,7 +58,7 @@ export default function CustomDropdown({
   return (
     <div
       ref={ref}
-      className={`relative ${open ? "z-50" : "z-10"} ${
+      className={`relative ${open ? "z-100" : "z-10"} ${
         disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
       } ${className}`}
     >
@@ -70,7 +70,7 @@ export default function CustomDropdown({
             setOpen(!open);
           }
         }}
-        className={`${buttonClassName || defaultButtonClass} ${
+        className={`${buttonClassName || defaultButtonClass} flex items-center justify-between ${
           disabled ? "cursor-not-allowed pointer-events-none" : "cursor-pointer"
         }`}
       >
@@ -82,7 +82,7 @@ export default function CustomDropdown({
         </div>
 
         <FiChevronDown
-          className={`transition ml-2 shrink-0 ${
+          className={`transition ml-auto shrink-0 ${
             open ? "rotate-180" : ""
           }`}
         />
@@ -90,7 +90,7 @@ export default function CustomDropdown({
 
       {!disabled && (
         <div
-          className={`absolute z-50 mt-2 min-w-full w-full rounded-xl border border-gray-700 bg-gray-300 dark:bg-neutral-900 shadow-xl overflow-hidden left-0 transition-all duration-200 ease-out origin-top transform ${
+          className={`absolute z-9999 mt-2 min-w-full w-full rounded-xl border border-gray-700 bg-gray-300 dark:bg-neutral-900 shadow-xl overflow-hidden left-0 transition-all duration-200 ease-out origin-top transform ${
             open
               ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"
               : "opacity-0 scale-y-95 -translate-y-2 pointer-events-none"

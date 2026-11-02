@@ -166,12 +166,17 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm center-modal-animate" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-3 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto center-modal-animate">
-          <div className="flex justify-between items-center mb-4">
+        <Dialog.Content className="property-dialog-content responsive-sheet-animate fixed inset-x-0 bottom-0 z-50 max-h-[92dvh] w-full overflow-y-auto rounded-t-3xl border border-gray-200 bg-white p-4 shadow-2xl dark:border-white/10 dark:bg-[#1A1A1A] sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[90vh] sm:w-[calc(100%-2rem)] sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl">
+          <div className="property-dialog-header mb-4 flex items-start justify-between border-b border-[#e7dfd4] pb-4 dark:border-white/10">
+            <div>
             <Dialog.Title className="text-xl font-semibold dark:text-white text-gray-900 flex items-center gap-2">
               <FiAlertTriangle className="text-red-500" />
               Report Agent
             </Dialog.Title>
+              <p className="property-dialog-subtitle mt-1 text-sm text-gray-600 dark:text-gray-400">
+                {property.name}
+              </p>
+            </div>
             <Dialog.Description className="sr-only">
               Report an agent for unprofessional behavior or suspected scams
               related to {property.name}.

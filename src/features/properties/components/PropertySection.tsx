@@ -3,17 +3,20 @@ import { usePropertyStore } from "../store/usePropertyStore";
 import PropertyCard from "./PropertyCard";
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
 import { NavLink } from "react-router";
+import { FiAlertCircle, FiArrowRight } from "react-icons/fi";
 
-// Shared page container: centered, capped width, side padding that grows with screen size.
-const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+// Same container as the Navbar, Footer and every inner page.
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
+
+// Same serif as the Navbar (Fraunces is loaded in index.html)
+const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };
+
+const viewAllClass =
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#9677df]";
 
 function PropertySection() {
-  const {
-    featuredProperties,
-    featuredLoading,
-    featuredError,
-    fetchFeaturedProperties,
-  } = usePropertyStore();
+  const { featuredProperties, featuredLoading, featuredError, fetchFeaturedProperties } =
+    usePropertyStore();
 
   useEffect(() => {
     fetchFeaturedProperties();
@@ -26,91 +29,65 @@ function PropertySection() {
   const hideOnMdOnly = "hidden sm:block md:hidden xl:block";
 
   return (
-    <div className={`${PAGE_CONTAINER} md:py-1 py-2`}>
-      <div className="">
-        <img
-          src="/logo/Abstract Design (1).png"
-          alt="Icon"
-          loading="lazy"
-          decoding="async"
-          className="w-13 h-13 object-contain"
-        />
-        <div className="flex justify-between items-center mb-4">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-semibold text-gray-900 dark:text-white">
-              Featured Properties
-            </h1>
-            <p className="dark:text-gray-400 text-gray-600 w-full">
-              Explore our handpicked selection of featured properties.
-            </p>
-          </div>
-
-          <NavLink
-            to="/properties"
-            className="border border-[#703BF7] px-4 py-2 rounded bg-[#703BF7] hover:bg-[#9677df] text-white transition text-center hidden sm:block"
+    <div className={PAGE_CONTAINER}>
+      <div className="mb-8 flex items-end justify-between gap-4">
+        <div className="max-w-2xl">
+          <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">Featured</p>
+          <h2
+            style={SERIF}
+            className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl"
           >
-            View All
-          </NavLink>
-        </div>
-      </div>
-      <div className=" py-2">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-          {featuredLoading ? (
-            [...Array(4)].map((_, i) => (
-              <div key={i} className={`${i === 3 ? hideOnMdOnly : ""} h-full`}>
-                <PropertyCardSkeleton />
-              </div>
-            ))
-          ) : featuredError ? (
-            <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 py-10 flex flex-col items-center justify-center text-center space-y-4 bg-white dark:bg-[#1A1A1A] border border-red-100 dark:border-red-900/30 rounded-xl">
-              <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-full">
-                <svg
-                  className="w-8 h-8 text-red-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <div className="space-y-1">
-                <p className="text-lg font-medium text-gray-900 dark:text-white">
-                  Something went wrong
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {featuredError}
-                </p>
-              </div>
-              <button
-                onClick={() => fetchFeaturedProperties()}
-                className="px-6 py-2 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white transition-all shadow-md active:scale-95"
-              >
-                Try Again
-              </button>
-            </div>
-          ) : (
-            currentProperties.map((item, i) => (
-              <div key={item.id} className={`${i === 3 ? hideOnMdOnly : ""} h-full`}>
-                <PropertyCard property={item} />
-              </div>
-            ))
-          )}
+            Featured properties
+          </h2>
+          <p className="mt-3 text-gray-700 dark:text-gray-400">
+            Explore our handpicked selection of featured properties.
+          </p>
         </div>
 
-        <hr className="my-4 h-px bg-gray-600/50 border-0 w-full" />
-        <div className="flex justify-end items-center gap-4 text-white">
-             <NavLink
-                to="/properties"
-                className="border border-[#703BF7] px-4 py-2 rounded bg-[#703BF7] hover:bg-[#9677df] text-white transition text-center sm:hidden"
-              >
-           View All
-          </NavLink>
-       </div>
+        <NavLink to="/properties" className={`${viewAllClass} hidden sm:inline-flex`}>
+          View all <FiArrowRight size={16} />
+        </NavLink>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:gap-6 xl:grid-cols-4">
+        {featuredLoading ? (
+          [...Array(4)].map((_, i) => (
+            <div key={i} className={`${i === 3 ? hideOnMdOnly : ""} h-full`}>
+              <PropertyCardSkeleton />
+            </div>
+          ))
+        ) : featuredError ? (
+          <div className="col-span-full flex flex-col items-center justify-center space-y-4 rounded-3xl border border-gray-200 bg-white py-12 text-center dark:border-white/10 dark:bg-[#1A1A1A]">
+            <div className="rounded-full bg-red-50 p-4 text-red-500 dark:bg-red-900/10">
+              <FiAlertCircle size={28} />
+            </div>
+            <div className="space-y-1">
+              <p style={SERIF} className="text-xl font-semibold text-gray-900 dark:text-white">
+                Something went wrong
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{featuredError}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => fetchFeaturedProperties()}
+              className="cursor-pointer rounded-full bg-[#703BF7] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df] active:scale-95"
+            >
+              Try again
+            </button>
+          </div>
+        ) : (
+          currentProperties.map((item, i) => (
+            <div key={item.id} className={`${i === 3 ? hideOnMdOnly : ""} h-full`}>
+              <PropertyCard property={item} />
+            </div>
+          ))
+        )}
+      </div>
+
+      <div className="mt-8 sm:hidden">
+        <NavLink to="/properties" className={`${viewAllClass} w-full`}>
+          View all <FiArrowRight size={16} />
+        </NavLink>
       </div>
     </div>
   );

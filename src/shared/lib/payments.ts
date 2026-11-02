@@ -15,6 +15,8 @@ interface PayInvoiceOptions {
   email: string;
   /** The invoice's payment page, for when a popup isn't possible. */
   paymentLink?: string | null;
+  /** Keep payment in the current app instead of navigating to the invoice page. */
+  allowRedirect?: boolean;
 }
 
 const goTo = (link: string): PaymentOutcome => {
@@ -27,20 +29,25 @@ const goTo = (link: string): PaymentOutcome => {
  * page; anything else goes to the invoice's payment page. The amount comes
  * from SabiFlow, never from the browser.
  */
-export const payInvoice = async ({ invoiceId, email, paymentLink }: PayInvoiceOptions): Promise<PaymentOutcome> => {
+export const payInvoice = async ({
+  invoiceId,
+  email,
+  paymentLink,
+  allowRedirect = true,
+}: PayInvoiceOptions): Promise<PaymentOutcome> => {
   let start: PaymentStart;
   try {
     const { data } = await realEstateApi.post<Sent<PaymentStart>>("/payments/start", { invoiceId, customerEmail: email });
     start = data.data;
   } catch (error) {
-    if (paymentLink) return goTo(paymentLink);
+    if (allowRedirect && paymentLink) return goTo(paymentLink);
     throw error;
   }
 
   const accessCode = start.accessCode;
   if (start.provider !== "paystack" || !accessCode) {
     const link = start.authorizationUrl ?? paymentLink;
-    if (link) return goTo(link);
+    if (allowRedirect && link) return goTo(link);
     throw new Error("Online payment isn't available right now.");
   }
 

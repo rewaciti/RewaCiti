@@ -154,11 +154,16 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/60 z-50 backdrop-blur-xs dialog-overlay-animate" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-lg dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-3 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto center-modal-animate">
-          <div className="flex justify-between items-center mb-4">
-            <Dialog.Title className="text-2xl font-semibold dark:text-white text-gray-900">
-              Inquire About This Property
-            </Dialog.Title>
+        <Dialog.Content className="property-dialog-content responsive-sheet-animate fixed inset-x-0 bottom-0 z-50 max-h-[92dvh] w-full overflow-y-auto rounded-t-3xl border border-gray-200 bg-white p-4 shadow-2xl dark:border-gray-600/30 dark:bg-[#1A1A1A] sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[90vh] sm:w-[calc(100%-2rem)] sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl">
+          <div className="property-dialog-header mb-4 flex items-start justify-between border-b border-gray-200 pb-4 dark:border-gray-600/30">
+            <div>
+              <Dialog.Title className="text-2xl font-semibold text-gray-900 dark:text-white">
+                Ask about this property
+              </Dialog.Title>
+              <p className="property-dialog-subtitle mt-1 text-base text-gray-600 dark:text-gray-400">
+                {property.name}
+              </p>
+            </div>
             <Dialog.Description className="sr-only">
               Send a question about {property.name} to the RewaCiti team.
             </Dialog.Description>
@@ -171,10 +176,10 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
 
           <form
             onSubmit={handleSubmit}
-            className="space-y-5 border border-gray-600/30 p-4 rounded-xl dark:bg-[#121212] bg-white"
+            className="space-y-5 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-600/30 dark:bg-[#121212]"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2">
                 <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
                   Full Name
                 </label>
@@ -190,20 +195,6 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
 
               <div>
                 <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  placeholder="Enter your Email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
                   Phone
                 </label>
                 <input
@@ -212,6 +203,20 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
+                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                />
+              </div>
+
+              <div>
+                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="Enter your Email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
                 />
               </div>

@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import * as Dialog from "@radix-ui/react-dialog";
-import { FiX } from "react-icons/fi";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useAuthStore } from "../../auth/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
@@ -9,12 +7,10 @@ import { getCookie, setCookie } from "../../../shared/lib/utils";
 import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
 import useRequestKey from "../../../shared/hooks/useRequestKey";
 import { requestsAPI } from "../services/requestsAPI";
-import CustomDropdown from "./CustomDropdown";
-
-interface ListPropertyModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
+import CustomDropdown from "../components/CustomDropdown";
+import Navbar from "../../../shared/components/Layout/Navbar";
+import Footer from "../../../shared/components/Layout/Footer";
+import { FiCheckCircle, FiClock, FiShield } from "react-icons/fi";
 
 const LISTER_ROLE_OPTIONS = [
   { label: "Real Estate Agent / Broker", value: "Real Estate Agent" },
@@ -24,17 +20,25 @@ const LISTER_ROLE_OPTIONS = [
   { label: "Other", value: "Other" },
 ];
 
-const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
-  open,
-  onOpenChange,
-}) => {
+const LISTING_PURPOSE_OPTIONS = [
+  { label: "For rent", value: "rent" },
+  { label: "For sale", value: "sale" },
+  { label: "Short-let", value: "short-let" },
+  { label: "For lease", value: "lease" },
+  { label: "Investment", value: "investment" },
+  { label: "Other", value: "other" },
+];
+
+const ListPropertyPage: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [listerRole, setListerRole] = useState("Real Estate Agent");
+  const [listingPurpose, setListingPurpose] = useState("");
   const [location, setLocation] = useState("");
   const [message, setMessage] = useState("");
   const [agreed, setAgreed] = useState(false);
@@ -52,6 +56,7 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
         setEmail(parsed.email || "");
         setPhone(parsed.phone || "");
         setListerRole(parsed.listerRole || "Real Estate Agent");
+        setListingPurpose(parsed.listingPurpose || "");
         setLocation(parsed.location || "");
         setMessage(parsed.message || "");
         setAgreed(parsed.agreed || false);
@@ -61,9 +66,9 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
     }
   }, []);
 
-  // Populate from authenticated profile only when the modal opens while logged in.
+  // Populate authenticated applicants from their profile.
   useEffect(() => {
-    if (!(open && isAuthenticated)) return;
+    if (!isAuthenticated) return;
 
     const populateProfileDetails = async () => {
       try {
@@ -90,7 +95,7 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
     };
 
     populateProfileDetails();
-  }, [open, isAuthenticated]);
+  }, [isAuthenticated]);
 
   // Persist draft to cookie whenever fields change (skip the very first render).
   const isFirstRender = useRef(true);
@@ -105,13 +110,14 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
       email,
       phone,
       listerRole,
+      listingPurpose,
       location,
       message,
       agreed,
     };
 
     setCookie(cookieKey, JSON.stringify(payload));
-  }, [name, email, phone, listerRole, location, message, agreed]);
+  }, [name, email, phone, listerRole, listingPurpose, location, message, agreed]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,7 +144,10 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
           consent: agreed,
           role: LISTER_ROLE_OPTIONS.find((option) => option.value === listerRole)?.label ?? listerRole,
           location: location.trim(),
-          message: message.trim() || undefined,
+          message: [
+            `Listing purpose: ${LISTING_PURPOSE_OPTIONS.find((option) => option.value === listingPurpose)?.label ?? listingPurpose}`,
+            message.trim(),
+          ].filter(Boolean).join("\n\n"),
         },
         requestKey.current(),
       );
@@ -156,6 +165,7 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
       setEmail("");
       setPhone("");
       setListerRole("Real Estate Agent");
+      setListingPurpose("");
       setLocation("");
       setMessage("");
       setAgreed(false);
@@ -166,12 +176,12 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
           email: "",
           phone: "",
           listerRole: "Real Estate Agent",
+          listingPurpose: "",
           location: "",
           message: "",
           agreed: false,
         })
       );
-      onOpenChange(false);
     } catch (error) {
       console.error("Error submitting lister request:", error);
       toast.error(errorMessage(error, "Failed to submit request. Please try again."));
@@ -186,34 +196,43 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
     Boolean(name.trim()) &&
     Boolean(email.trim()) &&
     Boolean(phone.trim()) &&
+    Boolean(listingPurpose) &&
     Boolean(location.trim());
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/60 z-50 backdrop-blur-xs dialog-overlay-animate" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-lg dark:bg-[#1A1A1A] bg-white border border-gray-600/30 p-3 rounded-xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto center-modal-animate">
-          <div className="flex justify-between items-center mb-4">
-            <Dialog.Title className="text-2xl font-semibold dark:text-white text-gray-900">
-              Become a Lister
-            </Dialog.Title>
-            <Dialog.Description className="sr-only">
-              Apply to list your properties on RewaCiti.
-            </Dialog.Description>
-            <Dialog.Close asChild>
-              <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors dark:text-gray-400 text-gray-600 cursor-pointer">
-                <FiX size={20} />
-              </button>
-            </Dialog.Close>
-          </div>
+    <div className="min-h-screen bg-gray-300 text-gray-900 dark:bg-black/30 dark:text-white">
+      <Navbar />
+      <header className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 py-5">
+        <div className="mx-auto w-full max-w-7xl space-y-1 px-4 sm:px-6 lg:px-10">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[#703BF7] dark:text-[#b79bff]">
+            List with RewaCiti
+          </p>
+          <h1 className="text-3xl text-gray-900 dark:text-white md:text-4xl">
+            Put your property in good hands
+          </h1>
+          <p className="max-w-[95%] text-[14px] text-gray-800 dark:text-gray-400">
+            Tell us a little about yourself and the properties you want to list. Our team will be in touch to verify your profile and help you get started.
+          </p>
+        </div>
+      </header>
+      <main className="bg-gray-200 py-10 dark:bg-black/50 sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,0.8fr)]">
+          <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#1A1A1A] sm:p-8">
+            <h2 className="mb-2 text-2xl font-semibold text-gray-900 dark:text-white">
+              Your application
+            </h2>
+            <p className="mb-6 text-sm text-gray-600 dark:text-gray-400">
+              Fields marked as required help us verify your listing request.
+            </p>
 
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-5 border border-gray-600/30 p-2 rounded-xl dark:bg-[#121212] bg-white"
-          >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-5"
+            >
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">
                   Full Name
                 </label>
                 <input
@@ -222,12 +241,12 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
                 />
               </div>
 
               <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">
                   Email
                 </label>
                 <input
@@ -236,12 +255,12 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
                 />
               </div>
 
               <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">
                   Phone
                 </label>
                 <input
@@ -250,12 +269,12 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
                 />
               </div>
 
               <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">
                   I am a...
                 </label>
                 <CustomDropdown
@@ -263,12 +282,25 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
                   value={listerRole}
                   options={LISTER_ROLE_OPTIONS}
                   onChange={(val) => setListerRole(val)}
-                  buttonClassName="w-full h-[42px] px-4 flex items-center justify-between rounded-md dark:bg-black/70 bg-gray-300 border border-gray-600/70 text-gray-900 dark:text-white text-sm"
+                  buttonClassName="w-full h-[46px] rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 dark:border-white/15 dark:bg-black/30 dark:text-white"
                 />
               </div>
 
               <div>
-                <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+                <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">
+                  What are you listing for?
+                </label>
+                <CustomDropdown
+                  placeholder="Choose a listing purpose"
+                  value={listingPurpose}
+                  options={LISTING_PURPOSE_OPTIONS}
+                  onChange={setListingPurpose}
+                  buttonClassName="w-full h-[46px] rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-900 dark:border-white/15 dark:bg-black/30 dark:text-white"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">
                   Primary Location
                 </label>
                 <input
@@ -277,28 +309,28 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
                   required
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-gray-700 dark:text-gray-300 text-sm mb-1 block">
+              <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">
                 About You
               </label>
               <textarea
-                rows={3}
+                rows={4}
                 placeholder="Tell us a bit about yourself and your experience as a lister."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
               />
             </div>
 
-            <div className="sm:col-span-2 flex items-center gap-1">
+            <div className="flex items-start gap-2">
               <input
                 type="checkbox"
-                className="mt-0.5"
+                className="mt-1 accent-[#703BF7]"
                 checked={agreed}
                 onChange={(e) => setAgreed(e.target.checked)}
                 required
@@ -316,24 +348,62 @@ const ListPropertyModal: React.FC<ListPropertyModalProps> = ({
               </p>
             </div>
 
-            <div className="sm:col-span-2 flex items-center justify-end">
+            <div className="flex flex-col-reverse gap-3 border-t border-gray-200 pt-5 dark:border-white/10 sm:flex-row sm:justify-between">
+              <button
+                type="button"
+                onClick={() => navigate("/properties")}
+                className="rounded-lg border border-gray-300 px-5 py-3 text-sm font-semibold text-gray-800 transition hover:bg-gray-100 dark:border-white/20 dark:text-white dark:hover:bg-white/10"
+              >
+                Back to properties
+              </button>
               <button
                 type="submit"
                 disabled={!isFormValid}
-                className={`px-4 py-3 rounded-lg font-medium transition
+                className={`rounded-lg px-5 py-3 text-sm font-semibold transition
                   ${isFormValid
-                    ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white"
-                    : "bg-gray-400 cursor-not-allowed text-gray-200"
+                    ? "bg-[#703BF7] text-white hover:bg-[#5c2fe0]"
+                    : "cursor-not-allowed bg-gray-400 text-gray-200"
                   }`}
               >
                 {isSubmitting ? "Submitting..." : "Submit Request"}
               </button>
             </div>
-          </form>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+            </form>
+          </section>
+
+          <aside className="space-y-4">
+            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1A1A1A]">
+              <h2 className="mb-5 text-xl font-semibold text-gray-900 dark:text-white">
+                Why list with us?
+              </h2>
+              <ul className="space-y-5">
+                <li className="flex gap-3">
+                  <FiCheckCircle className="mt-0.5 shrink-0 text-[#703BF7]" size={20} />
+                  <span className="text-sm leading-6 text-gray-700 dark:text-gray-300">
+                    Reach tenants, buyers, and professionals looking for their next property.
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <FiShield className="mt-0.5 shrink-0 text-[#703BF7]" size={20} />
+                  <span className="text-sm leading-6 text-gray-700 dark:text-gray-300">
+                    Our team verifies your details before helping you publish.
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <FiClock className="mt-0.5 shrink-0 text-[#703BF7]" size={20} />
+                  <span className="text-sm leading-6 text-gray-700 dark:text-gray-300">
+                    After you apply, a team member will contact you shortly.
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </aside>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 };
 
-export default ListPropertyModal;
+export default ListPropertyPage;

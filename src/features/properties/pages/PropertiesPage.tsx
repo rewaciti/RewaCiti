@@ -1,10 +1,21 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
+import { useNavigate, useSearchParams } from "react-router";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { propertiesAPI } from "../services/propertiesAPI";
 import type { PropertyLocations } from "../../../types/realEstate";
-import { FiArrowLeft, FiArrowRight, FiFilter, FiUsers, FiSliders, FiHome } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiArrowRight,
+  FiFilter,
+  FiUsers,
+  FiSliders,
+  FiHome,
+  FiSearch,
+  FiGrid,
+  FiMap,
+} from "react-icons/fi";
 import PropertyCard from "../components/PropertyCard";
 import PropertyMap from "../components/PropertyMap";
 import Footer from "../../../shared/components/Layout/Footer";
@@ -12,16 +23,27 @@ import useScrollToHash from "../../../shared/hooks/useScrollToHash";
 import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
 import CustomDropdown from "../../../features/properties/components/CustomDropdown.tsx";
 import PropertyFiltersModal from "../components/PropertyFiltersModal";
-import PreferenceModal from "../components/PreferenceModal";
-import CoRentModal from "../components/CoRentModal";
-import ListPropertyModal from "../components/ListPropertyModal";
 
-// Height of Navbar (top-16 = 4rem) — used to offset the sticky map panel
-const NAVBAR_HEIGHT_PX = 64;
+// Same container as the Navbar, Property Details, Account, Request, Service and Contact pages.
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
 
-// Shared page container: centered, capped width, side padding that grows with screen size.
-// Use the SAME classes inside your Navbar so the logo lines up with the content.
-const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+// Same serif as the Navbar / Home hero (Fraunces is loaded in index.html)
+const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };
+
+// Fallback Navbar height (h-16); the real height is measured below
+const NAVBAR_FALLBACK_PX = 64;
+
+const pillBase =
+  "shrink-0 cursor-pointer whitespace-nowrap rounded-full border px-4 py-2 text-xs font-semibold transition";
+const pillActive = "border-[#703BF7] bg-[#703BF7] text-white";
+const pillIdle =
+  "border-gray-300 bg-white text-gray-800 hover:border-[#703BF7] hover:text-[#703BF7] dark:border-white/15 dark:bg-[#101010] dark:text-gray-200";
+
+const dropdownButtonClass =
+  "flex h-10 w-full cursor-pointer items-center justify-between rounded-full border border-gray-300 bg-white px-4 text-xs font-semibold text-gray-900 transition hover:border-[#703BF7] disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/15 dark:bg-[#101010] dark:text-white";
+
+const cardShell =
+  "rounded-3xl border border-gray-200 bg-white dark:border-white/10 dark:bg-[#1A1A1A]";
 
 interface LocationHierarchyItem {
   state: string;
@@ -40,8 +62,78 @@ const flattenLocations = (states: PropertyLocations["data"]): LocationHierarchyI
     ]),
   );
 
+const ViewToggle = ({
+  viewMode,
+  setViewMode,
+}: {
+  viewMode: "list" | "map";
+  setViewMode: (mode: "list" | "map") => void;
+}) => {
+  const base =
+    "flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition";
+  const on = "bg-[#703BF7] text-white shadow-sm";
+  const off = "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white";
+  return (
+    <div className="flex shrink-0 select-none items-center gap-1 rounded-full border border-gray-300 bg-white p-1 dark:border-white/15 dark:bg-[#101010]">
+      <button
+        type="button"
+        onClick={() => setViewMode("list")}
+        aria-pressed={viewMode === "list"}
+        className={`${base} ${viewMode === "list" ? on : off}`}
+      >
+        <FiGrid size={14} /> List
+      </button>
+      <button
+        type="button"
+        onClick={() => setViewMode("map")}
+        aria-pressed={viewMode === "map"}
+        className={`${base} ${viewMode === "map" ? on : off}`}
+      >
+        <FiMap size={14} /> Map
+      </button>
+    </div>
+  );
+};
+
+const FilterPills = ({
+  options,
+  value,
+  onChange,
+}: {
+  options: { label: string; value: string }[];
+  value: string;
+  onChange: (value: string) => void;
+}) => (
+  <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <button
+      type="button"
+      onClick={() => onChange("")}
+      className={`${pillBase} ${value === "" ? pillActive : pillIdle}`}
+    >
+      All
+    </button>
+    {options
+      .filter((opt) => opt.value !== "")
+      .map((opt) => (
+        <button
+          type="button"
+          key={opt.value}
+          onClick={() => onChange(opt.value)}
+          className={`${pillBase} ${value === opt.value ? pillActive : pillIdle}`}
+        >
+          {opt.label}
+        </button>
+      ))}
+  </div>
+);
+
+const roundButton =
+  "cursor-pointer rounded-full border border-gray-300 bg-white p-2.5 text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:bg-[#101010] dark:text-white";
+
 function PropertySearchSection() {
   useScrollToHash();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const {
     properties,
     loading,
@@ -59,9 +151,9 @@ function PropertySearchSection() {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [state, setState] = useState("");
+  const [state, setState] = useState(() => searchParams.get("state") ?? "");
   const [city, setCity] = useState("");
-  const [area, setArea] = useState("");
+  const [area, setArea] = useState(() => searchParams.get("area") ?? "");
   const [university, setUniversity] = useState("");
   const [category, setCategory] = useState("");
   const [bedrooms, setBedrooms] = useState("");
@@ -70,32 +162,28 @@ function PropertySearchSection() {
 
   const [minPriceInput, setMinPriceInput] = useState("");
   const [maxPriceInput, setMaxPriceInput] = useState("");
-  const [priceRange, setPriceRange] = useState<[number, number]>([
-    0, 999999999,
-  ]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 999999999]);
 
   const [bedroomCount, setBedroomCount] = useState(0);
   const [sharedRoomOnly, setSharedRoomOnly] = useState(false);
 
   const [showFilters, setShowFilters] = useState(false);
-  const [isPreferenceModalOpen, setIsPreferenceModalOpen] = useState(false);
-  const [isCoRentModalOpen, setIsCoRentModalOpen] = useState(false);
-  const [isListPropertyOpen, setIsListPropertyOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
-  const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(
-    null,
-  );
+  const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(null);
   const [listingTypes, setListingTypes] = useState<{ label: string; value: string }[]>([]);
 
-  // Measures the sticky top bar's real height so the map panel sits exactly below it
+  // Measures the sticky Navbar and this page's top bar so the bar and the map panel
+  // sit exactly below them, whatever the screen size.
   const topBarRef = useRef<HTMLDivElement>(null);
-  const [mapTopOffset, setMapTopOffset] = useState(NAVBAR_HEIGHT_PX + 64);
+  const [navHeight, setNavHeight] = useState(NAVBAR_FALLBACK_PX);
+  const [topBarHeight, setTopBarHeight] = useState(64);
+  const mapTopOffset = navHeight + topBarHeight;
 
   useLayoutEffect(() => {
     const measure = () => {
-      if (topBarRef.current) {
-        setMapTopOffset(NAVBAR_HEIGHT_PX + topBarRef.current.offsetHeight);
-      }
+      const nav = document.querySelector<HTMLElement>("header.sticky");
+      if (nav) setNavHeight(nav.offsetHeight);
+      if (topBarRef.current) setTopBarHeight(topBarRef.current.offsetHeight);
     };
     measure();
     window.addEventListener("resize", measure);
@@ -140,9 +228,7 @@ function PropertySearchSection() {
     fetchCategories();
   }, [fetchCategories]);
 
-  const [locationHierarchy, setLocationHierarchy] = useState<
-    LocationHierarchyItem[]
-  >([]);
+  const [locationHierarchy, setLocationHierarchy] = useState<LocationHierarchyItem[]>([]);
 
   // Where there are listings, and the listing types in use, to filter by
   useEffect(() => {
@@ -187,12 +273,8 @@ function PropertySearchSection() {
   }, [bedrooms]);
 
   useEffect(() => {
-    const min =
-      minPriceInput.trim() === "" ? 0 : Math.max(0, Number(minPriceInput));
-    const max =
-      maxPriceInput.trim() === ""
-        ? 999999999
-        : Math.max(0, Number(maxPriceInput));
+    const min = minPriceInput.trim() === "" ? 0 : Math.max(0, Number(minPriceInput));
+    const max = maxPriceInput.trim() === "" ? 999999999 : Math.max(0, Number(maxPriceInput));
 
     if (Number.isNaN(min) || Number.isNaN(max)) return;
 
@@ -228,10 +310,7 @@ function PropertySearchSection() {
     listingType,
   ]);
 
-  const totalApiPages = Math.max(
-    1,
-    Math.ceil(totalProperties / ITEMS_PER_PAGE),
-  );
+  const totalApiPages = Math.max(1, Math.ceil(totalProperties / ITEMS_PER_PAGE));
   const currentProperties = properties;
 
   const handleNext = () => {
@@ -376,9 +455,7 @@ function PropertySearchSection() {
     const cityLower = selectedCity.toLowerCase();
     const validAreas = locationHierarchy
       .filter(
-        (i) =>
-          i.state.toLowerCase() === stateLower &&
-          i.city.toLowerCase() === cityLower,
+        (i) => i.state.toLowerCase() === stateLower && i.city.toLowerCase() === cityLower,
       )
       .map((i) => i.area.toLowerCase());
 
@@ -405,9 +482,7 @@ function PropertySearchSection() {
     setUniversity(selectedUniversity);
     if (selectedUniversity) {
       const match = locationHierarchy.find(
-        (i) =>
-          (i.university || "").toLowerCase() ===
-          selectedUniversity.toLowerCase(),
+        (i) => (i.university || "").toLowerCase() === selectedUniversity.toLowerCase(),
       );
       if (match) {
         if (match.state && match.state.toLowerCase() !== state.toLowerCase()) {
@@ -428,10 +503,7 @@ function PropertySearchSection() {
     })),
   ];
 
-  const listingTypeOptions = [
-    { label: "Listing Type", value: "" },
-    ...listingTypes,
-  ];
+  const listingTypeOptions = [{ label: "Listing Type", value: "" }, ...listingTypes];
 
   const activeFilterCount = [
     state,
@@ -463,8 +535,13 @@ function PropertySearchSection() {
     setBedrooms("");
   };
 
+  const resultsLabel =
+    !loading && !error
+      ? `${totalProperties} ${totalProperties === 1 ? "property" : "properties"}`
+      : "";
+
   return (
-    <div>
+    <div className="bg-gray-300 text-gray-900 dark:bg-black/30 dark:text-white">
       <Helmet>
         <title>Properties | RewaCiti</title>
         <meta
@@ -481,278 +558,132 @@ function PropertySearchSection() {
       </Helmet>
       <Navbar />
 
+      {/* Sticky search + filter bar */}
       <div
         ref={topBarRef}
-        className="border-b border-gray-400 dark:border-neutral-800 bg-gray-300 dark:bg-[#1A1A1A] text-gray-900 dark:text-white sticky top-16 z-20 p-0.5"
         id="Categories"
+        style={{ top: navHeight }}
+        className="sticky z-20 border-b border-gray-400 bg-gray-300 dark:border-neutral-800 dark:bg-[#1A1A1A]"
       >
-        <div className={`${PAGE_CONTAINER} py-3`}>
-          <div className="relative w-full max-w-3xl mx-auto">
-            <input
-              type="text"
-              placeholder="Search for properties..."
-              className="w-full pl-4 pr-28 py-2.5 rounded-lg dark:bg-black/70 bg-gray-100 text-gray-900 dark:text-white border border-gray-500 dark:border-gray-600 focus:outline-none dark:placeholder-gray-400 placeholder-gray-500 text-sm"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+        <div className={`${PAGE_CONTAINER} space-y-3 py-3`}>
+          <div className="flex items-center gap-3">
+            <div className="relative min-w-0 flex-1 lg:max-w-2xl">
+              <FiSearch
+                size={16}
+                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"
+              />
+              <input
+                type="text"
+                placeholder="Search for properties..."
+                aria-label="Search for properties"
+                className="w-full rounded-full border border-gray-300 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-500 focus:border-[#703BF7] focus:ring-2 focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
 
             <button
+              type="button"
               onClick={() => setShowFilters(true)}
-              className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-900 dark:text-white bg-white dark:bg-neutral-800 border border-gray-500 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition"
+              className="relative flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] dark:border-white/15 dark:bg-[#101010] dark:text-white"
             >
-              <FiFilter />
+              <FiFilter size={15} />
               <span>Filters</span>
               {activeFilterCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#703BF7] text-white text-[10px] font-semibold w-5 h-5 flex items-center justify-center rounded-full">
+                <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#703BF7] text-[10px] font-semibold text-white">
                   {activeFilterCount}
                 </span>
               )}
             </button>
           </div>
 
-          <div className="mt-3  w-full max-w-5xl mx-auto">
-            {/* Small screens: explicit, scrollable Listing Type pills + toggle */}
-            <div className="sm:hidden flex items-center gap-1.5">
-              <div className="flex-1 min-w-0 flex items-center gap-1.5 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                <button
-                  onClick={() => setListingType("")}
-                  className={`shrink-0 px-3 py-2 rounded-full border text-xs font-semibold transition ${listingType === ""
-                    ? "bg-[#703BF7] border-[#703BF7] text-white"
-                    : "border-gray-400 dark:border-neutral-700 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-900"
-                    }`}
-                >
-                  All
-                </button>
+          {/* Small screens: Listing Type pills + toggle */}
+          <div className="flex items-center gap-2 sm:hidden">
+            <FilterPills
+              options={listingTypeOptions}
+              value={listingType}
+              onChange={setListingType}
+            />
+            <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
+          </div>
 
-                {listingTypeOptions
-                  .filter((opt) => opt.value !== "")
-                  .map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setListingType(opt.value)}
-                      className={`shrink-0 px-3 py-2 rounded-full border text-xs font-semibold transition whitespace-nowrap ${listingType === opt.value
-                        ? "bg-[#703BF7] border-[#703BF7] text-white"
-                        : "border-gray-400 dark:border-neutral-700 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-900"
-                        }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
+          {/* sm to lg: Category pills + toggle */}
+          <div className="hidden items-center gap-2 sm:flex lg:hidden">
+            <FilterPills options={categoryOptions} value={category} onChange={setCategory} />
+            <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
+          </div>
+
+          {/* Large screens: location dropdowns + toggle */}
+          <div className="hidden items-center justify-between gap-3 overflow-visible lg:flex">
+            <div className="flex min-w-0 flex-1 flex-nowrap items-center gap-2 overflow-visible">
+              <div className="w-[215px] shrink-0">
+                <CustomDropdown
+                  placeholder="Landmark"
+                  value={university}
+                  options={[{ label: "All Landmarks", value: "" }, ...universityOptions]}
+                  onChange={handleUniversityChange}
+                  className="w-full"
+                  buttonClassName={dropdownButtonClass}
+                />
               </div>
 
-              <div className="shrink-0">
-                <div className="flex items-center gap-1 bg-gray-100 dark:bg-neutral-800/90 p-1 rounded-xl border border-gray-300 dark:border-neutral-700/60 select-none">
-                  <button
-                    onClick={() => setViewMode("list")}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "list" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25A2.25 2.25 0 0 1 8.25 10.5H6A2.25 2.25 0 0 1 3.75 8.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 8.25 20.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25h2.25A2.25 2.25 0 0 1 20.25 6v2.25a2.25 2.25 0 0 1-2.25 2.25h-2.25A2.25 2.25 0 0 1 13.5 8.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
-                    </svg>
-                    List
-                  </button>
-
-                  <button
-                    onClick={() => setViewMode("map")}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "map" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75 12 9l3-2.25M9 17.25l3 2.25 3-2.25M9 6.75v10.5m6-12.75v12.75M3 9v12l6-2.25m12-9.75v12l-6-2.25M9 19.5l6-2.25" />
-                    </svg>
-                    Map
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* sm to lg: Category pills + toggle */}
-            <div className="hidden sm:flex lg:hidden items-center gap-1.5 max-w-4xl mx-auto">
-              <div className="flex-1 min-w-0 flex items-center gap-1.5 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                <button
-                  onClick={() => setCategory("")}
-                  className={`shrink-0 px-3 py-2 rounded-full border text-xs font-semibold transition ${category === ""
-                    ? "bg-[#703BF7] border-[#703BF7] text-white"
-                    : "border-gray-400 dark:border-neutral-700 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-900"
-                    }`}
-                >
-                  All
-                </button>
-
-                {categoryOptions
-                  .filter((opt) => opt.value !== "")
-                  .map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setCategory(opt.value)}
-                      className={`shrink-0 px-3 py-2 rounded-full border text-xs font-semibold transition whitespace-nowrap ${category === opt.value
-                        ? "bg-[#703BF7] border-[#703BF7] text-white"
-                        : "border-gray-400 dark:border-neutral-700 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-900"
-                        }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
+              <div className="w-[165px] shrink-0">
+                <CustomDropdown
+                  placeholder="State"
+                  value={state}
+                  options={[{ label: "All States", value: "" }, ...stateOptions]}
+                  onChange={handleStateChange}
+                  className="w-full"
+                  buttonClassName={dropdownButtonClass}
+                />
               </div>
 
-              <div className="shrink-0">
-                <div className="flex items-center gap-1 bg-gray-100 dark:bg-neutral-800/90 p-1 rounded-xl border border-gray-300 dark:border-neutral-700/60 select-none">
-                  <button
-                    onClick={() => setViewMode("list")}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "list" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25A2.25 2.25 0 0 1 8.25 10.5H6A2.25 2.25 0 0 1 3.75 8.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 8.25 20.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25h2.25A2.25 2.25 0 0 1 20.25 6v2.25a2.25 2.25 0 0 1-2.25 2.25h-2.25A2.25 2.25 0 0 1 13.5 8.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
-                    </svg>
-                    List
-                  </button>
+              <div className="w-[190px] shrink-0">
+                <CustomDropdown
+                  placeholder={state ? "City" : "Select State first"}
+                  value={city}
+                  options={[{ label: "All Cities", value: "" }, ...cityOptions]}
+                  onChange={handleCityChange}
+                  disabled={!state}
+                  className="w-full"
+                  buttonClassName={dropdownButtonClass}
+                />
+              </div>
 
-                  <button
-                    onClick={() => setViewMode("map")}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "map" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75 12 9l3-2.25M9 17.25l3 2.25 3-2.25M9 6.75v10.5m6-12.75v12.75M3 9v12l6-2.25m12-9.75v12l-6-2.25M9 19.5l6-2.25" />
-                    </svg>
-                    Map
-                  </button>
-                </div>
+              <div className="w-[190px] shrink-0">
+                <CustomDropdown
+                  placeholder={!state ? "Select State first" : !city ? "Select City first" : "Area"}
+                  value={area}
+                  options={[{ label: "All Areas", value: "" }, ...areaOptions]}
+                  onChange={handleAreaChange}
+                  disabled={!state || !city}
+                  className="w-full"
+                  buttonClassName={dropdownButtonClass}
+                />
               </div>
             </div>
 
-            {/* Large screens: unchanged dropdown row */}
-            <div className="hidden lg:flex items-center justify-between gap-1.5 overflow-visible">
-              <div className="flex-1 min-w-0 overflow-visible">
-                <div className="flex flex-nowrap items-center gap-1 overflow-visible">
-                  <div className="min-w-[110px] sm:min-w-[170px] md:min-w-[180px] lg:min-w-[200px]">
-                    <CustomDropdown
-                      placeholder="University"
-                      value={university}
-                      options={[
-                        { label: "All Universities", value: "" },
-                        ...universityOptions,
-                      ]}
-                      onChange={handleUniversityChange}
-                      className="w-full"
-                      buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 bg-gray-100 font-bold dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
-                    />
-                  </div>
-
-                  <div className="min-w-[95px] sm:min-w-[150px] md:min-w-[170px] lg:min-w-[190px]">
-                    <CustomDropdown
-                      placeholder="State"
-                      value={state}
-                      options={[
-                        { label: "All States", value: "" },
-                        ...stateOptions,
-                      ]}
-                      onChange={handleStateChange}
-                      className="w-full"
-                      buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 bg-gray-100 font-bold dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
-                    />
-                  </div>
-
-                  <div className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]">
-                    <CustomDropdown
-                      placeholder={state ? "City" : "Select State first"}
-                      value={city}
-                      options={[
-                        { label: "All Cities", value: "" },
-                        ...cityOptions,
-                      ]}
-                      onChange={handleCityChange}
-                      disabled={!state}
-                      className="w-full"
-                      buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 font-bold bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
-                    />
-                  </div>
-
-                  <div className="min-w-[90px] sm:min-w-[140px] md:min-w-40 lg:min-w-[190px]">
-                    <CustomDropdown
-                      placeholder={
-                        !state
-                          ? "Select State first"
-                          : !city
-                            ? "Select City first"
-                            : "Area"
-                      }
-                      value={area}
-                      options={[
-                        { label: "All Areas", value: "" },
-                        ...areaOptions,
-                      ]}
-                      onChange={handleAreaChange}
-                      disabled={!state || !city}
-                      className="w-full"
-                      buttonClassName="w-full h-9 px-2.5 flex items-center justify-between rounded-lg border border-gray-500 font-bold bg-gray-100 dark:border-neutral-700 dark:bg-neutral-900 text-gray-900 dark:text-white text-[10px] sm:text-xs"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end shrink-0">
-                <div className="flex items-center gap-1 bg-gray-100 dark:bg-neutral-800/90 p-1 rounded-xl border border-gray-300 dark:border-neutral-700/60 select-none">
-                  <button
-                    onClick={() => setViewMode("list")}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "list" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="2"
-                      stroke="currentColor"
-                      className="w-3.5 h-3.5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25A2.25 2.25 0 0 1 8.25 10.5H6A2.25 2.25 0 0 1 3.75 8.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 8.25 20.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25h2.25A2.25 2.25 0 0 1 20.25 6v2.25a2.25 2.25 0 0 1-2.25 2.25h-2.25A2.25 2.25 0 0 1 13.5 8.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"
-                      />
-                    </svg>
-                    List
-                  </button>
-
-                  <button
-                    onClick={() => setViewMode("map")}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer ${viewMode === "map" ? "bg-[#703BF7] text-white shadow-md" : "text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}`}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="2"
-                      stroke="currentColor"
-                      className="w-3.5 h-3.5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 6.75 12 9l3-2.25M9 17.25l3 2.25 3-2.25M9 6.75v10.5m6-12.75v12.75M3 9v12l6-2.25m12-9.75v12l-6-2.25M9 19.5l6-2.25"
-                      />
-                    </svg>
-                    Map
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
           </div>
         </div>
       </div>
 
-      <div className="bg-gray-300 dark:bg-black/30">
-        <div className={`${PAGE_CONTAINER} pt-3`}>
+      <div>
+        <div className={`${PAGE_CONTAINER} pt-8`}>
           <section>
             {viewMode === "map" ? (
               loading ? (
-                <div className="w-full h-[600px] rounded-xl flex items-center justify-center bg-gray-200 dark:bg-neutral-800 animate-pulse text-gray-500 dark:text-gray-400">
+                <div className="flex h-[600px] w-full animate-pulse items-center justify-center rounded-3xl bg-gray-200 text-gray-500 dark:bg-neutral-800 dark:text-gray-400">
                   Loading interactive map...
                 </div>
               ) : currentProperties.length === 0 ? (
-                <div className="w-full h-[600px] rounded-xl flex flex-col items-center justify-center bg-gray-200 dark:bg-neutral-800/50 text-center p-6 border border-gray-300 dark:border-neutral-800">
-                  <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">
+                <div
+                  className={`${cardShell} flex h-[600px] w-full flex-col items-center justify-center p-6 text-center`}
+                >
+                  <h3 style={SERIF} className="mb-2 text-2xl font-semibold">
                     No properties found on the map
                   </h3>
-                  <p className="text-gray-800 dark:text-gray-400 text-sm">
+                  <p className="text-sm text-gray-700 dark:text-gray-400">
                     Try adjusting your search or filters to see results.
                   </p>
                 </div>
@@ -762,46 +693,43 @@ function PropertySearchSection() {
                     @keyframes propertyListShiftLeft { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
                     @keyframes propertyMapSlideInRight { from { opacity: 0; transform: translateX(32px); } to { opacity: 1; transform: translateX(0); } }
                   `}</style>
-                  <div className="flex flex-col lg:flex-row gap-4 items-start">
+                  <div className="flex flex-col items-start gap-6 lg:flex-row">
                     <div
-                      className="hidden lg:block lg:w-[42%] w-full"
-                      style={{
-                        animation: "propertyListShiftLeft 0.35s ease-out",
-                      }}
+                      className="hidden w-full lg:block lg:w-[42%]"
+                      style={{ animation: "propertyListShiftLeft 0.35s ease-out" }}
                     >
-                      <div>
-                        <div className="flex justify-between items-center mb-3 pt-4">
-                          <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
-                            <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl tracking-tight">
-                              Discover a World of Possibilities
-                            </h1>
-                          </div>
-                        </div>
+                      <div className="mb-5">
+                        <h1 style={SERIF} className="text-3xl font-semibold tracking-tight">
+                          Discover a world of possibilities
+                        </h1>
+                        {resultsLabel && (
+                          <p className="mt-1 text-sm text-gray-700 dark:text-gray-400">
+                            {resultsLabel}
+                          </p>
+                        )}
+                      </div>
 
-                        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                          {currentProperties.map((property) => (
-                            <div
-                              key={property.id}
-                              id={`property-card-${property.id}`}
-                              onMouseEnter={() =>
-                                setHoveredPropertyId(property.id)
-                              }
-                              onMouseLeave={() => setHoveredPropertyId(null)}
-                              className={`rounded-xl transition ${hoveredPropertyId === property.id ? "ring-2 ring-[#703BF7]" : "ring-1 ring-transparent"}`}
-                            >
-                              <PropertyCard property={property} />
-                            </div>
-                          ))}
-                        </div>
+                      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                        {currentProperties.map((property) => (
+                          <div
+                            key={property.id}
+                            id={`property-card-${property.id}`}
+                            onMouseEnter={() => setHoveredPropertyId(property.id)}
+                            onMouseLeave={() => setHoveredPropertyId(null)}
+                            className={`rounded-xl transition ${hoveredPropertyId === property.id ? "ring-2 ring-[#703BF7]" : "ring-1 ring-transparent"}`}
+                          >
+                            <PropertyCard property={property} />
+                          </div>
+                        ))}
                       </div>
                     </div>
 
-                    {/* Map panel: top/height driven by measured mapTopOffset so it starts exactly below the top bar and fills the rest of the viewport */}
+                    {/* Map panel: top/height driven by the measured offsets so it starts exactly below the bars and fills the rest of the viewport */}
                     <div
-                      className="w-full lg:w-[58%] lg:sticky z-10"
+                      className="z-10 w-full overflow-hidden rounded-3xl lg:sticky lg:w-[58%]"
                       style={{
-                        top: `${mapTopOffset}px`,
-                        height: `calc(100vh - ${mapTopOffset}px)`,
+                        top: `${mapTopOffset + 16}px`,
+                        height: `calc(100vh - ${mapTopOffset + 32}px)`,
                         minHeight: 420,
                         animation: "propertyMapSlideInRight 0.4s ease-out",
                       }}
@@ -815,10 +743,7 @@ function PropertySearchSection() {
                           setHoveredPropertyId(id);
                           document
                             .getElementById(`property-card-${id}`)
-                            ?.scrollIntoView({
-                              behavior: "smooth",
-                              block: "center",
-                            });
+                            ?.scrollIntoView({ behavior: "smooth", block: "center" });
                         }}
                       />
                     </div>
@@ -827,75 +752,68 @@ function PropertySearchSection() {
               )
             ) : (
               <div>
-                <div className="flex justify-between items-center mb-6 pt-4">
-                  <div className="flex-1 flex flex-col justify-center space-y-3 z-10">
-                    <img
-                      src="/logo/Abstract Design (1).png"
-                      alt="Icon"
-                      className="w-13 object-contain"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <div className="flex justify-between items-center">
-                      <div className="space-y-3">
-                        <h1 className="text-gray-900 dark:text-white md:text-4xl text-3xl">
-                          Discover Available Properties
-                        </h1>
-                        <p className="text-gray-800 dark:text-gray-400 text-[14px]">
-                          Explore a curated selection of properties and find the
-                          perfect place to live, rent, or invest in locations
-                          that fit your lifestyle.
-                        </p>
-                      </div>
-                    </div>
+                <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+                  <div>
+                    <h1 style={SERIF} className="text-3xl font-semibold sm:text-4xl">
+                      Discover available properties
+                    </h1>
+                    <p className="mt-2 max-w-2xl text-sm text-gray-700 dark:text-gray-400">
+                      Explore a curated selection of properties and find the perfect place to
+                      live, rent, or invest in locations that fit your lifestyle.
+                    </p>
                   </div>
+                  {resultsLabel && (
+                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-300">
+                      {resultsLabel}
+                    </p>
+                  )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:gap-6 xl:grid-cols-4">
                   {loading ? (
-                    [...Array(6)].map((_, i) => (
-                      <PropertyCardSkeleton key={i} />
-                    ))
+                    [...Array(8)].map((_, i) => <PropertyCardSkeleton key={i} />)
                   ) : error ? (
                     // Not "no results": the search didn't reach us, so changing filters won't help
-                    <div className="col-span-full py-10 flex flex-col items-center justify-center text-center space-y-4 bg-white dark:bg-[#1A1A1A] border border-red-100 dark:border-red-900/30 rounded-xl">
+                    <div
+                      className={`${cardShell} col-span-full flex flex-col items-center justify-center space-y-4 py-12 text-center`}
+                    >
                       <div className="space-y-1">
-                        <p className="text-lg font-medium text-gray-900 dark:text-white">
+                        <p style={SERIF} className="text-xl font-semibold">
                           We couldn't load properties
                         </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
                           Check your internet connection and try again.
                         </p>
                       </div>
                       <button
                         type="button"
                         onClick={() => fetchProperties(apiPage, filters)}
-                        className="px-6 py-2 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white transition-all shadow-md active:scale-95 cursor-pointer"
+                        className="cursor-pointer rounded-full bg-[#703BF7] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df] active:scale-95"
                       >
-                        Try Again
+                        Try again
                       </button>
                     </div>
                   ) : currentProperties.length === 0 ? (
-                    <div className="col-span-full text-center py-10">
-                      <h3 className="text-gray-900 dark:text-white text-xl font-semibold mb-2">
+                    <div
+                      className={`${cardShell} col-span-full flex flex-col items-center py-12 text-center`}
+                    >
+                      <h3 style={SERIF} className="mb-2 text-2xl font-semibold">
                         No properties found
                       </h3>
-                      <p className="text-gray-800 dark:text-gray-400 text-sm">
-                        Try adjusting your search or filters
+                      <p className="text-sm text-gray-700 dark:text-gray-400">
+                        Try adjusting your search or filters.
                       </p>
-                      <p className="text-gray-800 dark:text-gray-400 text-sm mb-4">
-                        Make sure your connection is stable
+                      <p className="mb-6 text-sm text-gray-700 dark:text-gray-400">
+                        Make sure your connection is stable.
                       </p>
-                      <div className="flex flex-wrap items-center justify-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => setIsPreferenceModalOpen(true)}
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#703BF7] hover:bg-[#5c2fe0] text-white text-sm font-medium transition cursor-pointer"
-                        >
-                          <FiSliders size={16} />
-                          <span>Tell Us Your Preference</span>
-                        </button>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => navigate("/request-property")}
+                        className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-[#703BF7] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df]"
+                      >
+                        <FiSliders size={16} />
+                        <span>Request a property</span>
+                      </button>
                     </div>
                   ) : (
                     currentProperties.map((item) => (
@@ -907,28 +825,31 @@ function PropertySearchSection() {
             )}
           </section>
 
-          <hr className="my-4 border-gray-600/50" />
-
-          <div className="flex justify-between items-center text-white">
-            <p className="text-sm text-black dark:text-white">
+          {/* Pagination */}
+          <div className="mt-10 flex items-center justify-between border-t border-gray-400 pb-10 pt-6 dark:border-white/10">
+            <p className="text-sm text-gray-800 dark:text-gray-300">
               Page {apiPage} of {totalApiPages}
             </p>
 
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               <button
+                type="button"
                 onClick={handlePrev}
                 disabled={apiPage === 1}
-                className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
+                aria-label="Previous page"
+                className={roundButton}
               >
-                <FiArrowLeft size={20} />
+                <FiArrowLeft size={18} />
               </button>
 
               <button
+                type="button"
                 onClick={handleNext}
                 disabled={apiPage >= totalApiPages}
-                className="px-2 py-2 border border-gray-500 rounded-full disabled:opacity-30 bg-gray-600"
+                aria-label="Next page"
+                className={roundButton}
               >
-                <FiArrowRight size={20} />
+                <FiArrowRight size={18} />
               </button>
             </div>
           </div>
@@ -968,140 +889,105 @@ function PropertySearchSection() {
         listingTypeOptions={listingTypeOptions}
       />
 
-      <PreferenceModal
-        open={isPreferenceModalOpen}
-        onOpenChange={setIsPreferenceModalOpen}
-        categories={categoryOptions.filter((c) => c.value !== "")}
-      />
-
-      <CoRentModal
-        open={isCoRentModalOpen}
-        onOpenChange={setIsCoRentModalOpen}
-      />
-
-      <ListPropertyModal
-        open={isListPropertyOpen}
-        onOpenChange={setIsListPropertyOpen}
-      />
-
+      {/* Tailored services */}
       <section
-        className="bg-gray-300 dark:bg-black/30 py-8"
         id="AddedServices"
+        className="scroll-mt-24 bg-gray-200 py-14 dark:bg-black/50 sm:py-20"
       >
         <div className={PAGE_CONTAINER}>
-          <div className="mb-6 space-y-3">
-            <img
-              src="/logo/Abstract Design (1).png"
-              alt="Icon"
-              className="w-13 object-contain"
-              loading="lazy"
-              decoding="async"
-            />
-            <div className="flex justify-between items-center">
-              <div className="space-y-2">
-                <h2 className="text-gray-900 dark:text-white md:text-4xl text-3xl font-semibold">
-                  Tailored Services for you
-                </h2>
-                <p className="text-gray-800 dark:text-gray-400 text-[14px]">
-                  Explore specialized solutions designed to meet your housing needs — from submitting custom preferences and co-renting to listing your properties.
-                </p>
-              </div>
-            </div>
+          <div className="max-w-2xl">
+            <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">
+              More ways we can help
+            </p>
+            <h2 style={SERIF} className="mt-2 text-3xl font-semibold sm:text-4xl">
+              Tailored services for you
+            </h2>
+            <p className="mt-4 leading-7 text-gray-700 dark:text-gray-400">
+              Explore specialized solutions designed to meet your housing needs, from submitting
+              custom preferences and co-renting to listing your properties.
+            </p>
           </div>
 
-          <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
             {/* Card 1: Property Preference */}
-            <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-4 shadow-lg flex flex-col justify-between space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
-                    <FiSliders size={18} />
-                  </div>
-                  <h3 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
-                    Can't find preference?
-                  </h3>
+            <div className={`${cardShell} flex flex-col justify-between gap-6 p-6 sm:p-7`}>
+              <div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#703BF7]/10 text-[#703BF7] dark:text-[#b79bff]">
+                  <FiSliders size={22} />
                 </div>
-                <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
-                  Ready to take the first step toward your dream property? Fill out
-                  the preference form, and our real estate experts will work to
-                  find your perfect match.
+                <h3 style={SERIF} className="mt-4 text-xl font-semibold">
+                  Can't find what you want?
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-gray-700 dark:text-gray-400">
+                  Ready to take the first step toward your dream property? Fill out the
+                  preference form, and our real estate experts will work to find your perfect
+                  match.
                 </p>
               </div>
-
-              <div>
-                <button
-                  type="button"
-                  onClick={() => setIsPreferenceModalOpen(true)}
-                  className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold text-sm transition-all shadow-lg hover:shadow-purple-500/25 cursor-pointer flex items-center justify-center gap-2 "
-                >
-                  <FiSliders size={16} />
-                  <span>Submit Your Preference</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => navigate("/request-property")}
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df] sm:w-fit"
+              >
+                <FiSliders size={16} />
+                <span>Request a property</span>
+              </button>
             </div>
 
             {/* Card 2: Looking to Co-Rent */}
-            <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-4 shadow-lg flex flex-col justify-between space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
-                    <FiUsers size={18} />
-                  </div>
-                  <h3 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
-                    Looking to Co-Rent?
-                  </h3>
+            <div className={`${cardShell} flex flex-col justify-between gap-6 p-6 sm:p-7`}>
+              <div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#703BF7]/10 text-[#703BF7] dark:text-[#b79bff]">
+                  <FiUsers size={22} />
                 </div>
-                <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
-                  Want to split rent and share verified properties in your preferred area?
-                  Submit your co-rent request and let us connect you with compatible co-tenants.
+                <h3 style={SERIF} className="mt-4 text-xl font-semibold">
+                  Looking to co-rent?
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-gray-700 dark:text-gray-400">
+                  Want to split rent and share verified properties in your preferred area? Submit
+                  your co-rent request and let us connect you with compatible co-tenants.
                 </p>
               </div>
-
-              <div>
-                <button
-                  type="button"
-                  onClick={() => setIsCoRentModalOpen(true)}
-                  className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold text-sm transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 border border-gray-700/40"
-                >
-                  <FiUsers size={16} />
-                  <span>Find Co-Rent Partners</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => navigate("/co-rent")}
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df] sm:w-fit"
+              >
+                <FiUsers size={16} />
+                <span>Find co-rent partners</span>
+              </button>
             </div>
 
             {/* Card 3: List Your Property */}
-            <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1A1A1A] border border-gray-400/30 dark:border-gray-700/50 p-4 shadow-lg flex flex-col justify-between space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 shrink-0 rounded-xl bg-[#703BF7]/10 flex items-center justify-center text-[#703BF7]">
-                    <FiHome size={18} />
-                  </div>
-                  <h3 className="text-gray-900 dark:text-white text-lg md:text-xl font-bold">
-                    Have a property to list?
-                  </h3>
+            <div
+              className={`${cardShell} flex flex-col justify-between gap-6 p-6 sm:col-span-2 sm:p-7 lg:col-span-1`}
+            >
+              <div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#703BF7]/10 text-[#703BF7] dark:text-[#b79bff]">
+                  <FiHome size={22} />
                 </div>
-                <p className="text-gray-700 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
-                  Are you a landlord, property owner, or agent? Reach thousands of verified tenants, professionals, and buyers by listing your property on RewaCiti.
+                <h3 style={SERIF} className="mt-4 text-xl font-semibold">
+                  Have a property to list?
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-gray-700 dark:text-gray-400">
+                  Are you a landlord, property owner, or agent? Reach thousands of verified
+                  tenants, professionals, and buyers by listing your property on RewaCiti.
                 </p>
               </div>
-
-              <div>
-                <button
-                  type="button"
-                  onClick={() => setIsListPropertyOpen(true)}
-                  className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#703BF7] hover:bg-[#9677df] text-white font-semibold text-sm transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 border border-gray-700/40"
-                >
-                  <FiHome size={16} />
-                  <span>Apply to List</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => navigate("/list-property")}
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df] sm:w-fit"
+              >
+                <FiHome size={16} />
+                <span>Apply to list</span>
+              </button>
             </div>
           </div>
         </div>
       </section>
-      <section className="bg-gray-300 dark:bg-black/30">
-        <Footer />
-      </section>
+
+      <Footer />
     </div>
   );
 }
