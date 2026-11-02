@@ -1,5 +1,5 @@
 import Navbar from "../../../shared/components/Layout/Navbar";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import { Helmet } from "react-helmet-async";
 import {
   FiMapPin,
@@ -94,6 +94,7 @@ const tileClass = (index: number, total: number) => {
 };
 
 function PropertyDetails() {
+  const navigate = useNavigate();
   const [showAllSpecifications, setShowAllSpecifications] = useState(false);
   const [showAllSpecialNotes, setShowAllSpecialNotes] = useState(false);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
@@ -142,7 +143,14 @@ function PropertyDetails() {
 
     const { isAuthenticated } = useAuthStore.getState();
     if (!isAuthenticated) {
-      toast.error("Please log in to access your wishlist.");
+      toast("Sign in to save properties", {
+        duration: 5000,
+        closeButton: false,
+        action: {
+          label: "Log in",
+          onClick: () => navigate("/auth/login"),
+        },
+      });
       return;
     }
 

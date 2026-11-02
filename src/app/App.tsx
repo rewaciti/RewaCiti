@@ -58,12 +58,12 @@ function App() {
           toastOptions={{
             className: "font-sans",
             style: {
-              borderRadius: '0.625rem',
+              borderRadius: "1rem",
             },
             classNames: {
-              toast: "bg-white dark:bg-[#1A1A1A] text-gray-900 dark:text-white border-purple-100 dark:border-gray-800 shadow-xl border",
+              toast: "rounded-2xl bg-white dark:bg-[#1A1A1A] text-gray-900 dark:text-white border-gray-200 dark:border-white/10 shadow-lg border",
               description: "text-gray-500 dark:text-gray-400",
-              actionButton: "bg-[#703BF7] text-white hover:bg-[#9677df] transition-colors",
+              actionButton: "rounded-full bg-[#703BF7] px-4 text-white hover:bg-[#5c2fe0] transition-colors",
               cancelButton: "bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-white/20 transition-colors",
               success: "text-[#0F766E] dark:text-[#5EEAD4]",
               error: "text-[#B91C1C] dark:text-[#FCA5A5]",

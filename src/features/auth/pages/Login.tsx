@@ -273,10 +273,11 @@ const Login = () => {
 
                 <button
                   type="button"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-gray-700 transition hover:text-[#703BF7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#703BF7] dark:text-gray-300 dark:hover:text-[#b79bff]"
                 >
-                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                  {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                 </button>
               </div>
             </div>
@@ -300,12 +301,13 @@ const Login = () => {
 
                   <button
                     type="button"
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                     onClick={() =>
                       setShowConfirmPassword(!showConfirmPassword)
                     }
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-gray-700 transition hover:text-[#703BF7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#703BF7] dark:text-gray-300 dark:hover:text-[#b79bff]"
                   >
-                    {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+                    {showConfirmPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                   </button>
                 </div>
 

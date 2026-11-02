@@ -535,11 +535,6 @@ function PropertySearchSection() {
     setBedrooms("");
   };
 
-  const resultsLabel =
-    !loading && !error
-      ? `${totalProperties} ${totalProperties === 1 ? "property" : "properties"}`
-      : "";
-
   return (
     <div className="bg-gray-300 text-gray-900 dark:bg-black/30 dark:text-white">
       <Helmet>
@@ -702,11 +697,6 @@ function PropertySearchSection() {
                         <h1 style={SERIF} className="text-3xl font-semibold tracking-tight">
                           Discover a world of possibilities
                         </h1>
-                        {resultsLabel && (
-                          <p className="mt-1 text-sm text-gray-700 dark:text-gray-400">
-                            {resultsLabel}
-                          </p>
-                        )}
                       </div>
 
                       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
@@ -762,11 +752,6 @@ function PropertySearchSection() {
                       live, rent, or invest in locations that fit your lifestyle.
                     </p>
                   </div>
-                  {resultsLabel && (
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-300">
-                      {resultsLabel}
-                    </p>
-                  )}
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:gap-6 xl:grid-cols-4">

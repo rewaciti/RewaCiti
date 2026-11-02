@@ -136,7 +136,14 @@ const Navbar = () => {
               type="button"
               onClick={() => {
                 if (!isAuthenticated) {
-                  toast.error("Please log in to access your wishlist.");
+                  toast("Sign in to save properties", {
+                    duration: 5000,
+                    closeButton: false,
+                    action: {
+                      label: "Log in",
+                      onClick: () => navigate("/auth/login"),
+                    },
+                  });
                   return;
                 }
                 navigate("/auth/profile?tab=saved");

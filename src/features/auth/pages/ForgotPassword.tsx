@@ -156,8 +156,16 @@ const ForgotPassword = () => {
 
       <Navbar />
 
-      <div className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white dark:bg-[#1A1A1A] rounded-xl p-10 shadow-lg border border-gray-600/30">
+      <main className="grid flex-1 grid-cols-1 md:min-h-[calc(100vh-112px)] md:grid-cols-2">
+        <div className="relative hidden min-h-[420px] overflow-hidden md:block">
+          <img
+            src="/images/home-hero.jpg"
+            alt="Modern home at sunset"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </div>
+        <section className="flex items-center justify-center px-6 py-12 sm:px-10 lg:px-16">
+          <div className="w-full max-w-lg">
           {/* Back Button */}
           <button
             onClick={() => navigate("/auth/login")}
@@ -316,7 +324,8 @@ const ForgotPassword = () => {
             </Link>
           </p>
         </div>
-      </div>
+        </section>
+      </main>
 {/* 
       <Footer /> */}
     </div>

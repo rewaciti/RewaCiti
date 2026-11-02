@@ -185,7 +185,14 @@ function PropertyCard({ property }: PropertyCardProps) {
 
     const { isAuthenticated } = useAuthStore.getState();
     if (!isAuthenticated) {
-      toast.error("Please log in to access your wishlist.");
+      toast("Sign in to save properties", {
+        duration: 5000,
+        closeButton: false,
+        action: {
+          label: "Log in",
+          onClick: () => navigate("/auth/login"),
+        },
+      });
       return;
     }
 
