@@ -538,7 +538,7 @@ const DealCard = ({
                     >
                       <FiFileText size={16} />
                       {downloadingId === String(payment.invoiceId)
-                        ? "Downloading…"
+                        ? "Loading…"
                         : "View Reciept"}
                     </button>
                   )}
