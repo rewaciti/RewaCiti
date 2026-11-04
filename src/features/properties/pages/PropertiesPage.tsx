@@ -390,12 +390,13 @@ function PropertySearchSection() {
 
   // 4. Available Universities (filtered by state if state is selected)
   const universityOptions = useMemo(() => {
+    if (!state) return [];
     const uniMap = new Map<string, string>();
-    const stateLower = state ? state.toLowerCase() : "";
+    const stateLower = state.toLowerCase();
 
     locationHierarchy.forEach((item) => {
       if (item.university) {
-        if (!stateLower || item.state.toLowerCase() === stateLower) {
+        if (item.state.toLowerCase() === stateLower) {
           const lower = item.university.toLowerCase();
           if (!uniMap.has(lower)) {
             uniMap.set(lower, item.university);
@@ -415,6 +416,7 @@ function PropertySearchSection() {
     if (!selectedState) {
       setCity("");
       setArea("");
+      setUniversity("");
       return;
     }
 
@@ -480,19 +482,6 @@ function PropertySearchSection() {
 
   const handleUniversityChange = (selectedUniversity: string) => {
     setUniversity(selectedUniversity);
-    if (selectedUniversity) {
-      const match = locationHierarchy.find(
-        (i) => (i.university || "").toLowerCase() === selectedUniversity.toLowerCase(),
-      );
-      if (match) {
-        if (match.state && match.state.toLowerCase() !== state.toLowerCase()) {
-          setState(match.state);
-        }
-        if (match.city && match.city.toLowerCase() !== city.toLowerCase()) {
-          setCity(match.city);
-        }
-      }
-    }
   };
 
   const categoryOptions = [
@@ -611,23 +600,24 @@ function PropertySearchSection() {
           {/* Large screens: location dropdowns + toggle */}
           <div className="hidden items-center justify-between gap-3 overflow-visible lg:flex">
             <div className="flex min-w-0 flex-1 flex-nowrap items-center gap-2 overflow-visible">
-              <div className="w-[215px] shrink-0">
-                <CustomDropdown
-                  placeholder="Landmark"
-                  value={university}
-                  options={[{ label: "All Landmarks", value: "" }, ...universityOptions]}
-                  onChange={handleUniversityChange}
-                  className="w-full"
-                  buttonClassName={dropdownButtonClass}
-                />
-              </div>
-
               <div className="w-[165px] shrink-0">
                 <CustomDropdown
                   placeholder="State"
                   value={state}
                   options={[{ label: "All States", value: "" }, ...stateOptions]}
                   onChange={handleStateChange}
+                  className="w-full"
+                  buttonClassName={dropdownButtonClass}
+                />
+              </div>
+
+              <div className="w-[215px] shrink-0">
+                <CustomDropdown
+                  placeholder={state ? "Landmark" : "Select State first"}
+                  value={university}
+                  options={[{ label: "All Landmarks", value: "" }, ...universityOptions]}
+                  onChange={handleUniversityChange}
+                  disabled={!state}
                   className="w-full"
                   buttonClassName={dropdownButtonClass}
                 />

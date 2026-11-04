@@ -122,24 +122,25 @@ export default function PropertyFiltersModal({
                 <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Location</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">Landmark</label>
-                    <CustomDropdown
-                      placeholder="All Landmarks"
-                      value={university}
-                      options={[{ label: "All Landmarks", value: "" }, ...universityOptions]}
-                      onChange={(val) => onUniversityChange?.(val)}
-                      className="w-full"
-                      buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent text-gray-900 dark:text-white text-sm"
-                    />
-                  </div>
-
-                  <div>
                     <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">State</label>
                     <CustomDropdown
                       placeholder="All States"
                       value={state}
                       options={[{ label: "All States", value: "" }, ...stateOptions]}
                       onChange={(val) => onStateChange?.(val)}
+                      className="w-full"
+                      buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent text-gray-900 dark:text-white text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">Landmark</label>
+                    <CustomDropdown
+                      placeholder={state ? "All Landmarks" : "Select State first"}
+                      value={university}
+                      options={[{ label: "All Landmarks", value: "" }, ...universityOptions]}
+                      onChange={(val) => onUniversityChange?.(val)}
+                      disabled={!state}
                       className="w-full"
                       buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent text-gray-900 dark:text-white text-sm"
                     />

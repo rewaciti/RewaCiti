@@ -151,7 +151,7 @@ function Home() {
             className="max-w-3xl text-4xl font-semibold leading-[1.1] text-white sm:text-5xl lg:text-6xl"
           >
             Real Estate,{" "}
-            <em className="font-medium text-[#E3B17A]">
+            <em className="font-medium text-[#B79BFF]">
               Beyond Properties.
             </em>
           </h1>

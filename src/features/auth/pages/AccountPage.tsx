@@ -133,8 +133,16 @@ const downloadFile = async (url: string, baseName: string) => {
 
   const receiptUrl = new URL(url, baseURL);
   const apiUrl = new URL(baseURL);
+  if (receiptUrl.protocol !== "http:" && receiptUrl.protocol !== "https:") {
+    throw new Error("This receipt link is not a valid web address.");
+  }
   if (receiptUrl.origin !== apiUrl.origin) {
-    throw new Error("This receipt link is hosted outside the account payment service.");
+    const anchor = document.createElement("a");
+    anchor.href = receiptUrl.href;
+    anchor.target = "_blank";
+    anchor.rel = "noopener noreferrer";
+    anchor.click();
+    return;
   }
 
   const { data: blob } = await realEstateApi.get<Blob>(receiptUrl.href, {
@@ -529,7 +537,9 @@ const DealCard = ({
                       className={`${pillButtonClass} px-5 py-2.5!`}
                     >
                       <FiFileText size={16} />
-                      {downloadingId === String(payment.invoiceId) ? "Downloading…" : "Receipt"}
+                      {downloadingId === String(payment.invoiceId)
+                        ? "Downloading…"
+                        : "View Reciept"}
                     </button>
                   )}
                 </div>
@@ -746,11 +756,13 @@ const VisitCard = ({
 
   return (
     <article className={cardClass}>
-      <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-start sm:justify-between">
-        <h2 style={SERIF} className={`self-start text-xl sm:text-2xl ${headingClass}`}>
+      <div className="flex flex-col items-end gap-2 md:flex-row md:items-start md:justify-between">
+        <h2 style={SERIF} className={`order-2 self-start text-xl sm:text-2xl md:order-1 ${headingClass}`}>
           {visit.propertyTitle}
         </h2>
-        <StatusChip status={visit.status} />
+        <div className="order-1 md:order-2">
+          <StatusChip status={visit.status} />
+        </div>
       </div>
       <p className={`mt-2 ${mutedClass}`}>
         {formatVisitWhen(visit.date, visit.start)} ·{" "}
