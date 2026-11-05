@@ -1,6 +1,6 @@
 import { Skeleton } from "./Skeleton";
 
-const PAGE_CONTAINER = "mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-10";
+const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
 
 export function PropertyCardSkeleton() {
   return (
@@ -73,136 +73,149 @@ export function FAQCardSkeleton() {
 
 export function PropertyDetailsSkeleton() {
   return (
-    <div className="bg-gray-300 dark:bg-black/30 min-h-screen">
-        {/* Header Section — mirrors Name/Location pill + share/heart + price */}
-        <div className={`${PAGE_CONTAINER} py-5 sm:flex sm:justify-between sm:items-center sm:gap-6 sm:py-6`}>
-          {/* Title + location pill */}
-          <div className="min-w-0 flex-1 space-y-2">
+    <div className="min-h-screen bg-gray-300 dark:bg-black/30">
+      <div className="bg-gray-200 dark:bg-black/50">
+        <div className={PAGE_CONTAINER}>
+          <Skeleton className="mt-4 h-4 w-28" />
+          <div className="pb-5 pt-3 sm:pt-4">
+            <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-6 w-24 rounded-full" />
+                <Skeleton className="h-6 w-20 rounded-full" />
+              </div>
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-9 w-20 rounded-lg" />
+                <Skeleton className="h-9 w-20 rounded-lg" />
+              </div>
+            </div>
+            <Skeleton className="h-9 w-3/4 sm:h-10 sm:w-1/2" />
+            <Skeleton className="mt-3 h-4 w-2/3 sm:w-1/3" />
+          </div>
+        </div>
+        <section className={`${PAGE_CONTAINER} pb-8`}>
+          <div className="overflow-hidden rounded-3xl sm:rounded-[28px]">
+            <Skeleton className="aspect-4/3 w-full rounded-none sm:hidden" />
+            <div className="hidden h-[360px] grid-cols-4 grid-rows-2 gap-2 sm:grid lg:h-[440px]">
+              <Skeleton className="col-span-2 row-span-2 rounded-none" />
+              <Skeleton className="rounded-none" />
+              <Skeleton className="rounded-none" />
+              <Skeleton className="rounded-none" />
+              <Skeleton className="rounded-none" />
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section
+        className={`${PAGE_CONTAINER} grid grid-cols-1 gap-x-16 pb-28 lg:grid-cols-[minmax(0,1fr)_380px] lg:pb-10 xl:gap-x-24`}
+      >
+        <div className="min-w-0">
+          <div className="border-b border-gray-600/50 py-8">
             <Skeleton className="h-7 w-2/3 sm:w-1/2" />
-            <Skeleton className="h-7 w-48 rounded-sm" />
+            <div className="mt-3 flex gap-5">
+              <Skeleton className="h-4 w-28" />
+              <Skeleton className="h-4 w-32" />
+            </div>
           </div>
 
-          {/* Share/heart + price */}
-          <div className="flex items-center justify-between sm:justify-end gap-4 mt-2 sm:mt-0 shrink-0">
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-9 w-9 rounded-full" />
-              <Skeleton className="h-9 w-9 rounded-full" />
+          <div className="space-y-8">
+            <div className="border-b border-gray-600/50 py-8">
+              <Skeleton className="mb-4 h-7 w-48" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+              </div>
+              <Skeleton className="mt-3 h-4 w-24" />
             </div>
-            <div className="flex flex-col items-end gap-1.5">
-              <Skeleton className="h-3 w-20 rounded" />
-              <Skeleton className="h-7 w-28 rounded" />
+            <div className="border-b border-gray-600/50 py-8">
+              <Skeleton className="mb-5 h-7 w-32" />
+              <div className="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <Skeleton key={index} className="h-10 w-full" />
+                ))}
+              </div>
+              <Skeleton className="mt-6 h-12 w-44 rounded-lg" />
+            </div>
+            <div className="border-b border-gray-600/50 py-8">
+              <Skeleton className="mb-5 h-7 w-52" />
+              <div className="space-y-4">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <Skeleton key={index} className="h-6 w-3/4" />
+                ))}
+              </div>
+            </div>
+            <div className="border-b border-gray-600/50 py-8">
+              <Skeleton className="mb-5 h-7 w-56" />
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <Skeleton key={index} className="h-12 w-full rounded-lg" />
+                ))}
+              </div>
+              <Skeleton className="mt-5 h-12 w-40 rounded-lg" />
+            </div>
+            <div className="border-b border-gray-600/50 py-8">
+              <Skeleton className="mb-5 h-7 w-44" />
+              <div className="space-y-5">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="space-y-3">
+                    <Skeleton className="h-5 w-32" />
+                    <Skeleton className="h-12 w-full rounded-lg" />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="border-b border-gray-600/50 py-8">
+              <Skeleton className="mb-2 h-7 w-36" />
+              <Skeleton className="mb-5 h-4 w-2/3" />
+              <Skeleton className="h-[280px] w-full rounded-xl sm:h-[400px]" />
             </div>
           </div>
         </div>
-        {/* Gallery Section */}
-        <section className={`${PAGE_CONTAINER} pb-10`}>
-          <div className="p-2 border border-gray-600/30 rounded-xl">
-            {/* Thumbnail Row — matches h-25 w-30 md:w-40 thumbs */}
-            <div className="flex gap-2 overflow-x-auto mb-3 p-1 border border-gray-600/30 rounded-xl bg-black/20">
-              {[...Array(9)].map((_, i) => (
-                <Skeleton
-                  key={i}
-                  className="h-[100px] w-[120px] md:w-40 shrink-0 rounded-lg"
-                />
-              ))}
-            </div>
-            {/* Main Image Display — 2-up on sm+, like the live flex track */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <Skeleton className="w-full h-[55vh] sm:h-[55vh] lg:h-[70vh] rounded-xl" />
-              <Skeleton className="w-full h-[45vh] sm:h-[55vh] lg:h-[70vh] rounded-xl hidden sm:block" />
-            </div>
-            {/* Controls */}
-            <div className="flex justify-center items-center mt-4 gap-4 bg-black/20 p-1 rounded-full w-fit mx-auto">
-              <Skeleton className="h-8 w-8 rounded-full" />
-              <Skeleton className="h-2 w-24" />
-              <Skeleton className="h-8 w-8 rounded-full" />
-            </div>
-          </div>
-        </section>
 
-        {/* Property Video Tour placeholder */}
-        <section className={`${PAGE_CONTAINER} pb-10`}>
-          <div className="p-2 border border-gray-600/30 rounded-xl">
-            <Skeleton className="h-7 w-48 mb-4" />
-            <Skeleton className="w-full h-[40vh] md:h-[70vh] rounded-xl" />
+        <aside className="hidden lg:block">
+          <div className="sticky top-28 pt-8">
+            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-[0_6px_16px_rgba(0,0,0,0.12)] dark:border-gray-600/30 dark:bg-[#1A1A1A]">
+              <Skeleton className="h-8 w-40" />
+              <Skeleton className="mt-5 h-12 w-full rounded-lg" />
+              <Skeleton className="mt-3 h-12 w-full rounded-lg" />
+              <Skeleton className="mx-auto mt-4 h-4 w-32" />
+            </div>
           </div>
-        </section>
+        </aside>
+      </section>
 
-        {/* Description & Features Section */}
-        <section className={`${PAGE_CONTAINER} mb-8 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:gap-10`}>
-          <div className="px-4 py-10 border border-gray-600/30 rounded-xl flex-1 h-fit dark:bg-[#1A1A1A] bg-white">
-            <Skeleton className="h-7 w-32 mb-3" />
-            <div className="space-y-2 mb-8">
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-3/4" />
+      <section className="bg-gray-200 dark:bg-black/50">
+        <div className={`${PAGE_CONTAINER} border-t border-gray-600/50 py-10 dark:border-gray-600/50`}>
+          <div className="mb-6 flex items-end justify-between gap-4">
+            <div className="w-full space-y-2">
+              <Skeleton className="h-7 w-56" />
+              <Skeleton className="h-4 w-2/3" />
             </div>
-            {/* Bedrooms / bathrooms / category row */}
-            <div className="grid grid-cols-2 sm:flex sm:flex-row sm:items-center gap-4 border-t border-gray-600/30 pt-2">
-              <div className="space-y-1.5 px-2">
-                <Skeleton className="h-3 w-16" />
-                <Skeleton className="h-6 w-20" />
-              </div>
-              <div className="space-y-1.5 px-2">
-                <Skeleton className="h-3 w-16" />
-                <Skeleton className="h-6 w-20" />
-              </div>
-              <div className="space-y-1.5 px-2">
-                <Skeleton className="h-3 w-16" />
-                <Skeleton className="h-6 w-24" />
-              </div>
-            </div>
+            <Skeleton className="hidden h-10 w-24 shrink-0 rounded-lg md:block" />
           </div>
-          <div className="px-4 py-6 dark:bg-[#1A1A1A] bg-white border border-gray-600/30 rounded-xl flex-1 h-fit space-y-4">
-            <Skeleton className="h-7 w-48 mb-1" />
-            {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-12 w-full rounded" />
-            ))}
-          </div>
-        </section>
-
-        {/* Related Properties Section Skeleton */}
-        <section className={`${PAGE_CONTAINER} py-4 mb-8`}>
-          <div className="mb-8 space-y-3">
-            <Skeleton className="h-8 w-12 rounded" />
-            <div className="flex items-center justify-between gap-3">
-              <Skeleton className="h-8 w-56" />
-              <Skeleton className="h-6 w-11 rounded-full" />
-            </div>
-            <Skeleton className="h-4 w-2/3" />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             <PropertyCardSkeleton />
             <PropertyCardSkeleton />
             <PropertyCardSkeleton />
-            <div className="hidden xl:block">
-              <PropertyCardSkeleton />
-            </div>
-          </div>
-        </section>
-
-        {/* Actions Bottom Bar Skeleton (mirrors price summary + 4 buttons) */}
-        <div className="sticky bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-[#1A1A1A]/90 backdrop-blur-md border-t border-gray-300/30 dark:border-gray-800/80 py-2 px-4 shadow-[0_-8px_30px_rgb(0,0,0,0.12)]">
-          <div className={PAGE_CONTAINER}>
-            {/* Price / visitation summary */}
-            <div className="flex items-center justify-between gap-3 mb-2 pb-2 border-b border-gray-300/30 dark:border-gray-800/60">
-              <div className="space-y-1.5">
-                <Skeleton className="h-3 w-24" />
-                <Skeleton className="h-6 w-28" />
-              </div>
-              <div className="space-y-1.5 flex flex-col items-end">
-                <Skeleton className="h-3 w-20" />
-                <Skeleton className="h-5 w-16" />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <Skeleton className="h-12 rounded-xl w-full" />
-              <Skeleton className="h-12 rounded-xl w-full" />
-              <Skeleton className="h-12 rounded-xl w-full" />
-              <Skeleton className="h-12 rounded-xl w-full" />
-            </div>
+            <PropertyCardSkeleton />
           </div>
         </div>
+      </section>
+
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white dark:border-gray-600/30 dark:bg-[#1A1A1A] lg:hidden">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+          <div className="space-y-1">
+            <Skeleton className="h-5 w-28" />
+            <Skeleton className="h-3 w-20" />
+          </div>
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-11 w-11 rounded-lg" />
+            <Skeleton className="h-11 min-w-0 flex-1 rounded-lg sm:w-32 sm:flex-none" />
+            <Skeleton className="h-11 min-w-0 flex-1 rounded-lg sm:w-24 sm:flex-none" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

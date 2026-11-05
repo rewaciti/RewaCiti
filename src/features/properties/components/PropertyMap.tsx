@@ -62,17 +62,17 @@ function makePropertyPinIcon() {
   return L.divIcon({
     className: "property-location-marker",
     html: `
-      <div style="position:relative;width:60px;height:68px;">
-        <div style="position:absolute;top:0;left:0;z-index:2;display:flex;width:60px;height:60px;align-items:center;justify-content:center;border:2px solid #fff;border-radius:50%;background:#dc2626;box-shadow:0 2px 8px rgba(0,0,0,.35);">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+      <div style="position:relative;width:44px;height:50px;">
+        <div style="position:absolute;top:0;left:0;z-index:2;display:flex;width:44px;height:44px;align-items:center;justify-content:center;border:2px solid #fff;border-radius:50%;background:#dc2626;box-shadow:0 2px 8px rgba(0,0,0,.35);">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="white" aria-hidden="true">
             <path d="M3 10.7 12 3l9 7.7v9.1a1.2 1.2 0 0 1-1.2 1.2h-5.3v-6h-5v6H4.2A1.2 1.2 0 0 1 3 19.8z"/>
           </svg>
         </div>
-        <span style="position:absolute;top:53px;left:21px;z-index:1;width:0;height:0;border-top:13px solid #dc2626;border-right:9px solid transparent;border-left:9px solid transparent;"></span>
+        <span style="position:absolute;top:39px;left:15px;z-index:1;width:0;height:0;border-top:11px solid #dc2626;border-right:7px solid transparent;border-left:7px solid transparent;"></span>
       </div>
     `,
-    iconSize: [60, 68],
-    iconAnchor: [30, 66],
+    iconSize: [44, 50],
+    iconAnchor: [22, 49],
   });
 }
 

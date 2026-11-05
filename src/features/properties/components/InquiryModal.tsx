@@ -154,7 +154,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/60 z-50 backdrop-blur-xs dialog-overlay-animate" />
-        <Dialog.Content className="property-dialog-content responsive-sheet-animate fixed inset-x-0 bottom-0 z-50 max-h-[92dvh] w-full overflow-y-auto rounded-t-3xl border border-gray-200 bg-white p-4 shadow-2xl dark:border-gray-600/30 dark:bg-[#1A1A1A] sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[90vh] sm:w-[calc(100%-2rem)] sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl">
+        <Dialog.Content className="property-dialog-content responsive-sheet-animate fixed inset-x-0 bottom-0 z-50 max-h-[92dvh] w-full overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-t-3xl border border-gray-200 bg-white p-4 shadow-2xl dark:border-gray-600/30 dark:bg-[#1A1A1A] sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[90vh] sm:w-[calc(100%-2rem)] sm:max-w-2xl sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl sm:p-6">
           <div className="property-dialog-header mb-4 flex items-start justify-between border-b border-gray-200 pb-4 dark:border-gray-600/30">
             <div>
               <Dialog.Title className="text-2xl font-semibold text-gray-900 dark:text-white">
@@ -176,7 +176,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
 
           <form
             onSubmit={handleSubmit}
-            className="space-y-5 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-600/30 dark:bg-[#121212]"
+            className="space-y-5"
           >
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
@@ -189,7 +189,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  className="h-11 w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none focus:ring-2 focus:ring-[#703BF7]/30 dark:border-gray-500 dark:bg-[#262626] dark:text-white dark:placeholder:text-gray-400"
                 />
               </div>
 
@@ -203,7 +203,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  className="h-11 w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none focus:ring-2 focus:ring-[#703BF7]/30 dark:border-gray-500 dark:bg-[#262626] dark:text-white dark:placeholder:text-gray-400"
                 />
               </div>
 
@@ -217,7 +217,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                  className="h-11 w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none focus:ring-2 focus:ring-[#703BF7]/30 dark:border-gray-500 dark:bg-[#262626] dark:text-white dark:placeholder:text-gray-400"
                 />
               </div>
             </div>
@@ -230,7 +230,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
                 type="text"
                 value={[property.name, addressOf(property)].filter(Boolean).join(", ")}
                 readOnly
-                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none text-gray-900 dark:text-white dark:placeholder-gray-400 placeholder-gray-900/70"
+                className="h-11 w-full rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm text-gray-900 focus:border-[#703BF7] focus:outline-none focus:ring-2 focus:ring-[#703BF7]/30 dark:border-gray-600 dark:bg-[#202020] dark:text-white"
               />
             </div>
 
@@ -239,12 +239,12 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
                 Message
               </label>
               <textarea
-                rows={3}
+                rows={5}
                 placeholder="Enter your Message here..."
                 required
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="w-full dark:bg-black/70 bg-gray-300 border border-gray-600/70 rounded-md px-4 py-2 text-sm focus:outline-none dark:placeholder-gray-400 placeholder-gray-900/70 text-gray-900 dark:text-white"
+                className="min-h-32 w-full rounded-md border border-gray-400 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none focus:ring-2 focus:ring-[#703BF7]/30 dark:border-gray-500 dark:bg-[#262626] dark:text-white dark:placeholder:text-gray-400"
               />
             </div>
 
