@@ -482,6 +482,17 @@ function PropertySearchSection() {
 
   const handleUniversityChange = (selectedUniversity: string) => {
     setUniversity(selectedUniversity);
+    if (!selectedUniversity) return;
+
+    const match = locationHierarchy.find(
+      (item) =>
+        item.state.toLowerCase() === state.toLowerCase() &&
+        (item.university || "").toLowerCase() === selectedUniversity.toLowerCase(),
+    );
+    if (match?.city && match.city.toLowerCase() !== city.toLowerCase()) {
+      setCity(match.city);
+      setArea("");
+    }
   };
 
   const categoryOptions = [
@@ -550,8 +561,8 @@ function PropertySearchSection() {
         className="sticky z-20 border-b border-gray-400 bg-gray-300 dark:border-neutral-800 dark:bg-[#1A1A1A]"
       >
         <div className={`${PAGE_CONTAINER} space-y-3 py-3`}>
-          <div className="flex items-center gap-3">
-            <div className="relative min-w-0 flex-1 lg:max-w-2xl">
+          <div className="mx-auto flex w-full max-w-3xl items-center gap-3">
+            <div className="relative min-w-0 flex-1">
               <FiSearch
                 size={16}
                 className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"
@@ -604,7 +615,7 @@ function PropertySearchSection() {
                 <CustomDropdown
                   placeholder="State"
                   value={state}
-                  options={[{ label: "All States", value: "" }, ...stateOptions]}
+                  options={[{ label: "State", value: "" }, ...stateOptions]}
                   onChange={handleStateChange}
                   className="w-full"
                   buttonClassName={dropdownButtonClass}
@@ -613,9 +624,12 @@ function PropertySearchSection() {
 
               <div className="w-[215px] shrink-0">
                 <CustomDropdown
-                  placeholder={state ? "Landmark" : "Select State first"}
+                  placeholder={state ? "Landmark" : "Pick state first"}
                   value={university}
-                  options={[{ label: "All Landmarks", value: "" }, ...universityOptions]}
+                  options={[
+                    { label: state ? "Landmark" : "Pick state first", value: "" },
+                    ...universityOptions,
+                  ]}
                   onChange={handleUniversityChange}
                   disabled={!state}
                   className="w-full"
@@ -625,9 +639,12 @@ function PropertySearchSection() {
 
               <div className="w-[190px] shrink-0">
                 <CustomDropdown
-                  placeholder={state ? "City" : "Select State first"}
+                  placeholder={state ? "City" : "Pick state first"}
                   value={city}
-                  options={[{ label: "All Cities", value: "" }, ...cityOptions]}
+                  options={[
+                    { label: state ? "City" : "Pick state first", value: "" },
+                    ...cityOptions,
+                  ]}
                   onChange={handleCityChange}
                   disabled={!state}
                   className="w-full"
@@ -637,9 +654,12 @@ function PropertySearchSection() {
 
               <div className="w-[190px] shrink-0">
                 <CustomDropdown
-                  placeholder={!state ? "Select State first" : !city ? "Select City first" : "Area"}
+                  placeholder={city ? "Area" : "Pick city first"}
                   value={area}
-                  options={[{ label: "All Areas", value: "" }, ...areaOptions]}
+                  options={[
+                    { label: city ? "Area" : "Pick city first", value: "" },
+                    ...areaOptions,
+                  ]}
                   onChange={handleAreaChange}
                   disabled={!state || !city}
                   className="w-full"

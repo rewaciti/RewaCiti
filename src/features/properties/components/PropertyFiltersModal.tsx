@@ -124,9 +124,9 @@ export default function PropertyFiltersModal({
                   <div>
                     <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">State</label>
                     <CustomDropdown
-                      placeholder="All States"
+                      placeholder="State"
                       value={state}
-                      options={[{ label: "All States", value: "" }, ...stateOptions]}
+                      options={[{ label: "State", value: "" }, ...stateOptions]}
                       onChange={(val) => onStateChange?.(val)}
                       className="w-full"
                       buttonClassName="w-full h-11 px-4 flex items-center justify-between rounded-full border border-gray-600/70 bg-gray-300 dark:border-gray-600 dark:bg-transparent text-gray-900 dark:text-white text-sm"
@@ -136,9 +136,12 @@ export default function PropertyFiltersModal({
                   <div>
                     <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">Landmark</label>
                     <CustomDropdown
-                      placeholder={state ? "All Landmarks" : "Select State first"}
+                      placeholder={state ? "Landmark" : "Pick state first"}
                       value={university}
-                      options={[{ label: "All Landmarks", value: "" }, ...universityOptions]}
+                      options={[
+                        { label: state ? "Landmark" : "Pick state first", value: "" },
+                        ...universityOptions,
+                      ]}
                       onChange={(val) => onUniversityChange?.(val)}
                       disabled={!state}
                       className="w-full"
@@ -149,9 +152,12 @@ export default function PropertyFiltersModal({
                   <div>
                     <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">City</label>
                     <CustomDropdown
-                      placeholder={state ? "All Cities" : "Select State first"}
+                      placeholder={state ? "City" : "Pick state first"}
                       value={city}
-                      options={[{ label: "All Cities", value: "" }, ...cityOptions]}
+                      options={[
+                        { label: state ? "City" : "Pick state first", value: "" },
+                        ...cityOptions,
+                      ]}
                       onChange={(val) => onCityChange?.(val)}
                       disabled={!state}
                       className="w-full"
@@ -162,15 +168,12 @@ export default function PropertyFiltersModal({
                   <div>
                     <label className="text-gray-500 dark:text-gray-400 text-xs block mb-1">Area</label>
                     <CustomDropdown
-                      placeholder={
-                        !state
-                          ? "Select State first"
-                          : !city
-                            ? "Select City first"
-                            : "All Areas"
-                      }
+                      placeholder={city ? "Area" : "Pick city first"}
                       value={area}
-                      options={[{ label: "All Areas", value: "" }, ...areaOptions]}
+                      options={[
+                        { label: city ? "Area" : "Pick city first", value: "" },
+                        ...areaOptions,
+                      ]}
                       onChange={(val) => onAreaChange?.(val)}
                       disabled={!state || !city}
                       className="w-full"

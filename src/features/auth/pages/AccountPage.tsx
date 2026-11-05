@@ -458,11 +458,13 @@ const DealCard = ({
 
   return (
     <article className={paymentCardClass}>
-      <div className="flex items-start justify-between gap-4">
-        <h2 style={SERIF} className={`text-xl sm:text-2xl ${headingClass}`}>
+      <div className="flex flex-col items-end gap-2 md:flex-row md:items-start md:justify-between">
+        <h2 style={SERIF} className={`order-2 self-start text-xl sm:text-2xl md:order-1 ${headingClass}`}>
           {deal.propertyTitle}
         </h2>
-        <StatusChip status={isComplete ? "complete" : deal.status} />
+        <div className="order-1 md:order-2">
+          <StatusChip status={isComplete ? "complete" : deal.status} />
+        </div>
       </div>
       <p className={`mt-1.5 text-sm ${mutedClass}`}>
         Ref {deal.number}

@@ -966,6 +966,7 @@ function PropertyDetails() {
                     <PropertyMap
                       properties={[property]}
                       heightClassName="h-[280px] sm:h-[400px]"
+                      markerVariant="property"
                     />
                   </div>
                 </div>
