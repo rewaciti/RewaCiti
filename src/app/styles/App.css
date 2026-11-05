@@ -260,6 +260,16 @@ html:has(.account-page)::-webkit-scrollbar-button {
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
 
+:is([role="dialog"], .modal-scrollbar-hidden),
+:is([role="dialog"], .modal-scrollbar-hidden) * {
+  scrollbar-width: none;
+}
+
+:is([role="dialog"], .modal-scrollbar-hidden)::-webkit-scrollbar,
+:is([role="dialog"], .modal-scrollbar-hidden) *::-webkit-scrollbar {
+  display: none;
+}
+
 .property-dialog-content > .property-dialog-header {
   position: sticky;
   top: -1rem;

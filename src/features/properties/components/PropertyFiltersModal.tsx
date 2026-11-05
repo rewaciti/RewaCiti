@@ -98,7 +98,7 @@ export default function PropertyFiltersModal({
 
       {/* panel */}
       <div
-        className={`relative w-full sm:w-[540px] max-h-[90vh] sm:max-h-[85vh] bg-white dark:bg-[#1A1A1A] rounded-t-3xl sm:rounded-3xl flex flex-col overflow-hidden shadow-2xl transition-all duration-300 ease-out transform ${
+        className={`modal-scrollbar-hidden relative w-full sm:w-[540px] max-h-[90vh] sm:max-h-[85vh] bg-white dark:bg-[#1A1A1A] rounded-t-3xl sm:rounded-3xl flex flex-col overflow-hidden shadow-2xl transition-all duration-300 ease-out transform ${
           isOpen
             ? "translate-y-0 opacity-100 scale-100"
             : "translate-y-full md:translate-y-10 opacity-0 scale-95"
