@@ -552,7 +552,7 @@ function PropertyDetails() {
                     </button>
                   </div>
                 </div>
-                <h1 className="break-words text-3xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                <h1 className="wrap-break-words text-3xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
                   {property.name}
                 </h1>
                 <a
@@ -566,7 +566,7 @@ function PropertyDetails() {
                   className="mt-2 inline-flex w-full min-w-0 items-start gap-2 text-sm text-gray-700 underline-offset-2 hover:underline dark:text-gray-300"
                 >
                   <FiMapPin className="mt-0.5 shrink-0" />
-                  <span className="min-w-0 break-words">
+                  <span className="min-w-0 wrap-break-words">
                     {locationText(addressOf(property), property.location.nearby)}
                   </span>
                 </a>

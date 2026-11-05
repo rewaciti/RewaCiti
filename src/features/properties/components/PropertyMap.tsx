@@ -122,7 +122,7 @@ function ExpandButton({
       }}
       aria-label={isFullscreen ? "Exit fullscreen map" : "Expand map to fullscreen"}
       title={isFullscreen ? "Exit fullscreen" : "Expand map"}
-      className={`absolute top-3 right-3 z-[1000] w-9 h-9 rounded-full bg-white dark:bg-[#1A1A1A] border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white shadow-md items-center justify-center hover:border-[#703BF7] hover:text-[#703BF7] transition-colors cursor-pointer ${visibilityClassName}`}
+      className={`absolute top-3 right-3 z-1000 w-9 h-9 rounded-full bg-white dark:bg-[#1A1A1A] border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white shadow-md items-center justify-center hover:border-[#703BF7] hover:text-[#703BF7] transition-colors cursor-pointer ${visibilityClassName}`}
     >
       {isFullscreen ? <FiMinimize2 size={16} /> : <FiMaximize2 size={16} />}
     </button>
@@ -329,7 +329,7 @@ export default function PropertyMap({
         {/* Placeholder keeps the page layout from jumping while fullscreen */}
         <div className={`${heightClassName} w-full`} aria-hidden="true" />
         {createPortal(
-          <div className="fixed inset-0 z-[9999] w-full h-full bg-white dark:bg-[#111] p-2 sm:p-4">
+          <div className="fixed inset-0 z-9999 w-full h-full bg-white dark:bg-[#111] p-2 sm:p-4">
             <div className="relative w-full h-full rounded-2xl overflow-hidden border border-gray-300 dark:border-gray-700">
               {mapBody}
               <ExpandButton
