@@ -159,7 +159,7 @@ const teamData: TeamMember[] = [
   },
   {
     id: 4,
-    name: "Isiah Olumide",
+    name: "Isaiah Olumide",
     role: "Property Acquisition Specialist",
     image: "/logo/Team/WhatsApp Image 2026-04-25 at 5.41.00 AM.jpeg",
     email: "Isaiahmusicgiantimgsznf@gmail.com",
