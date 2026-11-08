@@ -80,7 +80,7 @@ function Footer() {
       <div className={`${PAGE_CONTAINER} py-12`}>
         <div className="grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-[1.5fr_1fr_1fr_1.3fr] lg:gap-12">
           {/* Brand + newsletter */}
-          <div className="border-b border-gray-900/30 dark:border-gray-400/30 pb-8 sm:col-span-2 sm:border-b-0 sm:pb-0 lg:col-span-1">
+          <div className="border-b border-gray-900/30 pb-8 dark:border-gray-400/30 sm:col-span-2 lg:col-span-1 lg:border-b-0 lg:pb-0">
             <Link to="/" className="inline-flex items-center gap-2">
               <img src={logo} alt="" className="h-9" />
               <span style={SERIF} className="text-[24px] font-semibold leading-none">
@@ -115,9 +115,9 @@ function Footer() {
             </form>
           </div>
 
-          {/* Explore + Company: side by side with a divider on small screens, normal grid cells otherwise */}
-          <div className="grid grid-cols-2 divide-x divide-gray-900/30 border-b border-gray-900/30 dark:border-gray-400/30 pb-8 dark:divide-gray-400/30 sm:contents sm:divide-x-0 sm:border-b-0 sm:pb-0">
-          <nav aria-label="Explore" className="pr-4 sm:pr-0">
+          {/* Explore + Company keep their divided layout through tablet widths. */}
+          <div className="grid grid-cols-2 divide-x divide-gray-900/30 border-b border-gray-900/30 pb-8 dark:divide-gray-400/30 dark:border-gray-400/30 lg:contents lg:divide-x-0 lg:border-b-0 lg:pb-0">
+          <nav aria-label="Explore" className="pr-4 lg:pr-0">
             <h3 className={headingClass}>Explore</h3>
             <ul className="space-y-3">
               {explore.map((item) => (
@@ -131,7 +131,7 @@ function Footer() {
           </nav>
 
           {/* Company */}
-          <nav aria-label="Company" className="pl-4 sm:pl-0">
+          <nav aria-label="Company" className="pl-4 lg:pl-0">
             <h3 className={headingClass}>Company</h3>
             <ul className="space-y-3">
               {company.map((item) => (

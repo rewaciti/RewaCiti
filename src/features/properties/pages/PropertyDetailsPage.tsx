@@ -10,6 +10,7 @@ import {
   FiArrowLeft,
   FiArrowRight,
   FiX,
+  FiMaximize2,
   FiMail,
   FiCalendar,
   FiCreditCard,
@@ -19,7 +20,7 @@ import {
 } from "react-icons/fi";
 import * as Dialog from "@radix-ui/react-dialog";
 import { usePropertyStore } from "../store/usePropertyStore";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Bath, BedDouble, Zap } from "lucide-react";
 import Footer from "../../../shared/components/Layout/Footer";
 import BookInspectionModal from "../../inspections/components/BookInspectionModal";
@@ -56,7 +57,7 @@ type GalleryItem =
   | { kind: "image"; src: string; label: string }
   | { kind: "video"; src: string; label: string; poster?: string };
 
-const youtubeEmbedUrl = (videoUrl: string) => {
+const youtubeEmbedUrl = (videoUrl: string, autoplay = false) => {
   try {
     const url = new URL(videoUrl);
     const host = url.hostname.replace(/^www\./, "");
@@ -70,7 +71,9 @@ const youtubeEmbedUrl = (videoUrl: string) => {
         : url.pathname.startsWith("/embed/")
           ? url.pathname.split("/")[2]
           : url.searchParams.get("v");
-    return id ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0` : null;
+    return id
+      ? `https://www.youtube-nocookie.com/embed/${id}?rel=0${autoplay ? "&autoplay=1" : ""}`
+      : null;
   } catch {
     return null;
   }
@@ -95,6 +98,7 @@ const tileClass = (index: number, total: number) => {
 
 function PropertyDetails() {
   const navigate = useNavigate();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [showAllSpecifications, setShowAllSpecifications] = useState(false);
   const [showAllSpecialNotes, setShowAllSpecialNotes] = useState(false);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
@@ -141,8 +145,7 @@ function PropertyDetails() {
   const handleShortlist = async () => {
     if (!property) return;
 
-    const { isAuthenticated } = useAuthStore.getState();
-    if (!isAuthenticated) {
+    if (!useAuthStore.getState().isAuthenticated) {
       toast("Sign in to save properties", {
         duration: 5000,
         closeButton: false,
@@ -162,14 +165,13 @@ function PropertyDetails() {
 
   const handleShare = async () => {
     if (!property) return;
-    const description = stripHtmlTags(property.description);
     const url = window.location.href;
     const address = locationText(addressOf(property), property.location.nearby);
     const coverImageUrl = property.img || property.images?.[0] || "";
     const shareText = [
       property.name,
       address,
-      description,
+      `Price: ₦${formatCurrency(property.pricing.total)}${property.duration ? ` ${property.duration.replace(/^\d+\s+/, "per ")}` : ""}`,
       `Category: ${property.category}\nURL: ${url}`,
     ]
       .filter(Boolean)
@@ -268,8 +270,6 @@ function PropertyDetails() {
   const [relatedPage, setRelatedPage] = useState(1);
   const [showAllRelated, setShowAllRelated] = useState(false);
   const [sameAgentOnly, setSameAgentOnly] = useState(false);
-  const relatedPropertiesRef = useRef<HTMLElement | null>(null);
-  const [relatedPropertiesReached, setRelatedPropertiesReached] = useState(false);
   const RELATED_ITEMS_PER_PAGE = 4;
 
   // Reset page-level UI whenever the listing changes
@@ -332,26 +332,10 @@ function PropertyDetails() {
     setShowAllRelated(false);
   }, [sameAgentOnly, property?.id]);
 
-  useEffect(() => {
-    const updateRelatedPropertiesPosition = () => {
-      const relatedSection = relatedPropertiesRef.current;
-      if (relatedSection) {
-        setRelatedPropertiesReached(
-          relatedSection.getBoundingClientRect().top <= window.innerHeight,
-        );
-      }
-    };
-
-    updateRelatedPropertiesPosition();
-    window.addEventListener("scroll", updateRelatedPropertiesPosition, { passive: true });
-    window.addEventListener("resize", updateRelatedPropertiesPosition);
-    return () => {
-      window.removeEventListener("scroll", updateRelatedPropertiesPosition);
-      window.removeEventListener("resize", updateRelatedPropertiesPosition);
-    };
-  }, [property, showDetailsSkeleton]);
-
   const coverImage = property?.img || property?.images?.[0] || "";
+  const videoEmbedUrl = property?.videoUrl
+    ? youtubeEmbedUrl(property.videoUrl)
+    : null;
   const cleanDescription = property
     ? stripHtmlTags(property.description).slice(0, 160)
     : "View property details on RewaCiti.";
@@ -360,6 +344,15 @@ function PropertyDetails() {
   const placeAvailable = !!property && property.places.left > 0;
   // RewaCiti's own listings have no agent to report
   const canReport = !!property?.agentId && !!forms?.features.requests.includes("report");
+
+  const openViewer = (index: number) => {
+    setSelectedMediaIndex(index);
+    setGalleryView("viewer");
+    setIsGalleryOpen(true);
+  };
+
+  const openInspection = () => setIsInspectionModalOpen(true);
+
   const renderMobileBookingBar = () => {
     if (!property) return null;
 
@@ -412,6 +405,79 @@ function PropertyDetails() {
     );
   };
 
+  // Full booking card, shared by the desktop sidebar and the small-screen
+  // card that sits under the map.
+  const renderBookingCard = () => {
+    if (!property) return null;
+
+    return (
+      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-[0_6px_16px_rgba(0,0,0,0.12)] dark:border-gray-600/30 dark:bg-[#1A1A1A]">
+        <div className="flex items-baseline gap-1.5">
+          <span className="text-[26px] font-semibold text-gray-900 dark:text-white">
+            ₦{formatCurrency(price)}
+          </span>
+          {property.duration && (
+            <span className="text-base text-gray-600 dark:text-gray-400">
+              / {property.duration}
+            </span>
+          )}
+        </div>
+
+        {property.visitationfee ? (
+          <div className="mt-5 overflow-hidden rounded-lg border border-gray-300 dark:border-gray-600/30">
+            <div className="flex items-center justify-between px-4 py-3">
+              <span className="text-sm text-gray-700 dark:text-gray-300">Visit fee</span>
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                ₦{formatCurrency(property.visitationfee)}
+              </span>
+            </div>
+          </div>
+        ) : null}
+
+        <div className="mt-5 grid gap-3">
+          <button
+            type="button"
+            onClick={openInspection}
+            className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#703BF7] px-4 py-3.5 text-base font-semibold text-white transition hover:bg-[#5c2fe0]"
+          >
+            <FiCalendar size={18} /> Book a visit
+          </button>
+          {canPay && (
+            <button
+              type="button"
+              onClick={() => setIsPaymentModalOpen(true)}
+              disabled={!placeAvailable}
+              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-900 px-4 py-3.5 text-base font-semibold text-gray-900 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white dark:text-white dark:hover:bg-white/10"
+            >
+              <FiCreditCard size={18} />
+              {placeAvailable ? "Pay for this property" : "Reserved"}
+            </button>
+          )}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsInquiryModalOpen(true)}
+          className="mx-auto mt-4 flex cursor-pointer items-center gap-2 text-sm font-semibold text-gray-900 underline underline-offset-2 dark:text-white"
+        >
+          <FiMail size={14} /> Ask a question
+        </button>
+
+        {!isAuthenticated && (
+          <p className="mt-5 border-t border-gray-200 pt-4 text-center text-xs leading-5 text-gray-600 dark:border-gray-600/30 dark:text-gray-400">
+            <Link
+              to="/auth/login"
+              className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#5c2fe0] dark:text-[#b69bff]"
+            >
+              Create an account
+            </Link>{" "}
+            to see your visits, payments and saved properties in one place.
+          </p>
+        )}
+      </div>
+    );
+  };
+
   const hasAmenities =
     (property?.keyFeatures?.length ?? 0) > 0 ||
     (property?.additionalFeatures?.length ?? 0) > 0;
@@ -420,14 +486,6 @@ function PropertyDetails() {
     (property?.additionalBillsAndCharges?.length ?? 0) > 0;
   const hasRules =
     (property?.rules?.length ?? 0) > 0 || (property?.additionalRules?.length ?? 0) > 0;
-
-  const openViewer = (index: number) => {
-    setSelectedMediaIndex(index);
-    setGalleryView("viewer");
-    setIsGalleryOpen(true);
-  };
-
-  const openInspection = () => setIsInspectionModalOpen(true);
 
   return (
     <div className="bg-gray-300 dark:bg-black/30">
@@ -582,16 +640,21 @@ function PropertyDetails() {
                 type="button"
                 onClick={() => openViewer(0)}
                 aria-label="View property photos"
-                className="block aspect-4/3 w-full bg-gray-200 dark:bg-[#1A1A1A] sm:hidden"
+                className="group relative block aspect-4/3 w-full bg-gray-200 dark:bg-[#1A1A1A] sm:hidden"
               >
                 {images[0] && (
-                  <img
-                    src={images[0]}
-                    alt="Property photo 1"
-                    loading="eager"
-                    decoding="async"
-                    className="h-full w-full object-cover"
-                  />
+                  <>
+                    <img
+                      src={images[0]}
+                      alt="Property photo 1"
+                      loading="eager"
+                      decoding="async"
+                      className="h-full w-full object-cover"
+                    />
+                    <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/50 p-2 text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                      <FiMaximize2 size={18} aria-hidden="true" />
+                    </span>
+                  </>
                 )}
               </button>
 
@@ -612,6 +675,9 @@ function PropertyDetails() {
                       decoding="async"
                       className="h-full w-full object-cover transition duration-300 group-hover:brightness-90"
                     />
+                    <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/50 p-2 text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                      <FiMaximize2 size={18} aria-hidden="true" />
+                    </span>
                   </button>
                 ))}
                 {images.length === 0 && (
@@ -707,13 +773,18 @@ function PropertyDetails() {
                         className="group relative aspect-4/3 cursor-pointer overflow-hidden rounded-lg bg-gray-100 text-left dark:bg-white/5"
                       >
                         {item.kind === "image" ? (
-                          <img
-                            src={item.src}
-                            alt={item.label}
-                            loading="lazy"
-                            decoding="async"
-                            className="h-full w-full object-cover transition duration-300 group-hover:brightness-90"
-                          />
+                          <>
+                            <img
+                              src={item.src}
+                              alt={item.label}
+                              loading="lazy"
+                              decoding="async"
+                              className="h-full w-full object-cover transition duration-300 group-hover:brightness-90"
+                            />
+                            <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/50 p-2 text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                              <FiMaximize2 size={18} aria-hidden="true" />
+                            </span>
+                          </>
                         ) : (
                           <>
                             <img
@@ -770,7 +841,6 @@ function PropertyDetails() {
                           src={galleryItems[selectedMediaIndex].src}
                           poster={galleryItems[selectedMediaIndex].poster}
                           controls
-                          autoPlay
                           playsInline
                           className="max-h-[calc(100vh-120px)] max-w-full rounded-lg"
                         />
@@ -797,7 +867,7 @@ function PropertyDetails() {
 
           {/* Main two-column layout */}
           <section
-            className={`${PAGE_CONTAINER} grid grid-cols-1 gap-x-16 pb-28 lg:grid-cols-[minmax(0,1fr)_380px] lg:pb-10 xl:gap-x-24`}
+            className={`${PAGE_CONTAINER} grid grid-cols-1 gap-x-16 pb-10 lg:grid-cols-[minmax(0,1fr)_380px] xl:gap-x-24`}
           >
             {/* LEFT COLUMN */}
             <div className="min-w-0">
@@ -955,6 +1025,33 @@ function PropertyDetails() {
                 </div>
               )}
 
+              {property.videoUrl && (
+                <section className={SECTION}>
+                  <h2 className={`${H2} mb-5`}>Video tour</h2>
+                  <div className="relative aspect-video overflow-hidden rounded-xl bg-black">
+                    {videoEmbedUrl ? (
+                      <iframe
+                        src={videoEmbedUrl}
+                        title={`Video tour of ${property.name}`}
+                        className="absolute inset-0 h-full w-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <video
+                        src={property.videoUrl}
+                        poster={coverImage || undefined}
+                        controls
+                        preload="metadata"
+                        className="absolute inset-0 h-full w-full object-contain"
+                      >
+                        Your browser does not support video playback.
+                      </video>
+                    )}
+                  </div>
+                </section>
+              )}
+
               {/* Keep Leaflet's high-z-index panes below dialogs and modals. */}
               {property.geo_location.lat !== 0 && property.geo_location.lng !== 0 && (
                 <div className={`${SECTION} -mb-6 pb-0 sm:mb-0 sm:pb-8`}>
@@ -972,6 +1069,9 @@ function PropertyDetails() {
                 </div>
               )}
 
+              {/* Booking card for small screens: sits under the map, like Airbnb */}
+              <div className="pb-6 pt-10 lg:hidden">{renderBookingCard()}</div>
+
               {canReport && (
                 <div className="py-6">
                   <button
@@ -987,60 +1087,7 @@ function PropertyDetails() {
 
             {/* RIGHT COLUMN: sticky booking card (desktop only) */}
             <aside className="hidden lg:block">
-              <div className="sticky top-28 pt-8">
-                <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-[0_6px_16px_rgba(0,0,0,0.12)] dark:border-gray-600/30 dark:bg-[#1A1A1A]">
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-[26px] font-semibold text-gray-900 dark:text-white">
-                      ₦{formatCurrency(price)}
-                    </span>
-                    {property.duration && (
-                      <span className="text-base text-gray-600 dark:text-gray-400">
-                        / {property.duration}
-                      </span>
-                    )}
-                  </div>
-
-                  {property.visitationfee ? (
-                    <div className="mt-5 overflow-hidden rounded-lg border border-gray-300 dark:border-gray-600/30">
-                      <div className="flex items-center justify-between px-4 py-3">
-                        <span className="text-sm text-gray-700 dark:text-gray-300">Visit fee</span>
-                        <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                          ₦{formatCurrency(property.visitationfee)}
-                        </span>
-                      </div>
-                    </div>
-                  ) : null}
-
-                  <div className="mt-5 grid gap-3">
-                    <button
-                      type="button"
-                      onClick={openInspection}
-                      className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#703BF7] px-4 py-3.5 text-base font-semibold text-white transition hover:bg-[#5c2fe0]"
-                    >
-                      <FiCalendar size={18} /> Book a visit
-                    </button>
-                    {canPay && (
-                      <button
-                        type="button"
-                        onClick={() => setIsPaymentModalOpen(true)}
-                        disabled={!placeAvailable}
-                        className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-900 px-4 py-3.5 text-base font-semibold text-gray-900 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white dark:text-white dark:hover:bg-white/10"
-                      >
-                        <FiCreditCard size={18} />
-                        {placeAvailable ? "Pay for this property" : "Reserved"}
-                      </button>
-                    )}
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setIsInquiryModalOpen(true)}
-                    className="mx-auto mt-4 flex cursor-pointer items-center gap-2 text-sm font-semibold text-gray-900 underline underline-offset-2 dark:text-white"
-                  >
-                    <FiMail size={14} /> Ask a question
-                  </button>
-                </div>
-              </div>
+              <div className="sticky top-28 pt-8">{renderBookingCard()}</div>
             </aside>
           </section>
 
@@ -1192,25 +1239,7 @@ function PropertyDetails() {
           </Dialog.Root>
 
           {/* Related properties */}
-          {property && !showDetailsSkeleton && (
-            <>
-              <div
-                className={`border-t border-gray-200 bg-white dark:border-gray-600/30 dark:bg-[#1A1A1A] lg:hidden ${
-                  relatedPropertiesReached ? "" : "invisible"
-                }`}
-              >
-                {renderMobileBookingBar()}
-              </div>
-              {!relatedPropertiesReached && (
-                <div className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white dark:border-gray-600/30 dark:bg-[#1A1A1A] lg:hidden">
-                  {renderMobileBookingBar()}
-                </div>
-              )}
-            </>
-          )}
-
           <section
-            ref={relatedPropertiesRef}
             className="bg-gray-200 dark:bg-black/50"
           >
             <div className={`${PAGE_CONTAINER} border-t border-gray-600/50 py-10 dark:border-gray-600/50`}>
@@ -1313,6 +1342,14 @@ function PropertyDetails() {
         </>
       )}
 
+      {/* Mobile booking bar: sticky, so the browser pins it to the bottom of the
+          screen while scrolling and it rests above the footer at the end of the
+          page. No scroll listeners or state, so it moves smoothly both ways. */}
+      {property && !showDetailsSkeleton && (
+        <div className="sticky bottom-0 z-40 border-t border-gray-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(0,0,0,0.08)] dark:border-gray-600/30 dark:bg-[#1A1A1A] lg:hidden">
+          {renderMobileBookingBar()}
+        </div>
+      )}
       <Footer />
     </div>
   );

@@ -9,7 +9,7 @@ import {
   FiChevronLeft,
   FiChevronRight,
 } from "react-icons/fi";
-import { formatCurrency, stripHtmlTags } from "../../../shared/lib/utils";
+import { formatCurrency } from "../../../shared/lib/utils";
 import { usePropertyStore } from "../store/usePropertyStore";
 import { addressOf } from "../services/toProperty";
 import { useNavigate } from "react-router";
@@ -127,11 +127,15 @@ function PropertyCard({ property }: PropertyCardProps) {
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const description = stripHtmlTags(property.description);
     const url = `${window.location.origin}/properties/${propertySlug}`;
     const address = addressOf(property);
     const coverImageUrl = property.img || images?.[0] || "";
-    const shareText = [property.name, address, description, `Category: ${property.category}\nURL: ${url}`]
+    const shareText = [
+      property.name,
+      address,
+      `Price: ₦${formatCurrency(property.pricing.total)}${property.duration ? ` ${property.duration.replace(/^\d+\s+/, "per ")}` : ""}`,
+      `Category: ${property.category}\nURL: ${url}`,
+    ]
       .filter(Boolean)
       .join("\n\n");
     if (navigator.share) {
