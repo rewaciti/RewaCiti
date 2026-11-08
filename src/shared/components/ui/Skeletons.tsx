@@ -75,8 +75,8 @@ export function PropertyDetailsSkeleton() {
   return (
     <div className="min-h-screen bg-gray-300 dark:bg-black/30">
       <div className="bg-gray-200 dark:bg-black/50">
-        <div className={PAGE_CONTAINER}>
-          <Skeleton className="mt-4 h-4 w-28" />
+        <div className={`${PAGE_CONTAINER} pt-4`}>
+          <Skeleton className="h-4 w-28" />
           <div className="pb-5 pt-3 sm:pt-4">
             <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
@@ -118,7 +118,7 @@ export function PropertyDetailsSkeleton() {
             </div>
           </div>
 
-          <div className="space-y-8">
+          <div>
             <div className="border-b border-gray-600/50 py-8">
               <Skeleton className="mb-4 h-7 w-48" />
               <div className="space-y-2">
@@ -138,21 +138,34 @@ export function PropertyDetailsSkeleton() {
               <Skeleton className="mt-6 h-12 w-44 rounded-lg" />
             </div>
             <div className="border-b border-gray-600/50 py-8">
-              <Skeleton className="mb-5 h-7 w-52" />
-              <div className="space-y-4">
-                {Array.from({ length: 4 }).map((_, index) => (
-                  <Skeleton key={index} className="h-6 w-3/4" />
+              <Skeleton className="mb-4 h-7 w-52" />
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <Skeleton key={index} className="h-28 w-full rounded-xl" />
                 ))}
               </div>
+              <Skeleton className="mt-5 h-10 w-36 rounded-lg" />
             </div>
             <div className="border-b border-gray-600/50 py-8">
-              <Skeleton className="mb-5 h-7 w-56" />
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {Array.from({ length: 6 }).map((_, index) => (
-                  <Skeleton key={index} className="h-12 w-full rounded-lg" />
-                ))}
+              <Skeleton className="mb-6 h-7 w-40" />
+              <div className="border-t border-gray-200 py-7 first:border-t-0 first:pt-0 dark:border-white/10">
+                <Skeleton className="mb-4 h-6 w-32" />
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <Skeleton key={index} className="h-28 w-full rounded-xl" />
+                  ))}
+                </div>
+                <Skeleton className="mt-5 h-10 w-32 rounded-lg" />
               </div>
-              <Skeleton className="mt-5 h-12 w-40 rounded-lg" />
+              <div className="border-t border-gray-200 py-7 dark:border-white/10">
+                <Skeleton className="mb-4 h-6 w-36" />
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <Skeleton key={index} className="h-28 w-full rounded-xl" />
+                  ))}
+                </div>
+                <Skeleton className="mt-5 h-10 w-40 rounded-lg" />
+              </div>
             </div>
             <div className="border-b border-gray-600/50 py-8">
               <Skeleton className="mb-5 h-7 w-44" />
