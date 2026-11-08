@@ -1342,9 +1342,7 @@ function PropertyDetails() {
         </>
       )}
 
-      {/* Mobile booking bar: sticky, so the browser pins it to the bottom of the
-          screen while scrolling and it rests above the footer at the end of the
-          page. No scroll listeners or state, so it moves smoothly both ways. */}
+    
       {property && !showDetailsSkeleton && (
         <div className="sticky bottom-0 z-40 border-t border-gray-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(0,0,0,0.08)] dark:border-gray-600/30 dark:bg-[#1A1A1A] lg:hidden">
           {renderMobileBookingBar()}
