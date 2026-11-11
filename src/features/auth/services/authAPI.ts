@@ -64,6 +64,20 @@ interface LoginResponse {
   };
 }
 
+interface GoogleSignInPayload {
+  companyId: string;
+  /** What came after #google_handoff= on /auth/google. */
+  handoff: string;
+  /** The PKCE verifier kept when the sign-in started (see googleSignIn.ts). */
+  codeVerifier: string;
+}
+
+interface GoogleSignInResponse extends LoginResponse {
+  message: string;
+  /** True when this sign-in made the account. */
+  created: boolean;
+}
+
 interface SignUpResponse {
   success?: boolean;
   message: string;
@@ -172,6 +186,12 @@ export const authAPI = {
   // Login
   login: async (payload: LoginPayload): Promise<LoginResponse> => {
     const response = await axios.post(`${API_URL}/customers/login`, payload);
+    return response.data;
+  },
+
+  // Sign in with Google: also makes the account for a new email
+  googleSignIn: async (payload: GoogleSignInPayload): Promise<GoogleSignInResponse> => {
+    const response = await axios.post(`${API_URL}/customers/google/sign-in`, payload);
     return response.data;
   },
 

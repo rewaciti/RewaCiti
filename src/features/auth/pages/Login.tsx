@@ -1,8 +1,10 @@
-import { useState } from "react";
-import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useEffect, useState } from "react";
+import { FiEye, FiEyeOff, FiLoader } from "react-icons/fi";
+import { FcGoogle } from "react-icons/fc";
 import { useNavigate, Link } from "react-router";
 import { toast } from "sonner";
 import { authAPI } from "../services/authAPI";
+import { canUseGoogleSignIn, startGoogleSignIn } from "../services/googleSignIn";
 import { useAuthStore } from "../store/useAuthStore";
 import { usePropertyStore } from "../../properties/store/usePropertyStore";
 import Navbar from "../../../shared/components/Layout/Navbar";
@@ -36,6 +38,30 @@ const Login = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agree, setAgree] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  // On the way to Google: the form locks until this tab leaves
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [showGoogle] = useState(canUseGoogleSignIn);
+
+  // Coming back with the browser's Back button can restore this page as it
+  // was, still waiting: unlock it
+  useEffect(() => {
+    const onShow = (event: PageTransitionEvent) => {
+      if (event.persisted) setIsGoogleLoading(false);
+    };
+    window.addEventListener("pageshow", onShow);
+    return () => window.removeEventListener("pageshow", onShow);
+  }, []);
+
+  const handleGoogle = async () => {
+    setIsGoogleLoading(true);
+    try {
+      await startGoogleSignIn(companyId);
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+      setIsGoogleLoading(false);
+      toast.error("We couldn’t open Google. Please try again.");
+    }
+  };
 
   // Form states for login
   const [email, setEmail] = useState(
@@ -53,7 +79,7 @@ const Login = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const inputStyle =
-    "w-full px-4 py-2 border border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#703BF7] placeholder:text-[12px] dark:placeholder:text-gray-400 placeholder:text-gray-600";
+    "w-full px-4 py-2 border border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#703BF7] placeholder:text-[12px] dark:placeholder:text-gray-400 placeholder:text-gray-600 disabled:cursor-not-allowed disabled:opacity-60";
 
   // Validation
   const isSignInValid = email && password;
@@ -192,6 +218,45 @@ const Login = () => {
                 : "Login to access your account"}
             </p>
 
+            {showGoogle && (
+              <>
+                <button
+                  type="button"
+                  onClick={handleGoogle}
+                  disabled={isLoading || isGoogleLoading}
+                  aria-busy={isGoogleLoading}
+                  className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-600/30 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 transition hover:border-[#703BF7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#703BF7] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-gray-600/30 dark:text-gray-100"
+                >
+                  {isGoogleLoading ? (
+                    <FiLoader aria-hidden="true" size={18} className="animate-spin" />
+                  ) : (
+                    <FcGoogle aria-hidden="true" size={20} />
+                  )}
+                  {isGoogleLoading ? "Opening Google…" : "Continue with Google"}
+                </button>
+
+                {isSignUp && (
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    By continuing with Google, you agree to the{" "}
+                    <Link to="/terms" className="text-[#703BF7] hover:underline">
+                      Terms
+                    </Link>{" "}
+                    and{" "}
+                    <Link to="/privacy-policy" className="text-[#703BF7] hover:underline">
+                      Privacy Policy
+                    </Link>
+                    .
+                  </p>
+                )}
+
+                <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+                  <span className="h-px flex-1 bg-gray-600/30" />
+                  or use your email
+                  <span className="h-px flex-1 bg-gray-600/30" />
+                </div>
+              </>
+            )}
+
             {/* First Name */}
             {isSignUp && (
               <div>
@@ -204,6 +269,7 @@ const Login = () => {
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   className={inputStyle}
+                  disabled={isGoogleLoading}
                   required={isSignUp}
                 />
               </div>
@@ -221,6 +287,7 @@ const Login = () => {
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   className={inputStyle}
+                  disabled={isGoogleLoading}
                   required={isSignUp}
                 />
               </div>
@@ -238,6 +305,7 @@ const Login = () => {
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   className={inputStyle}
+                  disabled={isGoogleLoading}
                   required={isSignUp}
                 />
               </div>
@@ -255,6 +323,7 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={inputStyle}
+                disabled={isGoogleLoading}
                 required
               />
             </div>
@@ -283,6 +352,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={inputStyle}
+                  disabled={isGoogleLoading}
                   required
                 />
 
@@ -312,6 +382,7 @@ const Login = () => {
                     }
                   }}
                   className="h-4 w-4 rounded border-gray-300 accent-[#703BF7]"
+                  disabled={isGoogleLoading}
                 />
                 Remember my email on this device
               </label>
@@ -331,6 +402,7 @@ const Login = () => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className={inputStyle}
+                    disabled={isGoogleLoading}
                     required={isSignUp}
                   />
 
@@ -365,6 +437,7 @@ const Login = () => {
                   checked={agree}
                   onChange={() => setAgree(!agree)}
                   className="mt-1"
+                  disabled={isGoogleLoading}
                   required
                 />
 
@@ -392,10 +465,10 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={
-                  (isSignUp ? !isSignUpValid : !isSignInValid) || isLoading
+                  (isSignUp ? !isSignUpValid : !isSignInValid) || isLoading || isGoogleLoading
                 }
                 className={`px-6 py-2 rounded-lg font-semibold text-sm transition ${
-                  (isSignUp ? !isSignUpValid : !isSignInValid) || isLoading
+                  (isSignUp ? !isSignUpValid : !isSignInValid) || isLoading || isGoogleLoading
                     ? "bg-gray-400 cursor-not-allowed text-gray-200"
                     : "bg-[#703BF7] text-white hover:bg-[#5c2fe0]"
                 }`}

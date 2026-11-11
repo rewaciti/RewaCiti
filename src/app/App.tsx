@@ -22,6 +22,7 @@ import Login from "../features/auth/pages/Login";
 import VerifyEmail from "../features/auth/pages/VerifyEmail";
 import ForgotPassword from "../features/auth/pages/ForgotPassword";
 import ResetPassword from "../features/auth/pages/ResetPassword";
+import GoogleCallback from "../features/auth/pages/GoogleCallback";
 import Profile from "../features/auth/pages/Profile";
 import AccountPage from "../features/auth/pages/AccountPage";
 import PropertyFeatureIconsPage from "../features/properties/pages/PropertyFeatureIconsPage";
@@ -78,6 +79,7 @@ function App() {
           <Route path="/auth/verify-email" element={<VerifyEmail />} />
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
           <Route path="/auth/reset-password" element={<ResetPassword />} />
+          <Route path="/auth/google" element={<GoogleCallback />} />
           <Route path="/auth/profile" element={<AccountPage />} />
           <Route path="/auth/profile/settings" element={<Profile />} />
           <Route path="/AllComments" element={<AllComments />} />
