@@ -232,7 +232,11 @@ const Login = () => {
                   ) : (
                     <FcGoogle aria-hidden="true" size={20} />
                   )}
-                  {isGoogleLoading ? "Opening Google…" : "Continue with Google"}
+                  {isGoogleLoading
+                    ? "Opening Google…"
+                    : isSignUp
+                    ? "Sign up with Google"
+                    : "Continue with Google"}
                 </button>
 
                 {isSignUp && (
