@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Documentation build artefacts
+docs/fonts/
+docs/_walkthrough.html
