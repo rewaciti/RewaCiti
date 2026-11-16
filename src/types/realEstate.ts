@@ -53,9 +53,12 @@ export interface PublicListing {
   amenities: string[];
   extraAmenities: string[];
   rules: string[];
-  extraRules: string[];
+  extraRules?: string[];
+  additionalRules?: string[];
   bills: string[];
-  extraBills: string[];
+  extraBills?: string[];
+  additionalBills?: string[];
+  additionalBillsAndCharges?: string[];
   agentId: string | null;
   photos: string[];
   videoUrl: string | null;

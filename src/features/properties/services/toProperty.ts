@@ -62,6 +62,9 @@ const specificationsOf = (listing: PublicListing, fields: FormField[]) => {
 const listOf = (value: unknown) =>
   (Array.isArray(value) ? value : []).map((item) => String(item).trim()).filter(Boolean);
 
+const firstListOf = (...values: unknown[]) =>
+  values.map(listOf).find((items) => items.length > 0) ?? [];
+
 /**
  * Turns a Real Estate listing into what the pages show. `fields` are the
  * company's property fields from `GET /forms`, for labelling its own details.
@@ -100,9 +103,13 @@ export const toProperty = (listing: PublicListing | PublicListingDetail, fields:
     keyFeatures: listing.amenities,
     additionalFeatures: listing.extraAmenities,
     billsAndCharges: listing.bills,
-    additionalBillsAndCharges: listing.extraBills,
+    additionalBillsAndCharges: firstListOf(
+      listing.extraBills,
+      listing.additionalBills,
+      listing.additionalBillsAndCharges,
+    ),
     rules: listing.rules,
-    additionalRules: listing.extraRules,
+    additionalRules: firstListOf(listing.extraRules, listing.additionalRules),
     specialNotes: listOf(listing.customFields[SPECIAL_NOTES_KEY]),
     specifications: specificationsOf(listing, fields),
     videoUrl: listing.videoUrl ? ensureHttps(listing.videoUrl) : undefined,

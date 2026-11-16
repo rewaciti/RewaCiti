@@ -1204,11 +1204,15 @@ const AccountPage = () => {
             <button
               type="button"
               onClick={() => openProperty(property.slug)}
-              className="block h-48 w-full cursor-pointer bg-gray-200 dark:bg-white/5"
+              className="block h-48 w-full cursor-pointer bg-gray-200 dark:bg-white/5 rounded-xl"
               aria-label={`View ${property.name}`}
             >
               {property.img ? (
-                <img src={property.img} alt={property.name} className="h-full w-full object-cover" />
+                <img
+                  src={property.img}
+                  alt={property.name}
+                  className="h-full w-full rounded-xl object-cover"
+                />
               ) : (
                 <span className="flex h-full items-center justify-center text-gray-500">
                   Property image unavailable

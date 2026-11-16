@@ -20,7 +20,7 @@ import {
 } from "react-icons/fi";
 import * as Dialog from "@radix-ui/react-dialog";
 import { usePropertyStore } from "../store/usePropertyStore";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Bath, BedDouble, Zap } from "lucide-react";
 import Footer from "../../../shared/components/Layout/Footer";
 import BookInspectionModal from "../../inspections/components/BookInspectionModal";
@@ -257,6 +257,9 @@ function PropertyDetails() {
   const [selectedMediaIndex, setSelectedMediaIndex] = useState<number | null>(null);
   const [galleryView, setGalleryView] = useState<"grid" | "viewer">("grid");
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [mobileImageIndex, setMobileImageIndex] = useState(0);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const suppressGalleryClickRef = useRef(false);
 
   const [isInspectionModalOpen, setIsInspectionModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -281,6 +284,7 @@ function PropertyDetails() {
     setSelectedMediaIndex(null);
     setGalleryView("grid");
     setIsGalleryOpen(false);
+    setMobileImageIndex(0);
   }, [slug, property?.id]);
 
   useEffect(() => {
@@ -349,6 +353,28 @@ function PropertyDetails() {
     setSelectedMediaIndex(index);
     setGalleryView("viewer");
     setIsGalleryOpen(true);
+  };
+
+  const handleMobileGalleryTouchStart = (event: React.TouchEvent) => {
+    const touch = event.touches[0];
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+    suppressGalleryClickRef.current = false;
+  };
+
+  const handleMobileGalleryTouchEnd = (event: React.TouchEvent) => {
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    if (!start || images.length < 2) return;
+
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+    if (Math.abs(deltaX) < 40 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+    suppressGalleryClickRef.current = true;
+    setMobileImageIndex((index) =>
+      Math.max(0, Math.min(index + (deltaX < 0 ? 1 : -1), images.length - 1)),
+    );
   };
 
   const openInspection = () => setIsInspectionModalOpen(true);
@@ -474,6 +500,39 @@ function PropertyDetails() {
             to see your visits, payments and saved properties in one place.
           </p>
         )}
+      </div>
+    );
+  };
+
+  const renderListingAgentCard = () => {
+    const agent = property?.agent;
+    const name = agent?.name.trim();
+    if (!agent || !name) return null;
+
+    return (
+      <div className="mt-5 flex items-center gap-4 rounded-xl border border-[#E8DFD2] bg-white p-6 dark:border-gray-600/30 dark:bg-[#1A1A1A]">
+        {agent.photo ? (
+          <img
+            src={agent.photo}
+            alt=""
+            className="h-[70px] w-[70px] shrink-0 rounded-full object-cover"
+          />
+        ) : (
+          <span
+            aria-hidden="true"
+            className="flex h-[70px] w-[70px] shrink-0 items-center justify-center rounded-full bg-gray-300 font-serif text-2xl font-semibold text-[#703BF7] dark:bg-white/10 dark:text-white"
+          >
+            {name[0].toUpperCase()}
+          </span>
+        )}
+        <div className="min-w-0">
+          <p className="text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            Listed by
+          </p>
+          <p className="truncate text-lg font-semibold text-gray-900 dark:text-white">
+            {name}
+          </p>
+        </div>
       </div>
     );
   };
@@ -638,15 +697,23 @@ function PropertyDetails() {
               {/* Mobile: one hero photo */}
               <button
                 type="button"
-                onClick={() => openViewer(0)}
+                onClick={() => {
+                  if (suppressGalleryClickRef.current) {
+                    suppressGalleryClickRef.current = false;
+                    return;
+                  }
+                  openViewer(mobileImageIndex);
+                }}
+                onTouchStart={handleMobileGalleryTouchStart}
+                onTouchEnd={handleMobileGalleryTouchEnd}
                 aria-label="View property photos"
-                className="group relative block aspect-4/3 w-full bg-gray-200 dark:bg-[#1A1A1A] sm:hidden"
+                className="group relative block aspect-4/3 w-full touch-pan-y bg-gray-200 dark:bg-[#1A1A1A] sm:hidden"
               >
-                {images[0] && (
+                {images[mobileImageIndex] && (
                   <>
                     <img
-                      src={images[0]}
-                      alt="Property photo 1"
+                      src={images[mobileImageIndex]}
+                      alt={`Property photo ${mobileImageIndex + 1}`}
                       loading="eager"
                       decoding="async"
                       className="h-full w-full object-cover"
@@ -654,6 +721,11 @@ function PropertyDetails() {
                     <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/50 p-2 text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                       <FiMaximize2 size={18} aria-hidden="true" />
                     </span>
+                    {images.length > 1 && (
+                      <span className="pointer-events-none absolute bottom-3 left-3 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white">
+                        {mobileImageIndex + 1} / {images.length}
+                      </span>
+                    )}
                   </>
                 )}
               </button>
@@ -994,7 +1066,7 @@ function PropertyDetails() {
                 </div>
               )}
 
-              {/* Rules first, followed by bills and fees. Each list opens its full modal after four items. */}
+              {/* Rules first, followed by bills and fees. Each list opens its full modal after six items. */}
               {(hasBills || hasRules) && (
                 <div className={SECTION}>
                   <h2 className={`${H2} mb-6`}>Before you book</h2>
@@ -1002,9 +1074,8 @@ function PropertyDetails() {
                     {hasRules && (
                       <FeatureSection
                         title="House rules"
-                        items={property.rules}
-                        extraItems={property.additionalRules}
-                        limit={4}
+                        items={[...property.rules, ...property.additionalRules]}
+                        limit={6}
                         noun="rules"
                         variant="rule"
                         onShowAll={() => setActiveFeatureModal("rules")}
@@ -1013,9 +1084,11 @@ function PropertyDetails() {
                     {hasBills && (
                       <FeatureSection
                         title="Bills & fees"
-                        items={property.billsAndCharges}
-                        extraItems={property.additionalBillsAndCharges}
-                        limit={4}
+                        items={[
+                          ...property.billsAndCharges,
+                          ...property.additionalBillsAndCharges,
+                        ]}
+                        limit={6}
                         noun="bills & fees"
                         variant="bill"
                         onShowAll={() => setActiveFeatureModal("bills")}
@@ -1070,7 +1143,10 @@ function PropertyDetails() {
               )}
 
               {/* Booking card for small screens: sits under the map, like Airbnb */}
-              <div className="pb-6 pt-10 lg:hidden">{renderBookingCard()}</div>
+              <div className="pb-6 pt-10 lg:hidden">
+                {renderBookingCard()}
+                {renderListingAgentCard()}
+              </div>
 
               {canReport && (
                 <div className="py-6">
@@ -1087,7 +1163,10 @@ function PropertyDetails() {
 
             {/* RIGHT COLUMN: sticky booking card (desktop only) */}
             <aside className="hidden lg:block">
-              <div className="sticky top-28 pt-8">{renderBookingCard()}</div>
+              <div className="sticky top-28 pt-8">
+                {renderBookingCard()}
+                {renderListingAgentCard()}
+              </div>
             </aside>
           </section>
 
@@ -1101,137 +1180,71 @@ function PropertyDetails() {
             <Dialog.Portal>
               <Dialog.Overlay className="dialog-overlay-animate fixed inset-0 z-50 bg-black/50" />
               <Dialog.Content className="property-dialog-content responsive-sheet-animate fixed inset-x-0 bottom-0 z-50 flex max-h-[92dvh] w-full flex-col overflow-hidden rounded-t-3xl border border-gray-200 bg-white shadow-2xl dark:border-gray-600/30 dark:bg-[#1A1A1A] sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[85vh] sm:w-[92vw] sm:max-w-2xl sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl">
-                <div className="property-dialog-header flex items-center justify-between border-b border-gray-200 px-5 py-4 dark:border-gray-600/30">
-                  <Dialog.Close asChild>
-                    <button
-                      type="button"
-                      aria-label="Close"
-                      className="cursor-pointer rounded-full p-2 text-gray-700 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10"
-                    >
-                      <FiX size={18} />
-                    </button>
-                  </Dialog.Close>
-                  <Dialog.Title className="absolute left-1/2 -translate-x-1/2 text-base font-semibold text-gray-900 dark:text-white">
+                <div className="property-dialog-header relative flex items-center justify-between border-b border-gray-200 px-5 py-4 dark:border-gray-600/30">
+                  <Dialog.Title className="absolute left-1/2 -translate-x-1/2 text-center text-base font-semibold text-gray-900 dark:text-white">
                     {activeFeatureModal === "amenities"
-                      ? "What this place offers"
+                      ? "Amenities"
                       : activeFeatureModal === "rules"
-                        ? "House rules"
+                        ? "Rules"
                         : "Bills & fees"}
                   </Dialog.Title>
                   <Dialog.Description className="sr-only">
                     Full list of details for {property.name}.
                   </Dialog.Description>
-                  <span className="w-9" />
+                  <span aria-hidden="true" className="h-9 w-9 shrink-0" />
+                  <Dialog.Close asChild>
+                    <button
+                      type="button"
+                      aria-label="Close"
+                      className="absolute right-6 top-1/2 -translate-y-1/2 cursor-pointer rounded-full p-2 text-gray-700 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10"
+                    >
+                      <FiX size={18} />
+                    </button>
+                  </Dialog.Close>
                 </div>
 
                 <div className="overflow-y-auto px-6 py-6">
                   {activeFeatureModal === "amenities" && (
-                    <div className="space-y-8">
-                      {(property.keyFeatures?.length ?? 0) > 0 && (
-                        <div>
-                          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
-                            Main amenities
-                          </h3>
-                          <ul>
-                            {property.keyFeatures.map((f, i) => (
-                              <PropertyFeatureItem key={`${f}-${i}`} label={f} showIcon divided />
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                      {(property.additionalFeatures?.length ?? 0) > 0 && (
-                        <div>
-                          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
-                            Additional features
-                          </h3>
-                          <ul>
-                            {property.additionalFeatures!.map((f, i) => (
-                              <PropertyFeatureItem key={`${f}-${i}`} label={f} divided />
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
+                    <ul>
+                      {[...property.keyFeatures, ...property.additionalFeatures].map((feature, index) => (
+                        <PropertyFeatureItem
+                          key={`${feature}-${index}`}
+                          label={feature}
+                          showIcon
+                          divided
+                        />
+                      ))}
+                    </ul>
                   )}
 
                   {activeFeatureModal === "rules" && (
-                    <div className="space-y-8">
-                      {(property.rules?.length ?? 0) > 0 && (
-                        <div>
-                          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
-                            During your stay
-                          </h3>
-                          <ul>
-                            {property.rules!.map((r, i) => (
-                              <PropertyFeatureItem
-                                key={`${r}-${i}`}
-                                label={r}
-                                variant="rule"
-                                showIcon
-                                divided
-                              />
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                      {(property.additionalRules?.length ?? 0) > 0 && (
-                        <div>
-                          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
-                            Additional rules
-                          </h3>
-                          <ul>
-                            {property.additionalRules!.map((r, i) => (
-                              <PropertyFeatureItem
-                                key={`${r}-${i}`}
-                                label={r}
-                                variant="rule"
-                                divided
-                              />
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
+                    <ul>
+                      {[...property.rules, ...property.additionalRules].map((rule, index) => (
+                        <PropertyFeatureItem
+                          key={`${rule}-${index}`}
+                          label={rule}
+                          variant="rule"
+                          showIcon
+                          divided
+                        />
+                      ))}
+                    </ul>
                   )}
 
                   {activeFeatureModal === "bills" && (
-                    <div className="space-y-8">
-                      {(property.billsAndCharges?.length ?? 0) > 0 && (
-                        <div>
-                          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
-                            Bills &amp; fees
-                          </h3>
-                          <ul>
-                            {property.billsAndCharges!.map((c, i) => (
-                              <PropertyFeatureItem
-                                key={`${c}-${i}`}
-                                label={c}
-                                variant="bill"
-                                showIcon
-                                divided
-                              />
-                            ))}
-                          </ul>
-                        </div>
+                    <ul>
+                      {[...property.billsAndCharges, ...property.additionalBillsAndCharges].map(
+                        (bill, index) => (
+                          <PropertyFeatureItem
+                            key={`${bill}-${index}`}
+                            label={bill}
+                            variant="bill"
+                            showIcon
+                            divided
+                          />
+                        ),
                       )}
-                      {(property.additionalBillsAndCharges?.length ?? 0) > 0 && (
-                        <div>
-                          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
-                            Additional bills &amp; fees
-                          </h3>
-                          <ul>
-                            {property.additionalBillsAndCharges!.map((c, i) => (
-                              <PropertyFeatureItem
-                                key={`${c}-${i}`}
-                                label={c}
-                                variant="bill"
-                                divided
-                              />
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
+                    </ul>
                   )}
                 </div>
               </Dialog.Content>
