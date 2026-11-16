@@ -258,7 +258,7 @@ function PropertyDetails() {
   const [galleryView, setGalleryView] = useState<"grid" | "viewer">("grid");
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [mobileImageIndex, setMobileImageIndex] = useState(0);
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const touchStartRef = useRef<{ x: number; y: number; pointerId: number } | null>(null);
   const suppressGalleryClickRef = useRef(false);
 
   const [isInspectionModalOpen, setIsInspectionModalOpen] = useState(false);
@@ -355,26 +355,44 @@ function PropertyDetails() {
     setIsGalleryOpen(true);
   };
 
-  const handleMobileGalleryTouchStart = (event: React.TouchEvent) => {
-    const touch = event.touches[0];
-    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+  const handleMobileGalleryPointerDown = (
+    event: React.PointerEvent<HTMLButtonElement>,
+  ) => {
+    if (!event.isPrimary || (event.pointerType !== "touch" && event.pointerType !== "pen")) {
+      return;
+    }
+
+    touchStartRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      pointerId: event.pointerId,
+    };
     suppressGalleryClickRef.current = false;
+    event.currentTarget.setPointerCapture(event.pointerId);
   };
 
-  const handleMobileGalleryTouchEnd = (event: React.TouchEvent) => {
+  const handleMobileGalleryPointerUp = (
+    event: React.PointerEvent<HTMLButtonElement>,
+  ) => {
     const start = touchStartRef.current;
     touchStartRef.current = null;
-    if (!start || images.length < 2) return;
+    if (!start || start.pointerId !== event.pointerId || images.length < 2) return;
 
-    const touch = event.changedTouches[0];
-    const deltaX = touch.clientX - start.x;
-    const deltaY = touch.clientY - start.y;
+    const deltaX = event.clientX - start.x;
+    const deltaY = event.clientY - start.y;
     if (Math.abs(deltaX) < 40 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
 
     suppressGalleryClickRef.current = true;
+    window.setTimeout(() => {
+      suppressGalleryClickRef.current = false;
+    }, 0);
     setMobileImageIndex((index) =>
       Math.max(0, Math.min(index + (deltaX < 0 ? 1 : -1), images.length - 1)),
     );
+  };
+
+  const handleMobileGalleryPointerCancel = () => {
+    touchStartRef.current = null;
   };
 
   const openInspection = () => setIsInspectionModalOpen(true);
@@ -704,10 +722,11 @@ function PropertyDetails() {
                   }
                   openViewer(mobileImageIndex);
                 }}
-                onTouchStart={handleMobileGalleryTouchStart}
-                onTouchEnd={handleMobileGalleryTouchEnd}
+                onPointerDown={handleMobileGalleryPointerDown}
+                onPointerUp={handleMobileGalleryPointerUp}
+                onPointerCancel={handleMobileGalleryPointerCancel}
                 aria-label="View property photos"
-                className="group relative block aspect-4/3 w-full touch-pan-y bg-gray-200 dark:bg-[#1A1A1A] sm:hidden"
+                className="group relative block aspect-4/3 w-full touch-pan-y select-none overflow-hidden bg-gray-200 dark:bg-[#1A1A1A] sm:hidden"
               >
                 {images[mobileImageIndex] && (
                   <>
@@ -716,7 +735,8 @@ function PropertyDetails() {
                       alt={`Property photo ${mobileImageIndex + 1}`}
                       loading="eager"
                       decoding="async"
-                      className="h-full w-full object-cover"
+                      draggable={false}
+                      className="pointer-events-none h-full w-full object-cover"
                     />
                     <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/50 p-2 text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                       <FiMaximize2 size={18} aria-hidden="true" />

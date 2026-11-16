@@ -199,14 +199,15 @@ const EmptyState = ({
 const AccountSkeleton = ({ tab }: { tab: AccountTab }) => {
   const visitCard = () => (
     <article className={cardClass} aria-hidden="true">
-      <div className="flex items-start justify-between gap-4">
-        <Skeleton className="h-7 w-3/5" />
-        <Skeleton className="h-7 w-24 rounded-full" />
+      <div className="flex flex-col items-end gap-2 md:flex-row md:items-start md:justify-between">
+        <Skeleton className="order-2 h-7 w-3/5 self-start md:order-1" />
+        <Skeleton className="order-1 h-7 w-24 rounded-full md:order-2" />
       </div>
       <Skeleton className="mt-3 h-4 w-3/5" />
       <Skeleton className="mt-2 h-4 w-1/4" />
-      <div className="mt-5 flex gap-3">
+      <div className="mt-5 flex flex-wrap gap-3">
         <Skeleton className="h-12 w-36 rounded-full" />
+        <Skeleton className="h-12 w-24 rounded-full" />
         <Skeleton className="h-12 w-24 rounded-full" />
       </div>
     </article>
@@ -214,17 +215,20 @@ const AccountSkeleton = ({ tab }: { tab: AccountTab }) => {
 
   const paymentCard = () => (
     <article className={paymentCardClass} aria-hidden="true">
-      <div className="flex items-start justify-between gap-4">
-        <Skeleton className="h-6 w-3/5" />
-        <Skeleton className="h-6 w-24 rounded-full" />
+      <div className="flex flex-col items-end gap-2 md:flex-row md:items-start md:justify-between">
+        <Skeleton className="order-2 h-7 w-3/5 self-start md:order-1" />
+        <Skeleton className="order-1 h-7 w-24 rounded-full md:order-2" />
       </div>
-      <Skeleton className="mt-2 h-4 w-2/5" />
-      <div className="mt-3 space-y-2 rounded-2xl border border-gray-300/70 bg-gray-100 p-3 dark:border-white/10 dark:bg-black/30">
-        <Skeleton className="h-3.5 w-full" />
-        <Skeleton className="h-3.5 w-4/5" />
-        <Skeleton className="h-3.5 w-3/5" />
-        <div className="border-t border-gray-300/70 pt-2 dark:border-white/10">
+      <Skeleton className="mt-1.5 h-4 w-2/5" />
+      <div className="mt-3 rounded-2xl border border-gray-300/70 bg-gray-100 p-3 dark:border-white/10 dark:bg-black/30 sm:p-4">
+        <div className="space-y-1.5 border-b border-gray-300/70 pb-3 dark:border-white/10">
           <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-4/5" />
+          <Skeleton className="h-4 w-3/5" />
+        </div>
+        <div className="flex items-baseline justify-between gap-4 pt-3">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-4 w-32" />
         </div>
       </div>
       <div className="mt-3 space-y-2">
@@ -251,19 +255,45 @@ const AccountSkeleton = ({ tab }: { tab: AccountTab }) => {
   );
 
   const profileSkeleton = (
-    <div className="grid gap-6 lg:grid-cols-2">
-      <div className={`${cardClass} space-y-5`}>
-        <Skeleton className="h-7 w-40" />
-        <Skeleton className="h-12 w-full rounded-xl" />
-        <Skeleton className="h-12 w-full rounded-xl" />
-        <Skeleton className="h-12 w-full rounded-xl" />
-        <Skeleton className="h-11 w-36 rounded-full" />
-      </div>
-      <div className={`${cardClass} space-y-5`}>
-        <Skeleton className="h-7 w-36" />
-        <Skeleton className="h-12 w-full rounded-xl" />
-        <Skeleton className="h-12 w-full rounded-xl" />
-        <Skeleton className="h-11 w-40 rounded-full" />
+    <div className="grid items-start gap-6 lg:grid-cols-2">
+      <section className={cardClass} aria-hidden="true">
+        <Skeleton className="mb-5 h-7 w-40" />
+        <div className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            {[0, 1].map((item) => (
+              <div key={item} className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-12 w-full rounded-xl" />
+              </div>
+            ))}
+          </div>
+          <div>
+            <Skeleton className="h-4 w-16" />
+            <Skeleton className="mt-2 h-12 w-full rounded-xl" />
+            <Skeleton className="mt-1 h-3 w-3/4" />
+          </div>
+          <div>
+            <Skeleton className="h-4 w-14" />
+            <Skeleton className="mt-2 h-12 w-full rounded-xl" />
+          </div>
+          <Skeleton className="h-12 w-36 rounded-full" />
+        </div>
+      </section>
+      <div className="space-y-6">
+        <section className={cardClass} aria-hidden="true">
+          <Skeleton className="mb-5 h-7 w-36" />
+          <div className="space-y-4">
+            {[0, 1].map((item) => (
+              <div key={item}>
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="mt-2 h-12 w-full rounded-xl" />
+                {item === 1 && <Skeleton className="mt-1 h-3 w-3/4" />}
+              </div>
+            ))}
+            <Skeleton className="h-12 w-40 rounded-full" />
+          </div>
+        </section>
+        <Skeleton className="h-12 w-32 rounded-full" />
       </div>
     </div>
   );
@@ -279,11 +309,11 @@ const AccountSkeleton = ({ tab }: { tab: AccountTab }) => {
               className={`${cardClass} overflow-hidden p-0 sm:p-0`}
               aria-hidden="true"
             >
-              <Skeleton className="h-48 w-full rounded-none" />
-              <div className="space-y-3 p-5">
+              <Skeleton className="h-48 w-full rounded-xl" />
+              <div className="p-5">
                 <Skeleton className="h-3 w-1/2" />
-                <Skeleton className="h-6 w-4/5" />
-                <Skeleton className="h-5 w-1/3" />
+                <Skeleton className="mt-2 h-7 w-4/5" />
+                <Skeleton className="mt-3 h-6 w-1/3" />
                 <div className="mt-5 flex justify-between border-t border-gray-200 pt-4 dark:border-white/10">
                   <Skeleton className="h-4 w-24" />
                   <Skeleton className="h-4 w-16" />
@@ -296,10 +326,15 @@ const AccountSkeleton = ({ tab }: { tab: AccountTab }) => {
       break;
     case "visits":
       content = (
-        <div className="space-y-5">
-          <Skeleton className="h-11 w-56 rounded-full" />
-          {visitCard()}
-          {visitCard()}
+        <div>
+          <div className="mb-6 inline-flex rounded-full bg-gray-200 p-1 dark:bg-white/10">
+            <Skeleton className="h-9 w-28 rounded-full" />
+            <Skeleton className="h-9 w-24 rounded-full" />
+          </div>
+          <div className="space-y-4">
+            {visitCard()}
+            {visitCard()}
+          </div>
         </div>
       );
       break;
@@ -316,10 +351,10 @@ const AccountSkeleton = ({ tab }: { tab: AccountTab }) => {
         <div className="space-y-4">
           {[0, 1, 2].map((item) => (
             <article key={item} className={cardClass} aria-hidden="true">
-              <div className="flex items-start justify-between gap-3">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex-1 space-y-2">
                   <Skeleton className="h-3 w-1/3" />
-                  <Skeleton className="h-6 w-2/3" />
+                  <Skeleton className="mt-1 h-7 w-2/3" />
                 </div>
                 <Skeleton className="h-7 w-24 rounded-full" />
               </div>
