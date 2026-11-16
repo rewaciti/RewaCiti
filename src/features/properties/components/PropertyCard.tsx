@@ -11,7 +11,7 @@ import {
 } from "react-icons/fi";
 import { formatCurrency } from "../../../shared/lib/utils";
 import { usePropertyStore } from "../store/usePropertyStore";
-import { addressOf } from "../services/toProperty";
+import { addressOf, pricePeriodLabel } from "../services/toProperty";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useAuthStore } from "../../auth/store/useAuthStore";
@@ -133,7 +133,7 @@ function PropertyCard({ property }: PropertyCardProps) {
     const shareText = [
       property.name,
       address,
-      `Price: ₦${formatCurrency(property.pricing.total)}${property.duration ? ` ${property.duration.replace(/^\d+\s+/, "per ")}` : ""}`,
+      `Price: ₦${formatCurrency(property.pricing.total)}${pricePeriodLabel(property.pricePeriod) ? ` ${pricePeriodLabel(property.pricePeriod)}` : ""}`,
       `Category: ${property.category}\nURL: ${url}`,
     ]
       .filter(Boolean)
@@ -425,9 +425,9 @@ function PropertyCard({ property }: PropertyCardProps) {
       {/* Price + Button */}
       <div className="flex justify-between items-end mt-auto">
         <div>
-          {property.duration && (
+          {pricePeriodLabel(property.pricePeriod) && (
             <p className="text-[11px] text-gray-500 dark:text-gray-400">
-              Price ({property.duration})
+              Price ({pricePeriodLabel(property.pricePeriod)})
             </p>
           )}
           <span className="text-base font-bold text-[#703BF7]">

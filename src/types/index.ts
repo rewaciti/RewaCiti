@@ -1,4 +1,4 @@
-import type { ListingCharge, ListingPurpose, PropertyLocations, PublicForms, PublicListingDetail, SharingType } from "./realEstate";
+import type { ListingCharge, ListingPurpose, PricePeriod, PropertyLocations, PublicForms, PublicListingDetail, SharingType } from "./realEstate";
 
 /** A listing as the pages show it, made from the Real Estate API by `toProperty`. */
 export interface Property {
@@ -19,6 +19,10 @@ export interface Property {
   listingType: string;
   /** How long the price covers, e.g. "1 year" or "per month". Empty for a one-off price. */
   duration: string;
+  /** The rental term provided by the API, separate from the price period. */
+  rentalTerm: string;
+  /** The API's price period, separate from the rental term. */
+  pricePeriod: PricePeriod;
   sharing: SharingType;
   places: { total: number; left: number };
   /** Someone is paying for it right now. */

@@ -40,7 +40,7 @@ import FeatureSection from "../components/FeatureSection";
 import PropertyFeatureItem from "../components/PropertyFeatureItem";
 
 import { useAuthStore } from "../../auth/store/useAuthStore";
-import { addressOf } from "../services/toProperty";
+import { addressOf, pricePeriodLabel } from "../services/toProperty";
 
 // Use the SAME classes inside your Navbar so the logo lines up with the content.
 const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
@@ -171,7 +171,7 @@ function PropertyDetails() {
     const shareText = [
       property.name,
       address,
-      `Price: ₦${formatCurrency(property.pricing.total)}${property.duration ? ` ${property.duration.replace(/^\d+\s+/, "per ")}` : ""}`,
+      `Price: ₦${formatCurrency(property.pricing.total)}${pricePeriodLabel(property.pricePeriod) ? ` ${pricePeriodLabel(property.pricePeriod)}` : ""}`,
       `Category: ${property.category}\nURL: ${url}`,
     ]
       .filter(Boolean)
@@ -405,10 +405,10 @@ function PropertyDetails() {
         <div className="min-w-0">
           <p className="truncate text-base font-semibold text-gray-900 dark:text-white">
             ₦{formatCurrency(price)}
-            {property.duration && (
+            {pricePeriodLabel(property.pricePeriod) && (
               <span className="text-sm font-normal text-gray-600 dark:text-gray-400">
                 {" "}
-                / {property.duration}
+                / {pricePeriodLabel(property.pricePeriod)}
               </span>
             )}
           </p>
@@ -454,18 +454,32 @@ function PropertyDetails() {
   const renderBookingCard = () => {
     if (!property) return null;
 
+    const additionalCharges =
+      property.pricing.charges.reduce((total, charge) => total + charge.amount, 0) +
+      property.pricing.serviceCharge;
+
     return (
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-[0_6px_16px_rgba(0,0,0,0.12)] dark:border-gray-600/30 dark:bg-[#1A1A1A]">
-        <div className="flex items-baseline gap-1.5">
+        {property.rentalTerm && (
+          <p className="mb-1 text-sm text-gray-600 dark:text-gray-400">
+            Price for {property.rentalTerm}
+          </p>
+        )}
+        <div className="flex flex-wrap items-baseline gap-x-1.5">
           <span className="text-[26px] font-semibold text-gray-900 dark:text-white">
             ₦{formatCurrency(price)}
           </span>
-          {property.duration && (
-            <span className="text-base text-gray-600 dark:text-gray-400">
-              / {property.duration}
+          {pricePeriodLabel(property.pricePeriod) && (
+            <span className="text-base font-semibold text-gray-700 dark:text-gray-300">
+              / {pricePeriodLabel(property.pricePeriod)}
             </span>
           )}
         </div>
+        {additionalCharges > 0 && (
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            ₦{formatCurrency(property.pricing.base)} plus ₦{formatCurrency(additionalCharges)} in charges
+          </p>
+        )}
 
         {property.visitationfee ? (
           <div className="mt-5 overflow-hidden rounded-lg border border-gray-300 dark:border-gray-600/30">

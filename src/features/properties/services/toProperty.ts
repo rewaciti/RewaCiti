@@ -33,6 +33,15 @@ const durationOf = (listing: PublicListing) => {
   return PERIOD_TEXT[listing.pricePeriod] ?? "";
 };
 
+export const pricePeriodLabel = (period: PublicListing["pricePeriod"]) =>
+  PERIOD_TEXT[period] ?? "";
+
+const rentalTermOf = (listing: PublicListing) => {
+  if (!listing.term) return "";
+  const { value, unit } = listing.term;
+  return `${value} ${value === 1 ? unit.replace(/s$/, "") : unit}`;
+};
+
 const textOf = (value: unknown, type?: string) => {
   if (Array.isArray(value)) return value.map(String).join(", ");
   if (typeof value === "boolean") return value ? "Yes" : "No";
@@ -43,6 +52,8 @@ const textOf = (value: unknown, type?: string) => {
 /** Size, sharing, places and the company's own fields, labelled as on the RewaCiti dashboard. */
 const specificationsOf = (listing: PublicListing, fields: FormField[]) => {
   const specs: { label: string; value: string }[] = [];
+  const rentalTerm = rentalTermOf(listing);
+  if (rentalTerm) specs.push({ label: "Rental term", value: rentalTerm });
   if (listing.sizeSqm) specs.push({ label: "Size", value: `${listing.sizeSqm.toLocaleString()} m²` });
   if (listing.sharing !== "whole") {
     const perRoom = listing.peoplePerRoom ? ` · ${listing.peoplePerRoom} people per room` : "";
@@ -87,6 +98,8 @@ export const toProperty = (listing: PublicListing | PublicListingDetail, fields:
     purpose: listing.purpose,
     listingType: PURPOSE_LABELS[listing.purpose] ?? "",
     duration: durationOf(listing),
+    rentalTerm: rentalTermOf(listing),
+    pricePeriod: listing.pricePeriod,
     sharing: listing.sharing,
     places: listing.places,
     reserved: listing.status === "reserved",

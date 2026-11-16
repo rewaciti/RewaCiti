@@ -35,7 +35,7 @@ import {
 import { useAuthStore } from "../store/useAuthStore";
 import { usePropertyStore } from "../../properties/store/usePropertyStore";
 import { propertiesAPI } from "../../properties/services/propertiesAPI";
-import { toProperty } from "../../properties/services/toProperty";
+import { pricePeriodLabel, toProperty } from "../../properties/services/toProperty";
 import type { Property } from "../../../types";
 import type { VisitSlot } from "../../../types/realEstate";
 
@@ -1270,6 +1270,11 @@ const AccountPage = () => {
               </button>
               <p className="mt-3 font-semibold text-[#703BF7] dark:text-[#b79bff]">
                 {formatMoney(property.pricing.total || property.pricing.base)}
+                {pricePeriodLabel(property.pricePeriod) && (
+                  <span className={`ml-1 text-xs font-normal ${mutedClass}`}>
+                    / {pricePeriodLabel(property.pricePeriod)}
+                  </span>
+                )}
               </p>
               <div className="mt-5 flex items-center justify-between border-t border-gray-200 pt-4 text-sm dark:border-white/10">
                 <button

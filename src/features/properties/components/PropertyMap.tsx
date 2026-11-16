@@ -5,6 +5,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Property } from "../../../types";
 import { FiMapPin, FiArrowRight, FiMaximize2, FiMinimize2 } from "react-icons/fi";
+import { pricePeriodLabel } from "../services/toProperty";
 
 interface PropertyMapProps {
   properties: Property[];
@@ -165,7 +166,7 @@ function PropertyPreview({ property }: { property: Property }) {
 
         <div className="flex items-center justify-between gap-2">
           <div className="min-w-0">
-            {property.duration && <p className="text-[9px] text-gray-500 dark:text-gray-400 leading-none mb-0.5">{property.duration}</p>}
+            {pricePeriodLabel(property.pricePeriod) && <p className="text-[9px] text-gray-500 dark:text-gray-400 leading-none mb-0.5">{pricePeriodLabel(property.pricePeriod)}</p>}
             <p className="text-sm font-bold text-[#703BF7] truncate">{formatPrice(property.pricing.total)}</p>
           </div>
 
