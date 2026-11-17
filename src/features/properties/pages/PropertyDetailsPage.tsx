@@ -15,7 +15,6 @@ import {
   FiCalendar,
   FiCreditCard,
   FiFlag,
-  FiPlay,
   FiGrid,
 } from "react-icons/fi";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -53,9 +52,7 @@ const OUTLINE_BTN =
 const GHOST_BTN =
   "inline-flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-gray-900 underline underline-offset-2 transition hover:bg-gray-100 dark:text-white dark:hover:bg-white/10";
 
-type GalleryItem =
-  | { kind: "image"; src: string; label: string }
-  | { kind: "video"; src: string; label: string; poster?: string };
+type GalleryItem = { src: string; label: string };
 
 const youtubeEmbedUrl = (videoUrl: string, autoplay = false) => {
   try {
@@ -234,20 +231,9 @@ function PropertyDetails() {
         : [];
   const galleryItems: GalleryItem[] = [
     ...images.map((src, index) => ({
-      kind: "image" as const,
       src,
       label: `Property photo ${index + 1}`,
     })),
-    ...(property?.videoUrl
-      ? [
-          {
-            kind: "video" as const,
-            src: property.videoUrl,
-            label: "Property video tour",
-            poster: images[0] || property.img,
-          },
-        ]
-      : []),
   ];
   const tiles = images.slice(0, 4);
 
@@ -360,8 +346,7 @@ function PropertyDetails() {
     if (
       !event.isPrimary ||
       (event.pointerType !== "touch" && event.pointerType !== "pen") ||
-      selectedMediaIndex === null ||
-      galleryItems[selectedMediaIndex]?.kind !== "image"
+      selectedMediaIndex === null
     ) {
       return;
     }
@@ -382,8 +367,7 @@ function PropertyDetails() {
     if (
       !start ||
       start.pointerId !== event.pointerId ||
-      selectedMediaIndex === null ||
-      galleryItems[selectedMediaIndex]?.kind !== "image"
+      selectedMediaIndex === null
     ) {
       return;
     }
@@ -833,7 +817,7 @@ function PropertyDetails() {
                   className="absolute bottom-4 right-4 inline-flex cursor-pointer items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-100 dark:border-gray-600/30 dark:bg-[#1A1A1A] dark:text-white dark:hover:bg-[#262626]"
                 >
                   <FiGrid size={14} />
-                  Show all photos{property.videoUrl ? " & video" : ""}
+                  Show all photos
                 </button>
               )}
             </div>
@@ -855,11 +839,11 @@ function PropertyDetails() {
               <Dialog.Overlay className="fixed inset-0 z-50 bg-white dark:bg-[#101010]" />
               <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto bg-white text-gray-900 outline-none dark:bg-[#101010] dark:text-white">
                 <Dialog.Title className="sr-only">
-                  Photos and video of {property.name}
+                  Photos of {property.name}
                 </Dialog.Title>
                 <Dialog.Description className="sr-only">
-                  Browse all property photos and play the property video. Use
-                  the arrow keys to navigate in full-screen view.
+                  Browse all property photos. Use the arrow keys to navigate in
+                  full-screen view.
                 </Dialog.Description>
                 <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white/95 px-4 py-3 backdrop-blur dark:border-gray-600/30 dark:bg-[#101010]/95 sm:px-8">
                   {galleryView === "viewer" ? (
@@ -872,11 +856,11 @@ function PropertyDetails() {
                       className="inline-flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold hover:bg-gray-100 dark:hover:bg-white/10"
                     >
                       <FiChevronLeft size={18} />
-                      {property.videoUrl ? "All photos & video" : "All photos"}
+                      All photos
                     </button>
                   ) : (
                     <p className="text-sm font-semibold">
-                      {galleryItems.length} {property.videoUrl ? "photos and video" : "photos"}
+                      {galleryItems.length} photos
                     </p>
                   )}
                   {galleryView === "viewer" && selectedMediaIndex !== null && (
@@ -900,43 +884,23 @@ function PropertyDetails() {
                     {galleryItems.map((item, index) => (
                       <button
                         type="button"
-                        key={`${item.kind}-${item.src}`}
+                        key={item.src}
                         onClick={() => {
                           setSelectedMediaIndex(index);
                           setGalleryView("viewer");
                         }}
                         className="group relative aspect-4/3 cursor-pointer overflow-hidden rounded-lg bg-gray-100 text-left dark:bg-white/5"
                       >
-                        {item.kind === "image" ? (
-                          <>
-                            <img
-                              src={item.src}
-                              alt={item.label}
-                              loading="lazy"
-                              decoding="async"
-                              className="h-full w-full object-cover transition duration-300 group-hover:brightness-90"
-                            />
-                            <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/50 p-2 text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
-                              <FiMaximize2 size={18} aria-hidden="true" />
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            <img
-                              src={item.poster}
-                              alt=""
-                              loading="lazy"
-                              decoding="async"
-                              className="h-full w-full object-cover"
-                            />
-                            <span className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/35 text-white">
-                              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-gray-900">
-                                <FiPlay size={20} fill="currentColor" />
-                              </span>
-                              <span className="text-sm font-semibold">Property video</span>
-                            </span>
-                          </>
-                        )}
+                        <img
+                          src={item.src}
+                          alt={item.label}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-full w-full object-cover transition duration-300 group-hover:brightness-90"
+                        />
+                        <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/50 p-2 text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                          <FiMaximize2 size={18} aria-hidden="true" />
+                        </span>
                       </button>
                     ))}
                   </div>
@@ -961,30 +925,11 @@ function PropertyDetails() {
                       onPointerCancel={handleViewerPointerCancel}
                       className="flex max-h-[calc(100vh-110px)] w-full max-w-5xl touch-pan-y items-center justify-center"
                     >
-                      {galleryItems[selectedMediaIndex].kind === "image" ? (
-                        <img
-                          src={galleryItems[selectedMediaIndex].src}
-                          alt={galleryItems[selectedMediaIndex].label}
-                          className="max-h-[calc(100vh-120px)] max-w-full rounded-lg object-contain"
-                        />
-                      ) : youtubeEmbedUrl(galleryItems[selectedMediaIndex].src) ? (
-                        <iframe
-                          src={youtubeEmbedUrl(galleryItems[selectedMediaIndex].src)!}
-                          title={galleryItems[selectedMediaIndex].label}
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                          allowFullScreen
-                          className="aspect-video w-full rounded-lg"
-                        />
-                      ) : (
-                        <video
-                          key={galleryItems[selectedMediaIndex].src}
-                          src={galleryItems[selectedMediaIndex].src}
-                          poster={galleryItems[selectedMediaIndex].poster}
-                          controls
-                          playsInline
-                          className="max-h-[calc(100vh-120px)] max-w-full rounded-lg"
-                        />
-                      )}
+                      <img
+                        src={galleryItems[selectedMediaIndex].src}
+                        alt={galleryItems[selectedMediaIndex].label}
+                        className="max-h-[calc(100vh-120px)] max-w-full rounded-lg object-contain"
+                      />
                     </div>
                     <button
                       type="button"
