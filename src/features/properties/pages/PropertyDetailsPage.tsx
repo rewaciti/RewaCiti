@@ -258,8 +258,7 @@ function PropertyDetails() {
   const [galleryView, setGalleryView] = useState<"grid" | "viewer">("grid");
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [mobileImageIndex, setMobileImageIndex] = useState(0);
-  const touchStartRef = useRef<{ x: number; y: number; pointerId: number } | null>(null);
-  const suppressGalleryClickRef = useRef(false);
+  const viewerTouchStartRef = useRef<{ x: number; y: number; pointerId: number } | null>(null);
 
   const [isInspectionModalOpen, setIsInspectionModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -355,44 +354,53 @@ function PropertyDetails() {
     setIsGalleryOpen(true);
   };
 
-  const handleMobileGalleryPointerDown = (
-    event: React.PointerEvent<HTMLButtonElement>,
+  const handleViewerPointerDown = (
+    event: React.PointerEvent<HTMLDivElement>,
   ) => {
-    if (!event.isPrimary || (event.pointerType !== "touch" && event.pointerType !== "pen")) {
+    if (
+      !event.isPrimary ||
+      (event.pointerType !== "touch" && event.pointerType !== "pen") ||
+      selectedMediaIndex === null ||
+      galleryItems[selectedMediaIndex]?.kind !== "image"
+    ) {
       return;
     }
 
-    touchStartRef.current = {
+    viewerTouchStartRef.current = {
       x: event.clientX,
       y: event.clientY,
       pointerId: event.pointerId,
     };
-    suppressGalleryClickRef.current = false;
     event.currentTarget.setPointerCapture(event.pointerId);
   };
 
-  const handleMobileGalleryPointerUp = (
-    event: React.PointerEvent<HTMLButtonElement>,
+  const handleViewerPointerUp = (
+    event: React.PointerEvent<HTMLDivElement>,
   ) => {
-    const start = touchStartRef.current;
-    touchStartRef.current = null;
-    if (!start || start.pointerId !== event.pointerId || images.length < 2) return;
+    const start = viewerTouchStartRef.current;
+    viewerTouchStartRef.current = null;
+    if (
+      !start ||
+      start.pointerId !== event.pointerId ||
+      selectedMediaIndex === null ||
+      galleryItems[selectedMediaIndex]?.kind !== "image"
+    ) {
+      return;
+    }
 
     const deltaX = event.clientX - start.x;
     const deltaY = event.clientY - start.y;
     if (Math.abs(deltaX) < 40 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
 
-    suppressGalleryClickRef.current = true;
-    window.setTimeout(() => {
-      suppressGalleryClickRef.current = false;
-    }, 0);
-    setMobileImageIndex((index) =>
-      Math.max(0, Math.min(index + (deltaX < 0 ? 1 : -1), images.length - 1)),
+    setSelectedMediaIndex((index) =>
+      index === null
+        ? null
+        : Math.max(0, Math.min(index + (deltaX < 0 ? 1 : -1), galleryItems.length - 1)),
     );
   };
 
-  const handleMobileGalleryPointerCancel = () => {
-    touchStartRef.current = null;
+  const handleViewerPointerCancel = () => {
+    viewerTouchStartRef.current = null;
   };
 
   const openInspection = () => setIsInspectionModalOpen(true);
@@ -759,18 +767,9 @@ function PropertyDetails() {
               {/* Mobile: one hero photo */}
               <button
                 type="button"
-                onClick={() => {
-                  if (suppressGalleryClickRef.current) {
-                    suppressGalleryClickRef.current = false;
-                    return;
-                  }
-                  openViewer(mobileImageIndex);
-                }}
-                onPointerDown={handleMobileGalleryPointerDown}
-                onPointerUp={handleMobileGalleryPointerUp}
-                onPointerCancel={handleMobileGalleryPointerCancel}
+                onClick={() => openViewer(mobileImageIndex)}
                 aria-label="View property photos"
-                className="group relative block aspect-4/3 w-full touch-pan-y select-none overflow-hidden bg-gray-200 dark:bg-[#1A1A1A] sm:hidden"
+                className="group relative block aspect-4/3 w-full select-none overflow-hidden bg-gray-200 dark:bg-[#1A1A1A] sm:hidden"
               >
                 {images[mobileImageIndex] && (
                   <>
@@ -956,7 +955,12 @@ function PropertyDetails() {
                     >
                       <FiChevronLeft size={22} />
                     </button>
-                    <div className="flex max-h-[calc(100vh-110px)] w-full max-w-5xl items-center justify-center">
+                    <div
+                      onPointerDown={handleViewerPointerDown}
+                      onPointerUp={handleViewerPointerUp}
+                      onPointerCancel={handleViewerPointerCancel}
+                      className="flex max-h-[calc(100vh-110px)] w-full max-w-5xl touch-pan-y items-center justify-center"
+                    >
                       {galleryItems[selectedMediaIndex].kind === "image" ? (
                         <img
                           src={galleryItems[selectedMediaIndex].src}
