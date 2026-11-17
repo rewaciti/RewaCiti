@@ -424,7 +424,7 @@ function PropertyCard({ property, featured }: PropertyCardProps) {
           </div>
 
           <div className="mt-2 flex flex-wrap items-end justify-between gap-2">
-            <p className="min-w-0 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <p className="min-w-0 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
               ₦{formatCurrency(property.pricing.total)}
               {periodLabel && (
                 <span className="ml-1 text-sm font-semibold">{periodLabel}</span>
