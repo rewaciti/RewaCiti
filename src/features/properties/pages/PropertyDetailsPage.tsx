@@ -541,6 +541,11 @@ function PropertyDetails() {
     const name = agent?.name.trim();
     if (!agent || !name) return null;
 
+    const rating = agent.rating;
+    const averageRating = typeof rating?.average === "number" ? rating.average : 0;
+    const reviewCount = typeof rating?.count === "number" ? rating.count : 0;
+    const filledStars = Math.min(5, Math.max(0, Math.round(averageRating)));
+
     return (
       <div className="mt-5 flex items-center gap-4 rounded-xl border border-[#E8DFD2] bg-white p-6 dark:border-gray-600/30 dark:bg-[#1A1A1A]">
         {agent.photo ? (
@@ -564,6 +569,31 @@ function PropertyDetails() {
           <p className="truncate text-lg font-semibold text-gray-900 dark:text-white">
             {name}
           </p>
+
+          {averageRating > 0 && reviewCount > 0 ? (
+            <div className="mt-2 flex items-center gap-2 text-sm">
+              <div
+                role="img"
+                aria-label={`Rated ${averageRating.toFixed(1)} out of 5`}
+                className="flex items-center gap-0.5 leading-none text-amber-400"
+              >
+                {[0, 1, 2, 3, 4].map((starIndex) => (
+                  <span
+                    key={starIndex}
+                    aria-hidden="true"
+                    className={starIndex < filledStars ? "text-amber-400" : "text-gray-300 dark:text-gray-600"}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              <span className="font-medium text-gray-600 dark:text-gray-400">
+                {averageRating.toFixed(1)} ({reviewCount})
+              </span>
+            </div>
+          ) : (
+            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">No ratings yet</p>
+          )}
         </div>
       </div>
     );
