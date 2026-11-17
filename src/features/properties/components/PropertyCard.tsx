@@ -256,7 +256,7 @@ function PropertyCard({ property, featured }: PropertyCardProps) {
       onKeyDown={(e) => {
         if (e.key === "Enter" && e.target === e.currentTarget) handleCardClick();
       }}
-      className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 text-gray-900 dark:text-white shadow-sm hover:shadow-lg transition-all duration-300 rounded-2xl overflow-hidden flex flex-col h-full cursor-pointer animate-fade-in-up focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#703BF7]"
+      className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 text-gray-900 dark:text-white shadow-sm hover:shadow-lg transition-all duration-300 rounded-2xl overflow-hidden flex flex-col h-full cursor-pointer animate-fade-in-up focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#703BF7]"
     >
       {/* Image carousel, edge to edge */}
       <div
@@ -276,14 +276,13 @@ function PropertyCard({ property, featured }: PropertyCardProps) {
               alt={`${property.name} ${idx + 1}`}
               loading="lazy"
               decoding="async"
-              className="w-full aspect-[4/3] object-cover shrink-0 bg-gray-200 dark:bg-neutral-800"
+              className="w-full aspect-4/3 object-cover shrink-0 bg-gray-200 dark:bg-neutral-800"
               draggable={false}
             />
           ))}
         </div>
 
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] bg-black/5" />
-
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-1 bg-black/5" />
         {/* Top-left pills */}
         <div className="absolute z-10 top-3 left-3 right-24 flex flex-wrap items-center gap-2 pointer-events-none">
           {property.listingType && (

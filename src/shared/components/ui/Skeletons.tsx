@@ -6,8 +6,8 @@ export function PropertyCardSkeleton() {
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-purple-100 bg-white/90 text-gray-900 dark:border-gray-600/30 dark:bg-[#1A1A1A]">
       <div className="relative">
-        <Skeleton className="aspect-[4/3] w-full rounded-none" />
-        <div className="pointer-events-none absolute inset-0 z-[1] bg-black/5" />
+        <Skeleton className="aspect-4/3 w-full rounded-none" />
+        <div className="pointer-events-none absolute inset-0 z-1 bg-black/5" />
         <div className="absolute left-3 right-24 top-3 flex gap-2">
           <Skeleton className="h-7 w-20 rounded-full" />
           <Skeleton className="h-7 w-24 rounded-full" />
