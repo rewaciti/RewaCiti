@@ -22,11 +22,7 @@ function PropertySection() {
     fetchFeaturedProperties();
   }, [fetchFeaturedProperties]);
 
-  // fetch/slice the max count you'll ever show (4)
   const currentProperties = featuredProperties.slice(0, 4);
-
-  // sm -> 4, md -> 3, lg -> 4 (only the 4th card needs to toggle)
-  const hideOnMdOnly = "hidden sm:block md:hidden xl:block";
 
   return (
     <div className={PAGE_CONTAINER}>
@@ -49,10 +45,10 @@ function PropertySection() {
         </NavLink>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:gap-6 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
         {featuredLoading ? (
           [...Array(4)].map((_, i) => (
-            <div key={i} className={`${i === 3 ? hideOnMdOnly : ""} h-full`}>
+            <div key={i} className={i === 3 ? "hidden sm:block lg:hidden" : ""}>
               <PropertyCardSkeleton />
             </div>
           ))
@@ -77,7 +73,7 @@ function PropertySection() {
           </div>
         ) : (
           currentProperties.map((item, i) => (
-            <div key={item.id} className={`${i === 3 ? hideOnMdOnly : ""} h-full`}>
+            <div key={item.id} className={i === 3 ? "hidden sm:block lg:hidden" : ""}>
               <PropertyCard property={item} />
             </div>
           ))

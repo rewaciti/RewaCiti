@@ -698,9 +698,9 @@ function PropertySearchSection() {
                     @keyframes propertyListShiftLeft { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
                     @keyframes propertyMapSlideInRight { from { opacity: 0; transform: translateX(32px); } to { opacity: 1; transform: translateX(0); } }
                   `}</style>
-                  <div className="flex flex-col items-start gap-6 lg:flex-row">
+                  <div className="flex flex-col items-start gap-6 lg:grid lg:grid-cols-[minmax(0,0.36fr)_minmax(0,0.64fr)]">
                     <div
-                      className="hidden w-full lg:block lg:w-[42%]"
+                      className="hidden w-full lg:block"
                       style={{ animation: "propertyListShiftLeft 0.35s ease-out" }}
                     >
                       <div className="mb-5">
@@ -709,7 +709,7 @@ function PropertySearchSection() {
                         </h1>
                       </div>
 
-                      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                      <div className="grid grid-cols-1 gap-4">
                         {currentProperties.map((property) => (
                           <div
                             key={property.id}
@@ -726,7 +726,7 @@ function PropertySearchSection() {
 
                     {/* Map panel: top/height driven by the measured offsets so it starts exactly below the bars and fills the rest of the viewport */}
                     <div
-                      className="z-10 w-full overflow-hidden rounded-3xl lg:sticky lg:w-[58%]"
+                      className="z-10 w-full overflow-hidden rounded-3xl lg:sticky"
                       style={{
                         top: `${mapTopOffset + 16}px`,
                         height: `calc(100vh - ${mapTopOffset + 32}px)`,
@@ -764,9 +764,9 @@ function PropertySearchSection() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:gap-6 xl:grid-cols-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
                   {loading ? (
-                    [...Array(8)].map((_, i) => <PropertyCardSkeleton key={i} />)
+                    [...Array(6)].map((_, i) => <PropertyCardSkeleton key={i} />)
                   ) : error ? (
                     // Not "no results": the search didn't reach us, so changing filters won't help
                     <div

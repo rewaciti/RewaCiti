@@ -4,35 +4,47 @@ const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
 
 export function PropertyCardSkeleton() {
   return (
-    <div className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 rounded-lg p-2 h-full flex flex-col justify-between">
-      <div>
-        {/* Image + floating share/shortlist buttons */}
-        <div className="relative mb-3">
-          <Skeleton className="w-full h-44 rounded-md" />
-          <div className="absolute bottom-1 right-1 flex gap-1">
-            <Skeleton className="h-7 w-7 rounded-full" />
-            <Skeleton className="h-7 w-7 rounded-full" />
-          </div>
+    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-purple-100 bg-white/90 text-gray-900 dark:border-gray-600/30 dark:bg-[#1A1A1A]">
+      <div className="relative">
+        <Skeleton className="aspect-[4/3] w-full rounded-none" />
+        <div className="pointer-events-none absolute inset-0 z-[1] bg-black/5" />
+        <div className="absolute left-3 right-24 top-3 flex gap-2">
+          <Skeleton className="h-7 w-20 rounded-full" />
+          <Skeleton className="h-7 w-24 rounded-full" />
         </div>
-        <Skeleton className="h-5 w-3/4 mb-2" />
-        <Skeleton className="h-3 w-1/2 mb-3" />
-        <div className="space-y-2 mb-3">
+        <div className="absolute right-3 top-3 flex gap-2">
+          <Skeleton className="h-9 w-9 rounded-full" />
+          <Skeleton className="h-9 w-9 rounded-full" />
+        </div>
+        <Skeleton className="absolute left-3 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full" />
+        <Skeleton className="absolute right-3 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full" />
+        <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
+          <Skeleton className="h-1.5 w-1.5 rounded-full" />
+          <Skeleton className="h-1.5 w-1.5 rounded-full" />
+          <Skeleton className="h-1.5 w-1.5 rounded-full" />
+          <Skeleton className="h-1.5 w-1.5 rounded-full" />
+        </div>
+      </div>
+
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
+        <Skeleton className="h-6 w-3/4 max-w-full" />
+        <Skeleton className="mt-3 h-5 w-2/3 max-w-full" />
+        <div className="mt-2 space-y-1.5">
           <Skeleton className="h-3 w-full" />
           <Skeleton className="h-3 w-2/3" />
         </div>
-        {/* Bedrooms / bathrooms / category — mirrors card grid */}
-        <div className="grid grid-cols-2 gap-2 mb-3">
-          <Skeleton className="h-8 rounded-2xl" />
-          <Skeleton className="h-8 rounded-2xl" />
-          <Skeleton className="h-7 rounded-xl col-span-2" />
+
+        <div className="mt-auto pt-4">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-purple-100 pt-3 dark:border-gray-600/30">
+            <Skeleton className="h-5 w-14" />
+            <Skeleton className="h-5 w-14" />
+            <Skeleton className="h-5 w-24" />
+          </div>
+          <div className="mt-2 flex flex-wrap items-end justify-between gap-2">
+            <Skeleton className="h-8 w-40 max-w-full" />
+            <Skeleton className="h-8 w-28 rounded-xl" />
+          </div>
         </div>
-      </div>
-      <div className="flex justify-between items-center mt-auto">
-        <div className="space-y-1">
-          <Skeleton className="h-3 w-16" />
-          <Skeleton className="h-5 w-20" />
-        </div>
-        <Skeleton className="h-8 w-24 rounded-md" />
       </div>
     </div>
   );
