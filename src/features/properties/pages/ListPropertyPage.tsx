@@ -11,6 +11,7 @@ import CustomDropdown from "../components/CustomDropdown";
 import Navbar from "../../../shared/components/Layout/Navbar";
 import Footer from "../../../shared/components/Layout/Footer";
 import { FiCheckCircle, FiClock, FiShield } from "react-icons/fi";
+import { useAgentAuthStore } from "../../agent/store/useAgentAuthStore";
 
 const LISTER_ROLE_OPTIONS = [
   { label: "Real Estate Agent / Broker", value: "Real Estate Agent" },
@@ -31,6 +32,7 @@ const LISTING_PURPOSE_OPTIONS = [
 
 const ListPropertyPage: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
+  const agentToken = useAgentAuthStore((state) => state.token);
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -396,6 +398,20 @@ const ListPropertyPage: React.FC = () => {
                   </span>
                 </li>
               </ul>
+            </div>
+            <div className="rounded-2xl border border-[#703BF7]/20 bg-[#703BF7]/5 p-5 dark:border-[#b79bff]/20 dark:bg-[#703BF7]/10">
+              <p className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">
+                Already approved as an agent?
+              </p>
+              <p className="mb-4 text-sm leading-6 text-gray-600 dark:text-gray-400">
+                Open the agent portal to manage listings, visits, leads, and your profile.
+              </p>
+              <Link
+                to={agentToken ? "/agent" : "/agent/login"}
+                className="inline-flex w-full items-center justify-center rounded-lg border border-[#703BF7] px-4 py-2.5 text-sm font-semibold text-[#703BF7] transition hover:bg-[#703BF7] hover:text-white dark:border-[#b79bff] dark:text-[#b79bff] dark:hover:bg-[#703BF7] dark:hover:text-white"
+              >
+                {agentToken ? "Go to agent portal" : "Sign in to agent portal"}
+              </Link>
             </div>
           </aside>
           </div>

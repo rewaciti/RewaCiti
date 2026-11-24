@@ -29,6 +29,10 @@ import PropertyFeatureIconsPage from "../features/properties/pages/PropertyFeatu
 import ListPropertyPage from "../features/properties/pages/ListPropertyPage";
 import RequestPropertyPage from "../features/properties/pages/RequestPropertyPage";
 import CoRentPage from "../features/properties/pages/CoRentPage";
+import AgentLoginPage from "../features/agent/pages/AgentLoginPage";
+import AgentForgotPasswordPage from "../features/agent/pages/AgentForgotPasswordPage";
+import AgentDashboardPage from "../features/agent/pages/AgentDashboardPage";
+import AgentListingsPage from "../features/agent/pages/AgentListingsPage";
 
 
 
@@ -82,6 +86,10 @@ function App() {
           <Route path="/auth/google" element={<GoogleCallback />} />
           <Route path="/auth/profile" element={<AccountPage />} />
           <Route path="/auth/profile/settings" element={<Profile />} />
+          <Route path="/agent/login" element={<AgentLoginPage />} />
+          <Route path="/agent/forgot-password" element={<AgentForgotPasswordPage />} />
+          <Route path="/agent/listings/*" element={<AgentListingsPage />} />
+          <Route path="/agent/*" element={<AgentDashboardPage />} />
           <Route path="/AllComments" element={<AllComments />} />
           <Route path="/AllFAQs" element={<AllFAQs />} />
           <Route path="/About" element={<About />} />
