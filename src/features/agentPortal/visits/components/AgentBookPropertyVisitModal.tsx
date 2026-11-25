@@ -84,16 +84,16 @@ const AgentBookPropertyVisitModal = ({
           className="fixed top-1/2 left-1/2 z-71 flex max-h-[min(86dvh,680px)] w-[min(560px,calc(100vw-32px))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-3xl border border-gray-200 bg-white text-gray-900 shadow-2xl outline-none dark:border-white/10 dark:bg-[#1A1A1A] dark:text-white max-sm:top-auto max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:max-h-[90dvh] max-sm:translate-x-0 max-sm:translate-y-0 max-sm:rounded-t-3xl max-sm:rounded-b-none max-sm:border-b-0"
           aria-describedby="agent-pick-visit-property-description"
         >
-          <header className="flex shrink-0 items-start justify-between gap-3 border-b border-gray-200 px-6 py-5 dark:border-white/10 max-sm:px-5 max-sm:py-4">
-            <div className="flex items-start gap-3">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#703BF7]/10 text-[#703BF7] dark:bg-[#B79BFF]/15 dark:text-[#B79BFF]" aria-hidden="true">
+          <header className="flex shrink-0 items-start justify-between gap-2 border-b border-gray-200 px-6 py-5 dark:border-white/10 max-sm:gap-2 max-sm:px-5 max-sm:py-4">
+            <div className="flex min-w-0 flex-1 items-start gap-3 max-sm:gap-2">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#703BF7]/10 text-[#703BF7] dark:bg-[#B79BFF]/15 dark:text-[#B79BFF] max-sm:h-9 max-sm:w-9" aria-hidden="true">
                 <CalendarPlus size={19} />
               </span>
-              <div>
+              <div className="min-w-0">
                 <Dialog.Title className="m-0 font-serif text-xl font-semibold text-gray-900 dark:text-white max-sm:text-lg">
                   Book a visit
                 </Dialog.Title>
-                <Dialog.Description id="agent-pick-visit-property-description" className="mt-1 mb-0 text-xs text-gray-600 dark:text-gray-400 sm:text-sm">
+                <Dialog.Description id="agent-pick-visit-property-description" className="mt-1 mb-0 text-xs text-gray-600 dark:text-gray-400 sm:text-sm max-sm:text-[11px]">
                   Choose a live property to open the booking calendar.
                 </Dialog.Description>
               </div>

@@ -273,10 +273,10 @@ const BookInspectionModal = ({ property, open, onOpenChange }: BookInspectionMod
     <Dialog.Root open={open} onOpenChange={onOpenChange} modal={false}>
       <Dialog.Portal>
         <Dialog.Content className="fixed top-1/2 left-1/2 z-71 flex max-h-[min(90dvh,900px)] w-[min(820px,calc(100vw-32px))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-3xl border border-gray-200 bg-white text-gray-900 shadow-2xl outline-none dark:border-white/10 dark:bg-[#1A1A1A] dark:text-white max-[700px]:top-auto max-[700px]:bottom-0 max-[700px]:left-0 max-[700px]:w-full max-[700px]:max-h-[92dvh] max-[700px]:translate-x-0 max-[700px]:translate-y-0 max-[700px]:rounded-t-3xl max-[700px]:rounded-b-none max-[700px]:border-b-0" aria-describedby="client-book-modal-description">
-          <header className="relative z-1 flex flex-[0_0_auto] items-start justify-between gap-4 border-b border-gray-200 bg-white px-[26px] py-[21px] dark:border-white/10 dark:bg-[#1A1A1A] max-[700px]:px-[18px] max-[700px]:py-[17px]">
-            <div>
-              <Dialog.Title className="m-0 font-serif text-[25px] font-semibold">Book a visit</Dialog.Title>
-              <p className="mt-1 mb-0 text-[13px] text-gray-500 dark:text-gray-400">Choose a time, add your details and pay the visit fee securely.</p>
+          <header className="relative z-1 flex flex-[0_0_auto] items-start justify-between gap-3 border-b border-gray-200 bg-white px-[26px] py-[21px] dark:border-white/10 dark:bg-[#1A1A1A] max-[700px]:gap-2 max-[700px]:px-[18px] max-[700px]:py-[17px]">
+            <div className="min-w-0 flex-1">
+              <Dialog.Title className="m-0 font-serif text-[25px] font-semibold max-[700px]:text-[22px]">Book a visit</Dialog.Title>
+              <p className="mt-1 mb-0 text-[13px] text-gray-500 dark:text-gray-400 max-[700px]:text-xs max-[700px]:leading-[1.4]">Choose a time, add your details and pay the visit fee securely.</p>
             </div>
             <Dialog.Description id="client-book-modal-description" className="sr-only">
               Choose a date and time, provide your contact details, and book a visit to {property.name}.
@@ -290,9 +290,9 @@ const BookInspectionModal = ({ property, open, onOpenChange }: BookInspectionMod
 
           <form onSubmit={(event) => void submit(event)} className="flex min-h-0 flex-1 flex-col">
             <div className="grid min-h-0 gap-5 overflow-y-auto px-[26px] py-5 max-[700px]:gap-[17px] max-[700px]:px-[18px] max-[700px]:py-4">
-              <section className="flex min-w-0 items-center gap-3.5 rounded-2xl border border-gray-200 bg-gray-100 p-3 dark:border-white/15 dark:bg-[#202020]">
-                {property.img ? <img className="h-[68px] w-[82px] shrink-0 overflow-hidden rounded-[11px] bg-gray-200 object-cover dark:bg-[#303030]" src={property.img} alt="" /> : <div className="grid h-[68px] w-[82px] shrink-0 place-items-center overflow-hidden rounded-[11px] bg-gray-200 dark:bg-[#303030]"><CalendarDays size={22} /></div>}
-                <div className="grid min-w-0 gap-1">
+              <section className="flex min-w-0 flex-wrap items-center gap-3 rounded-2xl border border-gray-200 bg-gray-100 p-3 dark:border-white/15 dark:bg-[#202020] max-[700px]:gap-y-2.5">
+                {property.img ? <img className="h-[68px] w-[82px] shrink-0 overflow-hidden rounded-[11px] bg-gray-200 object-cover dark:bg-[#303030] max-[700px]:h-[60px] max-[700px]:w-[70px]" src={property.img} alt="" /> : <div className="grid h-[68px] w-[82px] shrink-0 place-items-center overflow-hidden rounded-[11px] bg-gray-200 dark:bg-[#303030] max-[700px]:h-[60px] max-[700px]:w-[70px]"><CalendarDays size={22} /></div>}
+                <div className="grid min-w-0 flex-1 gap-1">
                   <strong className="truncate text-[15px]">{property.name}</strong>
                   <span className="flex items-center gap-[5px] text-xs text-gray-500 dark:text-gray-400"><MapPin size={14} /> {addressOf(property)}</span>
                   <div className="flex flex-wrap items-center gap-[7px]">
@@ -301,7 +301,7 @@ const BookInspectionModal = ({ property, open, onOpenChange }: BookInspectionMod
                     {property.bathrooms > 0 && <span className="inline-flex items-center gap-[3px] text-[11px] text-gray-500"><Bath size={14} /> {property.bathrooms} bath</span>}
                   </div>
                 </div>
-                <div className="ml-auto grid shrink-0 justify-items-end gap-0.5">
+                <div className="ml-auto grid shrink-0 justify-items-end gap-0.5 max-[700px]:ml-0 max-[700px]:w-full max-[700px]:justify-items-start max-[700px]:border-t max-[700px]:border-gray-200 max-[700px]:pt-2 dark:max-[700px]:border-white/10">
                   <span className="text-[10px] text-gray-500 dark:text-gray-400">Total amount</span>
                   <strong className="whitespace-nowrap text-[15px]">{totalAmount}</strong>
                   {property.pricing.total !== property.pricing.base && (
