@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
-import { useAuthStore } from "../../auth/store/useAuthStore";
+import { useAuthStore } from "@/shared/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
-import { getCookie, setCookie } from "../../../shared/lib/utils";
-import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
-import useRequestKey from "../../../shared/hooks/useRequestKey";
+import { getCookie, setCookie } from "@/shared/lib/utils";
+import { errorMessage, noteTestMode } from "@/shared/lib/realEstateApi";
+import useRequestKey from "@/shared/hooks/useRequestKey";
 import { requestsAPI } from "../services/requestsAPI";
-import CustomDropdown from "../components/CustomDropdown";
-import Navbar from "../../../shared/components/Layout/Navbar";
-import Footer from "../../../shared/components/Layout/Footer";
+import CustomDropdown from "@/shared/components/CustomDropdown";
+import Navbar from "@/shared/components/Layout/Navbar";
+import Footer from "@/shared/components/Layout/Footer";
 import { FiCheckCircle, FiClock, FiShield } from "react-icons/fi";
-import { useAgentAuthStore } from "@/features/agent/common/store/useAgentAuthStore";
+import { hasAgentSession } from "@/shared/lib/agentSession";
 
 const LISTER_ROLE_OPTIONS = [
   { label: "Real Estate Agent / Broker", value: "Real Estate Agent" },
@@ -32,7 +32,7 @@ const LISTING_PURPOSE_OPTIONS = [
 
 const ListPropertyPage: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
-  const agentToken = useAgentAuthStore((state) => state.token);
+  const hasAgentToken = hasAgentSession();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -407,10 +407,10 @@ const ListPropertyPage: React.FC = () => {
                 Open the agent portal to manage listings, visits, leads, and your profile.
               </p>
               <Link
-                to={agentToken ? "/agent" : "/agent/login"}
+                to={hasAgentToken ? "/agent" : "/agent/login"}
                 className="inline-flex w-full items-center justify-center rounded-lg border border-[#703BF7] px-4 py-2.5 text-sm font-semibold text-[#703BF7] transition hover:bg-[#703BF7] hover:text-white dark:border-[#b79bff] dark:text-[#b79bff] dark:hover:bg-[#703BF7] dark:hover:text-white"
               >
-                {agentToken ? "Go to agent portal" : "Sign in to agent portal"}
+                {hasAgentToken ? "Go to agent portal" : "Sign in to agent portal"}
               </Link>
             </div>
           </aside>

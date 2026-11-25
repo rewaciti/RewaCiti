@@ -15,14 +15,14 @@ import {
   XCircle,
 } from "lucide-react";
 import { toast } from "sonner";
-import CustomDropdown from "@/features/properties/components/CustomDropdown";
+import CustomDropdown from "@/shared/components/CustomDropdown";
 import {
   agentAPI,
   agentErrorMessage,
   type AgentBooking,
   type AgentPropertySlot,
-} from "@/features/agent/common/services/agentAPI";
-import { money } from "@/features/agent/common/utils/agentListingUtils";
+} from "@/features/agentPortal/common/services/agentAPI";
+import { money } from "@/features/agentPortal/common/utils/agentListingUtils";
 import {
   PAYMENT_METHOD_OPTIONS,
   formatVisitDateTime,
@@ -30,7 +30,7 @@ import {
   paymentStatusPillClass,
   visitStatusLabel,
   visitStatusPillClass,
-} from "@/features/agent/common/utils/agentVisitUtils";
+} from "@/features/agentPortal/common/utils/agentVisitUtils";
 
 interface AgentVisitDetailViewProps {
   booking: AgentBooking;

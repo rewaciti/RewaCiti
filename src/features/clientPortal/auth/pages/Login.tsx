@@ -5,9 +5,9 @@ import { useNavigate, Link } from "react-router";
 import { toast } from "sonner";
 import { authAPI } from "../services/authAPI";
 import { canUseGoogleSignIn, startGoogleSignIn } from "../services/googleSignIn";
-import { useAuthStore } from "../store/useAuthStore";
-import { usePropertyStore } from "../../properties/store/usePropertyStore";
-import Navbar from "../../../shared/components/Layout/Navbar";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import { usePropertyStore } from "@/shared/store/usePropertyStore";
+import Navbar from "@/shared/components/Layout/Navbar";
 import { Helmet } from "react-helmet-async";
 
 const REMEMBERED_EMAIL_KEY = "rewaciti_remembered_email";

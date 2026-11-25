@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { FiUser, FiLogOut } from "react-icons/fi";
-import { useAuthStore } from "../store/useAuthStore";
+import { useAuthStore } from "@/shared/store/useAuthStore";
 import { useNavigate } from "react-router";
 
 interface ProfileDropdownProps {

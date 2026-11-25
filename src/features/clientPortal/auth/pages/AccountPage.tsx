@@ -16,12 +16,12 @@ import {
   FiX,
 } from "react-icons/fi";
 import { toast } from "sonner";
-import Navbar from "../../../shared/components/Layout/Navbar";
-import Footer from "../../../shared/components/Layout/Footer";
-import { Skeleton } from "../../../shared/components/ui/Skeleton";
-import { errorMessage, noteTestMode, realEstateApi } from "../../../shared/lib/realEstateApi";
-import { payInvoice } from "../../../shared/lib/payments";
-import { visitsAPI } from "../../inspections/services/visitsAPI";
+import Navbar from "@/shared/components/Layout/Navbar";
+import Footer from "@/shared/components/Layout/Footer";
+import { Skeleton } from "@/shared/components/ui/Skeleton";
+import { errorMessage, noteTestMode, realEstateApi } from "@/shared/lib/realEstateApi";
+import { payInvoice } from "@/shared/lib/payments";
+import { visitsAPI } from "@/shared/api/visitsAPI";
 import { requestsAPI } from "../../properties/services/requestsAPI";
 import { authAPI } from "../services/authAPI";
 import type { ProfileResponse } from "../services/authAPI";
@@ -32,12 +32,12 @@ import {
   type AccountRequest,
   type AccountVisit,
 } from "../services/accountAPI";
-import { useAuthStore } from "../store/useAuthStore";
-import { usePropertyStore } from "../../properties/store/usePropertyStore";
-import { propertiesAPI } from "../../properties/services/propertiesAPI";
-import { pricePeriodLabel, toProperty } from "../../properties/services/toProperty";
-import type { Property } from "../../../types";
-import type { VisitSlot } from "../../../types/realEstate";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import { usePropertyStore } from "@/shared/store/usePropertyStore";
+import { propertiesAPI } from "@/shared/api/propertiesAPI";
+import { pricePeriodLabel, toProperty } from "@/shared/domain/property/toProperty";
+import type { Property } from "@/types";
+import type { VisitSlot } from "@/types/realEstate";
 
 type AccountTab = "saved" | "visits" | "payments" | "messages" | "profile";
 type VisitFilter = "upcoming" | "all";

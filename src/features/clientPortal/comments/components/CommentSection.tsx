@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useCommentStore } from "../store/useCommentStore"; // Your Zustand store for comments
-import type { Comment } from "../../../types";
+import type { Comment } from "@/types";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { NavLink } from "react-router";
 
-import { CommentCardSkeleton } from "../../../shared/components/ui/Skeletons";
+import { CommentCardSkeleton } from "@/shared/components/ui/Skeletons";
 
 // Same container as the Navbar, Footer and every inner page.
 const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";

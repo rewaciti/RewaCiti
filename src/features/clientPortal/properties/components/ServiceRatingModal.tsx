@@ -3,8 +3,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { FiX, FiStar } from "react-icons/fi";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
-import type { Property } from "../../../types";
-import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
+import type { Property } from "@/types";
+import { errorMessage, noteTestMode } from "@/shared/lib/realEstateApi";
 import { requestsAPI } from "../services/requestsAPI";
 
 // The inline bootstrap script in index.html defines `window.tp` synchronously

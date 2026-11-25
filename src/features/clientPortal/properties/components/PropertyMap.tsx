@@ -3,9 +3,9 @@ import { createPortal } from "react-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import type { Property } from "../../../types";
+import type { Property } from "@/types";
 import { FiMapPin, FiArrowRight, FiMaximize2, FiMinimize2 } from "react-icons/fi";
-import { pricePeriodLabel } from "../services/toProperty";
+import { pricePeriodLabel } from "@/shared/domain/property/toProperty";
 
 interface PropertyMapProps {
   properties: Property[];

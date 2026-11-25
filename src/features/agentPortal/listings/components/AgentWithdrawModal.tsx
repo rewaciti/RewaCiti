@@ -3,7 +3,7 @@ import * as React from "react";
 import { AlertTriangle, X } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { toast } from "sonner";
-import { agentAPI, agentErrorMessage, type AgentProperty } from "@/features/agent/common/services/agentAPI";
+import { agentAPI, agentErrorMessage, type AgentProperty } from "@/features/agentPortal/common/services/agentAPI";
 
 interface AgentWithdrawModalProps {
   property: AgentProperty;

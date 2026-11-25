@@ -5,14 +5,14 @@ import {
   agentAPI,
   agentErrorMessage,
   type AgentDeal,
-} from "@/features/agent/common/services/agentAPI";
-import { money } from "@/features/agent/common/utils/agentListingUtils";
+} from "@/features/agentPortal/common/services/agentAPI";
+import { money } from "@/features/agentPortal/common/utils/agentListingUtils";
 import {
   dealPropertyTitle,
   dealStatusLabel,
   dealStatusPillClass,
   formatDealDate,
-} from "@/features/agent/earnings/utils/agentEarningsUtils";
+} from "@/features/agentPortal/earnings/utils/agentEarningsUtils";
 
 interface AgentDealDetailModalProps {
   deal: AgentDeal;

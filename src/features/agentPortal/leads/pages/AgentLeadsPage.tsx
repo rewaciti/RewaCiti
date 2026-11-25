@@ -19,10 +19,10 @@ import {
 import { Navigate, useNavigate } from "react-router";
 import { Helmet } from "react-helmet-async";
 import { toast } from "sonner";
-import CustomDropdown from "@/features/properties/components/CustomDropdown";
-import AgentAddLeadModal from "@/features/agent/leads/components/AgentAddLeadModal";
-import AgentLeadDetailView from "@/features/agent/leads/components/AgentLeadDetailView";
-import AgentPortalHeader from "@/features/agent/common/components/AgentPortalHeader";
+import CustomDropdown from "@/shared/components/CustomDropdown";
+import AgentAddLeadModal from "@/features/agentPortal/leads/components/AgentAddLeadModal";
+import AgentLeadDetailView from "@/features/agentPortal/leads/components/AgentLeadDetailView";
+import AgentPortalHeader from "@/features/agentPortal/common/components/AgentPortalHeader";
 import {
   agentAPI,
   agentErrorMessage,
@@ -31,8 +31,8 @@ import {
   type AgentInquiryCounts,
   type AgentInquiryStatus,
   type AgentProfile,
-} from "@/features/agent/common/services/agentAPI";
-import { useAgentAuthStore } from "@/features/agent/common/store/useAgentAuthStore";
+} from "@/features/agentPortal/common/services/agentAPI";
+import { useAgentAuthStore } from "@/features/agentPortal/common/store/useAgentAuthStore";
 import {
   LEAD_STATUS_FILTERS,
   LEAD_STATUS_OPTIONS,
@@ -41,7 +41,7 @@ import {
   leadStatusLabel,
   leadStatusPillClass,
   type LeadTab,
-} from "@/features/agent/leads/utils/agentLeadUtils";
+} from "@/features/agentPortal/leads/utils/agentLeadUtils";
 
 const ui = {
   btn: "inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold transition-colors disabled:cursor-wait disabled:opacity-60 sm:h-10",

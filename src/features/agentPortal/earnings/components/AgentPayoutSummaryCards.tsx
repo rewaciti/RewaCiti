@@ -1,6 +1,6 @@
 import { CheckCircle2, CircleSlash2, Clock3 } from "lucide-react";
-import type { AgentPayoutSummary } from "@/features/agent/common/services/agentAPI";
-import { money } from "@/features/agent/common/utils/agentListingUtils";
+import type { AgentPayoutSummary } from "@/features/agentPortal/common/services/agentAPI";
+import { money } from "@/features/agentPortal/common/utils/agentListingUtils";
 
 interface AgentPayoutSummaryCardsProps {
   summary: AgentPayoutSummary | null;

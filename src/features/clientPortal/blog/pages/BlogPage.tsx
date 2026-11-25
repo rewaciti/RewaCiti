@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import Navbar from "../../../shared/components/Layout/Navbar";
-import Footer from "../../../shared/components/Layout/Footer";
+import Navbar from "@/shared/components/Layout/Navbar";
+import Footer from "@/shared/components/Layout/Footer";
 import { useBlogStore } from "../store/useBlogStore";
 import { Link } from "react-router";
 import { FiArrowLeft, FiArrowRight, FiCalendar, FiUser } from "react-icons/fi";
 import { Helmet } from "react-helmet-async";
-import { Skeleton } from "../../../shared/components/ui/Skeleton";
+import { Skeleton } from "@/shared/components/ui/Skeleton";
 
 const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
 const paginationButton =

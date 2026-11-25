@@ -3,10 +3,10 @@ import { FileText, Image as ImageIcon, Mail, Phone, ShieldCheck, Trash2 } from "
 import { Navigate, useNavigate } from "react-router";
 import { Helmet } from "react-helmet-async";
 import { toast } from "sonner";
-import AgentPortalHeader from "@/features/agent/common/components/AgentPortalHeader";
-import { agentAPI, agentErrorMessage, type AgentAttention, type AgentProfile } from "@/features/agent/common/services/agentAPI";
-import { useAgentAuthStore } from "@/features/agent/common/store/useAgentAuthStore";
-import { readFileAsDataUrl } from "@/features/agent/common/utils/agentListingUtils";
+import AgentPortalHeader from "@/features/agentPortal/common/components/AgentPortalHeader";
+import { agentAPI, agentErrorMessage, type AgentAttention, type AgentProfile } from "@/features/agentPortal/common/services/agentAPI";
+import { useAgentAuthStore } from "@/features/agentPortal/common/store/useAgentAuthStore";
+import { readFileAsDataUrl } from "@/features/agentPortal/common/utils/agentListingUtils";
 
 const VERIFICATION_LABELS: Record<string, string> = {
   not_sent: "Not sent",

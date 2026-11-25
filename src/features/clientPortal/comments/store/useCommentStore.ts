@@ -1,8 +1,8 @@
 // /features/comments/store/useCommentStore.ts
 import { create } from "zustand";
 import axios from "axios";
-import type { Comment, CommentStore } from "../../../types";
-import { ensureHttps } from "../../../shared/lib/utils";
+import type { Comment, CommentStore } from "@/types";
+import { ensureHttps } from "@/shared/lib/utils";
 
 export const useCommentStore = create<CommentStore>((set) => ({
   comments: [],

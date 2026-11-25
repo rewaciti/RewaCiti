@@ -3,14 +3,14 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { FiX } from "react-icons/fi";
 import { Link } from "react-router";
 import { toast } from "sonner";
-import { useAuthStore } from "../../auth/store/useAuthStore";
+import { useAuthStore } from "@/shared/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
-import { getCookie, setCookie } from "../../../shared/lib/utils";
-import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
-import useRequestKey from "../../../shared/hooks/useRequestKey";
+import { getCookie, setCookie } from "@/shared/lib/utils";
+import { errorMessage, noteTestMode } from "@/shared/lib/realEstateApi";
+import useRequestKey from "@/shared/hooks/useRequestKey";
 import { requestsAPI } from "../services/requestsAPI";
-import { addressOf } from "../services/toProperty";
-import type { Property } from "../../../types";
+import { addressOf } from "@/shared/domain/property/toProperty";
+import type { Property } from "@/types";
 
 interface InquiryModalProps {
   property: Property;

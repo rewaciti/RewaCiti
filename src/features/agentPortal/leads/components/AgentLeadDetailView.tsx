@@ -13,20 +13,20 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "sonner";
-import CustomDropdown from "@/features/properties/components/CustomDropdown";
+import CustomDropdown from "@/shared/components/CustomDropdown";
 import {
   agentAPI,
   agentErrorMessage,
   type AgentInquiry,
   type AgentInquiryStatus,
-} from "@/features/agent/common/services/agentAPI";
-import { money, periodShortLabel } from "@/features/agent/common/utils/agentListingUtils";
+} from "@/features/agentPortal/common/services/agentAPI";
+import { money, periodShortLabel } from "@/features/agentPortal/common/utils/agentListingUtils";
 import {
   LEAD_STATUS_OPTIONS,
   formatLeadDateTime,
   leadStatusLabel,
   leadStatusPillClass,
-} from "@/features/agent/leads/utils/agentLeadUtils";
+} from "@/features/agentPortal/leads/utils/agentLeadUtils";
 
 interface AgentLeadDetailViewProps {
   inquiry: AgentInquiry;

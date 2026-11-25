@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import Navbar from "../../shared/components/Layout/Navbar";
-import PropertySection from "../../features/properties/components/PropertySection";
-import FAQSection from "../../features/faq/components/FAQSection";
-import Footer from "../../shared/components/Layout/Footer";
+import Navbar from "@/shared/components/Layout/Navbar";
+import PropertySection from "../../features/clientPortal/properties/components/PropertySection";
+import FAQSection from "../../features/clientPortal/faq/components/FAQSection";
+import Footer from "@/shared/components/Layout/Footer";
 import { Link, useNavigate } from "react-router";
 import { FiSearch, FiArrowRight } from "react-icons/fi";
-import CommentSection from "../../features/comments/components/CommentSection";
-import useScrollToHash from "../../shared/hooks/useScrollToHash";
+import CommentSection from "../../features/clientPortal/comments/components/CommentSection";
+import useScrollToHash from "@/shared/hooks/useScrollToHash";
 import { Helmet } from "react-helmet-async";
-import CustomDropdown from "../../features/properties/components/CustomDropdown";
-import { usePropertyStore } from "../../features/properties/store/usePropertyStore";
+import CustomDropdown from "@/shared/components/CustomDropdown";
+import { usePropertyStore } from "@/shared/store/usePropertyStore";
 
 // Same container as the Navbar, Footer and every inner page.
 const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";

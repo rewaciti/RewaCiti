@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { CalendarPlus, ImagePlus, MapPin, Search, X } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { toast } from "sonner";
-import { agentAPI, agentErrorMessage, type AgentProperty } from "@/features/agent/common/services/agentAPI";
-import { money, periodShortLabel } from "@/features/agent/common/utils/agentListingUtils";
-import AgentBookVisitModal from "@/features/agent/listings/components/AgentBookVisitModal";
+import { agentAPI, agentErrorMessage, type AgentProperty } from "@/features/agentPortal/common/services/agentAPI";
+import { money, periodShortLabel } from "@/features/agentPortal/common/utils/agentListingUtils";
+import AgentBookVisitModal from "@/features/agentPortal/listings/components/AgentBookVisitModal";
 
 interface AgentBookPropertyVisitModalProps {
   open: boolean;

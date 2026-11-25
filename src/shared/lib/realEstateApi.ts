@@ -1,6 +1,6 @@
 import axios, { type AxiosError } from "axios";
 import { toast } from "sonner";
-import { useAuthStore } from "../../features/auth/store/useAuthStore";
+import { useAuthStore } from "@/shared/store/useAuthStore";
 
 const API_URL = import.meta.env.VITE_API_URL || "https://api.sabiflow.com/api";
 

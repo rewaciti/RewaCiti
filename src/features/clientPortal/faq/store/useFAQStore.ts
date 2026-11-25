@@ -1,7 +1,7 @@
 // /features/faq/store/useFAQStore.ts
 import { create } from "zustand";
 import axios from "axios";
-import type { FAQ, FAQStore } from "../../../types";
+import type { FAQ, FAQStore } from "@/types";
 
 export const useFAQStore = create<FAQStore>((set) => ({
   faq: [],  

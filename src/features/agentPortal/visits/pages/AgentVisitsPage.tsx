@@ -19,19 +19,19 @@ import {
 import { Navigate, useNavigate } from "react-router";
 import { Helmet } from "react-helmet-async";
 import { toast } from "sonner";
-import CustomDropdown from "@/features/properties/components/CustomDropdown";
-import AgentBookPropertyVisitModal from "@/features/agent/visits/components/AgentBookPropertyVisitModal";
-import AgentPortalHeader from "@/features/agent/common/components/AgentPortalHeader";
-import AgentVisitDetailView from "@/features/agent/visits/components/AgentVisitDetailView";
+import CustomDropdown from "@/shared/components/CustomDropdown";
+import AgentBookPropertyVisitModal from "@/features/agentPortal/visits/components/AgentBookPropertyVisitModal";
+import AgentPortalHeader from "@/features/agentPortal/common/components/AgentPortalHeader";
+import AgentVisitDetailView from "@/features/agentPortal/visits/components/AgentVisitDetailView";
 import {
   agentAPI,
   agentErrorMessage,
   type AgentAttention,
   type AgentBooking,
   type AgentProfile,
-} from "@/features/agent/common/services/agentAPI";
-import { useAgentAuthStore } from "@/features/agent/common/store/useAgentAuthStore";
-import { money } from "@/features/agent/common/utils/agentListingUtils";
+} from "@/features/agentPortal/common/services/agentAPI";
+import { useAgentAuthStore } from "@/features/agentPortal/common/store/useAgentAuthStore";
+import { money } from "@/features/agentPortal/common/utils/agentListingUtils";
 import {
   VISIT_STATUS_FILTERS,
   VISITS_PAGE_SIZE,
@@ -40,7 +40,7 @@ import {
   visitStatusLabel,
   visitStatusPillClass,
   type VisitTab,
-} from "@/features/agent/common/utils/agentVisitUtils";
+} from "@/features/agentPortal/common/utils/agentVisitUtils";
 
 const ui = {
   btn: "inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold transition-colors disabled:cursor-wait disabled:opacity-60 sm:h-10",

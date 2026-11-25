@@ -1,11 +1,11 @@
-import Navbar from "../../../shared/components/Layout/Navbar";
-import Footer from "../../../shared/components/Layout/Footer";
+import Navbar from "@/shared/components/Layout/Navbar";
+import Footer from "@/shared/components/Layout/Footer";
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { authAPI } from "../services/authAPI";
 import type { ProfileResponse } from "../services/authAPI";
-import { useAuthStore } from "../store/useAuthStore";
-import { ProfilePageSkeleton } from "../../../shared/components/ui/Skeletons";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import { ProfilePageSkeleton } from "@/shared/components/ui/Skeletons";
 import {FiUser, FiMapPin, FiEdit2, FiMail, FiSave, FiX, FiLock, FiCamera, FiPhone, FiEye, FiEyeOff, FiLogOut} from "react-icons/fi";
 import { useNavigate } from "react-router";
 

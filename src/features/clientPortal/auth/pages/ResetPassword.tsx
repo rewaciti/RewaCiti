@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { authAPI } from "../services/authAPI";
-import { useAuthStore } from "../store/useAuthStore";
-import Navbar from "../../../shared/components/Layout/Navbar";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import Navbar from "@/shared/components/Layout/Navbar";
 import { Helmet } from "react-helmet-async";
 import { FiEye, FiEyeOff, FiArrowLeft } from "react-icons/fi";
 

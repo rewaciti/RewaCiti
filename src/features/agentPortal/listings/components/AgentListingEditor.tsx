@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, CalendarClock, Check, ChevronDown, CircleDollarSign, FileText, ImagePlus, Info, ListChecks, MapPin, Plus, Star, Trash2, Upload, Users, X } from "lucide-react";
 import { toast } from "sonner";
-import CustomDropdown from "@/features/properties/components/CustomDropdown";
-import { agentAPI, agentErrorMessage, type AgentProperty, type AgentPropertyCharge, type AgentPropertyPayload, type AgentPropertyType } from "@/features/agent/common/services/agentAPI";
-import { EDITOR_TABS, PROPERTY_PURPOSES, PRICE_PERIODS, CURRENCY_OPTIONS, RENTAL_TERM_UNITS, isRentalTermUnit, CHARGE_RECIPIENT_OPTIONS, DEFAULT_CHARGE_OPTIONS, LAND_TITLE_OPTIONS, DEFAULT_AMENITY_OPTIONS, DEFAULT_RULE_OPTIONS, DEFAULT_BILL_OPTIONS, currencySymbol, money, serviceChargeFor, statusLabel, splitLines, readFileAsDataUrl, sanitizeDescriptionHtml, descriptionText } from "@/features/agent/common/utils/agentListingUtils";
-import type { EditorTab } from "@/features/agent/common/utils/agentListingUtils";
+import CustomDropdown from "@/shared/components/CustomDropdown";
+import { agentAPI, agentErrorMessage, type AgentProperty, type AgentPropertyCharge, type AgentPropertyPayload, type AgentPropertyType } from "@/features/agentPortal/common/services/agentAPI";
+import { EDITOR_TABS, PROPERTY_PURPOSES, PRICE_PERIODS, CURRENCY_OPTIONS, RENTAL_TERM_UNITS, isRentalTermUnit, CHARGE_RECIPIENT_OPTIONS, DEFAULT_CHARGE_OPTIONS, LAND_TITLE_OPTIONS, DEFAULT_AMENITY_OPTIONS, DEFAULT_RULE_OPTIONS, DEFAULT_BILL_OPTIONS, currencySymbol, money, serviceChargeFor, statusLabel, splitLines, readFileAsDataUrl, sanitizeDescriptionHtml, descriptionText } from "@/features/agentPortal/common/utils/agentListingUtils";
+import type { EditorTab } from "@/features/agentPortal/common/utils/agentListingUtils";
 import AgentDescriptionEditor from "./AgentDescriptionEditor";
 import AgentListingEditorSkeleton from "./AgentListingEditorSkeleton";
-import { blankDraft, draftFromProperty } from "@/features/agent/listings/utils/agentListingDraft";
-import type { ListingDraft } from "@/features/agent/listings/utils/agentListingDraft";
+import { blankDraft, draftFromProperty } from "@/features/agentPortal/listings/utils/agentListingDraft";
+import type { ListingDraft } from "@/features/agentPortal/listings/utils/agentListingDraft";
 
 const inputBaseClass = "w-full border border-[#e5e7eb] bg-white text-xs text-[#111827] outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-[#9ca3af] focus:border-[#703bf7] focus:ring-2 focus:ring-[#703bf7]/10 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:placeholder:text-[#6b7280] dark:focus:ring-[#b79bff]/15";
 const fieldInputClass = `${inputBaseClass} min-h-[42px] rounded-[6px] px-3 py-2.5`;

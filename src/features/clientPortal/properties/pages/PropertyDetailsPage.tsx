@@ -1,4 +1,4 @@
-import Navbar from "../../../shared/components/Layout/Navbar";
+import Navbar from "@/shared/components/Layout/Navbar";
 import { useParams, Link, useNavigate } from "react-router";
 import { Helmet } from "react-helmet-async";
 import {
@@ -18,10 +18,10 @@ import {
   FiGrid,
 } from "react-icons/fi";
 import * as Dialog from "@radix-ui/react-dialog";
-import { usePropertyStore } from "../store/usePropertyStore";
+import { usePropertyStore } from "@/shared/store/usePropertyStore";
 import { useState, useEffect, useRef } from "react";
 import { Bath, BedDouble, Zap } from "lucide-react";
-import Footer from "../../../shared/components/Layout/Footer";
+import Footer from "@/shared/components/Layout/Footer";
 import BookInspectionModal from "../../inspections/components/BookInspectionModal";
 import PropertyPaymentModal from "../components/PropertyPaymentModal";
 import ServiceRatingModal from "../components/ServiceRatingModal";
@@ -32,14 +32,14 @@ import PropertyMap from "../components/PropertyMap";
 import {
   PropertyDetailsSkeleton,
   PropertyCardSkeleton,
-} from "../../../shared/components/ui/Skeletons";
+} from "@/shared/components/ui/Skeletons";
 import { toast } from "sonner";
-import { formatCurrency, stripHtmlTags } from "../../../shared/lib/utils";
+import { formatCurrency, stripHtmlTags } from "@/shared/lib/utils";
 import FeatureSection from "../components/FeatureSection";
 import PropertyFeatureItem from "../components/PropertyFeatureItem";
 
-import { useAuthStore } from "../../auth/store/useAuthStore";
-import { addressOf, pricePeriodLabel } from "../services/toProperty";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import { addressOf, pricePeriodLabel } from "@/shared/domain/property/toProperty";
 
 // Use the SAME classes inside your Navbar so the logo lines up with the content.
 const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";

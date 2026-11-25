@@ -1,6 +1,6 @@
-import { ensureHttps } from "../../../shared/lib/utils";
-import type { Property } from "../../../types";
-import type { FormField, ListingPurpose, PublicListing, PublicListingDetail, SharingType } from "../../../types/realEstate";
+import { ensureHttps } from "@/shared/lib/utils";
+import type { Property } from "@/types";
+import type { FormField, ListingPurpose, PublicListing, PublicListingDetail, SharingType } from "@/types/realEstate";
 
 export const PURPOSE_LABELS: Record<ListingPurpose, string> = {
   sale: "For sale",

@@ -6,8 +6,8 @@ import {
   agentErrorMessage,
   type AgentProfile,
   type AgentVerificationDocument,
-} from "@/features/agent/common/services/agentAPI";
-import { readFileAsDataUrl } from "@/features/agent/common/utils/agentListingUtils";
+} from "@/features/agentPortal/common/services/agentAPI";
+import { readFileAsDataUrl } from "@/features/agentPortal/common/utils/agentListingUtils";
 
 interface AgentVerificationModalProps {
   open: boolean;

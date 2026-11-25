@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate, Link } from "react-router";
 import { toast } from "sonner";
 import { authAPI } from "../services/authAPI";
-import { useAuthStore } from "../store/useAuthStore";
-import Navbar from "../../../shared/components/Layout/Navbar";
-// import Footer from "../../../shared/components/Layout/Footer";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import Navbar from "@/shared/components/Layout/Navbar";
+// import Footer from "@/shared/components/Layout/Footer";
 import { Helmet } from "react-helmet-async";
 import { FiArrowLeft } from "react-icons/fi";
 

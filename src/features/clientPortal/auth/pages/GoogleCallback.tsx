@@ -5,9 +5,9 @@ import { toast } from "sonner";
 import { Helmet } from "react-helmet-async";
 import { authAPI } from "../services/authAPI";
 import { takeGoogleResult, takePendingGoogleSignIn } from "../services/googleSignIn";
-import { useAuthStore } from "../store/useAuthStore";
-import { usePropertyStore } from "../../properties/store/usePropertyStore";
-import Navbar from "../../../shared/components/Layout/Navbar";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import { usePropertyStore } from "@/shared/store/usePropertyStore";
+import Navbar from "@/shared/components/Layout/Navbar";
 
 const getErrorMessage = (error: unknown, fallback: string) => {
   const withMessage = error as { response?: { data?: { message?: string } } } | null;

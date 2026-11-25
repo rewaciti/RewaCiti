@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import type { Property } from "../../../types";
+import type { Property } from "@/types";
 import { useNavigate } from "react-router";
 import { FaStar, FaHome } from "react-icons/fa";
 import {
@@ -9,11 +9,11 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 import { LuBedDouble, LuBath, LuUsers, LuMapPin } from "react-icons/lu";
-import { formatCurrency } from "../../../shared/lib/utils";
-import { usePropertyStore } from "../store/usePropertyStore";
-import { addressOf, pricePeriodLabel } from "../services/toProperty";
+import { formatCurrency } from "@/shared/lib/utils";
+import { usePropertyStore } from "@/shared/store/usePropertyStore";
+import { addressOf, pricePeriodLabel } from "@/shared/domain/property/toProperty";
 import { toast } from "sonner";
-import { useAuthStore } from "../../auth/store/useAuthStore";
+import { useAuthStore } from "@/shared/store/useAuthStore";
 
 interface PropertyCardProps {
   property: Property;

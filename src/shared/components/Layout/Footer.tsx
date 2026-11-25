@@ -7,7 +7,7 @@ import { Link } from "react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
-import { COMPANY_ID } from "../../../features/auth/store/useAuthStore";
+import { COMPANY_ID } from "@/shared/store/useAuthStore";
 
 // Same container as the Navbar and every page.
 const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";

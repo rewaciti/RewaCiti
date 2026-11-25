@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import type { AgentRatingSummary } from "@/features/agent/common/services/agentAPI";
+import type { AgentRatingSummary } from "@/features/agentPortal/common/services/agentAPI";
 
 interface AgentRatingCardProps {
   rating: AgentRatingSummary | null;

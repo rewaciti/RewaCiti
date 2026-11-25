@@ -1,5 +1,5 @@
-import type { AgentProperty, AgentPropertyCharge, AgentPropertyStatus } from "@/features/agent/common/services/agentAPI";
-import type { RentalTermUnit } from "@/features/agent/common/utils/agentListingUtils";
+import type { AgentProperty, AgentPropertyCharge, AgentPropertyStatus } from "@/features/agentPortal/common/services/agentAPI";
+import type { RentalTermUnit } from "@/features/agentPortal/common/utils/agentListingUtils";
 
 export interface ListingDraft {
   title: string;

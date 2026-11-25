@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import * as React from "react";
 import { CalendarDays, X } from "lucide-react";
 import { toast } from "sonner";
-import CustomDropdown from "@/features/properties/components/CustomDropdown";
-import { agentAPI, agentErrorMessage, type AgentProperty, type AgentPropertyAvailability } from "@/features/agent/common/services/agentAPI";
-import { localISODate, splitLines } from "@/features/agent/common/utils/agentListingUtils";
+import CustomDropdown from "@/shared/components/CustomDropdown";
+import { agentAPI, agentErrorMessage, type AgentProperty, type AgentPropertyAvailability } from "@/features/agentPortal/common/services/agentAPI";
+import { localISODate, splitLines } from "@/features/agentPortal/common/utils/agentListingUtils";
 
 const DISPLAY_DAYS = [
   { day: 1, label: "Mon" },

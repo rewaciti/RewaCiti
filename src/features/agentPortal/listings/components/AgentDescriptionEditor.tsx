@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Bold, Italic, Link as LinkIcon, List as ListIcon, ListOrdered, Maximize, Minimize, RemoveFormatting, Underline as UnderlineIcon, X } from "lucide-react";
 import { toast } from "sonner";
-import CustomDropdown from "@/features/properties/components/CustomDropdown";
-import { sanitizeDescriptionHtml } from "@/features/agent/common/utils/agentListingUtils";
+import CustomDropdown from "@/shared/components/CustomDropdown";
+import { sanitizeDescriptionHtml } from "@/features/agentPortal/common/utils/agentListingUtils";
 
 const AgentDescriptionEditor = ({
   value,

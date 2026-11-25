@@ -1,5 +1,5 @@
-import { realEstateApi } from "../../../shared/lib/realEstateApi";
-import type { Booking, Deal, Paged, Sent } from "../../../types/realEstate";
+import { realEstateApi } from "@/shared/lib/realEstateApi";
+import type { Booking, Deal, Paged, Sent } from "@/types/realEstate";
 
 interface CustomerContact {
   name: string;

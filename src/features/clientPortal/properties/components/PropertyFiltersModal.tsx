@@ -1,4 +1,4 @@
-import CustomDropdown from "./CustomDropdown";
+import CustomDropdown from "@/shared/components/CustomDropdown";
 
 const MAX_BEDROOM_STEP = 7;
 

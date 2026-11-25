@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { usePropertyStore } from "../store/usePropertyStore";
+import { usePropertyStore } from "@/shared/store/usePropertyStore";
 import PropertyCard from "./PropertyCard";
-import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
+import { PropertyCardSkeleton } from "@/shared/components/ui/Skeletons";
 import { NavLink } from "react-router";
 import { FiAlertCircle, FiArrowRight } from "react-icons/fi";
 

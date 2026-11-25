@@ -1,5 +1,5 @@
 import { ArrowRight, ImagePlus, Info, X } from "lucide-react";
-import { EDITOR_TABS } from "@/features/agent/common/utils/agentListingUtils";
+import { EDITOR_TABS } from "@/features/agentPortal/common/utils/agentListingUtils";
 
 const SkeletonBar = ({ className = "" }: { className?: string }) => (
   <span className={`block animate-pulse rounded-[5px] bg-[#f3f4f6] dark:bg-[#232323] ${className}`} aria-hidden="true" />

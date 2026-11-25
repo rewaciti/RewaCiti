@@ -1,5 +1,5 @@
 import { Wallet } from "lucide-react";
-import type { AgentPayout } from "@/features/agent/common/services/agentAPI";
+import type { AgentPayout } from "@/features/agentPortal/common/services/agentAPI";
 import {
   formatPayoutDate,
   payoutAmount,
@@ -8,7 +8,7 @@ import {
   payoutReference,
   payoutStatusLabel,
   payoutStatusPillClass,
-} from "@/features/agent/earnings/utils/agentEarningsUtils";
+} from "@/features/agentPortal/earnings/utils/agentEarningsUtils";
 
 interface AgentPayoutsTableProps {
   payouts: AgentPayout[];

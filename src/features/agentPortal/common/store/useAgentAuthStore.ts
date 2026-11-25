@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { AGENT_AUTH_STORAGE_KEY } from "@/shared/lib/agentSession";
 
 interface AgentAuthState {
   token: string | null;
@@ -14,6 +15,6 @@ export const useAgentAuthStore = create<AgentAuthState>()(
       setToken: (token) => set({ token }),
       logout: () => set({ token: null }),
     }),
-    { name: "rewaciti-agent-auth" }
+    { name: AGENT_AUTH_STORAGE_KEY }
   )
 );

@@ -2,15 +2,15 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Bath, BedDouble, CalendarDays, ChevronLeft, ChevronRight, MapPin, X } from "lucide-react";
 import { toast } from "sonner";
-import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { useAuthStore } from "@/shared/store/useAuthStore";
 import { errorMessage, noteTestMode } from "@/shared/lib/realEstateApi";
 import useRequestKey from "@/shared/hooks/useRequestKey";
 import type { Property } from "@/types";
 import type { VisitMode, VisitSlot } from "@/types/realEstate";
-import { usePropertyStore } from "@/features/properties/store/usePropertyStore";
-import { addressOf } from "@/features/properties/services/toProperty";
-import { visitsAPI } from "@/features/inspections/services/visitsAPI";
-import { money, periodShortLabel } from "@/features/agent/common/utils/agentListingUtils";
+import { usePropertyStore } from "@/shared/store/usePropertyStore";
+import { addressOf } from "@/shared/domain/property/toProperty";
+import { visitsAPI } from "@/shared/api/visitsAPI";
+import { money, periodShortLabel } from "@/features/agentPortal/common/utils/agentListingUtils";
 
 interface AgentBookInspectionModalProps {
   property: Property;

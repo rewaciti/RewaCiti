@@ -3,8 +3,8 @@ import logo from "/Symbol.png";
 import { useState, useEffect } from "react";
 import { useThemeStore } from "../../store/useThemeStore";
 import { FiSun, FiMoon, FiHeart, FiLogOut, FiUser, FiX, FiMenu } from "react-icons/fi";
-import { usePropertyStore } from "../../../features/properties/store/usePropertyStore";
-import { useAuthStore } from "../../../features/auth/store/useAuthStore";
+import { usePropertyStore } from "@/shared/store/usePropertyStore";
+import { useAuthStore } from "@/shared/store/useAuthStore";
 import { toast } from "sonner";
 
 // Same container as every page, so the logo lines up with the content.

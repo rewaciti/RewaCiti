@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useFAQStore } from "../store/useFAQStore";
-import type { FAQ } from "../../../types";
+import type { FAQ } from "@/types";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { NavLink } from "react-router";
 
-import { FAQCardSkeleton } from "../../../shared/components/ui/Skeletons";
+import { FAQCardSkeleton } from "@/shared/components/ui/Skeletons";
 
 // Same container as the Navbar, Footer and every inner page.
 const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";

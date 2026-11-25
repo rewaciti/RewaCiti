@@ -1,5 +1,5 @@
-import { once, realEstateApi } from "../../../shared/lib/realEstateApi";
-import type { Booking, Contact, Sent, VisitMode, VisitSlot } from "../../../types/realEstate";
+import { once, realEstateApi } from "@/shared/lib/realEstateApi";
+import type { Booking, Contact, Sent, VisitMode, VisitSlot } from "@/types/realEstate";
 
 export interface BookingRequest extends Contact {
   propertyId: string;

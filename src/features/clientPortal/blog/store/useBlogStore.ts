@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
-import type { BlogPost, BlogStore } from "../../../types";
-import { ensureHttps } from "../../../shared/lib/utils";
+import type { BlogPost, BlogStore } from "@/types";
+import { ensureHttps } from "@/shared/lib/utils";
 
 export const useBlogStore = create<BlogStore>((set, get) => ({
   posts: [],

@@ -1,4 +1,4 @@
-import { once, realEstateApi } from "../../../shared/lib/realEstateApi";
+import { once, realEstateApi } from "@/shared/lib/realEstateApi";
 import type {
   Contact,
   Paged,
@@ -10,7 +10,7 @@ import type {
   PublicListingDetail,
   PurchaseResult,
   Sent,
-} from "../../../types/realEstate";
+} from "@/types/realEstate";
 
 /** Search options for `GET /properties`, e.g. `{ city: "Ile-Ife", sharing: "shared_room" }`. */
 export type PropertyQuery = Record<string, string | number | boolean | undefined>;

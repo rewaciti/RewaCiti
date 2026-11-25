@@ -11,13 +11,13 @@ import {
 import { Navigate, useNavigate } from "react-router";
 import { Helmet } from "react-helmet-async";
 import { toast } from "sonner";
-import CustomDropdown from "@/features/properties/components/CustomDropdown";
-import AgentDealDetailModal from "@/features/agent/earnings/components/AgentDealDetailModal";
-import AgentDealsTable from "@/features/agent/earnings/components/AgentDealsTable";
-import AgentEarningsCards from "@/features/agent/earnings/components/AgentEarningsCards";
-import AgentPayoutsTable from "@/features/agent/earnings/components/AgentPayoutsTable";
-import AgentPortalHeader from "@/features/agent/common/components/AgentPortalHeader";
-import AgentVisitFeesTable from "@/features/agent/earnings/components/AgentVisitFeesTable";
+import CustomDropdown from "@/shared/components/CustomDropdown";
+import AgentDealDetailModal from "@/features/agentPortal/earnings/components/AgentDealDetailModal";
+import AgentDealsTable from "@/features/agentPortal/earnings/components/AgentDealsTable";
+import AgentEarningsCards from "@/features/agentPortal/earnings/components/AgentEarningsCards";
+import AgentPayoutsTable from "@/features/agentPortal/earnings/components/AgentPayoutsTable";
+import AgentPortalHeader from "@/features/agentPortal/common/components/AgentPortalHeader";
+import AgentVisitFeesTable from "@/features/agentPortal/earnings/components/AgentVisitFeesTable";
 import {
   agentAPI,
   agentErrorMessage,
@@ -30,8 +30,8 @@ import {
   type AgentPayoutSummary,
   type AgentProfile,
   type AgentRatingSummary,
-} from "@/features/agent/common/services/agentAPI";
-import { useAgentAuthStore } from "@/features/agent/common/store/useAgentAuthStore";
+} from "@/features/agentPortal/common/services/agentAPI";
+import { useAgentAuthStore } from "@/features/agentPortal/common/store/useAgentAuthStore";
 import {
   DEALS_PAGE_SIZE,
   dealAmount,
@@ -54,8 +54,8 @@ import {
   type NormalizedPayoutFilter,
   type PayoutStatus,
   VISIT_FEE_STATUS_OPTIONS,
-} from "@/features/agent/earnings/utils/agentEarningsUtils";
-import { formatVisitDate, visitStatusLabel, VISITS_PAGE_SIZE } from "@/features/agent/common/utils/agentVisitUtils";
+} from "@/features/agentPortal/earnings/utils/agentEarningsUtils";
+import { formatVisitDate, visitStatusLabel, VISITS_PAGE_SIZE } from "@/features/agentPortal/common/utils/agentVisitUtils";
 
 const ui = {
   btn: "inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold transition-colors disabled:cursor-wait disabled:opacity-60 sm:h-10",

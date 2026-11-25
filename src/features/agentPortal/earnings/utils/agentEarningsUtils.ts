@@ -3,8 +3,8 @@ import type {
   AgentPayout,
   AgentPayoutFilter,
   AgentPayoutFilterOption,
-} from "@/features/agent/common/services/agentAPI";
-import { money } from "@/features/agent/common/utils/agentListingUtils";
+} from "@/features/agentPortal/common/services/agentAPI";
+import { money } from "@/features/agentPortal/common/utils/agentListingUtils";
 
 export const PAYOUTS_PAGE_SIZE = 10;
 export const DEALS_PAGE_SIZE = 10;

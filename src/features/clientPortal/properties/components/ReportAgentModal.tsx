@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { FiX, FiAlertTriangle } from "react-icons/fi";
-import type { Property } from "../../../types";
+import type { Property } from "@/types";
 import { toast } from "sonner";
-import { useAuthStore } from "../../auth/store/useAuthStore";
-import CustomDropdown from "./CustomDropdown";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import CustomDropdown from "@/shared/components/CustomDropdown";
 import { authAPI } from "../../auth/services/authAPI";
-import { getCookie, setCookie } from "../../../shared/lib/utils";
-import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
-import useRequestKey from "../../../shared/hooks/useRequestKey";
-import { usePropertyStore } from "../store/usePropertyStore";
+import { getCookie, setCookie } from "@/shared/lib/utils";
+import { errorMessage, noteTestMode } from "@/shared/lib/realEstateApi";
+import useRequestKey from "@/shared/hooks/useRequestKey";
+import { usePropertyStore } from "@/shared/store/usePropertyStore";
 import { requestsAPI } from "../services/requestsAPI";
 import { Link } from "react-router";
 

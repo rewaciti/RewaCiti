@@ -1,4 +1,4 @@
-import type { AgentInquiryStatus } from "@/features/agent/common/services/agentAPI";
+import type { AgentInquiryStatus } from "@/features/agentPortal/common/services/agentAPI";
 
 export const LEADS_PAGE_SIZE = 10;
 

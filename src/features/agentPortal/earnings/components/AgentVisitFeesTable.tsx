@@ -1,13 +1,13 @@
 import { CalendarDays, UserRound } from "lucide-react";
-import type { AgentBooking } from "@/features/agent/common/services/agentAPI";
-import { money } from "@/features/agent/common/utils/agentListingUtils";
+import type { AgentBooking } from "@/features/agentPortal/common/services/agentAPI";
+import { money } from "@/features/agentPortal/common/utils/agentListingUtils";
 import {
   formatVisitDate,
   formatVisitTime,
   paymentStatusPillClass,
   visitStatusLabel,
   visitStatusPillClass,
-} from "@/features/agent/common/utils/agentVisitUtils";
+} from "@/features/agentPortal/common/utils/agentVisitUtils";
 
 interface AgentVisitFeesTableProps {
   bookings: AgentBooking[];

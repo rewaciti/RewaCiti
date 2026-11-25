@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import type { Property } from "@/types";
 import { errorMessage } from "@/shared/lib/realEstateApi";
-import { propertiesAPI } from "@/features/properties/services/propertiesAPI";
-import { toProperty } from "@/features/properties/services/toProperty";
-import { usePropertyStore } from "@/features/properties/store/usePropertyStore";
-import type { AgentProperty } from "@/features/agent/common/services/agentAPI";
+import { propertiesAPI } from "@/shared/api/propertiesAPI";
+import { toProperty } from "@/shared/domain/property/toProperty";
+import { usePropertyStore } from "@/shared/store/usePropertyStore";
+import type { AgentProperty } from "@/features/agentPortal/common/services/agentAPI";
 import AgentBookInspectionModal from "./AgentBookInspectionModal";
 import { toast } from "sonner";
 

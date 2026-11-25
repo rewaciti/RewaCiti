@@ -1,10 +1,10 @@
-import Navbar from "../../../shared/components/Layout/Navbar";
+import Navbar from "@/shared/components/Layout/Navbar";
 import { useNavigate, useSearchParams } from "react-router";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { usePropertyStore } from "../store/usePropertyStore";
-import { propertiesAPI } from "../services/propertiesAPI";
-import type { PropertyLocations } from "../../../types/realEstate";
+import { usePropertyStore } from "@/shared/store/usePropertyStore";
+import { propertiesAPI } from "@/shared/api/propertiesAPI";
+import type { PropertyLocations } from "@/types/realEstate";
 import {
   FiArrowLeft,
   FiArrowRight,
@@ -18,10 +18,10 @@ import {
 } from "react-icons/fi";
 import PropertyCard from "../components/PropertyCard";
 import PropertyMap from "../components/PropertyMap";
-import Footer from "../../../shared/components/Layout/Footer";
-import useScrollToHash from "../../../shared/hooks/useScrollToHash";
-import { PropertyCardSkeleton } from "../../../shared/components/ui/Skeletons";
-import CustomDropdown from "../../../features/properties/components/CustomDropdown.tsx";
+import Footer from "@/shared/components/Layout/Footer";
+import useScrollToHash from "@/shared/hooks/useScrollToHash";
+import { PropertyCardSkeleton } from "@/shared/components/ui/Skeletons";
+import CustomDropdown from "@/shared/components/CustomDropdown";
 import PropertyFiltersModal from "../components/PropertyFiltersModal";
 
 // Same container as the Navbar, Property Details, Account, Request, Service and Contact pages.

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { deleteCookie, getCookie, setCookie } from "../../../shared/lib/utils";
+import { deleteCookie, getCookie, setCookie } from "@/shared/lib/utils";
 
 interface Customer {
   id: string;

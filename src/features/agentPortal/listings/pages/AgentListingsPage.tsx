@@ -1,20 +1,20 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight, CalendarPlus, CalendarClock, ChevronDown, Clock3, Eye, EyeOff, Filter, ImagePlus, MapPin, MessageSquare, MoreHorizontal, MoreVertical, Pencil, Plus, Search, Star, X } from "lucide-react";
 import { toast } from "sonner";
-import CustomDropdown from "@/features/properties/components/CustomDropdown";
-import { agentAPI, agentErrorMessage, type AgentAttention, type AgentProfile, type AgentProperty, type AgentPropertyCounts, type AgentPropertyType } from "@/features/agent/common/services/agentAPI";
-import { PAGE_SIZE, STATUS_FILTERS, PROPERTY_PURPOSES, compactMoney, money, statusLabel, periodLabel, periodShortLabel, purposeLabel } from "@/features/agent/common/utils/agentListingUtils";
-import type { ListingTab } from "@/features/agent/common/utils/agentListingUtils";
+import CustomDropdown from "@/shared/components/CustomDropdown";
+import { agentAPI, agentErrorMessage, type AgentAttention, type AgentProfile, type AgentProperty, type AgentPropertyCounts, type AgentPropertyType } from "@/features/agentPortal/common/services/agentAPI";
+import { PAGE_SIZE, STATUS_FILTERS, PROPERTY_PURPOSES, compactMoney, money, statusLabel, periodLabel, periodShortLabel, purposeLabel } from "@/features/agentPortal/common/utils/agentListingUtils";
+import type { ListingTab } from "@/features/agentPortal/common/utils/agentListingUtils";
 import { Navigate, useNavigate } from "react-router";
 import { Helmet } from "react-helmet-async";
-import AgentPortalHeader from "@/features/agent/common/components/AgentPortalHeader";
-import { useAgentAuthStore } from "@/features/agent/common/store/useAgentAuthStore";
-import AgentListingEditor from "@/features/agent/listings/components/AgentListingEditor";
-import AgentListingEditorSkeleton from "@/features/agent/listings/components/AgentListingEditorSkeleton";
-import AgentPropertyOverview from "@/features/agent/listings/components/AgentPropertyOverview";
-import AgentAvailabilityEditor from "@/features/agent/listings/components/AgentAvailabilityEditor";
-import AgentBookVisitModal from "@/features/agent/listings/components/AgentBookVisitModal";
-import AgentWithdrawModal from "@/features/agent/listings/components/AgentWithdrawModal";
+import AgentPortalHeader from "@/features/agentPortal/common/components/AgentPortalHeader";
+import { useAgentAuthStore } from "@/features/agentPortal/common/store/useAgentAuthStore";
+import AgentListingEditor from "@/features/agentPortal/listings/components/AgentListingEditor";
+import AgentListingEditorSkeleton from "@/features/agentPortal/listings/components/AgentListingEditorSkeleton";
+import AgentPropertyOverview from "@/features/agentPortal/listings/components/AgentPropertyOverview";
+import AgentAvailabilityEditor from "@/features/agentPortal/listings/components/AgentAvailabilityEditor";
+import AgentBookVisitModal from "@/features/agentPortal/listings/components/AgentBookVisitModal";
+import AgentWithdrawModal from "@/features/agentPortal/listings/components/AgentWithdrawModal";
 
 /* ---------- Shared UI tokens ---------- */
 

@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import { toast } from "sonner";
-import type { Property, PropertyStore } from "../../../types";
-import type { PropertyLocations, PublicForms } from "../../../types/realEstate";
-import { errorMessage } from "../../../shared/lib/realEstateApi";
-import { useAuthStore } from "../../auth/store/useAuthStore";
-import { propertiesAPI } from "../services/propertiesAPI";
-import { toProperty } from "../services/toProperty";
+import type { Property, PropertyStore } from "@/types";
+import type { PropertyLocations, PublicForms } from "@/types/realEstate";
+import { errorMessage } from "@/shared/lib/realEstateApi";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import { propertiesAPI } from "@/shared/api/propertiesAPI";
+import { toProperty } from "@/shared/domain/property/toProperty";
 
 // ---------------------------------------------------------------------------
 // Caches that live for the visit

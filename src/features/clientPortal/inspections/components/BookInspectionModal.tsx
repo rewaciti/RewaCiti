@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import { useAuthStore } from "../../auth/store/useAuthStore";
+import { useAuthStore } from "@/shared/store/useAuthStore";
 import * as Dialog from "@radix-ui/react-dialog";
-import type { Property } from "../../../types";
-import type { VisitMode, VisitSlot } from "../../../types/realEstate";
+import type { Property } from "@/types";
+import type { VisitMode, VisitSlot } from "@/types/realEstate";
 import { FiX, FiMapPin, FiChevronDown } from "react-icons/fi";
 import { toast } from "sonner";
 import { authAPI } from "../../auth/services/authAPI";
-import { getCookie, setCookie } from "../../../shared/lib/utils";
-import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
-import { payInvoice } from "../../../shared/lib/payments";
-import useRequestKey from "../../../shared/hooks/useRequestKey";
-import { usePropertyStore } from "../../properties/store/usePropertyStore";
-import { addressOf } from "../../properties/services/toProperty";
-import { visitsAPI } from "../services/visitsAPI";
+import { getCookie, setCookie } from "@/shared/lib/utils";
+import { errorMessage, noteTestMode } from "@/shared/lib/realEstateApi";
+import { payInvoice } from "@/shared/lib/payments";
+import useRequestKey from "@/shared/hooks/useRequestKey";
+import { usePropertyStore } from "@/shared/store/usePropertyStore";
+import { addressOf } from "@/shared/domain/property/toProperty";
+import { visitsAPI } from "@/shared/api/visitsAPI";
 import { Link } from "react-router";
 
 // Same serif as the Navbar (Fraunces is loaded in index.html)

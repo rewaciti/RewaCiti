@@ -1,19 +1,19 @@
-import Navbar from "../../shared/components/Layout/Navbar";
+import Navbar from "@/shared/components/Layout/Navbar";
 import { FaEnvelope, FaPhone, FaDirections } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
-import Footer from "../../shared/components/Layout/Footer";
-import useScrollToHash from "../../shared/hooks/useScrollToHash";
+import Footer from "@/shared/components/Layout/Footer";
+import useScrollToHash from "@/shared/hooks/useScrollToHash";
 import { Helmet } from "react-helmet-async";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { toast } from "sonner";
-import { useAuthStore } from "../../features/auth/store/useAuthStore";
-import { authAPI } from "../../features/auth/services/authAPI";
-import { requestsAPI } from "../../features/properties/services/requestsAPI";
-import { errorMessage, noteTestMode } from "../../shared/lib/realEstateApi";
-import useRequestKey from "../../shared/hooks/useRequestKey";
-import CustomDropdown from "../../features/properties/components/CustomDropdown";
-import { getCookie, setCookie } from "../../shared/lib/utils";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import { authAPI } from "../../features/clientPortal/auth/services/authAPI";
+import { requestsAPI } from "../../features/clientPortal/properties/services/requestsAPI";
+import { errorMessage, noteTestMode } from "@/shared/lib/realEstateApi";
+import useRequestKey from "@/shared/hooks/useRequestKey";
+import CustomDropdown from "@/shared/components/CustomDropdown";
+import { getCookie, setCookie } from "@/shared/lib/utils";
 
 // Same container as the Navbar, Property Details, Account, Request and Service pages.
 const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";

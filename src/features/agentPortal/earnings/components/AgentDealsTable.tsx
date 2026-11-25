@@ -1,5 +1,5 @@
 import { ArrowUpRight, Building2, UserRound } from "lucide-react";
-import type { AgentDeal } from "@/features/agent/common/services/agentAPI";
+import type { AgentDeal } from "@/features/agentPortal/common/services/agentAPI";
 import {
   dealAmount,
   dealCustomerName,
@@ -7,7 +7,7 @@ import {
   dealStatusLabel,
   dealStatusPillClass,
   formatDealDate,
-} from "@/features/agent/earnings/utils/agentEarningsUtils";
+} from "@/features/agentPortal/earnings/utils/agentEarningsUtils";
 
 interface AgentDealsTableProps {
   deals: AgentDeal[];

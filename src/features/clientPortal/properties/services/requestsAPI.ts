@@ -1,5 +1,5 @@
-import { once, realEstateApi } from "../../../shared/lib/realEstateApi";
-import type { Contact, Sent } from "../../../types/realEstate";
+import { once, realEstateApi } from "@/shared/lib/realEstateApi";
+import type { Contact, Sent } from "@/types/realEstate";
 
 // Everything people send RewaCiti. Each lands with the team in SabiFlow, on the
 // customer's own record when they're signed in.

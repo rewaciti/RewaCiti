@@ -1,6 +1,6 @@
 import { CheckCircle2, Clock3, Percent, Star } from "lucide-react";
-import type { AgentPayoutSummary, AgentRatingSummary } from "@/features/agent/common/services/agentAPI";
-import { compactMoney } from "@/features/agent/common/utils/agentListingUtils";
+import type { AgentPayoutSummary, AgentRatingSummary } from "@/features/agentPortal/common/services/agentAPI";
+import { compactMoney } from "@/features/agentPortal/common/utils/agentListingUtils";
 
 interface AgentEarningsCardsProps {
   summary: AgentPayoutSummary | null;

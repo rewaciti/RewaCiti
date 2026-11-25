@@ -1,17 +1,17 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
-import { useAuthStore } from "../../auth/store/useAuthStore";
+import { useAuthStore } from "@/shared/store/useAuthStore";
 import { authAPI } from "../../auth/services/authAPI";
-import Navbar from "../../../shared/components/Layout/Navbar";
-import Footer from "../../../shared/components/Layout/Footer";
-import { errorMessage, noteTestMode } from "../../../shared/lib/realEstateApi";
-import { getCookie, setCookie } from "../../../shared/lib/utils";
-import useRequestKey from "../../../shared/hooks/useRequestKey";
-import { usePropertyStore } from "../store/usePropertyStore";
+import Navbar from "@/shared/components/Layout/Navbar";
+import Footer from "@/shared/components/Layout/Footer";
+import { errorMessage, noteTestMode } from "@/shared/lib/realEstateApi";
+import { getCookie, setCookie } from "@/shared/lib/utils";
+import useRequestKey from "@/shared/hooks/useRequestKey";
+import { usePropertyStore } from "@/shared/store/usePropertyStore";
 import { requestsAPI } from "../services/requestsAPI";
-import { PURPOSE_LABELS } from "../services/toProperty";
-import CustomDropdown from "../components/CustomDropdown";
+import { PURPOSE_LABELS } from "@/shared/domain/property/toProperty";
+import CustomDropdown from "@/shared/components/CustomDropdown";
 
 // Same container as the Navbar, PropertyDetails and AccountPage.
 const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";

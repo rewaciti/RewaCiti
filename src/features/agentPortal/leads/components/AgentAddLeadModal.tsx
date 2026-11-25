@@ -3,8 +3,8 @@ import * as React from "react";
 import { UserPlus, X } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { toast } from "sonner";
-import CustomDropdown from "@/features/properties/components/CustomDropdown";
-import { agentAPI, agentErrorMessage, type AgentInquiry, type AgentProperty } from "@/features/agent/common/services/agentAPI";
+import CustomDropdown from "@/shared/components/CustomDropdown";
+import { agentAPI, agentErrorMessage, type AgentInquiry, type AgentProperty } from "@/features/agentPortal/common/services/agentAPI";
 
 interface AgentAddLeadModalProps {
   open: boolean;

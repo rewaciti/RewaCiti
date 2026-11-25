@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
-import Navbar from "../../../shared/components/Layout/Navbar";
-import Footer from "../../../shared/components/Layout/Footer";
+import Navbar from "@/shared/components/Layout/Navbar";
+import Footer from "@/shared/components/Layout/Footer";
 import {
   Ban,
   propertyFeatureIconGroups,

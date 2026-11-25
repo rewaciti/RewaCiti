@@ -1,10 +1,10 @@
-import Navbar from "../../../shared/components/Layout/Navbar";
+import Navbar from "@/shared/components/Layout/Navbar";
 import { useEffect } from "react";
 import { useFAQStore } from "../store/useFAQStore";
-import type { FAQ } from "../../../types";
-import Footer from "../../../shared/components/Layout/Footer";
+import type { FAQ } from "@/types";
+import Footer from "@/shared/components/Layout/Footer";
 import { Helmet } from "react-helmet-async";
-import { FAQCardSkeleton } from "../../../shared/components/ui/Skeletons";
+import { FAQCardSkeleton } from "@/shared/components/ui/Skeletons";
 
 // Same container as the Navbar so the page edges line up with it.
 const CONTAINER = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10";
