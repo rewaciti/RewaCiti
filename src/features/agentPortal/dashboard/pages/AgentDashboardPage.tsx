@@ -87,15 +87,10 @@ const AgentDashboardPage = () => {
       />
 
       <main className="mx-auto w-[min(1280px,calc(100%_-_32px))] pt-9 pb-16 max-[700px]:pt-6 max-sm:pb-24">
-        <div className="mb-6 flex items-end justify-between gap-4">
-          <div>
-            <p className="m-0 mb-2 text-[11px] font-semibold tracking-[0.18em] text-[#6b7280] uppercase dark:text-[#9ca3af]">YOUR WORKSPACE</p>
-            <h1 className="m-0 font-serif text-[34px] font-semibold tracking-[-0.02em] text-[#111827] leading-[1.15] dark:text-white max-[700px]:text-[26px]">{greeting()}, {displayName.split(" ")[0]}</h1>
-            <p className="mt-1.5 mb-0 text-[15px] text-[#4b5563] dark:text-[#9ca3af]">Here’s what needs you today.</p>
-          </div>
-          <button className="cursor-pointer rounded-full border border-[#e5e7eb] bg-white px-[18px] py-[9px] text-[13px] font-semibold text-[#111827] transition-[background-color,color] duration-150 ease-[ease] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white enabled:hover:bg-[#703bf7] enabled:hover:text-white disabled:cursor-wait disabled:opacity-60" type="button" onClick={() => void loadDashboard()} disabled={loading}>
-            {loading ? "Updating..." : "Refresh"}
-          </button>
+        <div className="mb-6">
+          <p className="m-0 mb-2 text-[11px] font-semibold tracking-[0.18em] text-[#6b7280] uppercase dark:text-[#9ca3af]">YOUR WORKSPACE</p>
+          <h1 className="m-0 font-serif text-[34px] font-semibold tracking-[-0.02em] text-[#111827] leading-[1.15] dark:text-white max-[700px]:text-[26px]">{greeting()}, {displayName.split(" ")[0]}</h1>
+          <p className="mt-1.5 mb-0 text-[15px] text-[#4b5563] dark:text-[#9ca3af]">Here’s what needs you today.</p>
         </div>
 
         {loading && !dashboard ? (

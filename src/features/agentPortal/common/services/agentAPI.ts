@@ -665,7 +665,7 @@ export const agentAPI = {
     return response.data;
   },
 
-  getInquiries: async (params: { page: number; limit: number; status?: string }) => {
+  getInquiries: async (params: { page: number; limit: number; status?: string; propertyId?: string }) => {
     const response = await agentApi.get<{ data: AgentInquiry[]; total: number }>("/agent/inquiries", {
       params,
     });
@@ -715,7 +715,7 @@ export const agentAPI = {
     return response.data;
   },
 
-  getBookings: async (params: { status?: string; page: number; limit: number }) => {
+  getBookings: async (params: { status?: string; page: number; limit: number; propertyId?: string }) => {
     const response = await agentApi.get<{ data: AgentBooking[]; total: number }>("/agent/bookings", {
       params,
     });

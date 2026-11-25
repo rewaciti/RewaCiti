@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as React from "react";
-import { CalendarPlus, CalendarClock, ChevronDown, ChevronLeft, ChevronRight, CircleDollarSign, Eye, ExternalLink, FileText, History as HistoryIcon, ImagePlus, Info, LayoutDashboard, MapPin, MessageSquare, Pencil, Star, X } from "lucide-react";
+import { ArrowRight, CalendarPlus, CalendarClock, ChevronDown, ChevronLeft, ChevronRight, CircleDollarSign, Eye, ExternalLink, FileText, History as HistoryIcon, ImagePlus, Info, LayoutDashboard, Mail, MapPin, MessageSquare, Pencil, Phone, Star, Users, X } from "lucide-react";
 import { toast } from "sonner";
 import CustomDropdown from "@/shared/components/CustomDropdown";
-import { agentAPI, agentErrorMessage, type AgentProperty, type AgentPropertyStatus } from "@/features/agentPortal/common/services/agentAPI";
+import { agentAPI, agentErrorMessage, type AgentBooking, type AgentInquiry, type AgentProperty, type AgentPropertyStatus } from "@/features/agentPortal/common/services/agentAPI";
 import { money, serviceChargeFor, statusLabel, periodLabel, periodShortLabel, purposeLabel, sanitizeDescriptionHtml } from "@/features/agentPortal/common/utils/agentListingUtils";
+import { formatLeadDateTime, leadStatusLabel, leadStatusPillClass } from "@/features/agentPortal/leads/utils/agentLeadUtils";
+import { formatVisitDate, formatVisitTime, visitStatusLabel, visitStatusPillClass } from "@/features/agentPortal/common/utils/agentVisitUtils";
 import type { PropertyDetailAction } from "@/features/agentPortal/common/utils/agentListingUtils";
 import AgentAvailabilityEditor from "./AgentAvailabilityEditor";
 import AgentBookVisitModal from "./AgentBookVisitModal";
@@ -38,6 +40,61 @@ const statusPillClasses: Record<AgentPropertyStatus, string> = {
   archived: "bg-[#f3f4f6] text-[#4b5563] dark:bg-[#232323] dark:text-[#9ca3af]",
 };
 
+const ActivityPlaceholder = ({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) => (
+  <div className="grid min-h-28 content-center justify-items-center gap-2 rounded-lg border border-dashed border-[#e5e7eb] p-4 text-center text-[#4b5563] dark:border-white/10 dark:text-[#9ca3af]">
+    {icon}
+    <span className="text-xs">{children}</span>
+  </div>
+);
+
+const ActivityError = ({ onRetry }: { onRetry: () => void }) => (
+  <div className="grid min-h-28 content-center justify-items-center gap-2 rounded-lg border border-dashed border-[#e5e7eb] p-4 text-center dark:border-white/10">
+    <span className="text-xs text-[#4b5563] dark:text-[#9ca3af]">We couldn’t load this activity.</span>
+    <button type="button" className="cursor-pointer rounded-full border-0 bg-transparent px-0 text-xs font-semibold text-[#703bf7] dark:text-[#b79bff]" onClick={onRetry}>Try again</button>
+  </div>
+);
+
+const InquiryCard = ({ inquiry, compact = false }: { inquiry: AgentInquiry; compact?: boolean }) => (
+  <article className="min-w-0 rounded-lg border border-[#e5e7eb] p-3.5 dark:border-white/10">
+    <div className="flex flex-wrap items-start justify-between gap-2">
+      <div className="min-w-0">
+        <strong className="text-sm text-[#111827] dark:text-white">{inquiry.contact.name || "Unnamed client"}</strong>
+        <span className="ml-2 text-xs text-[#6b7280] dark:text-[#9ca3af]">{inquiry.reference}</span>
+      </div>
+      <span className={leadStatusPillClass(inquiry.status)}>{leadStatusLabel(inquiry.status)}</span>
+    </div>
+    {!compact && inquiry.message && <p className="m-0 mt-2 text-xs leading-relaxed text-[#4b5563] wrap-anywhere dark:text-[#9ca3af]">{inquiry.message}</p>}
+    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#6b7280] dark:text-[#9ca3af]">
+      {inquiry.contact.email && <span className="inline-flex min-w-0 items-center gap-1"><Mail size={13} className="shrink-0" />{inquiry.contact.email}</span>}
+      {inquiry.contact.phone && <span className="inline-flex items-center gap-1"><Phone size={13} />{inquiry.contact.phone}</span>}
+    </div>
+    <p className="mb-0 mt-2 text-[11px] text-[#9ca3af]">{formatLeadDateTime(inquiry.createdAt)}</p>
+  </article>
+);
+
+const VisitCard = ({ booking, compact = false }: { booking: AgentBooking; compact?: boolean }) => (
+  <article className="min-w-0 rounded-lg border border-[#e5e7eb] p-3.5 dark:border-white/10">
+    <div className="flex flex-wrap items-start justify-between gap-2">
+      <div className="min-w-0">
+        <strong className="text-sm text-[#111827] dark:text-white">{booking.contact.name || "Unnamed client"}</strong>
+        <span className="ml-2 text-xs text-[#6b7280] dark:text-[#9ca3af]">{booking.reference}</span>
+      </div>
+      <span className={visitStatusPillClass(booking.status)}>{visitStatusLabel(booking.status)}</span>
+    </div>
+    <div className="mt-2 grid gap-1 text-xs text-[#4b5563] dark:text-[#9ca3af]">
+      <span className="inline-flex flex-wrap items-center gap-1.5"><CalendarClock size={13} />{formatVisitDate(booking.date)} · {formatVisitTime(booking.start)}–{formatVisitTime(booking.end)}</span>
+      <span className="inline-flex flex-wrap items-center gap-1.5"><Users size={13} />{booking.visitors} {booking.visitors === 1 ? "visitor" : "visitors"} · {String(booking.mode ?? "").replaceAll("_", " ")}</span>
+      {!compact && (
+        <>
+          {booking.contact.email && <span className="inline-flex min-w-0 items-center gap-1"><Mail size={13} className="shrink-0" />{booking.contact.email}</span>}
+          {booking.contact.phone && <span className="inline-flex items-center gap-1"><Phone size={13} />{booking.contact.phone}</span>}
+        </>
+      )}
+    </div>
+    <p className="mb-0 mt-2 text-[11px] text-[#9ca3af]">Booked {formatLeadDateTime(booking.createdAt)}</p>
+  </article>
+);
+
 const AgentPropertyOverview = ({
   property,
   typeName,
@@ -64,6 +121,49 @@ const AgentPropertyOverview = ({
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [inquiries, setInquiries] = useState<AgentInquiry[]>([]);
+  const [visits, setVisits] = useState<AgentBooking[]>([]);
+  const [activityLoading, setActivityLoading] = useState(true);
+  const [activityError, setActivityError] = useState(false);
+
+  const loadPropertyActivity = useCallback(async () => {
+    setActivityLoading(true);
+    setActivityError(false);
+    setInquiries([]);
+    setVisits([]);
+    try {
+      const [inquiryResponse, bookingResponse] = await Promise.all([
+        agentAPI.getInquiries({ page: 1, limit: 100, propertyId: property.id }),
+        agentAPI.getBookings({ page: 1, limit: 100, propertyId: property.id }),
+      ]);
+      setInquiries(inquiryResponse.data.filter((entry) => entry.propertyId === property.id));
+      setVisits(bookingResponse.data.filter((entry) => entry.propertyId === property.id));
+    } catch (error) {
+      setActivityError(true);
+      toast.error(agentErrorMessage(error, "We couldn't load this property's inquiries and visits."));
+      console.error("Agent property activity failed to load:", error);
+    } finally {
+      setActivityLoading(false);
+    }
+  }, [property.id]);
+
+  useEffect(() => {
+    void loadPropertyActivity();
+  }, [loadPropertyActivity]);
+
+  const renderInquiries = (limit?: number) => {
+    if (activityLoading) return <ActivityPlaceholder icon={<MessageSquare size={20} />}>Loading inquiries...</ActivityPlaceholder>;
+    if (activityError) return <ActivityError onRetry={() => void loadPropertyActivity()} />;
+    if (!inquiries.length) return <ActivityPlaceholder icon={<MessageSquare size={20} />}>No inquiries for this property yet.</ActivityPlaceholder>;
+    return <div className="grid gap-2">{(limit ? inquiries.slice(0, limit) : inquiries).map((inquiry) => <InquiryCard key={inquiry.id} inquiry={inquiry} compact={Boolean(limit)} />)}</div>;
+  };
+
+  const renderVisits = (limit?: number) => {
+    if (activityLoading) return <ActivityPlaceholder icon={<CalendarClock size={20} />}>Loading visits...</ActivityPlaceholder>;
+    if (activityError) return <ActivityError onRetry={() => void loadPropertyActivity()} />;
+    if (!visits.length) return <ActivityPlaceholder icon={<CalendarClock size={20} />}>No visits for this property yet.</ActivityPlaceholder>;
+    return <div className="grid gap-2">{(limit ? visits.slice(0, limit) : visits).map((booking) => <VisitCard key={booking.id} booking={booking} compact={Boolean(limit)} />)}</div>;
+  };
 
   const statusOptions: { label: string; value: AgentPropertyStatus }[] = [
     { label: "Mark as Reserved", value: "reserved" },
@@ -248,6 +348,23 @@ const AgentPropertyOverview = ({
               <div className="relative grid min-h-[88px] content-center gap-1 rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-[#1a1a1a]"><span className="text-xs text-[#4b5563] dark:text-[#9ca3af]">Visit fee</span><strong className="text-xl font-bold text-[#111827] dark:text-white sm:text-2xl">{property.visitFeeOverride == null ? "Usual fee" : money(property.visitFeeOverride, property.currency)}</strong><CircleDollarSign size={16} className="absolute top-4 right-4 text-[#6b7280] dark:text-[#9ca3af]" /></div>
             </div>
 
+            <section className="mb-4 grid grid-cols-2 items-start gap-4 max-[900px]:grid-cols-1">
+              <article className="grid min-w-0 content-start gap-3 rounded-xl border border-gray-200 bg-white p-4 text-[#111827] sm:p-5 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h2 className="m-0 text-base font-bold text-[#111827] dark:text-white">Recent inquiries</h2>
+                  <button type="button" className="inline-flex cursor-pointer items-center gap-1 border-0 bg-transparent p-0 text-xs font-semibold text-[#703bf7] dark:text-[#b79bff]" onClick={() => setActiveTab("inquiries")}>View all <ArrowRight size={14} /></button>
+                </div>
+                {renderInquiries(3)}
+              </article>
+              <article className="grid min-w-0 content-start gap-3 rounded-xl border border-gray-200 bg-white p-4 text-[#111827] sm:p-5 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h2 className="m-0 text-base font-bold text-[#111827] dark:text-white">Recent visits</h2>
+                  <button type="button" className="inline-flex cursor-pointer items-center gap-1 border-0 bg-transparent p-0 text-xs font-semibold text-[#703bf7] dark:text-[#b79bff]" onClick={() => setActiveTab("visits")}>View all <ArrowRight size={14} /></button>
+                </div>
+                {renderVisits(3)}
+              </article>
+            </section>
+
             <div className="grid grid-cols-[minmax(0,2fr)_minmax(290px,1fr)] items-start gap-4 max-[700px]:grid-cols-1">
               <div className="grid min-w-0 content-start gap-4">
                 <section className="m-0 min-w-0 rounded-xl border border-gray-200 bg-white p-4 text-[#111827] sm:p-5 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white">
@@ -341,15 +458,15 @@ const AgentPropertyOverview = ({
 
         {activeTab === "inquiries" && (
           <section className="grid min-h-[300px] content-start gap-4 rounded-xl border border-gray-200 bg-white p-5 text-[#111827] sm:p-6 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white">
-            <div><h2 className="m-0 text-base font-bold text-[#111827] sm:text-lg dark:text-white">Inquiries</h2><p className="mb-0 mt-1 text-sm text-[#4b5563] dark:text-[#9ca3af]">{property.inquiryCount ?? 0} inquiries recorded for this property.</p></div>
-            <div className="grid min-h-40 content-center justify-items-center gap-2 rounded-lg border border-dashed border-[#e5e7eb] p-6 text-center text-[#4b5563] dark:border-white/10 dark:text-[#9ca3af]"><MessageSquare size={22} /><strong className="text-sm text-[#111827] dark:text-white">Inquiry details aren’t available here yet.</strong><span className="text-xs">This listing response includes the inquiry count only.</span></div>
+            <div><h2 className="m-0 text-base font-bold text-[#111827] sm:text-lg dark:text-white">Inquiries</h2><p className="mb-0 mt-1 text-sm text-[#4b5563] dark:text-[#9ca3af]">{activityLoading ? `${property.inquiryCount ?? 0} inquiries recorded for this property.` : `${inquiries.length} inquiries recorded for this property.`}</p></div>
+            {renderInquiries()}
           </section>
         )}
 
         {activeTab === "visits" && (
           <section className="grid min-h-[300px] content-start gap-4 rounded-xl border border-gray-200 bg-white p-5 text-[#111827] sm:p-6 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white">
-            <div><h2 className="m-0 text-base font-bold text-[#111827] sm:text-lg dark:text-white">Visits</h2><p className="mb-0 mt-1 text-sm text-[#4b5563] dark:text-[#9ca3af]">{property.visitCount ?? 0} visits recorded for this property.</p></div>
-            <div className="grid min-h-40 content-center justify-items-center gap-2 rounded-lg border border-dashed border-[#e5e7eb] p-6 text-center text-[#4b5563] dark:border-white/10 dark:text-[#9ca3af]"><CalendarClock size={22} /><strong className="text-sm text-[#111827] dark:text-white">Visit details aren’t available here yet.</strong><span className="text-xs">This listing response includes the visit count only.</span></div>
+            <div><h2 className="m-0 text-base font-bold text-[#111827] sm:text-lg dark:text-white">Visits</h2><p className="mb-0 mt-1 text-sm text-[#4b5563] dark:text-[#9ca3af]">{activityLoading ? `${property.visitCount ?? 0} visits recorded for this property.` : `${visits.length} visits recorded for this property.`}</p></div>
+            {renderVisits()}
           </section>
         )}
 
