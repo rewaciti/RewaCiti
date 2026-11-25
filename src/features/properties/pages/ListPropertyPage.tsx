@@ -11,7 +11,7 @@ import CustomDropdown from "../components/CustomDropdown";
 import Navbar from "../../../shared/components/Layout/Navbar";
 import Footer from "../../../shared/components/Layout/Footer";
 import { FiCheckCircle, FiClock, FiShield } from "react-icons/fi";
-import { useAgentAuthStore } from "../../agent/store/useAgentAuthStore";
+import { useAgentAuthStore } from "@/features/agent/common/store/useAgentAuthStore";
 
 const LISTER_ROLE_OPTIONS = [
   { label: "Real Estate Agent / Broker", value: "Real Estate Agent" },

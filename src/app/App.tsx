@@ -29,10 +29,14 @@ import PropertyFeatureIconsPage from "../features/properties/pages/PropertyFeatu
 import ListPropertyPage from "../features/properties/pages/ListPropertyPage";
 import RequestPropertyPage from "../features/properties/pages/RequestPropertyPage";
 import CoRentPage from "../features/properties/pages/CoRentPage";
-import AgentLoginPage from "../features/agent/pages/AgentLoginPage";
-import AgentForgotPasswordPage from "../features/agent/pages/AgentForgotPasswordPage";
-import AgentDashboardPage from "../features/agent/pages/AgentDashboardPage";
-import AgentListingsPage from "../features/agent/pages/AgentListingsPage";
+import AgentLoginPage from "../features/agent/auth/pages/AgentLoginPage";
+import AgentForgotPasswordPage from "../features/agent/auth/pages/AgentForgotPasswordPage";
+import AgentDashboardPage from "../features/agent/dashboard/pages/AgentDashboardPage";
+import AgentListingsPage from "../features/agent/listings/pages/AgentListingsPage";
+import AgentLeadsPage from "../features/agent/leads/pages/AgentLeadsPage";
+import AgentVisitsPage from "../features/agent/visits/pages/AgentVisitsPage";
+import AgentEarningsPage from "../features/agent/earnings/pages/AgentEarningsPage";
+import AgentProfilePage from "../features/agent/profile/pages/AgentProfilePage";
 
 
 
@@ -89,6 +93,10 @@ function App() {
           <Route path="/agent/login" element={<AgentLoginPage />} />
           <Route path="/agent/forgot-password" element={<AgentForgotPasswordPage />} />
           <Route path="/agent/listings/*" element={<AgentListingsPage />} />
+          <Route path="/agent/leads/*" element={<AgentLeadsPage />} />
+          <Route path="/agent/visits/*" element={<AgentVisitsPage />} />
+          <Route path="/agent/earnings/*" element={<AgentEarningsPage />} />
+          <Route path="/agent/profile" element={<AgentProfilePage />} />
           <Route path="/agent/*" element={<AgentDashboardPage />} />
           <Route path="/AllComments" element={<AllComments />} />
           <Route path="/AllFAQs" element={<AllFAQs />} />

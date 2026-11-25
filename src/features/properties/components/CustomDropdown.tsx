@@ -26,6 +26,12 @@ interface Props {
   menuWidth?: number;
 }
 
+const getVisibleIconRight = (button: HTMLButtonElement, fallbackRight: number) => {
+  const visibleSvg = Array.from(button.querySelectorAll("svg"))
+    .find((svg) => svg.getBoundingClientRect().width > 0);
+  return visibleSvg?.getBoundingClientRect().right ?? fallbackRight;
+};
+
 export default function CustomDropdown({
   icon,
   placeholder,
@@ -83,7 +89,7 @@ export default function CustomDropdown({
     if (!portal || !open || !buttonRef.current || !menuRef.current) return;
 
     const buttonBounds = buttonRef.current.getBoundingClientRect();
-    const iconRight = buttonRef.current.querySelector("svg")?.getBoundingClientRect().right ?? buttonBounds.right;
+    const iconRight = getVisibleIconRight(buttonRef.current, buttonBounds.right);
     const menuBounds = menuRef.current.getBoundingClientRect();
     const viewportPadding = 8;
     const viewportWidth = document.documentElement.clientWidth;
@@ -119,7 +125,7 @@ export default function CustomDropdown({
       const viewportPadding = 8;
       const top = bounds.bottom + gap;
       const maxHeight = Math.max(0, window.innerHeight - top - viewportPadding);
-      const iconRight = buttonRef.current.querySelector("svg")?.getBoundingClientRect().right ?? bounds.right;
+      const iconRight = getVisibleIconRight(buttonRef.current, bounds.right);
       const left = Math.max(
         viewportPadding,
         Math.min(iconRight - menuWidth + 8, document.documentElement.clientWidth - menuWidth - viewportPadding),
@@ -132,8 +138,8 @@ export default function CustomDropdown({
   const dropdownMenu = !disabled && (
     <div
       ref={menuRef}
-      className={portal ? menuClassName : `absolute z-9999 mt-2 min-w-full w-full rounded-xl border border-gray-700 bg-white text-gray-900 shadow-xl overflow-hidden left-0 transition-all duration-200 ease-out origin-top transform dark:border-white/10 dark:bg-neutral-900 dark:text-white ${open ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto" : "opacity-0 scale-y-95 -translate-y-2 pointer-events-none"} ${menuClassName}`}
-      style={portal ? { ...menuPosition, boxSizing: "border-box", zIndex: 9999, width: menuWidth, maxWidth: "calc(100vw - 16px)" } : { zIndex: 9999 }}
+      className={portal ? `${menuClassName} z-5!` : `absolute z-9999 mt-2 min-w-full w-full rounded-xl border border-gray-700 bg-white text-gray-900 shadow-xl overflow-hidden left-0 transition-all duration-200 ease-out origin-top transform dark:border-white/10 dark:bg-neutral-900 dark:text-white ${open ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto" : "opacity-0 scale-y-95 -translate-y-2 pointer-events-none"} ${menuClassName}`}
+      style={portal ? { ...menuPosition, boxSizing: "border-box", width: menuWidth, maxWidth: "calc(100vw - 16px)" } : undefined}
       role={portal ? "menu" : undefined}
       onClick={portal ? (event) => event.stopPropagation() : undefined}
     >
@@ -160,10 +166,9 @@ export default function CustomDropdown({
   return (
     <div
       ref={ref}
-      className={`relative ${open ? "z-100" : "z-10"} ${
+      className={`relative ${open ? "z-5!" : ""} ${
         disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
       } ${className}`}
-      style={{ zIndex: open ? 60 : undefined }}
     >
       <button
         ref={buttonRef}

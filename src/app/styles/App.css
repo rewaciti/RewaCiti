@@ -12,6 +12,8 @@ html:has(.account-page)::-webkit-scrollbar-button {
 @theme inline {
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "DM Serif Display", Georgia, serif;
+  --color-brand: #703bf7;
+  --color-brand-light: #b79bff;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
