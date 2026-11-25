@@ -1,6 +1,6 @@
 import { Skeleton } from "./Skeleton";
 
-const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
+const PAGE_CONTAINER = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10";
 
 export function PropertyCardSkeleton() {
   return (

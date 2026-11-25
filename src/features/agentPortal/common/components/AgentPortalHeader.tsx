@@ -85,7 +85,7 @@ const AgentPortalHeader = ({
   return (
     <>
       <header className="sticky top-0 z-10 h-16 border-b border-[#b8bec8] bg-white dark:border-white/15 dark:bg-[#1a1a1a] max-[700px]:h-[58px]">
-        <div className="mx-auto grid h-full w-[calc(100%-32px)] max-w-[1280px] grid-cols-[1fr_auto_1fr] items-center max-[1000px]:grid-cols-[1fr_auto] max-[700px]:grid-cols-[auto_1fr_auto]">
+        <div className="mx-auto grid h-full w-[calc(100%-32px)] max-w-7xl grid-cols-[1fr_auto_1fr] items-center max-[1000px]:grid-cols-[1fr_auto] max-[700px]:grid-cols-[auto_1fr_auto]">
           <Link to="/agent" className="inline-flex w-fit items-center gap-[9px] font-serif text-lg font-semibold whitespace-nowrap text-[#111827] no-underline dark:text-white max-[700px]:gap-1.5 max-[700px]:text-[15px]" aria-label="RewaCiti agent home">
             <img src="/Symbol.png" alt="" className="block h-9 w-9 object-contain max-[700px]:h-[30px] max-[700px]:w-[30px]" />
             <span>RewaCiti</span>
@@ -118,7 +118,7 @@ const AgentPortalHeader = ({
                 {initials || "A"}
               </button>
               {accountMenuOpen && (
-                <div className="absolute right-0 top-[calc(100%_+_10px)] z-20 w-[240px] rounded-[20px] border border-[#e5e7eb] bg-white p-2 shadow-[0_16px_40px_rgba(0,0,0,0.14)] dark:border-white/10 dark:bg-[#1a1a1a]">
+                <div className="absolute right-0 top-[calc(100%+10px)] z-20 w-60 rounded-[20px] border border-[#e5e7eb] bg-white p-2 shadow-[0_16px_40px_rgba(0,0,0,0.14)] dark:border-white/10 dark:bg-[#1a1a1a]">
                   <div className="grid gap-[3px] border-b border-[#e5e7eb] px-3 py-[11px] dark:border-white/10">
                     <strong className="text-[13px]">{name}</strong>
                     <span className="overflow-hidden text-xs text-[#6b7280] text-ellipsis dark:text-[#9ca3af]">{email}</span>

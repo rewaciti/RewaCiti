@@ -6,7 +6,7 @@ import { Link } from "react-router";
 import { FiArrowRight } from "react-icons/fi";
 
 // Same container as the Navbar, Property Details, Account and Request pages.
-const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
+const PAGE_CONTAINER = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10";
 
 // Same serif as the Navbar / Home hero (Fraunces is loaded in index.html)
 const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };

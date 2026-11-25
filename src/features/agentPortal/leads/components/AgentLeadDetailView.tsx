@@ -374,12 +374,12 @@ const AgentLeadDetailView = ({ inquiry, onClose, onUpdated, agentName, onBookVis
                       disabled={togglingTaskId === activity.id}
                       onClick={() => void toggleTask(activity.id)}
                       aria-label={isDone ? `Mark "${activity.body}" as not done` : `Mark "${activity.body}" as done`}
-                      className={`relative z-[1] grid h-[27px] w-[27px] shrink-0 place-items-center rounded-full border border-gray-300 bg-white p-0 transition-colors disabled:opacity-50 dark:border-white/15 dark:bg-[#1a1a1a] ${isDone ? "text-green-600 dark:text-green-400" : "text-gray-500 hover:text-brand dark:text-gray-400 dark:hover:text-brand-light"}`}
+                      className={`relative z-1 grid h-[27px] w-[27px] shrink-0 place-items-center rounded-full border border-gray-300 bg-white p-0 transition-colors disabled:opacity-50 dark:border-white/15 dark:bg-[#1a1a1a] ${isDone ? "text-green-600 dark:text-green-400" : "text-gray-500 hover:text-brand dark:text-gray-400 dark:hover:text-brand-light"}`}
                     >
                       {isDone ? <CheckCircle2 size={15} /> : <Circle size={15} />}
                     </button>
                   ) : (
-                    <span className="relative z-[1] grid h-[27px] w-[27px] shrink-0 place-items-center rounded-full border border-gray-300 bg-white text-gray-600 dark:border-white/15 dark:bg-[#1a1a1a] dark:text-gray-300">
+                    <span className="relative z-1 grid h-[27px] w-[27px] shrink-0 place-items-center rounded-full border border-gray-300 bg-white text-gray-600 dark:border-white/15 dark:bg-[#1a1a1a] dark:text-gray-300">
                       {activityIcon(activity.type)}
                     </span>
                   )}

@@ -12,7 +12,7 @@ import CustomDropdown from "@/shared/components/CustomDropdown";
 import { usePropertyStore } from "@/shared/store/usePropertyStore";
 
 // Same container as the Navbar, Footer and every inner page.
-const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
+const PAGE_CONTAINER = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10";
 
 // Same serif as the Navbar (load Fraunces once in index.html):
 // <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">

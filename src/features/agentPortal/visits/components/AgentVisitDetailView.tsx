@@ -620,9 +620,9 @@ const AgentVisitDetailView = ({ booking, onClose, onUpdated, agentName }: AgentV
                   return (
                     <li key={entry.id} className="relative flex gap-3 pb-4 last:pb-0">
                       {!isLast && (
-                        <span className="absolute top-4 bottom-0 left-[4px] w-px bg-gray-300 dark:bg-white/15" aria-hidden="true" />
+                        <span className="absolute top-4 bottom-0 left-1 w-px bg-gray-300 dark:bg-white/15" aria-hidden="true" />
                       )}
-                      <span className="relative z-[1] mt-1.5 h-[9px] w-[9px] shrink-0 rounded-full bg-gray-900 dark:bg-white" aria-hidden="true" />
+                      <span className="relative z-1 mt-1.5 h-[9px] w-[9px] shrink-0 rounded-full bg-gray-900 dark:bg-white" aria-hidden="true" />
                       <div className="min-w-0 flex-1">
                         <p className="m-0 text-sm leading-snug">{entry.label}</p>
                         {entry.remark && <p className={`mt-0.5 mb-0 text-xs ${mutedText}`}>“{entry.remark}”</p>}
@@ -666,7 +666,7 @@ const AgentVisitDetailView = ({ booking, onClose, onUpdated, agentName }: AgentV
       {/* Reschedule modal */}
       {panel === "reschedule" && !isFinished && (
         <div
-          className="fixed inset-0 z-[60] grid place-items-center overflow-y-auto bg-black/55 p-4"
+          className="fixed inset-0 z-60 grid place-items-center overflow-y-auto bg-black/55 p-4"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setPanel(null);
           }}
@@ -821,7 +821,7 @@ const AgentVisitDetailView = ({ booking, onClose, onUpdated, agentName }: AgentV
       {/* Cancel modal */}
       {panel === "cancel" && !isFinished && (
         <div
-          className="fixed inset-0 z-[60] grid place-items-center overflow-y-auto bg-black/55 p-4"
+          className="fixed inset-0 z-60 grid place-items-center overflow-y-auto bg-black/55 p-4"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setPanel(null);
           }}

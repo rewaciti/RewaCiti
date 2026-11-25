@@ -770,7 +770,7 @@ const AgentListingEditor = ({
                           {photos.length < 20 && (
                             <button
                               type="button"
-                              className={`relative flex aspect-[4/3] w-full flex-col items-center justify-center gap-1 overflow-hidden rounded-[6px] border border-dashed border-[#e5e7eb] bg-white p-2 text-[#4b5563] cursor-pointer transition-[border-color,background-color] duration-150 hover:border-brand hover:bg-brand/10 disabled:cursor-wait dark:border-white/10 dark:bg-[#1a1a1a] dark:text-[#9ca3af] dark:hover:bg-brand-light/15 ${photoDropActive ? "border-brand bg-brand/10 dark:border-brand-light dark:bg-brand-light/15" : ""}`}
+                              className={`relative flex aspect-4/3 w-full flex-col items-center justify-center gap-1 overflow-hidden rounded-[6px] border border-dashed border-[#e5e7eb] bg-white p-2 text-[#4b5563] cursor-pointer transition-[border-color,background-color] duration-150 hover:border-brand hover:bg-brand/10 disabled:cursor-wait dark:border-white/10 dark:bg-[#1a1a1a] dark:text-[#9ca3af] dark:hover:bg-brand-light/15 ${photoDropActive ? "border-brand bg-brand/10 dark:border-brand-light dark:bg-brand-light/15" : ""}`}
                               disabled={photoUploading}
                               onClick={() => photoInputRef.current?.click()}
                               onDragEnter={(event) => { event.preventDefault(); setPhotoDropActive(true); }}
@@ -830,7 +830,7 @@ const AgentListingEditor = ({
                         />
                         <button
                           type="button"
-                          className={`mt-3 flex w-full min-h-[160px] flex-col items-center justify-center gap-2 rounded-[6px] border border-dashed border-[#e5e7eb] bg-white p-5 text-[#4b5563] cursor-pointer transition-[border-color,background-color] duration-150 hover:border-brand hover:bg-brand/10 disabled:cursor-wait dark:border-white/10 dark:bg-[#1a1a1a] dark:text-[#9ca3af] dark:hover:bg-brand-light/15 ${documentDropActive ? "border-brand bg-brand/10 dark:border-brand-light dark:bg-brand-light/15" : ""}`}
+                          className={`mt-3 flex w-full min-h-40 flex-col items-center justify-center gap-2 rounded-[6px] border border-dashed border-[#e5e7eb] bg-white p-5 text-[#4b5563] cursor-pointer transition-[border-color,background-color] duration-150 hover:border-brand hover:bg-brand/10 disabled:cursor-wait dark:border-white/10 dark:bg-[#1a1a1a] dark:text-[#9ca3af] dark:hover:bg-brand-light/15 ${documentDropActive ? "border-brand bg-brand/10 dark:border-brand-light dark:bg-brand-light/15" : ""}`}
                           disabled={documentUploading}
                           onClick={() => documentInputRef.current?.click()}
                           onDragEnter={(event) => { event.preventDefault(); setDocumentDropActive(true); }}

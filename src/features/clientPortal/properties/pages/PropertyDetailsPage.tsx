@@ -42,7 +42,7 @@ import { useAuthStore } from "@/shared/store/useAuthStore";
 import { addressOf, pricePeriodLabel } from "@/shared/domain/property/toProperty";
 
 // Use the SAME classes inside your Navbar so the logo lines up with the content.
-const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
+const PAGE_CONTAINER = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10";
 
 // Airbnb-style building blocks
 const SECTION = "border-b border-gray-600/50 py-8 dark:border-gray-600/50";

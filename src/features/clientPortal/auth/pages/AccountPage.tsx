@@ -43,7 +43,7 @@ type AccountTab = "saved" | "visits" | "payments" | "messages" | "profile";
 type VisitFilter = "upcoming" | "all";
 
 // Same container as the Navbar and PropertyDetails so everything lines up.
-const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
+const PAGE_CONTAINER = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10";
 
 // Same serif as the Navbar / Home hero (Fraunces is loaded in index.html)
 const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };

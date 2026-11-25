@@ -38,7 +38,7 @@ const AgentLoginPage = () => {
         <meta name="description" content="Sign in to your RewaCiti agent portal." />
       </Helmet>
       <header className="sticky top-0 z-10 h-16 border-b border-[#b8bec8] bg-white dark:border-white/15 dark:bg-[#1a1a1a] max-[700px]:h-[58px]">
-        <div className="mx-auto grid h-full w-[calc(100%-32px)] max-w-[1280px] grid-cols-[1fr_auto_1fr] items-center max-[1000px]:grid-cols-[1fr_auto] max-[700px]:grid-cols-[auto_1fr_auto]">
+        <div className="mx-auto grid h-full w-[calc(100%-32px)] max-w-7xl grid-cols-[1fr_auto_1fr] items-center max-[1000px]:grid-cols-[1fr_auto] max-[700px]:grid-cols-[auto_1fr_auto]">
           <Link to="/agent/login" className="inline-flex w-fit items-center gap-[9px] font-serif text-lg font-semibold whitespace-nowrap text-[#111827] no-underline dark:text-white max-[700px]:gap-1.5 max-[700px]:text-[15px]" aria-label="RewaCiti agent portal">
             <img src="/Symbol.png" alt="" className="block h-9 w-9 object-contain max-[700px]:h-[30px] max-[700px]:w-[30px]" />
             <span>RewaCiti</span>

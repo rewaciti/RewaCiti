@@ -8,7 +8,7 @@ import { useAuthStore } from "@/shared/store/useAuthStore";
 import { toast } from "sonner";
 
 // Same container as every page, so the logo lines up with the content.
-const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
+const PAGE_CONTAINER = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10";
 
 // Same serif as the rest of the site (Fraunces is loaded in index.html)
 const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };

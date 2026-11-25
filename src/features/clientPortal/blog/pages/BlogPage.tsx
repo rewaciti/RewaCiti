@@ -7,7 +7,7 @@ import { FiArrowLeft, FiArrowRight, FiCalendar, FiUser } from "react-icons/fi";
 import { Helmet } from "react-helmet-async";
 import { Skeleton } from "@/shared/components/ui/Skeleton";
 
-const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
+const PAGE_CONTAINER = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10";
 const paginationButton =
   "inline-flex cursor-pointer items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] disabled:cursor-not-allowed disabled:opacity-40 dark:border-white/20 dark:bg-[#101010] dark:text-white dark:hover:border-brand-light dark:hover:text-brand-light";
 

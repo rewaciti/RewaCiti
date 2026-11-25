@@ -6,7 +6,7 @@ import { NavLink } from "react-router";
 import { FiAlertCircle, FiArrowRight } from "react-icons/fi";
 
 // Same container as the Navbar, Footer and every inner page.
-const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
+const PAGE_CONTAINER = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10";
 
 // Same serif as the Navbar (Fraunces is loaded in index.html)
 const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };

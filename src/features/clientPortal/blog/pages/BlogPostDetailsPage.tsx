@@ -8,7 +8,7 @@ import { FiArrowLeft, FiCalendar, FiUser, FiTag } from "react-icons/fi";
 import { Helmet } from "react-helmet-async";
 import { Skeleton } from "@/shared/components/ui/Skeleton";
 
-const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
+const PAGE_CONTAINER = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10";
 const BlogPostDetailsPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const { getPostBySlug, fetchPosts, loading, posts } = useBlogStore();
