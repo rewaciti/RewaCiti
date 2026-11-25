@@ -15,7 +15,7 @@ const AgentListingEditorSkeleton = ({ title }: { title?: string }) => (
       <header className="flex min-h-14 shrink-0 items-center justify-between gap-[13px] border-b border-[#e5e7eb] bg-white px-5 dark:border-white/10 dark:bg-[#1a1a1a] max-[700px]:px-3.5">
         <div className="flex min-w-0 flex-1 items-center gap-2.5">
           <h2 className="m-0 truncate text-lg font-bold text-[#111827] dark:text-white max-[700px]:text-base">{title ?? "New Property"}</h2>
-          <SkeletonBar className="h-[24px] w-16 shrink-0 rounded-full" />
+          <SkeletonBar className="h-6 w-16 shrink-0 rounded-full" />
         </div>
         <span className="grid h-8 w-8 shrink-0 place-items-center text-[#4b5563] opacity-60 dark:text-[#9ca3af]" aria-hidden="true">
           <X size={19} />
