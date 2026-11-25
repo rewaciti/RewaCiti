@@ -201,6 +201,29 @@ const ListPropertyPage: React.FC = () => {
     Boolean(listingPurpose) &&
     Boolean(location.trim());
 
+  const agentPortalHref = hasAgentToken ? "/agent" : "/agent/login";
+  const agentPortalLabel = hasAgentToken ? "Go to agent portal" : "Sign in to agent portal";
+  const agentPortalButtonClass =
+    "inline-flex w-full items-center justify-center rounded-lg bg-[#703BF7] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#5c2fe0] dark:bg-[#b79bff] dark:text-black dark:hover:bg-[#a886ff]";
+
+  const renderAgentPortalMobileBar = () => (
+    <div className="sticky bottom-0 z-40 border-t border-gray-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(0,0,0,0.08)] dark:border-white/10 dark:bg-[#1A1A1A] lg:hidden">
+      <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+        <div className="min-w-0">
+          <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">
+            Already approved as an agent?
+          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            Manage listings, visits, leads, and your profile.
+          </p>
+        </div>
+        <Link to={agentPortalHref} className={`${agentPortalButtonClass} sm:w-auto`}>
+          {agentPortalLabel}
+        </Link>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gray-300 text-gray-900 dark:bg-black/30 dark:text-white">
       <Navbar />
@@ -373,7 +396,18 @@ const ListPropertyPage: React.FC = () => {
             </form>
           </section>
 
-          <aside className="space-y-4">
+          <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
+            <div className="hidden rounded-2xl border border-[#703BF7]/20 bg-[#703BF7]/5 p-5 dark:border-[#b79bff]/20 dark:bg-[#703BF7]/10 lg:block">
+              <p className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">
+                Already approved as an agent?
+              </p>
+              <p className="mb-4 text-sm leading-6 text-gray-600 dark:text-gray-400">
+                Open the agent portal to manage listings, visits, leads, and your profile.
+              </p>
+              <Link to={agentPortalHref} className={agentPortalButtonClass}>
+                {agentPortalLabel}
+              </Link>
+            </div>
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1A1A1A]">
               <h2 className="mb-5 text-xl font-semibold text-gray-900 dark:text-white">
                 Why list with us?
@@ -399,24 +433,11 @@ const ListPropertyPage: React.FC = () => {
                 </li>
               </ul>
             </div>
-            <div className="rounded-2xl border border-[#703BF7]/20 bg-[#703BF7]/5 p-5 dark:border-[#b79bff]/20 dark:bg-[#703BF7]/10">
-              <p className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">
-                Already approved as an agent?
-              </p>
-              <p className="mb-4 text-sm leading-6 text-gray-600 dark:text-gray-400">
-                Open the agent portal to manage listings, visits, leads, and your profile.
-              </p>
-              <Link
-                to={hasAgentToken ? "/agent" : "/agent/login"}
-                className="inline-flex w-full items-center justify-center rounded-lg border border-[#703BF7] px-4 py-2.5 text-sm font-semibold text-[#703BF7] transition hover:bg-[#703BF7] hover:text-white dark:border-[#b79bff] dark:text-[#b79bff] dark:hover:bg-[#703BF7] dark:hover:text-white"
-              >
-                {hasAgentToken ? "Go to agent portal" : "Sign in to agent portal"}
-              </Link>
-            </div>
           </aside>
           </div>
         </div>
       </main>
+      {renderAgentPortalMobileBar()}
       <Footer />
     </div>
   );
