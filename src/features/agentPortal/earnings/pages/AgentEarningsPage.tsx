@@ -379,6 +379,12 @@ const AgentEarningsPage = () => {
       ? DEAL_STATUS_OPTIONS
       : VISIT_FEE_STATUS_OPTIONS;
   const currentActiveFilterCount = isPayoutTab ? activeFilterCount : isDealsTab ? activeDealFilterCount : activeVisitFilterCount;
+  const currentListCount = isPayoutTab
+    ? summaryCount
+    : isDealsTab
+      ? dealCounts?.all ?? dealTotal
+      : visitFeeTotal;
+  const filterDisabled = currentListCount < 5 && !currentSearch && currentActiveFilterCount === 0;
   const clearCurrentFilters = isPayoutTab ? clearFilters : isDealsTab ? clearDealFilters : clearVisitFilters;
   const currentFilterHeading = isPayoutTab ? "Filter payouts" : isDealsTab ? "Filter deals" : "Filter visit fees";
   const currentSearchLabel = isPayoutTab ? "Search payouts" : isDealsTab ? "Search deals" : "Search visit fees";
@@ -462,9 +468,10 @@ const AgentEarningsPage = () => {
           <div className="relative shrink-0">
             <button
               type="button"
-              aria-expanded={filtersOpen}
+              disabled={filterDisabled}
+              aria-expanded={filtersOpen && !filterDisabled}
               onClick={() => setFiltersOpen((open) => !open)}
-              className={`${ui.control} inline-flex items-center gap-2 px-3.5 hover:border-brand max-sm:min-w-11 max-sm:justify-center max-sm:px-3 ${filtersOpen ? "border-brand" : ""}`}
+              className={`${ui.control} inline-flex items-center gap-2 px-3.5 max-sm:min-w-11 max-sm:justify-center max-sm:px-3 ${filterDisabled ? "cursor-not-allowed opacity-50" : "hover:border-brand"} ${filtersOpen ? "border-brand" : ""}`}
             >
               <Filter size={16} />
               <span className="max-sm:sr-only">Filters</span>
@@ -472,7 +479,7 @@ const AgentEarningsPage = () => {
               <ChevronDown size={15} className={`transition-transform duration-200 max-sm:hidden ${filtersOpen ? "rotate-180" : ""}`} />
             </button>
 
-            {filtersOpen && (
+            {filtersOpen && !filterDisabled && (
               <div className={`${ui.card} absolute top-[calc(100%+8px)] right-0 z-30 w-[min(20rem,calc(100vw-2rem))] p-4 shadow-xl`}>
                 <div className="mb-4 flex items-center justify-between">
                   <strong className="text-sm">{currentFilterHeading}</strong>

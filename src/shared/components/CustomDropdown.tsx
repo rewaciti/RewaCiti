@@ -53,12 +53,13 @@ export default function CustomDropdown({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const [menuPosition, setMenuPosition] = useState<{ top: number; left: number; maxHeight: number } | null>(null);
+  const isDisabled = disabled || options.length === 0;
 
   useEffect(() => {
-    if (disabled) {
+    if (isDisabled) {
       setOpen(false);
     }
-  }, [disabled]);
+  }, [isDisabled]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -113,7 +114,7 @@ export default function CustomDropdown({
 
   const defaultButtonClass = "w-full h-10 px-3 flex items-center justify-between rounded-lg border border-gray-600/70 bg-gray-300 dark:bg-black/70 text-gray-900 dark:text-white";
   const toggleOpen = () => {
-    if (disabled) return;
+    if (isDisabled) return;
     if (open) {
       setOpen(false);
       return;
@@ -135,7 +136,7 @@ export default function CustomDropdown({
     setOpen(true);
   };
 
-  const dropdownMenu = !disabled && (
+  const dropdownMenu = !isDisabled && (
     <div
       ref={menuRef}
       className={portal ? `${menuClassName} z-5!` : `absolute z-9999 mt-2 min-w-full w-full rounded-xl border border-gray-700 bg-white text-gray-900 shadow-xl overflow-hidden left-0 transition-all duration-200 ease-out origin-top transform dark:border-white/10 dark:bg-neutral-900 dark:text-white ${open ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto" : "opacity-0 scale-y-95 -translate-y-2 pointer-events-none"} ${menuClassName}`}
@@ -167,13 +168,13 @@ export default function CustomDropdown({
     <div
       ref={ref}
       className={`relative ${open ? "z-5!" : ""} ${
-        disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+        isDisabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
       } ${className}`}
     >
       <button
         ref={buttonRef}
         type="button"
-        disabled={disabled}
+        disabled={isDisabled}
         aria-label={ariaLabel}
         aria-haspopup={portal ? "menu" : "listbox"}
         aria-expanded={open}
@@ -183,7 +184,7 @@ export default function CustomDropdown({
         }}
         className={triggerContent
           ? `${buttonClassName} cursor-pointer`
-          : `${buttonClassName || defaultButtonClass} flex items-center justify-between ${disabled ? "cursor-not-allowed pointer-events-none" : "cursor-pointer"}`}
+          : `${buttonClassName || defaultButtonClass} flex items-center justify-between ${isDisabled ? "cursor-not-allowed pointer-events-none" : "cursor-pointer"}`}
       >
         {triggerContent ?? (
           <>
