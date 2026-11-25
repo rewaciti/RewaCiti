@@ -7,7 +7,7 @@ const SkeletonBar = ({ className = "" }: { className?: string }) => (
 
 const detailCardClass = "rounded-[9px] border border-[#e5e7eb] bg-white p-[17px] dark:border-white/10 dark:bg-[#1a1a1a]";
 const sideCardClass = "rounded-[9px] border border-[#e5e7eb] bg-white p-[17px] dark:border-white/10 dark:bg-[#1a1a1a] max-[700px]:p-[13px]";
-const sideHeadingClass = "[&>div>h3]:m-0 [&>div>h3]:text-[13px] [&>div>h3]:font-bold [&>div>h3]:text-[#111827] dark:[&>div>h3]:text-white [&>div>p]:mt-1 [&>div>p]:text-[10px] [&>div>p]:text-[#4b5563] dark:[&>div>p]:text-[#9ca3af] [&>h3]:m-0 [&>h3]:text-[13px] [&>h3]:font-bold [&>h3]:text-[#111827] dark:[&>h3]:text-white [&>strong]:text-xs [&>strong]:text-[#111827] dark:[&>strong]:text-white";
+const sideHeadingClass = "[&>div>h3]:m-0 [&>div>h3]:text-sm [&>div>h3]:font-bold [&>div>h3]:text-[#111827] dark:[&>div>h3]:text-white [&>div>p]:mt-1 [&>div>p]:text-xs [&>div>p]:text-[#4b5563] dark:[&>div>p]:text-[#9ca3af] [&>h3]:m-0 [&>h3]:text-sm [&>h3]:font-bold [&>h3]:text-[#111827] dark:[&>h3]:text-white [&>strong]:text-sm [&>strong]:text-[#111827] dark:[&>strong]:text-white";
 
 const AgentListingEditorSkeleton = ({ title }: { title?: string }) => (
   <div className="fixed inset-0 z-50 bg-[#d1d5db] font-sans text-[#111827] dark:bg-[#121212] dark:text-white" role="status" aria-live="polite" aria-label="Loading listing editor">
@@ -26,7 +26,7 @@ const AgentListingEditorSkeleton = ({ title }: { title?: string }) => (
         {EDITOR_TABS.map(({ value, label, icon: Icon }, index) => (
           <span
             key={value}
-            className={`relative flex min-h-10 min-w-max items-center gap-2 border px-[15px] text-sm max-[700px]:gap-1.5 max-[700px]:px-[9px] max-[700px]:text-[11px] ${index === 0 ? "border-[#e5e7eb] bg-white font-bold text-[#111827] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white" : "border-transparent bg-transparent text-[#4b5563] dark:text-[#9ca3af]"}`}
+            className={`relative flex min-h-10 min-w-max items-center gap-2 border px-[15px] text-sm max-[700px]:gap-1.5 max-[700px]:px-[9px] max-[700px]:text-[13px] ${index === 0 ? "border-[#e5e7eb] bg-white font-bold text-[#111827] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white" : "border-transparent bg-transparent text-[#4b5563] dark:text-[#9ca3af]"}`}
           >
             <Icon size={16} />
             <span>{label}</span>
@@ -46,7 +46,7 @@ const AgentListingEditorSkeleton = ({ title }: { title?: string }) => (
         <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[minmax(0,1fr)_300px] items-start gap-[22px] px-4 sm:px-6 lg:px-10 max-[900px]:grid-cols-[minmax(0,1fr)_260px] max-[900px]:gap-3.5 max-[700px]:grid-cols-1">
           <div className="grid min-w-0 gap-3.5 p-0">
             <div className={detailCardClass}>
-              <div className="mb-[7px] block text-xs font-semibold text-[#111827] dark:text-white">Listed for</div>
+              <div className="mb-[7px] block text-sm font-semibold text-[#111827] dark:text-white">Listed for</div>
               <div className="mb-5 grid grid-cols-5 gap-2.5 max-[1000px]:grid-cols-3 max-[700px]:grid-cols-2 max-[700px]:gap-[7px]">
                 {[0, 1, 2, 3, 4].map((item) => <SkeletonBar key={item} className="h-12 w-full" />)}
               </div>
@@ -91,10 +91,10 @@ const AgentListingEditorSkeleton = ({ title }: { title?: string }) => (
       </div>
 
       <footer className="flex min-h-[72px] shrink-0 items-center justify-between gap-3.5 border-t border-[#e5e7eb] bg-white px-[clamp(18px,4vw,58px)] py-[11px] dark:border-white/10 dark:bg-[#1a1a1a] max-[700px]:min-h-16 max-[700px]:gap-[7px] max-[700px]:px-3 max-[700px]:py-2 max-[700px]:pb-[max(8px,env(safe-area-inset-bottom))]" aria-hidden="true">
-        <span className="inline-flex min-h-10 items-center pr-[15px] text-[11px] font-semibold text-[#4b5563] opacity-60 dark:text-[#9ca3af] max-[700px]:pr-2">Cancel</span>
+        <span className="inline-flex min-h-10 items-center pr-[15px] text-[13px] font-semibold text-[#4b5563] opacity-60 dark:text-[#9ca3af] max-[700px]:pr-2">Cancel</span>
         <div className="flex items-center gap-[9px] max-[700px]:gap-1.5">
-          <span className="inline-flex min-h-10 items-center justify-center rounded-[6px] border border-[#e5e7eb] bg-white px-[15px] text-[11px] font-semibold text-[#111827] opacity-60 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white max-[700px]:min-h-[37px] max-[700px]:px-[9px] max-[700px]:text-[10px]">Save as Draft</span>
-          <span className="inline-flex min-h-10 items-center justify-center gap-[7px] rounded-[6px] border border-brand bg-brand px-[15px] text-[11px] font-semibold text-white opacity-60 max-[700px]:min-h-[37px] max-[700px]:px-[9px] max-[700px]:text-[10px]">Send for Approval <ArrowRight size={16} /></span>
+          <span className="inline-flex min-h-10 items-center justify-center rounded-[6px] border border-[#e5e7eb] bg-white px-[15px] text-[13px] font-semibold text-[#111827] opacity-60 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white max-[700px]:min-h-[37px] max-[700px]:px-[9px] max-[700px]:text-xs">Save as Draft</span>
+          <span className="inline-flex min-h-10 items-center justify-center gap-[7px] rounded-[6px] border border-brand bg-brand px-[15px] text-[13px] font-semibold text-white opacity-60 max-[700px]:min-h-[37px] max-[700px]:px-[9px] max-[700px]:text-xs">Send for Approval <ArrowRight size={16} /></span>
         </div>
       </footer>
     </section>

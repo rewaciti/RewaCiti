@@ -272,6 +272,14 @@ html:has(.account-page)::-webkit-scrollbar-button {
   display: none;
 }
 
+[data-agent-scroll] {
+  scrollbar-width: none;
+}
+
+[data-agent-scroll]::-webkit-scrollbar {
+  display: none;
+}
+
 .property-dialog-content > .property-dialog-header {
   position: sticky;
   top: -1rem;

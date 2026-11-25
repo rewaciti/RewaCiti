@@ -73,7 +73,7 @@ const AgentDescriptionEditor = ({
   };
 
   const iconButtonClass = "grid h-[31px] w-[31px] shrink-0 cursor-pointer place-items-center rounded-[4px] border-0 bg-transparent text-[#4b5563] outline-none hover:bg-brand/10 hover:text-brand focus-visible:bg-brand/10 focus-visible:text-brand dark:text-[#9ca3af] dark:hover:bg-brand-light/15 dark:hover:text-brand-light dark:focus-visible:bg-brand-light/15 dark:focus-visible:text-brand-light max-[700px]:h-7 max-[700px]:w-7";
-  const linkButtonClass = "inline-flex min-h-[34px] cursor-pointer items-center justify-center rounded-[5px] border border-[#e5e7eb] bg-white px-2.5 text-[10px] text-[#111827] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white";
+  const linkButtonClass = "inline-flex min-h-[34px] cursor-pointer items-center justify-center rounded-[5px] border border-[#e5e7eb] bg-white px-2.5 text-xs text-[#111827] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white";
 
   return (
     <div
@@ -86,8 +86,8 @@ const AgentDescriptionEditor = ({
       <div className="flex min-h-[46px] flex-wrap items-center gap-[5px] border-b border-[#e5e7eb] bg-[#f3f4f6] px-2 py-[5px] dark:border-white/10 dark:bg-[#232323] max-[700px]:flex-wrap" aria-label="Description formatting">
         <CustomDropdown
           className="w-[128px] shrink-0 max-[700px]:w-[110px]"
-          buttonClassName="w-full min-h-[42px] rounded-[6px] border border-[#e5e7eb] bg-white! px-2 text-left text-[12px] text-[#111827]! hover:border-brand dark:border-white/10 dark:bg-[#1a1a1a]! dark:text-white! max-[700px]:min-h-[33px]"
-          menuClassName="w-[128px] rounded-[6px] border border-[#e5e7eb] bg-white! p-1 text-[12px] text-[#111827]! shadow-lg dark:border-white/10 dark:bg-[#1a1a1a]! dark:text-white!"
+          buttonClassName="w-full min-h-[42px] rounded-[6px] border border-[#e5e7eb] bg-white! px-2 text-left text-sm text-[#111827]! hover:border-brand dark:border-white/10 dark:bg-[#1a1a1a]! dark:text-white! max-[700px]:min-h-[33px]"
+          menuClassName="w-[128px] rounded-[6px] border border-[#e5e7eb] bg-white! p-1 text-sm text-[#111827]! shadow-lg dark:border-white/10 dark:bg-[#1a1a1a]! dark:text-white!"
           menuItemClassName="block w-full rounded px-2 py-1.5 text-left hover:bg-brand/10 dark:hover:bg-brand-light/15"
           placeholder="Normal"
           value={format}
@@ -115,14 +115,14 @@ const AgentDescriptionEditor = ({
       </div>
       {linkOpen && (
         <div className="flex gap-[7px] border-b border-[#e5e7eb] p-[9px] dark:border-white/10">
-          <input type="url" aria-label="Link URL" value={linkUrl} onChange={(event) => setLinkUrl(event.target.value)} placeholder="https://example.com" className="min-w-0 flex-1 rounded-[5px] border border-[#e5e7eb] bg-white px-[9px] text-[11px] text-[#111827] outline-none dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white" />
+          <input type="url" aria-label="Link URL" value={linkUrl} onChange={(event) => setLinkUrl(event.target.value)} placeholder="https://example.com" className="min-w-0 flex-1 rounded-[5px] border border-[#e5e7eb] bg-white px-[9px] text-[13px] text-[#111827] outline-none dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white" />
           <button type="button" onMouseDown={(event) => event.preventDefault()} onClick={applyLink} className={`${linkButtonClass} border-brand! bg-brand! text-white!`}>Insert link</button>
           <button type="button" aria-label="Cancel adding link" onMouseDown={(event) => event.preventDefault()} onClick={() => setLinkOpen(false)} className={linkButtonClass}><X size={15} /></button>
         </div>
       )}
       <div
         ref={editorRef}
-        className={`min-h-[205px] wrap-anywhere px-4 py-[15px] text-[12px] leading-[1.7] text-[#111827] outline-none empty:before:pointer-events-none empty:before:text-[#6b7280] empty:before:content-[attr(data-placeholder)] dark:text-white dark:empty:before:text-[#9ca3af] [&_h2]:my-[10px] [&_h2]:text-[#111827] dark:[&_h2]:text-white [&_h3]:my-[10px] [&_h3]:text-[#111827] dark:[&_h3]:text-white [&_ol]:pl-6 [&_ul]:pl-6 max-[700px]:min-h-[180px] ${
+        className={`min-h-[205px] wrap-anywhere px-4 py-[15px] text-sm leading-[1.7] text-[#111827] outline-none empty:before:pointer-events-none empty:before:text-[#6b7280] empty:before:content-[attr(data-placeholder)] dark:text-white dark:empty:before:text-[#9ca3af] [&_h2]:my-[10px] [&_h2]:text-[#111827] dark:[&_h2]:text-white [&_h3]:my-[10px] [&_h3]:text-[#111827] dark:[&_h3]:text-white [&_ol]:pl-6 [&_ul]:pl-6 max-[700px]:min-h-[180px] ${
           fullscreen ? "flex-1 overflow-y-auto" : ""
         }`}
         contentEditable
