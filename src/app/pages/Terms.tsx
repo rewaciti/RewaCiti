@@ -188,8 +188,9 @@ const Terms = () => {
           </p>
 
           <p className="mt-2">
-            Property visits must be scheduled at least{" "}
-            <strong>48 hours in advance</strong> and are subject to confirmation.
+            Property visits can be booked for any available time and are subject
+            to the agent&apos;s confirmation. You can reschedule a visit from
+            your account before the agreed time.
           </p>
 
           <h3 className="mt-4 text-lg font-semibold">

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import * as React from "react";
-import { ArrowRight, CalendarPlus, CalendarClock, ChevronDown, ChevronLeft, ChevronRight, CircleDollarSign, Eye, ExternalLink, FileText, History as HistoryIcon, ImagePlus, Info, LayoutDashboard, Mail, MapPin, MessageSquare, Pencil, Phone, Star, Users, X } from "lucide-react";
+import { CalendarPlus, CalendarClock, ChevronDown, ChevronLeft, ChevronRight, CircleDollarSign, Eye, ExternalLink, FileText, History as HistoryIcon, ImagePlus, Info, LayoutDashboard, Mail, MapPin, MessageSquare, Pencil, Phone, Star, Users, X } from "lucide-react";
 import { toast } from "sonner";
 import CustomDropdown from "@/shared/components/CustomDropdown";
 import { agentAPI, agentErrorMessage, type AgentBooking, type AgentInquiry, type AgentProperty, type AgentPropertyStatus } from "@/features/agentPortal/common/services/agentAPI";
@@ -121,6 +121,7 @@ const AgentPropertyOverview = ({
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const galleryTouchStartX = React.useRef<number | null>(null);
   const [inquiries, setInquiries] = useState<AgentInquiry[]>([]);
   const [visits, setVisits] = useState<AgentBooking[]>([]);
   const [activityLoading, setActivityLoading] = useState(true);
@@ -150,6 +151,23 @@ const AgentPropertyOverview = ({
   useEffect(() => {
     void loadPropertyActivity();
   }, [loadPropertyActivity]);
+
+  useEffect(() => {
+    if (!galleryOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        setGalleryIndex((index) => Math.max(0, index - 1));
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        setGalleryIndex((index) => Math.min(property.photos.length - 1, index + 1));
+      } else if (event.key === "Escape") {
+        setGalleryOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [galleryOpen, property.photos.length]);
 
   const renderInquiries = (limit?: number) => {
     if (activityLoading) return <ActivityPlaceholder icon={<MessageSquare size={20} />}>Loading inquiries...</ActivityPlaceholder>;
@@ -348,23 +366,6 @@ const AgentPropertyOverview = ({
               <div className="relative grid min-h-[88px] content-center gap-1 rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-[#1a1a1a]"><span className="text-xs text-[#4b5563] dark:text-[#9ca3af]">Visit fee</span><strong className="text-xl font-bold text-[#111827] dark:text-white sm:text-2xl">{property.visitFeeOverride == null ? "Usual fee" : money(property.visitFeeOverride, property.currency)}</strong><CircleDollarSign size={16} className="absolute top-4 right-4 text-[#6b7280] dark:text-[#9ca3af]" /></div>
             </div>
 
-            <section className="mb-4 grid grid-cols-2 items-start gap-4 max-[900px]:grid-cols-1">
-              <article className="grid min-w-0 content-start gap-3 rounded-xl border border-gray-200 bg-white p-4 text-[#111827] sm:p-5 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h2 className="m-0 text-base font-bold text-[#111827] dark:text-white">Recent inquiries</h2>
-                  <button type="button" className="inline-flex cursor-pointer items-center gap-1 border-0 bg-transparent p-0 text-xs font-semibold text-[#703bf7] dark:text-[#b79bff]" onClick={() => setActiveTab("inquiries")}>View all <ArrowRight size={14} /></button>
-                </div>
-                {renderInquiries(3)}
-              </article>
-              <article className="grid min-w-0 content-start gap-3 rounded-xl border border-gray-200 bg-white p-4 text-[#111827] sm:p-5 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h2 className="m-0 text-base font-bold text-[#111827] dark:text-white">Recent visits</h2>
-                  <button type="button" className="inline-flex cursor-pointer items-center gap-1 border-0 bg-transparent p-0 text-xs font-semibold text-[#703bf7] dark:text-[#b79bff]" onClick={() => setActiveTab("visits")}>View all <ArrowRight size={14} /></button>
-                </div>
-                {renderVisits(3)}
-              </article>
-            </section>
-
             <div className="grid grid-cols-[minmax(0,2fr)_minmax(290px,1fr)] items-start gap-4 max-[700px]:grid-cols-1">
               <div className="grid min-w-0 content-start gap-4">
                 <section className="m-0 min-w-0 rounded-xl border border-gray-200 bg-white p-4 text-[#111827] sm:p-5 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white">
@@ -489,17 +490,28 @@ const AgentPropertyOverview = ({
         {availabilityOpen && <AgentAvailabilityEditor property={property} onClose={() => setAvailabilityOpen(false)} />}
         <AgentBookVisitModal property={property} open={bookVisitOpen} onOpenChange={setBookVisitOpen} />
         {galleryOpen && (
-          <div className="fixed inset-0 z-40 grid place-items-center bg-black/78 p-5" role="presentation" onClick={(event) => {
+          <div className="fixed inset-0 z-40 grid place-items-center bg-black/78 p-5 max-[700px]:p-3" role="presentation" onClick={(event) => {
             if (event.target === event.currentTarget) setGalleryOpen(false);
           }}>
-            <section className="grid h-[min(90vh,850px)] w-full max-w-[1100px] grid-rows-[auto_minmax(0,1fr)_auto] bg-white p-3.5 text-[#111827] dark:bg-[#1a1a1a] dark:text-white max-[700px]:h-[90vh] max-[700px]:p-2.5" role="dialog" aria-modal="true" aria-label="Property photos">
-              <header className="flex items-center justify-between gap-3 pb-3"><div className="grid gap-1"><strong className="text-[13px]">{property.title}</strong><span className="text-[11px] text-[#4b5563] dark:text-[#9ca3af]">Photo {galleryIndex + 1} of {property.photos.length}</span></div><button type="button" className="grid h-9 w-9 shrink-0 place-items-center rounded-[5px] border-0 bg-[#f3f4f6] text-[#111827] dark:bg-[#232323] dark:text-white" aria-label="Close photos" onClick={() => setGalleryOpen(false)}><X size={20} /></button></header>
-              <div className="flex min-h-0 items-center justify-between gap-3 bg-[#f3f4f6] dark:bg-[#232323] max-[700px]:gap-1.5">
-                <button type="button" className="grid h-9 w-9 shrink-0 place-items-center rounded-[5px] border-0 bg-[#f3f4f6] text-[#111827] disabled:cursor-not-allowed disabled:opacity-40 dark:bg-[#232323] dark:text-white max-[700px]:h-[34px] max-[700px]:w-[30px]" aria-label="Previous photo" disabled={galleryIndex === 0} onClick={() => setGalleryIndex((index) => Math.max(0, index - 1))}><ChevronLeft size={20} /></button>
-                <img className="h-full w-full min-w-0 object-contain" src={property.photos[galleryIndex]} alt={`${property.title} photo ${galleryIndex + 1}`} />
-                <button type="button" className="grid h-9 w-9 shrink-0 place-items-center rounded-[5px] border-0 bg-[#f3f4f6] text-[#111827] disabled:cursor-not-allowed disabled:opacity-40 dark:bg-[#232323] dark:text-white max-[700px]:h-[34px] max-[700px]:w-[30px]" aria-label="Next photo" disabled={galleryIndex >= property.photos.length - 1} onClick={() => setGalleryIndex((index) => Math.min(property.photos.length - 1, index + 1))}><ChevronRight size={20} /></button>
+            <section className="grid h-[min(90vh,850px)] w-full max-w-[1100px] grid-rows-[auto_minmax(0,1fr)_auto] bg-white p-3.5 text-[#111827] dark:bg-[#1a1a1a] dark:text-white max-[700px]:h-[90vh] max-[700px]:p-3" role="dialog" aria-modal="true" aria-label="Property photos">
+              <header className="flex items-center justify-between gap-3 pb-3"><div className="grid min-w-0 gap-1"><strong className="truncate text-[13px]">{property.title}</strong><span className="text-[11px] text-[#4b5563] dark:text-[#9ca3af]">Photo {galleryIndex + 1} of {property.photos.length}</span></div><button type="button" className="grid h-9 w-9 shrink-0 place-items-center rounded-[5px] border-0 bg-[#f3f4f6] text-[#111827] dark:bg-[#232323] dark:text-white" aria-label="Close photos" onClick={() => setGalleryOpen(false)}><X size={20} /></button></header>
+              <div
+                className="flex min-h-0 items-center justify-center gap-3 bg-[#f3f4f6] dark:bg-[#232323] max-[700px]:gap-0"
+                style={{ touchAction: "pan-y" }}
+                onTouchStart={(event) => { galleryTouchStartX.current = event.touches[0]?.clientX ?? null; }}
+                onTouchEnd={(event) => {
+                  if (galleryTouchStartX.current === null) return;
+                  const distance = (event.changedTouches[0]?.clientX ?? 0) - galleryTouchStartX.current;
+                  galleryTouchStartX.current = null;
+                  if (distance > 40) setGalleryIndex((index) => Math.max(0, index - 1));
+                  else if (distance < -40) setGalleryIndex((index) => Math.min(property.photos.length - 1, index + 1));
+                }}
+              >
+                <button type="button" className="grid h-9 w-9 shrink-0 place-items-center rounded-[5px] border-0 bg-[#f3f4f6] text-[#111827] disabled:cursor-not-allowed disabled:opacity-40 dark:bg-[#232323] dark:text-white max-[700px]:hidden" aria-label="Previous photo" disabled={galleryIndex === 0} onClick={() => setGalleryIndex((index) => Math.max(0, index - 1))}><ChevronLeft size={20} /></button>
+                <img className="h-full w-full min-w-0 select-none object-contain" src={property.photos[galleryIndex]} alt={`${property.title} photo ${galleryIndex + 1}`} draggable={false} />
+                <button type="button" className="grid h-9 w-9 shrink-0 place-items-center rounded-[5px] border-0 bg-[#f3f4f6] text-[#111827] disabled:cursor-not-allowed disabled:opacity-40 dark:bg-[#232323] dark:text-white max-[700px]:hidden" aria-label="Next photo" disabled={galleryIndex >= property.photos.length - 1} onClick={() => setGalleryIndex((index) => Math.min(property.photos.length - 1, index + 1))}><ChevronRight size={20} /></button>
               </div>
-              <div className="flex gap-[7px] overflow-x-auto pt-2.5">{property.photos.map((photo, index) => <button key={`${photo}-${index}`} type="button" className={`h-[52px] w-[68px] shrink-0 overflow-hidden border-2 bg-transparent p-0 ${galleryIndex === index ? "border-[#703bf7]" : "border-transparent"}`} onClick={() => setGalleryIndex(index)}><img className="h-full w-full object-cover" src={photo} alt={`Photo ${index + 1}`} /></button>)}</div>
+              <div className="flex gap-[7px] overflow-x-auto px-3.5 pt-2.5">{property.photos.map((photo, index) => <button key={`${photo}-${index}`} type="button" className={`h-[52px] w-[68px] shrink-0 overflow-hidden border-2 bg-transparent p-0 ${galleryIndex === index ? "border-[#703bf7]" : "border-transparent"}`} onClick={() => setGalleryIndex(index)}><img className="h-full w-full object-cover" src={photo} alt={`Photo ${index + 1}`} /></button>)}</div>
             </section>
           </div>
         )}

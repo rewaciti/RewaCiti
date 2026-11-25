@@ -1,14 +1,12 @@
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Bath, BedDouble, CalendarDays, ChevronLeft, ChevronRight, MapPin, X } from "lucide-react";
 import { toast } from "sonner";
 import { useAuthStore } from "@/shared/store/useAuthStore";
 import { errorMessage, noteTestMode } from "@/shared/lib/realEstateApi";
-import { payInvoice } from "@/shared/lib/payments";
-import { getCookie, setCookie } from "@/shared/lib/utils";
 import useRequestKey from "@/shared/hooks/useRequestKey";
 import type { Property } from "@/types";
-import type { Booking, VisitMode, VisitSlot } from "@/types/realEstate";
+import type { VisitMode, VisitSlot } from "@/types/realEstate";
 import { usePropertyStore } from "@/shared/store/usePropertyStore";
 import { addressOf } from "@/shared/domain/property/toProperty";
 import { visitsAPI } from "@/shared/api/visitsAPI";
@@ -18,10 +16,7 @@ interface AgentBookInspectionModalProps {
   property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onBooked?: (booking: Booking) => void;
-  audience?: "agent" | "client";
-  additionalInfo?: ReactNode;
-  consentContent?: ReactNode;
+  onBooked?: () => void;
 }
 
 const DEFAULT_MODES: VisitMode[] = ["in_person"];
@@ -47,8 +42,8 @@ const formatVisit = (date: string, time: string) => {
 const monthStart = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
 const monthLabel = (date: Date) => new Intl.DateTimeFormat("en-NG", { month: "long", year: "numeric" }).format(date);
 
-const AgentBookInspectionModal = ({ property, open, onOpenChange, onBooked, audience = "agent", additionalInfo, consentContent }: AgentBookInspectionModalProps) => {
-  const { customer, isAuthenticated } = useAuthStore();
+const AgentBookInspectionModal = ({ property, open, onOpenChange, onBooked }: AgentBookInspectionModalProps) => {
+  const { customer } = useAuthStore();
   const visitRules = usePropertyStore((state) => state.forms?.visit);
   const consentText = usePropertyStore((state) => state.forms?.consentText);
   const [customerName, setCustomerName] = useState("");
@@ -63,10 +58,7 @@ const AgentBookInspectionModal = ({ property, open, onOpenChange, onBooked, audi
   const [slotsLoading, setSlotsLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [calendarMonth, setCalendarMonth] = useState(() => monthStart(new Date()));
-  const [heldUntil, setHeldUntil] = useState(0);
   const requestKey = useRequestKey();
-  const isClient = audience === "client";
-  const readOnlyContact = isClient && isAuthenticated && !!customer;
 
   const modes = visitRules?.modes ?? DEFAULT_MODES;
   const minVisitDate = toLocalDate(new Date());
