@@ -13,9 +13,9 @@ const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
 const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };
 
 const viewAllClass =
-  "shrink-0 items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#9677df]";
+  "shrink-0 items-center justify-center gap-2 rounded-full bg-[#b79bff] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#b79bff]";
 const roundButton =
-  "cursor-pointer rounded-full border border-gray-300 bg-white p-2.5 text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:bg-[#101010] dark:text-white";
+  "cursor-pointer rounded-full border border-gray-300 bg-white p-2.5 text-gray-900 transition hover:border-[#b79bff] hover:text-[#b79bff] disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:bg-[#101010] dark:text-white";
 
 function CommentSection() {
   const { comments, loading, page, ITEMS_PER_PAGE, fetchComments, nextPage, prevPage } =
@@ -42,7 +42,7 @@ function CommentSection() {
     <div className={PAGE_CONTAINER}>
       <div className="mb-8 flex items-end justify-between gap-4">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">Testimonials</p>
+          <p className="text-sm font-semibold text-[#b79bff] dark:text-highlight">Testimonials</p>
           <h2
             style={SERIF}
             className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl"
@@ -95,7 +95,7 @@ function CommentSection() {
                         onClick={() =>
                           setExpanded((prev) => ({ ...prev, [comment.id]: !prev[comment.id] }))
                         }
-                        className="ml-2 cursor-pointer font-semibold text-[#703BF7] hover:underline dark:text-[#b79bff]"
+                        className="ml-2 cursor-pointer font-semibold text-[#b79bff] hover:underline dark:text-highlight"
                       >
                         {expanded[comment.id] ? "Show less" : "... Read more"}
                       </button>
@@ -119,7 +119,7 @@ function CommentSection() {
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block truncate text-sm text-gray-500 transition-colors hover:text-[#703BF7] dark:text-gray-400"
+                        className="block truncate text-sm text-gray-500 transition-colors hover:text-[#b79bff] dark:text-gray-400"
                       >
                         {comment.location}
                       </a>

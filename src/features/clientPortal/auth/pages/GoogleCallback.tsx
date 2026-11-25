@@ -73,7 +73,7 @@ const GoogleCallback = () => {
         </div>
         <section className="flex items-center justify-center px-6 py-12 sm:px-10 lg:px-16">
           <div role="status" className="flex flex-col items-center gap-4 text-center">
-            <FiLoader aria-hidden="true" size={28} className="animate-spin text-[#703BF7]" />
+            <FiLoader aria-hidden="true" size={28} className="animate-spin text-[#b79bff]" />
             <p className="text-sm text-gray-700 dark:text-gray-300">Signing you in with Google…</p>
           </div>
         </section>

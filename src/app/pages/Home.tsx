@@ -151,7 +151,7 @@ function Home() {
             className="max-w-3xl text-4xl font-semibold leading-[1.1] text-white sm:text-5xl lg:text-6xl"
           >
             Real Estate,{" "}
-            <em className="font-medium text-[#B79BFF]">
+            <em className="font-medium text-[#b79bff]">
               Beyond Properties.
             </em>
           </h1>
@@ -174,8 +174,8 @@ function Home() {
                   onClick={() => setTab(t.id)}
                   className={`cursor-pointer rounded-full px-3.5 py-1 text-xs font-semibold transition ${
                     tab === t.id
-                      ? "bg-[#703BF7] text-white"
-                      : "text-gray-600 hover:bg-[#9677df] hover:text-white dark:text-gray-300"
+                      ? "bg-[#b79bff] text-white"
+                      : "text-gray-600 hover:bg-[#b79bff] hover:text-white dark:text-gray-300"
                   }`}
                 >
                   {t.label}
@@ -223,7 +223,7 @@ function Home() {
 
               <button
                 type="submit"
-                className="flex cursor-pointer items-center justify-center gap-2 rounded-full bg-[#703BF7] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df] sm:ml-2"
+                className="flex cursor-pointer items-center justify-center gap-2 rounded-full bg-[#b79bff] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#b79bff] sm:ml-2"
               >
                 <FiSearch size={16} /> Search
               </button>
@@ -258,7 +258,7 @@ function Home() {
                 <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-400">
                   {item.description}
                 </p>
-                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#703BF7] transition group-hover:gap-2.5 dark:text-[#b79bff]">
+                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#b79bff] transition group-hover:gap-2.5 dark:text-highlight">
                   Learn more <FiArrowRight size={15} />
                 </span>
               </Link>

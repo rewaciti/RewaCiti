@@ -63,7 +63,7 @@ function AllFAQs() {
               faq.map((item: FAQ) => (
                 <article
                   key={item.id}
-                  className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-900 shadow-sm transition-colors hover:border-[#703BF7]/50 dark:border-white/10 dark:bg-[#1A1A1A] dark:text-white dark:hover:border-[#a98bff]/50"
+                  className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-900 shadow-sm transition-colors hover:border-[#b79bff]/50 dark:border-white/10 dark:bg-[#1A1A1A] dark:text-white dark:hover:border-[#b79bff]/50"
                 >
                   <h2 className="mb-2 text-lg font-semibold leading-snug">
                     {item.question}

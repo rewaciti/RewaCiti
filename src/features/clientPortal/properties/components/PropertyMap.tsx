@@ -39,7 +39,7 @@ function makePriceIcon(label: string, active: boolean) {
   return L.divIcon({
     className: "property-price-marker",
     html: `
-      <div style="background:${active ? "#5c2fe0" : "#e11d48"};
+      <div style="background:${active ? "#b79bff" : "#e11d48"};
         color:#fff;
         font-weight:600;
         font-size:12px;
@@ -123,7 +123,7 @@ function ExpandButton({
       }}
       aria-label={isFullscreen ? "Exit fullscreen map" : "Expand map to fullscreen"}
       title={isFullscreen ? "Exit fullscreen" : "Expand map"}
-      className={`absolute top-3 right-3 z-1000 w-9 h-9 rounded-full bg-white dark:bg-[#1A1A1A] border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white shadow-md items-center justify-center hover:border-[#703BF7] hover:text-[#703BF7] transition-colors cursor-pointer ${visibilityClassName}`}
+      className={`absolute top-3 right-3 z-1000 w-9 h-9 rounded-full bg-white dark:bg-[#1A1A1A] border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white shadow-md items-center justify-center hover:border-[#b79bff] hover:text-[#b79bff] transition-colors cursor-pointer ${visibilityClassName}`}
     >
       {isFullscreen ? <FiMinimize2 size={16} /> : <FiMaximize2 size={16} />}
     </button>
@@ -159,7 +159,7 @@ function PropertyPreview({ property }: { property: Property }) {
 
         {location && (
           <div className="flex items-center gap-1 text-[10px] text-gray-500 dark:text-gray-400 mb-2">
-            <FiMapPin size={11} className="shrink-0 text-[#703BF7]" />
+            <FiMapPin size={11} className="shrink-0 text-[#b79bff]" />
             <span className="truncate">{location}</span>
           </div>
         )}
@@ -167,7 +167,7 @@ function PropertyPreview({ property }: { property: Property }) {
         <div className="flex items-center justify-between gap-2">
           <div className="min-w-0">
             {pricePeriodLabel(property.pricePeriod) && <p className="text-[9px] text-gray-500 dark:text-gray-400 leading-none mb-0.5">{pricePeriodLabel(property.pricePeriod)}</p>}
-            <p className="text-sm font-bold text-[#703BF7] truncate">{formatPrice(property.pricing.total)}</p>
+            <p className="text-sm font-bold text-[#b79bff] truncate">{formatPrice(property.pricing.total)}</p>
           </div>
 
           <button
@@ -176,7 +176,7 @@ function PropertyPreview({ property }: { property: Property }) {
               e.stopPropagation();
               goToProperty();
             }}
-            className="shrink-0 flex items-center gap-1 bg-[#703BF7] hover:bg-[#5c2fe0] text-white text-[10px] font-medium px-2.5 py-1.5 rounded-md transition"
+            className="shrink-0 flex items-center gap-1 bg-[#b79bff] hover:bg-[#b79bff] text-white text-[10px] font-medium px-2.5 py-1.5 rounded-md transition"
           >
             View
             <FiArrowRight size={11} />

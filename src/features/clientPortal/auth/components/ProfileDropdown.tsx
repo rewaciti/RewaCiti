@@ -37,7 +37,7 @@ function ProfileDropdown({ isOpen, onClose }: ProfileDropdownProps) {
     >
       {/* User Information */}
       <div className="flex items-center gap-3 border-b border-gray-600/50 p-4 dark:border-gray-700">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#703BF7] font-semibold text-white">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#b79bff] font-semibold text-white">
           {initials}
         </div>
 

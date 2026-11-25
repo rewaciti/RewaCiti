@@ -60,7 +60,7 @@ const AgentBookVisitModal = ({ property, open, onOpenChange, onBooked }: AgentBo
             <Dialog.Title className="m-0 mb-4 font-serif text-[22px]">Book a visit</Dialog.Title>
             <div className="flex items-center gap-3.5" role="status" aria-live="polite">
               <span
-                className="h-7 w-7 shrink-0 animate-spin rounded-full border-[3px] border-gray-200 border-t-[#703BF7] dark:border-white/10 dark:border-t-[#B79BFF]"
+                className="h-7 w-7 shrink-0 animate-spin rounded-full border-[3px] border-gray-200 border-t-[#b79bff] dark:border-white/10 dark:border-t-[#b79bff]"
                 aria-hidden="true"
               />
               <Dialog.Description id="agent-book-visit-loading-description" className="m-0 text-sm text-gray-600 dark:text-gray-400">

@@ -61,7 +61,7 @@ const BlogPostDetailsPage = () => {
         <main className={`${PAGE_CONTAINER} py-20 text-center`}>
           <h1 className="mb-4 text-3xl font-semibold text-gray-900 dark:text-white">Post not found</h1>
           <p className="mb-8 text-gray-600 dark:text-gray-400">The blog post you are looking for does not exist.</p>
-          <Link to="/blog" className="inline-flex items-center justify-center gap-2 text-[#703BF7] hover:underline dark:text-[#b79bff]">
+          <Link to="/blog" className="inline-flex items-center justify-center gap-2 text-[#b79bff] hover:underline dark:text-highlight">
             <FiArrowLeft /> Back to blog
           </Link>
         </main>
@@ -104,10 +104,10 @@ const BlogPostDetailsPage = () => {
 
       <header className="border-b border-gray-900/20 bg-linear-to-r from-gray-300/50 to-gray-400 py-5 dark:border-white/10 dark:from-neutral-600/20 dark:to-black/60">
         <div className={`${PAGE_CONTAINER} space-y-1`}>
-          <Link to="/blog" className="mb-2 inline-flex items-center gap-2 text-sm font-medium text-[#703BF7] hover:underline dark:text-[#b79bff]">
+          <Link to="/blog" className="mb-2 inline-flex items-center gap-2 text-sm font-medium text-[#b79bff] hover:underline dark:text-highlight">
             <FiArrowLeft /> Back to blog
           </Link>
-          <p className="text-xs font-semibold uppercase tracking-wide text-[#703BF7] dark:text-[#b79bff]">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[#b79bff] dark:text-highlight">
             {post.category}
           </p>
           <h1 className="max-w-4xl text-3xl font-semibold leading-tight text-gray-900 dark:text-white md:text-4xl">
@@ -129,15 +129,15 @@ const BlogPostDetailsPage = () => {
 
           <div className="mb-6 flex flex-wrap items-center gap-6 text-sm text-gray-600 dark:text-gray-400">
             <div className="flex items-center gap-2">
-              <FiUser className="text-[#703BF7]" />
+              <FiUser className="text-[#b79bff]" />
               <span>{post.author}</span>
             </div>
             <div className="flex items-center gap-2">
-              <FiCalendar className="text-[#703BF7]" />
+              <FiCalendar className="text-[#b79bff]" />
               <span>{new Date(post.date).toLocaleDateString()}</span>
             </div>
             <div className="flex items-center gap-2">
-              <FiTag className="text-[#703BF7]" />
+              <FiTag className="text-[#b79bff]" />
               <span>{post.category}</span>
             </div>
           </div>
@@ -188,7 +188,7 @@ const BlogPostDetailsPage = () => {
                       className="h-40 w-full object-cover"
                     />
                     <div className="p-4">
-                      <h3 className="line-clamp-2 text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#703BF7] dark:text-white">
+                      <h3 className="line-clamp-2 text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#b79bff] dark:text-white">
                         {related.title}
                       </h3>
                     </div>

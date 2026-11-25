@@ -56,7 +56,7 @@ const AgentListingEditorSkeleton = ({ title }: { title?: string }) => (
               <SkeletonBar className="h-11 w-full" />
             </div>
             <div className={detailCardClass}>
-              <div className="mb-[13px] flex items-center gap-[9px] text-[#703bf7] dark:text-[#b79bff]"><Info size={17} /><SkeletonBar className="h-3.5 w-24 bg-[#703bf7]/15 dark:bg-[#b79bff]/20" /></div>
+              <div className="mb-[13px] flex items-center gap-[9px] text-highlight dark:text-highlight"><Info size={17} /><SkeletonBar className="h-3.5 w-24 bg-highlight/15 dark:bg-highlight/20" /></div>
               <SkeletonBar className="mb-2 h-3 w-24" />
               <SkeletonBar className="h-24 w-full" />
             </div>
@@ -72,7 +72,7 @@ const AgentListingEditorSkeleton = ({ title }: { title?: string }) => (
             </div>
             <div className={`${sideCardClass} ${sideHeadingClass}`}>
               <div className="flex items-center gap-3">
-                <span className="grid h-11 w-11 shrink-0 animate-pulse place-items-center rounded-[6px] bg-[#f3f4f6] text-[#703bf7] dark:bg-[#232323] dark:text-[#b79bff]" aria-hidden="true">
+                <span className="grid h-11 w-11 shrink-0 animate-pulse place-items-center rounded-[6px] bg-[#f3f4f6] text-highlight dark:bg-[#232323] dark:text-highlight" aria-hidden="true">
                   <ImagePlus size={18} />
                 </span>
                 <div className="min-w-0 flex-1">
@@ -82,9 +82,9 @@ const AgentListingEditorSkeleton = ({ title }: { title?: string }) => (
                 <SkeletonBar className="h-7 w-14 rounded-[6px]" />
               </div>
             </div>
-            <div className="flex items-start gap-[9px] rounded-md border border-[#703bf7]/10 bg-[#703bf7]/10 p-3 text-[#703bf7] dark:border-white/10 dark:bg-[#232323] dark:text-[#b79bff]">
+            <div className="flex items-start gap-[9px] rounded-md border border-highlight/10 bg-highlight/10 p-3 text-highlight dark:border-white/10 dark:bg-[#232323] dark:text-highlight">
               <Info className="shrink-0" size={17} />
-              <SkeletonBar className="h-2.5 flex-1 bg-[#703bf7]/20 dark:bg-[#b79bff]/25" />
+              <SkeletonBar className="h-2.5 flex-1 bg-highlight/20 dark:bg-highlight/25" />
             </div>
           </aside>
         </div>
@@ -94,7 +94,7 @@ const AgentListingEditorSkeleton = ({ title }: { title?: string }) => (
         <span className="inline-flex min-h-10 items-center pr-[15px] text-[11px] font-semibold text-[#4b5563] opacity-60 dark:text-[#9ca3af] max-[700px]:pr-2">Cancel</span>
         <div className="flex items-center gap-[9px] max-[700px]:gap-1.5">
           <span className="inline-flex min-h-10 items-center justify-center rounded-[6px] border border-[#e5e7eb] bg-white px-[15px] text-[11px] font-semibold text-[#111827] opacity-60 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white max-[700px]:min-h-[37px] max-[700px]:px-[9px] max-[700px]:text-[10px]">Save as Draft</span>
-          <span className="inline-flex min-h-10 items-center justify-center gap-[7px] rounded-[6px] border border-[#703bf7] bg-[#703bf7] px-[15px] text-[11px] font-semibold text-white opacity-60 max-[700px]:min-h-[37px] max-[700px]:px-[9px] max-[700px]:text-[10px]">Send for Approval <ArrowRight size={16} /></span>
+          <span className="inline-flex min-h-10 items-center justify-center gap-[7px] rounded-[6px] border border-highlight bg-highlight px-[15px] text-[11px] font-semibold text-white opacity-60 max-[700px]:min-h-[37px] max-[700px]:px-[9px] max-[700px]:text-[10px]">Send for Approval <ArrowRight size={16} /></span>
         </div>
       </footer>
     </section>

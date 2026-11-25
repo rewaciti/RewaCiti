@@ -104,7 +104,7 @@ const AgentVerificationModal = ({ open, agent, onOpenChange, onVerified }: Agent
           </div>
           <button
             type="button"
-            className="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-full bg-gray-100 text-2xl leading-none text-gray-600 hover:bg-brand hover:text-white dark:bg-[#232323] dark:text-gray-400"
+            className="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-full bg-gray-100 text-2xl leading-none text-gray-600 hover:bg-highlight hover:text-white dark:bg-[#232323] dark:text-gray-400"
             aria-label="Close verification"
             onClick={() => onOpenChange(false)}
             disabled={saving}
@@ -114,8 +114,8 @@ const AgentVerificationModal = ({ open, agent, onOpenChange, onVerified }: Agent
         </div>
 
         <form className="grid gap-3 text-sm" onSubmit={(event) => void submit(event)}>
-          <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-gray-300 bg-gray-50 px-4 py-6 text-center transition hover:border-brand dark:border-white/15 dark:bg-neutral-900">
-            <UploadCloud size={22} className="text-brand dark:text-brand-light" aria-hidden="true" />
+          <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-gray-300 bg-gray-50 px-4 py-6 text-center transition hover:border-highlight dark:border-white/15 dark:bg-neutral-900">
+            <UploadCloud size={22} className="text-highlight dark:text-highlight" aria-hidden="true" />
             <span className="font-semibold">Choose ID documents</span>
             <span className="text-xs text-gray-600 dark:text-gray-400">PDF or image, up to 5MB each</span>
             <input
@@ -153,7 +153,7 @@ const AgentVerificationModal = ({ open, agent, onOpenChange, onVerified }: Agent
 
           <button
             type="submit"
-            className="mt-1 inline-flex min-h-11 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white hover:bg-brand/90 disabled:cursor-not-allowed disabled:opacity-55"
+            className="mt-1 inline-flex min-h-11 items-center justify-center rounded-full bg-highlight px-5 text-sm font-semibold text-white hover:bg-highlight/90 disabled:cursor-not-allowed disabled:opacity-55"
             disabled={saving || !documents.length}
           >
             {saving ? "Submitting..." : "Submit for verification"}

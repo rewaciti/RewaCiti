@@ -158,7 +158,7 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
                 placeholder="Tell us more about your experience..."
-                className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
+                className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#b79bff] dark:text-white text-gray-900"
               ></textarea>
             </div>
 
@@ -174,7 +174,7 @@ const ServiceRatingModal: React.FC<ServiceRatingModalProps> = ({
                 type="submit"
                 disabled={rating === 0 || isSubmitting}
                 className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors ${rating > 0 && !isSubmitting
-                    ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white"
+                    ? "bg-[#b79bff] hover:bg-[#b79bff] text-white"
                     : "bg-gray-400 cursor-not-allowed text-gray-200"
                   }`}
               >

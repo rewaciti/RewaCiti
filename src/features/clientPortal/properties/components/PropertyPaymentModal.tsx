@@ -19,12 +19,12 @@ import { Link } from "react-router";
 const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };
 
 const inputClass =
-  "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#703BF7] focus:ring-2 focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white";
+  "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#b79bff] focus:ring-2 focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white";
 const labelClass = "mb-1.5 block text-sm font-medium text-gray-900 dark:text-white";
 const boxClass = "rounded-2xl bg-gray-100 p-4 dark:bg-white/5";
 const mutedClass = "text-gray-600 dark:text-gray-400";
 const primaryButtonClass =
-  "w-full cursor-pointer rounded-full bg-[#703BF7] px-5 py-3.5 text-base font-semibold text-white transition hover:bg-[#9677df] disabled:cursor-not-allowed disabled:opacity-50";
+  "w-full cursor-pointer rounded-full bg-[#b79bff] px-5 py-3.5 text-base font-semibold text-white transition hover:bg-[#b79bff] disabled:cursor-not-allowed disabled:opacity-50";
 
 interface PropertyPaymentModalProps {
   property: Property;
@@ -232,7 +232,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 <div className={`${boxClass} space-y-3`}>
                   <div className="flex items-baseline justify-between gap-4">
                     <span className={`text-sm ${mutedClass}`}>Amount</span>
-                    <span className="text-xl font-semibold text-[#703BF7] dark:text-[#b79bff]">
+                    <span className="text-xl font-semibold text-[#b79bff] dark:text-highlight">
                       ₦{bankTransfer.bankTransfer.amount.toLocaleString()}
                     </span>
                   </div>
@@ -384,7 +384,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 <p className="text-center text-sm leading-6 text-gray-700 dark:text-gray-300">
                   Once your payment is confirmed, a verified agent will be assigned and our team
                   will contact you within{" "}
-                  <span className="font-semibold text-[#703BF7] dark:text-[#b79bff]">24 hours</span>{" "}
+                  <span className="font-semibold text-[#b79bff] dark:text-highlight">24 hours</span>{" "}
                   to schedule a meeting for necessary documentation and activities.
                 </p>
 
@@ -392,7 +392,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 <details className="group rounded-2xl border border-gray-200 px-4 py-3 dark:border-white/10">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-sm font-semibold">
                     <span className="flex items-center gap-2">
-                      <FiInfo className="text-[#703BF7] dark:text-[#b79bff]" /> Safety tips &amp;
+                      <FiInfo className="text-[#b79bff] dark:text-highlight" /> Safety tips &amp;
                       payment info
                     </span>
                     <FiChevronDown className="transition group-open:rotate-180" />
@@ -413,7 +413,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 <label className="flex cursor-pointer items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
                   <input
                     type="checkbox"
-                    className="mt-0.5 h-4 w-4 cursor-pointer accent-[#703BF7]"
+                    className="mt-0.5 h-4 w-4 cursor-pointer accent-[#b79bff]"
                     checked={agreed}
                     onChange={(e) => setAgreed(e.target.checked)}
                     required
@@ -424,7 +424,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                       to="/terms"
                       target="_blank"
                       rel="noreferrer"
-                      className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#9677df] dark:text-[#b79bff]"
+                      className="font-semibold text-[#b79bff] underline underline-offset-2 hover:text-[#b79bff] dark:text-highlight"
                     >
                       Terms
                     </Link>{" "}
@@ -433,7 +433,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                       to="/privacy-policy"
                       target="_blank"
                       rel="noreferrer"
-                      className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#9677df] dark:text-[#b79bff]"
+                      className="font-semibold text-[#b79bff] underline underline-offset-2 hover:text-[#b79bff] dark:text-highlight"
                     >
                       Privacy Policy
                     </Link>

@@ -204,7 +204,7 @@ const ListPropertyPage: React.FC = () => {
   const agentPortalHref = hasAgentToken ? "/agent" : "/agent/login";
   const agentPortalLabel = hasAgentToken ? "Go to agent portal" : "Sign in to agent portal";
   const agentPortalButtonClass =
-    "inline-flex w-full items-center justify-center rounded-lg bg-[#703BF7] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#5c2fe0] dark:bg-[#b79bff] dark:text-black dark:hover:bg-[#a886ff]";
+    "inline-flex w-full items-center justify-center rounded-lg bg-[#b79bff] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#b79bff] dark:bg-highlight dark:text-black dark:hover:bg-[#b79bff]";
 
   const renderAgentPortalMobileBar = () => (
     <div className="sticky bottom-0 z-40 border-t border-gray-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(0,0,0,0.08)] dark:border-white/10 dark:bg-[#1A1A1A] lg:hidden">
@@ -229,7 +229,7 @@ const ListPropertyPage: React.FC = () => {
       <Navbar />
       <header className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 py-5">
         <div className="mx-auto w-full max-w-7xl space-y-1 px-4 sm:px-6 lg:px-10">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[#703BF7] dark:text-[#b79bff]">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[#b79bff] dark:text-highlight">
             List with RewaCiti
           </p>
           <h1 className="text-3xl text-gray-900 dark:text-white md:text-4xl">
@@ -266,7 +266,7 @@ const ListPropertyPage: React.FC = () => {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
+                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#b79bff] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
                 />
               </div>
 
@@ -280,7 +280,7 @@ const ListPropertyPage: React.FC = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
+                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#b79bff] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
                 />
               </div>
 
@@ -294,7 +294,7 @@ const ListPropertyPage: React.FC = () => {
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
+                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#b79bff] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
                 />
               </div>
 
@@ -334,7 +334,7 @@ const ListPropertyPage: React.FC = () => {
                   required
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
+                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#b79bff] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
                 />
               </div>
             </div>
@@ -348,25 +348,25 @@ const ListPropertyPage: React.FC = () => {
                 placeholder="Tell us a bit about yourself and your experience as a lister."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
+                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#b79bff] focus:outline-none dark:border-white/15 dark:bg-black/30 dark:text-white"
               />
             </div>
 
             <div className="flex items-start gap-2">
               <input
                 type="checkbox"
-                className="mt-1 accent-[#703BF7]"
+                className="mt-1 accent-[#b79bff]"
                 checked={agreed}
                 onChange={(e) => setAgreed(e.target.checked)}
                 required
               />
               <p className="text-sm text-gray-700 dark:text-gray-300">
                 I agree with the{" "}
-                <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">
+                <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#b79bff] underline">
                   Terms
                 </Link>{" "}
                 and{" "}
-                <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">
+                <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#b79bff] underline">
                   Privacy Policy
                 </Link>
                 .
@@ -386,7 +386,7 @@ const ListPropertyPage: React.FC = () => {
                 disabled={!isFormValid}
                 className={`rounded-lg px-5 py-3 text-sm font-semibold transition
                   ${isFormValid
-                    ? "bg-[#703BF7] text-white hover:bg-[#5c2fe0]"
+                    ? "bg-[#b79bff] text-white hover:bg-[#b79bff]"
                     : "cursor-not-allowed bg-gray-400 text-gray-200"
                   }`}
               >
@@ -397,7 +397,7 @@ const ListPropertyPage: React.FC = () => {
           </section>
 
           <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
-            <div className="hidden rounded-2xl border border-[#703BF7]/20 bg-[#703BF7]/5 p-5 dark:border-[#b79bff]/20 dark:bg-[#703BF7]/10 lg:block">
+            <div className="hidden rounded-2xl border border-[#b79bff]/20 bg-[#b79bff]/5 p-5 dark:border-highlight/20 dark:bg-[#b79bff]/10 lg:block">
               <p className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">
                 Already approved as an agent?
               </p>
@@ -414,19 +414,19 @@ const ListPropertyPage: React.FC = () => {
               </h2>
               <ul className="space-y-5">
                 <li className="flex gap-3">
-                  <FiCheckCircle className="mt-0.5 shrink-0 text-[#703BF7]" size={20} />
+                  <FiCheckCircle className="mt-0.5 shrink-0 text-[#b79bff]" size={20} />
                   <span className="text-sm leading-6 text-gray-700 dark:text-gray-300">
                     Reach tenants, buyers, and professionals looking for their next property.
                   </span>
                 </li>
                 <li className="flex gap-3">
-                  <FiShield className="mt-0.5 shrink-0 text-[#703BF7]" size={20} />
+                  <FiShield className="mt-0.5 shrink-0 text-[#b79bff]" size={20} />
                   <span className="text-sm leading-6 text-gray-700 dark:text-gray-300">
                     Our team verifies your details before helping you publish.
                   </span>
                 </li>
                 <li className="flex gap-3">
-                  <FiClock className="mt-0.5 shrink-0 text-[#703BF7]" size={20} />
+                  <FiClock className="mt-0.5 shrink-0 text-[#b79bff]" size={20} />
                   <span className="text-sm leading-6 text-gray-700 dark:text-gray-300">
                     After you apply, a team member will contact you shortly.
                   </span>

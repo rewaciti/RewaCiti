@@ -169,7 +169,7 @@ const ForgotPassword = () => {
           {/* Back Button */}
           <button
             onClick={() => navigate("/auth/login")}
-            className="flex items-center gap-2 text-[#703BF7] hover:underline text-sm font-medium mb-6"
+            className="flex items-center gap-2 text-[#b79bff] hover:underline text-sm font-medium mb-6"
           >
             <FiArrowLeft size={16} />
             Back to Login
@@ -202,7 +202,7 @@ const ForgotPassword = () => {
                       setHasSentCode(false);
                       setOtp(["", "", "", "", "", ""]);
                     }}
-                    className="w-full px-4 py-2 border border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#703BF7] placeholder:text-[12px] dark:placeholder:text-gray-400 placeholder:text-gray-600"
+                    className="w-full px-4 py-2 border border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#b79bff] placeholder:text-[12px] dark:placeholder:text-gray-400 placeholder:text-gray-600"
                     required
                   />
                 </div>
@@ -217,7 +217,7 @@ const ForgotPassword = () => {
                   className={`w-full px-4 py-3 rounded-lg font-medium transition ${
                     !isEmailValid || isLoading
                       ? "bg-gray-400 cursor-not-allowed text-gray-700"
-                      : "bg-[#703BF7] text-white hover:bg-[#5c2fe0]"
+                      : "bg-[#b79bff] text-white hover:bg-[#b79bff]"
                   }`}
                 >
                   {isLoading ? "Sending..." : "Send Reset Code"}
@@ -261,7 +261,7 @@ const ForgotPassword = () => {
                         value={digit}
                         onChange={(e) => handleOtpChange(index, e.target.value)}
                         onKeyDown={(e) => handleKeyDown(index, e)}
-                        className="w-10 h-10 text-center text-2xl font-bold border-2 border-gray-600/30 dark:border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-900 dark:text-white focus:outline-none focus:border-[#703BF7]"
+                        className="w-10 h-10 text-center text-2xl font-bold border-2 border-gray-600/30 dark:border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-900 dark:text-white focus:outline-none focus:border-[#b79bff]"
                       />
                     ))}
                   </div>
@@ -278,7 +278,7 @@ const ForgotPassword = () => {
                   className={`w-full px-4 py-3 rounded-lg font-medium transition ${
                     !isOtpComplete || isLoading
                       ? "bg-gray-400 cursor-not-allowed text-gray-700"
-                      : "bg-[#703BF7] text-white hover:bg-[#5c2fe0]"
+                      : "bg-[#b79bff] text-white hover:bg-[#b79bff]"
                   }`}
                 >
                   {isLoading ? "Processing..." : "Verify Code"}
@@ -292,7 +292,7 @@ const ForgotPassword = () => {
                     className={`font-semibold transition ${
                       !isEmailValid || isResending || isLoading
                         ? "text-gray-400 cursor-not-allowed"
-                        : "text-[#703BF7] hover:underline"
+                        : "text-[#b79bff] hover:underline"
                     }`}
                   >
                     {isResending ? "Resending..." : "Resend code"}
@@ -305,7 +305,7 @@ const ForgotPassword = () => {
                       setOtp(["", "", "", "", "", ""]);
                       setHasSentCode(false);
                     }}
-                    className="font-semibold text-[#703BF7] hover:underline"
+                    className="font-semibold text-[#b79bff] hover:underline"
                   >
                     Back to Email
                   </button>
@@ -318,7 +318,7 @@ const ForgotPassword = () => {
             Remember your password?{" "}
             <Link
               to="/auth/login"
-              className="text-[#703BF7] cursor-pointer font-semibold hover:underline"
+              className="text-[#b79bff] cursor-pointer font-semibold hover:underline"
             >
               Sign In
             </Link>

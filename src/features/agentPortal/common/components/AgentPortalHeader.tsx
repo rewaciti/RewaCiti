@@ -96,7 +96,7 @@ const AgentPortalHeader = ({
               <Link
                 key={item.label}
                 to={item.href}
-                className={`inline-flex min-h-9 items-center gap-[7px] rounded-full px-4 text-sm font-medium no-underline transition-colors duration-150 ease-[ease] max-[700px]:min-h-8 max-[700px]:px-2.5 max-[700px]:text-xs ${item.active ? "bg-[#703bf7] font-semibold text-white" : "text-[#4b5563] hover:bg-[#9677df] hover:text-white dark:text-[#9ca3af]"} ${index === 1 ? "max-[430px]:hidden" : ""} ${index === 2 || index === 3 ? "max-[700px]:hidden" : ""}`}
+                className={`inline-flex min-h-9 items-center gap-[7px] rounded-full px-4 text-sm font-medium no-underline transition-colors duration-150 ease-[ease] max-[700px]:min-h-8 max-[700px]:px-2.5 max-[700px]:text-xs ${item.active ? "bg-highlight font-semibold text-white" : "text-[#4b5563] hover:bg-[#b79bff] hover:text-white dark:text-[#9ca3af]"} ${index === 1 ? "max-[430px]:hidden" : ""} ${index === 2 || index === 3 ? "max-[700px]:hidden" : ""}`}
                 aria-current={item.active ? "page" : undefined}
               >
                 {item.label}
@@ -110,7 +110,7 @@ const AgentPortalHeader = ({
             <div ref={accountMenuRef} className="relative max-[1000px]:hidden max-sm:block">
               <button
                 type="button"
-                className="flex h-[42px] w-[42px] cursor-pointer items-center justify-center rounded-full border-0 bg-[#703bf7] text-xs font-bold text-white transition-colors duration-150 ease-[ease] hover:bg-[#9677df] [&_svg]:hidden max-[700px]:h-9 max-[700px]:w-9"
+                className="flex h-[42px] w-[42px] cursor-pointer items-center justify-center rounded-full border-0 bg-highlight text-xs font-bold text-white transition-colors duration-150 ease-[ease] hover:bg-[#b79bff] [&_svg]:hidden max-[700px]:h-9 max-[700px]:w-9"
                 aria-label="Open account menu"
                 aria-expanded={accountMenuOpen}
                 onClick={() => setAccountMenuOpen((open) => !open)}
@@ -123,10 +123,10 @@ const AgentPortalHeader = ({
                     <strong className="text-[13px]">{name}</strong>
                     <span className="overflow-hidden text-xs text-[#6b7280] text-ellipsis dark:text-[#9ca3af]">{email}</span>
                   </div>
-                  <button type="button" onClick={viewProfile} className="mt-1 flex w-full cursor-pointer items-center gap-2.5 rounded-xl border-0 bg-transparent px-3 py-2.5 text-left text-[13px] text-[#111827] transition-colors duration-150 ease-[ease] hover:bg-[#703bf7]/10 hover:text-[#703bf7] dark:text-white dark:hover:bg-[#b79bff]/15 dark:hover:text-[#b79bff]">
+                  <button type="button" onClick={viewProfile} className="mt-1 flex w-full cursor-pointer items-center gap-2.5 rounded-xl border-0 bg-transparent px-3 py-2.5 text-left text-[13px] text-[#111827] transition-colors duration-150 ease-[ease] hover:bg-highlight/10 hover:text-highlight dark:text-white dark:hover:bg-highlight/15 dark:hover:text-highlight">
                     <UserRound size={16} /> View profile
                   </button>
-                  <button type="button" onClick={onLogout} className="mt-1 flex w-full cursor-pointer items-center gap-2.5 rounded-xl border-0 bg-transparent px-3 py-2.5 text-left text-[13px] text-[#111827] transition-colors duration-150 ease-[ease] hover:bg-[#703bf7]/10 hover:text-[#703bf7] dark:text-white dark:hover:bg-[#b79bff]/15 dark:hover:text-[#b79bff]">
+                  <button type="button" onClick={onLogout} className="mt-1 flex w-full cursor-pointer items-center gap-2.5 rounded-xl border-0 bg-transparent px-3 py-2.5 text-left text-[13px] text-[#111827] transition-colors duration-150 ease-[ease] hover:bg-highlight/10 hover:text-highlight dark:text-white dark:hover:bg-highlight/15 dark:hover:text-highlight">
                     <LogOut size={16} /> Sign out
                   </button>
                 </div>
@@ -134,7 +134,7 @@ const AgentPortalHeader = ({
             </div>
             <button
               type="button"
-              className="hidden h-10 w-10 cursor-pointer place-items-center rounded-full border-0 bg-transparent text-[#111827] hover:bg-[#703bf7]/10 hover:text-[#703bf7] dark:text-white dark:hover:bg-[#b79bff]/15 dark:hover:text-[#b79bff] max-[1000px]:grid max-sm:hidden"
+              className="hidden h-10 w-10 cursor-pointer place-items-center rounded-full border-0 bg-transparent text-[#111827] hover:bg-highlight/10 hover:text-highlight dark:text-white dark:hover:bg-highlight/15 dark:hover:text-highlight max-[1000px]:grid max-sm:hidden"
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileMenuOpen}
               onClick={() => setMobileMenuOpen((open) => !open)}
@@ -164,17 +164,17 @@ const AgentPortalHeader = ({
               <Link
                 key={item.label}
                 to={item.href}
-                className={`flex min-h-[50px] items-center justify-between gap-2.5 rounded-[14px] border-0 bg-transparent px-4 text-left text-base text-[#111827] no-underline hover:bg-[#703bf7]/10 dark:text-white dark:hover:bg-[#b79bff]/15 ${item.active ? "bg-[#703bf7]/10 font-semibold text-[#703bf7] dark:bg-[#b79bff]/15 dark:text-[#b79bff]" : ""}`}
+                className={`flex min-h-[50px] items-center justify-between gap-2.5 rounded-[14px] border-0 bg-transparent px-4 text-left text-base text-[#111827] no-underline hover:bg-highlight/10 dark:text-white dark:hover:bg-highlight/15 ${item.active ? "bg-highlight/10 font-semibold text-highlight dark:bg-highlight/15 dark:text-highlight" : ""}`}
                 aria-current={item.active ? "page" : undefined}
               >
                 {item.label}
                 {item.badge ? <span className="inline-grid h-[18px] min-w-[18px] place-items-center rounded-full bg-[#ef4444] text-[10px] font-bold text-white">{item.badge}</span> : null}
               </Link>
             ))}
-            <button type="button" className="flex min-h-[50px] cursor-pointer items-center justify-start gap-2.5 rounded-[14px] border-0 bg-transparent px-4 text-left text-base text-[#111827] no-underline hover:bg-[#703bf7]/10 dark:text-white dark:hover:bg-[#b79bff]/15" onClick={viewProfile}>
+            <button type="button" className="flex min-h-[50px] cursor-pointer items-center justify-start gap-2.5 rounded-[14px] border-0 bg-transparent px-4 text-left text-base text-[#111827] no-underline hover:bg-highlight/10 dark:text-white dark:hover:bg-highlight/15" onClick={viewProfile}>
               <UserRound size={18} /> View profile
             </button>
-            <button type="button" className="flex min-h-[50px] cursor-pointer items-center justify-start gap-2.5 rounded-[14px] border-0 bg-transparent px-4 text-left text-base text-[#ef4444] no-underline hover:bg-[#703bf7]/10 dark:hover:bg-[#b79bff]/15" onClick={onLogout}>
+            <button type="button" className="flex min-h-[50px] cursor-pointer items-center justify-start gap-2.5 rounded-[14px] border-0 bg-transparent px-4 text-left text-base text-[#ef4444] no-underline hover:bg-highlight/10 dark:hover:bg-highlight/15" onClick={onLogout}>
               <LogOut size={18} /> Sign out
             </button>
           </nav>
@@ -191,7 +191,7 @@ const AgentPortalHeader = ({
             to={href}
             aria-current={active ? "page" : undefined}
             className={`relative flex flex-col items-center justify-center gap-0.5 py-1 text-[11px] no-underline transition-colors ${active
-              ? "font-semibold text-[#703bf7] dark:text-[#b79bff]"
+              ? "font-semibold text-highlight dark:text-highlight"
               : "font-medium text-[#4b5563] hover:text-[#111827] dark:text-[#9ca3af] dark:hover:text-white"}`}
           >
             <span className="relative inline-flex">

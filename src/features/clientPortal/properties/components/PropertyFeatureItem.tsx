@@ -31,7 +31,7 @@ export default function PropertyFeatureItem({
         divided ? "border-b border-gray-200 last:border-b-0 dark:border-gray-600/30" : ""
       } ${
         highlighted
-          ? "gap-0 rounded-md border-l border-[#703BF7] bg-[#703BF7]/5 p-2"
+          ? "gap-0 rounded-md border-l border-[#b79bff] bg-[#b79bff]/5 p-2"
           : ""
       }`}
     >
@@ -41,7 +41,7 @@ export default function PropertyFeatureItem({
             isProhibited
               ? "text-red-600"
               : highlighted
-                ? "text-[#703BF7]"
+                ? "text-[#b79bff]"
                 : "text-gray-700 dark:text-gray-300"
           }`}
         >
@@ -49,7 +49,7 @@ export default function PropertyFeatureItem({
             aria-hidden="true"
             size={20}
             strokeWidth={1.6}
-            className={highlighted ? "fill-[#703BF7]" : undefined}
+            className={highlighted ? "fill-[#b79bff]" : undefined}
           />
           {isProhibited && (
             <span className="absolute -right-1.5 -top-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-600 text-white">

@@ -12,8 +12,7 @@ html:has(.account-page)::-webkit-scrollbar-button {
 @theme inline {
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "DM Serif Display", Georgia, serif;
-  --color-brand: #703bf7;
-  --color-brand-light: #b79bff;
+  --color-highlight: #b79bff;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -314,8 +313,8 @@ html:has(.account-page)::-webkit-scrollbar-button {
 .property-dialog-content input:not([type="checkbox"]):focus,
 .property-dialog-content textarea:focus,
 .property-dialog-content select:focus {
-  border-color: #703bf7;
-  outline: 2px solid rgb(112 59 247 / 15%);
+  border-color: #b79bff;
+  outline: 2px solid rgb(183 155 255 / 15%);
 }
 
 .dark .property-dialog-content input:not([type="checkbox"]),
@@ -330,19 +329,19 @@ html:has(.account-page)::-webkit-scrollbar-button {
   width: 1.25rem;
   height: 1.25rem;
   flex: none;
-  accent-color: #703bf7;
+  accent-color: #b79bff;
 }
 
 .property-dialog-content button[type="submit"] {
   min-height: 3.5rem;
   border-radius: 9999px;
-  background-color: #703bf7;
+  background-color: #b79bff;
   color: #fff;
   font-weight: 700;
 }
 
 .property-dialog-content button[type="submit"]:hover:not(:disabled) {
-  background-color: #5c2fe0;
+  background-color: #b79bff;
 }
 
 .property-dialog-content button[type="submit"]:disabled {
@@ -351,8 +350,8 @@ html:has(.account-page)::-webkit-scrollbar-button {
 }
 
 .property-dialog-content .visit-mode-option[aria-pressed="true"] {
-  border-color: #703bf7;
-  background-color: #703bf7;
+  border-color: #b79bff;
+  background-color: #b79bff;
   color: #fff;
 }
 

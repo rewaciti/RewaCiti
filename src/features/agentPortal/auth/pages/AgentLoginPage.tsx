@@ -45,14 +45,14 @@ const AgentLoginPage = () => {
           </Link>
           <div className="col-start-3 flex items-center justify-self-end gap-2.5 max-[1000px]:col-start-2">
             <AgentThemeToggle />
-            <Link className="inline-flex items-center gap-2 text-[13px] font-medium text-[#4b5563] no-underline transition-colors duration-150 ease-[ease] hover:text-[#703bf7] dark:text-[#9ca3af] dark:hover:text-[#b79bff]" to="/">Visit RewaCiti <ArrowRight size={15} /></Link>
+            <Link className="inline-flex items-center gap-2 text-[13px] font-medium text-[#4b5563] no-underline transition-colors duration-150 ease-[ease] hover:text-highlight dark:text-[#9ca3af] dark:hover:text-highlight" to="/">Visit RewaCiti <ArrowRight size={15} /></Link>
           </div>
         </div>
       </header>
 
       <section className="mx-auto flex w-[calc(100%-32px)] max-w-[440px] flex-1 flex-col justify-center py-10 pb-14">
         <div className="rounded-3xl border border-[#e5e7eb] bg-white px-7 py-8 text-[#111827] shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white max-[430px]:px-5 max-[430px]:py-6">
-          <div className="mb-[18px] grid h-[46px] w-[46px] place-items-center rounded-2xl bg-[#703bf7]/10 text-[#703bf7] dark:bg-[#b79bff]/15 dark:text-[#b79bff]"><KeyRound size={22} /></div>
+          <div className="mb-[18px] grid h-[46px] w-[46px] place-items-center rounded-2xl bg-highlight/10 text-highlight dark:bg-highlight/15 dark:text-highlight"><KeyRound size={22} /></div>
           <p className="mb-2 text-[11px] font-semibold tracking-[0.18em] text-[#6b7280] uppercase dark:text-[#9ca3af]">WELCOME BACK</p>
           <h1 className="m-0 font-serif text-[30px] font-semibold leading-[1.15] tracking-[-0.02em] text-[#111827] dark:text-white max-[430px]:text-[26px]">Sign in to your portal</h1>
           <p className="mt-2 mb-[26px] text-sm leading-[1.6] text-[#4b5563] dark:text-[#9ca3af]">Manage your listings, connect with clients, and keep track of your business.</p>
@@ -67,12 +67,12 @@ const AgentLoginPage = () => {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               required
-              className="w-full min-h-12 rounded-[14px] border border-[#e5e7eb] bg-[#f3f4f6] px-4 text-sm text-[#111827] outline-none transition-[border-color,box-shadow] duration-150 ease-[ease] placeholder:text-[#9ca3af] focus:border-[#703bf7] focus:shadow-[0_0_0_3px_rgba(112,59,247,0.18)] dark:border-white/10 dark:bg-[#232323] dark:text-white"
+              className="w-full min-h-12 rounded-[14px] border border-[#e5e7eb] bg-[#f3f4f6] px-4 text-sm text-[#111827] outline-none transition-[border-color,box-shadow] duration-150 ease-[ease] placeholder:text-[#9ca3af] focus:border-highlight focus:shadow-[0_0_0_3px_rgba(183,155,255,0.18)] dark:border-white/10 dark:bg-[#232323] dark:text-white"
             />
 
             <div className="mt-2 flex items-center justify-between">
               <label htmlFor="agent-password" className="text-[11px] font-semibold tracking-[0.08em] text-[#6b7280] uppercase dark:text-[#9ca3af]">Password</label>
-              <Link to="/agent/forgot-password" className="text-xs font-semibold text-[#703bf7] no-underline hover:underline dark:text-[#b79bff]">Forgot password?</Link>
+              <Link to="/agent/forgot-password" className="text-xs font-semibold text-highlight no-underline hover:underline dark:text-highlight">Forgot password?</Link>
             </div>
             <div className="relative">
               <input
@@ -83,14 +83,14 @@ const AgentLoginPage = () => {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 required
-                className="w-full min-h-12 rounded-[14px] border border-[#e5e7eb] bg-[#f3f4f6] px-4 pr-12 text-sm text-[#111827] outline-none transition-[border-color,box-shadow] duration-150 ease-[ease] placeholder:text-[#9ca3af] focus:border-[#703bf7] focus:shadow-[0_0_0_3px_rgba(112,59,247,0.18)] dark:border-white/10 dark:bg-[#232323] dark:text-white"
+                className="w-full min-h-12 rounded-[14px] border border-[#e5e7eb] bg-[#f3f4f6] px-4 pr-12 text-sm text-[#111827] outline-none transition-[border-color,box-shadow] duration-150 ease-[ease] placeholder:text-[#9ca3af] focus:border-highlight focus:shadow-[0_0_0_3px_rgba(183,155,255,0.18)] dark:border-white/10 dark:bg-[#232323] dark:text-white"
               />
               <button type="button" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? "Hide password" : "Show password"} className="absolute right-0 top-0 grid h-12 w-12 cursor-pointer place-items-center border-0 bg-transparent text-[#6b7280] dark:text-[#9ca3af]">
                 {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
               </button>
             </div>
 
-            <button className="mt-3.5 inline-flex min-h-12 w-full cursor-pointer items-center justify-center gap-[9px] rounded-full border-0 bg-[#703bf7] px-6 text-sm font-semibold text-white transition-colors duration-150 ease-[ease] hover:bg-[#9677df] disabled:cursor-wait disabled:opacity-65" type="submit" disabled={loading}>
+            <button className="mt-3.5 inline-flex min-h-12 w-full cursor-pointer items-center justify-center gap-[9px] rounded-full border-0 bg-highlight px-6 text-sm font-semibold text-white transition-colors duration-150 ease-[ease] hover:bg-[#b79bff] disabled:cursor-wait disabled:opacity-65" type="submit" disabled={loading}>
               {loading ? "Signing in..." : "Sign in"} {!loading && <ArrowRight size={17} />}
             </button>
           </form>

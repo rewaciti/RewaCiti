@@ -212,7 +212,7 @@ const VerifyEmail = () => {
           <div className="w-full max-w-lg">
           <button
             onClick={() => navigate("/auth/login")}
-            className="flex items-center gap-2 text-[#703BF7] hover:underline text-sm font-medium mb-6"
+            className="flex items-center gap-2 text-[#b79bff] hover:underline text-sm font-medium mb-6"
           >
             <FiArrowLeft size={16} />
             Back to Login
@@ -250,7 +250,7 @@ const VerifyEmail = () => {
                       handleOtpChange(index, e.target.value)
                     }
                     onKeyDown={(e) => handleKeyDown(index, e)}
-                    className="w-10 h-10 text-center text-2xl font-bold border-2 border-gray-600/30 dark:border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-900 dark:text-white focus:outline-none focus:border-[#703BF7]"
+                    className="w-10 h-10 text-center text-2xl font-bold border-2 border-gray-600/30 dark:border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-900 dark:text-white focus:outline-none focus:border-[#b79bff]"
                   />
                 ))}
               </div>
@@ -279,7 +279,7 @@ const VerifyEmail = () => {
               className={`w-full px-4 py-3 rounded-lg font-medium transition ${
                 otp.join("").length !== 6 || isLoading
                   ? "bg-gray-400 cursor-not-allowed text-gray-200"
-                  : "bg-[#703BF7] text-white hover:bg-[#5c2fe0]"
+                  : "bg-[#b79bff] text-white hover:bg-[#b79bff]"
               }`}
             >
               {isLoading ? "Verifying..." : "Verify Email"}
@@ -294,7 +294,7 @@ const VerifyEmail = () => {
             <button
               onClick={handleResendOtp}
               disabled={isLoading}
-              className={`text-[#703BF7] font-semibold hover:underline ${
+              className={`text-[#b79bff] font-semibold hover:underline ${
                 isLoading ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >

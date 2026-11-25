@@ -15,7 +15,7 @@ import CustomDropdown from "@/shared/components/CustomDropdown";
 const PAGE_CONTAINER = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10";
 const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };
 const inputClass =
-  "h-[46px] w-full rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#703BF7] focus:ring-2 focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white";
+  "h-[46px] w-full rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#b79bff] focus:ring-2 focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white";
 const labelClass = "mb-1.5 block text-xs font-medium text-gray-900 dark:text-gray-200";
 const sectionLabelClass =
   "text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300";
@@ -262,7 +262,7 @@ const CoRentPage: React.FC = () => {
       <Navbar />
       <header className="border-b border-gray-300 bg-gray-200 py-7 dark:border-white/10 dark:bg-black/50 sm:py-8">
         <div className={`${PAGE_CONTAINER} max-w-7xl`}>
-          <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">
+          <p className="text-sm font-semibold text-[#b79bff] dark:text-highlight">
             RewaCiti co-renting
           </p>
           <h1 style={SERIF} className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl">
@@ -436,18 +436,18 @@ const CoRentPage: React.FC = () => {
               <label className="flex items-start gap-2 text-xs leading-5 text-gray-600 dark:text-gray-400">
                 <input
                   type="checkbox"
-                  className="mt-1 accent-[#703BF7]"
+                  className="mt-1 accent-[#b79bff]"
                   checked={agreed}
                   onChange={(e) => setAgreed(e.target.checked)}
                   required
                 />
                 <span>
                   I agree that my details can be used to reply to this request, and accept the{" "}
-                  <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline dark:text-[#b79bff]">
+                  <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#b79bff] underline dark:text-highlight">
                     Terms
                   </Link>{" "}
                   and{" "}
-                  <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline dark:text-[#b79bff]">
+                  <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#b79bff] underline dark:text-highlight">
                     Privacy Policy
                   </Link>
                   .
@@ -456,7 +456,7 @@ const CoRentPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={!isFormValid}
-                className="cursor-pointer rounded-full bg-[#703BF7] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df] disabled:cursor-not-allowed disabled:opacity-50"
+                className="cursor-pointer rounded-full bg-[#b79bff] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#b79bff] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isSubmitting ? "Finding your match…" : "Find me a match"}
               </button>

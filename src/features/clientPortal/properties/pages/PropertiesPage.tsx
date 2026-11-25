@@ -35,12 +35,12 @@ const NAVBAR_FALLBACK_PX = 64;
 
 const pillBase =
   "shrink-0 cursor-pointer whitespace-nowrap rounded-full border px-4 py-2 text-xs font-semibold transition";
-const pillActive = "border-[#703BF7] bg-[#703BF7] text-white";
+const pillActive = "border-[#b79bff] bg-[#b79bff] text-white";
 const pillIdle =
-  "border-gray-300 bg-white text-gray-800 hover:border-[#703BF7] hover:text-[#703BF7] dark:border-white/15 dark:bg-[#101010] dark:text-gray-200";
+  "border-gray-300 bg-white text-gray-800 hover:border-[#b79bff] hover:text-[#b79bff] dark:border-white/15 dark:bg-[#101010] dark:text-gray-200";
 
 const dropdownButtonClass =
-  "flex h-10 w-full cursor-pointer items-center justify-between rounded-full border border-gray-300 bg-white px-4 text-xs font-semibold text-gray-900 transition hover:border-[#703BF7] disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/15 dark:bg-[#101010] dark:text-white";
+  "flex h-10 w-full cursor-pointer items-center justify-between rounded-full border border-gray-300 bg-white px-4 text-xs font-semibold text-gray-900 transition hover:border-[#b79bff] disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/15 dark:bg-[#101010] dark:text-white";
 
 const cardShell =
   "rounded-3xl border border-gray-200 bg-white dark:border-white/10 dark:bg-[#1A1A1A]";
@@ -71,7 +71,7 @@ const ViewToggle = ({
 }) => {
   const base =
     "flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition";
-  const on = "bg-[#703BF7] text-white shadow-sm";
+  const on = "bg-[#b79bff] text-white shadow-sm";
   const off = "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white";
   return (
     <div className="flex shrink-0 select-none items-center gap-1 rounded-full border border-gray-300 bg-white p-1 dark:border-white/15 dark:bg-[#101010]">
@@ -128,7 +128,7 @@ const FilterPills = ({
 );
 
 const roundButton =
-  "cursor-pointer rounded-full border border-gray-300 bg-white p-2.5 text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:bg-[#101010] dark:text-white";
+  "cursor-pointer rounded-full border border-gray-300 bg-white p-2.5 text-gray-900 transition hover:border-[#b79bff] hover:text-[#b79bff] disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:bg-[#101010] dark:text-white";
 
 function PropertySearchSection() {
   useScrollToHash();
@@ -571,7 +571,7 @@ function PropertySearchSection() {
                 type="text"
                 placeholder="Search for properties..."
                 aria-label="Search for properties"
-                className="w-full rounded-full border border-gray-300 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-500 focus:border-[#703BF7] focus:ring-2 focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white"
+                className="w-full rounded-full border border-gray-300 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-500 focus:border-[#b79bff] focus:ring-2 focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -580,12 +580,12 @@ function PropertySearchSection() {
             <button
               type="button"
               onClick={() => setShowFilters(true)}
-              className="relative flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] dark:border-white/15 dark:bg-[#101010] dark:text-white"
+              className="relative flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 transition hover:border-[#b79bff] hover:text-[#b79bff] dark:border-white/15 dark:bg-[#101010] dark:text-white"
             >
               <FiFilter size={15} />
               <span>Filters</span>
               {activeFilterCount > 0 && (
-                <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#703BF7] text-[10px] font-semibold text-white">
+                <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#b79bff] text-[10px] font-semibold text-white">
                   {activeFilterCount}
                 </span>
               )}
@@ -716,7 +716,7 @@ function PropertySearchSection() {
                             id={`property-card-${property.id}`}
                             onMouseEnter={() => setHoveredPropertyId(property.id)}
                             onMouseLeave={() => setHoveredPropertyId(null)}
-                            className={`rounded-xl transition ${hoveredPropertyId === property.id ? "ring-2 ring-[#703BF7]" : "ring-1 ring-transparent"}`}
+                            className={`rounded-xl transition ${hoveredPropertyId === property.id ? "ring-2 ring-[#b79bff]" : "ring-1 ring-transparent"}`}
                           >
                             <PropertyCard property={property} />
                           </div>
@@ -783,7 +783,7 @@ function PropertySearchSection() {
                       <button
                         type="button"
                         onClick={() => fetchProperties(apiPage, filters)}
-                        className="cursor-pointer rounded-full bg-[#703BF7] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df] active:scale-95"
+                        className="cursor-pointer rounded-full bg-[#b79bff] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#b79bff] active:scale-95"
                       >
                         Try again
                       </button>
@@ -804,7 +804,7 @@ function PropertySearchSection() {
                       <button
                         type="button"
                         onClick={() => navigate("/request-property")}
-                        className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-[#703BF7] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df]"
+                        className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-[#b79bff] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#b79bff]"
                       >
                         <FiSliders size={16} />
                         <span>Request a property</span>
@@ -891,7 +891,7 @@ function PropertySearchSection() {
       >
         <div className={PAGE_CONTAINER}>
           <div className="max-w-2xl">
-            <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">
+            <p className="text-sm font-semibold text-[#b79bff] dark:text-highlight">
               More ways we can help
             </p>
             <h2 style={SERIF} className="mt-2 text-3xl font-semibold sm:text-4xl">
@@ -907,7 +907,7 @@ function PropertySearchSection() {
             {/* Card 1: Property Preference */}
             <div className={`${cardShell} flex flex-col justify-between gap-6 p-6 sm:p-7`}>
               <div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#703BF7]/10 text-[#703BF7] dark:text-[#b79bff]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#b79bff]/10 text-[#b79bff] dark:text-highlight">
                   <FiSliders size={22} />
                 </div>
                 <h3 style={SERIF} className="mt-4 text-xl font-semibold">
@@ -922,7 +922,7 @@ function PropertySearchSection() {
               <button
                 type="button"
                 onClick={() => navigate("/request-property")}
-                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df] sm:w-fit"
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#b79bff] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#b79bff] sm:w-fit"
               >
                 <FiSliders size={16} />
                 <span>Request a property</span>
@@ -932,7 +932,7 @@ function PropertySearchSection() {
             {/* Card 2: Looking to Co-Rent */}
             <div className={`${cardShell} flex flex-col justify-between gap-6 p-6 sm:p-7`}>
               <div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#703BF7]/10 text-[#703BF7] dark:text-[#b79bff]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#b79bff]/10 text-[#b79bff] dark:text-highlight">
                   <FiUsers size={22} />
                 </div>
                 <h3 style={SERIF} className="mt-4 text-xl font-semibold">
@@ -946,7 +946,7 @@ function PropertySearchSection() {
               <button
                 type="button"
                 onClick={() => navigate("/co-rent")}
-                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df] sm:w-fit"
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#b79bff] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#b79bff] sm:w-fit"
               >
                 <FiUsers size={16} />
                 <span>Find co-rent partners</span>
@@ -958,7 +958,7 @@ function PropertySearchSection() {
               className={`${cardShell} flex flex-col justify-between gap-6 p-6 sm:col-span-2 sm:p-7 lg:col-span-1`}
             >
               <div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#703BF7]/10 text-[#703BF7] dark:text-[#b79bff]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#b79bff]/10 text-[#b79bff] dark:text-highlight">
                   <FiHome size={22} />
                 </div>
                 <h3 style={SERIF} className="mt-4 text-xl font-semibold">
@@ -972,7 +972,7 @@ function PropertySearchSection() {
               <button
                 type="button"
                 onClick={() => navigate("/list-property")}
-                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df] sm:w-fit"
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#b79bff] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#b79bff] sm:w-fit"
               >
                 <FiHome size={16} />
                 <span>Apply to list</span>

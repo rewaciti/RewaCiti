@@ -64,11 +64,11 @@ const cardClass =
 const paymentCardClass =
   "rounded-3xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-[#1A1A1A] sm:p-5";
 const primaryButtonClass =
-  "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df] disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-[#b79bff] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#b79bff] disabled:cursor-not-allowed disabled:opacity-60";
 const pillButtonClass =
-  "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/20 dark:bg-transparent dark:text-white";
+  "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-900 transition hover:border-[#b79bff] hover:text-[#b79bff] disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/20 dark:bg-transparent dark:text-white";
 const inputClass =
-  "mt-2 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 font-normal text-gray-900 outline-none transition focus:border-[#703BF7] dark:border-white/15 dark:bg-[#101010] dark:text-white";
+  "mt-2 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 font-normal text-gray-900 outline-none transition focus:border-[#b79bff] dark:border-white/15 dark:bg-[#101010] dark:text-white";
 const headingClass = "font-semibold text-gray-900 dark:text-white";
 const mutedClass = "text-gray-600 dark:text-gray-400";
 
@@ -590,7 +590,7 @@ const DealCard = ({
         <button
           type="button"
           onClick={() => setIsRatingOpen(true)}
-          className="mt-1.5 cursor-pointer text-sm font-semibold text-[#703BF7] hover:underline dark:text-[#b79bff]"
+          className="mt-1.5 cursor-pointer text-sm font-semibold text-[#b79bff] hover:underline dark:text-highlight"
         >
           Rate our service
         </button>
@@ -628,7 +628,7 @@ const DealCard = ({
                     aria-label={`${star} star${star === 1 ? "" : "s"}`}
                     aria-pressed={rating === star}
                     onClick={() => setRating(star)}
-                    className="cursor-pointer p-1 text-[#703BF7] transition hover:scale-110"
+                    className="cursor-pointer p-1 text-[#b79bff] transition hover:scale-110"
                   >
                     <FiStar
                       size={30}
@@ -1264,11 +1264,11 @@ const AccountPage = () => {
                 type="button"
                 onClick={() => openProperty(property.slug)}
                 style={SERIF}
-                className={`mt-2 cursor-pointer text-left text-lg ${headingClass} hover:text-[#703BF7]`}
+                className={`mt-2 cursor-pointer text-left text-lg ${headingClass} hover:text-[#b79bff]`}
               >
                 {property.name}
               </button>
-              <p className="mt-3 font-semibold text-[#703BF7] dark:text-[#b79bff]">
+              <p className="mt-3 font-semibold text-[#b79bff] dark:text-highlight">
                 {formatMoney(property.pricing.total || property.pricing.base)}
                 {pricePeriodLabel(property.pricePeriod) && (
                   <span className={`ml-1 text-xs font-normal ${mutedClass}`}>
@@ -1280,7 +1280,7 @@ const AccountPage = () => {
                 <button
                   type="button"
                   onClick={() => openProperty(property.slug)}
-                  className="cursor-pointer font-semibold text-[#703BF7] hover:underline dark:text-[#b79bff]"
+                  className="cursor-pointer font-semibold text-[#b79bff] hover:underline dark:text-highlight"
                 >
                   View property
                 </button>
@@ -1517,7 +1517,7 @@ const AccountPage = () => {
       <header className="border-b border-gray-400 dark:border-neutral-800">
         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 py-5">
           <div className={`${PAGE_CONTAINER} space-y-1`}>
-            <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">Your account</p>
+            <p className="text-sm font-semibold text-[#b79bff] dark:text-highlight">Your account</p>
             <h1 style={SERIF} className="text-4xl font-semibold sm:text-5xl">
               Hello, {customer?.firstName || "there"}
             </h1>
@@ -1542,7 +1542,7 @@ const AccountPage = () => {
                   setSearchParams(id === "profile" ? {} : { tab: id }, { replace: true });
                 }}
                 aria-current={activeTab === id ? "page" : undefined}
-                className={`relative flex shrink-0 cursor-pointer items-center gap-2 px-3 pb-4 text-sm transition after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-full after:bg-[#703BF7] after:transition-transform sm:px-4 ${
+                className={`relative flex shrink-0 cursor-pointer items-center gap-2 px-3 pb-4 text-sm transition after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-full after:bg-[#b79bff] after:transition-transform sm:px-4 ${
                   activeTab === id
                     ? "font-semibold text-gray-900 after:scale-x-100 dark:text-white"
                     : `after:scale-x-0 ${mutedClass} hover:text-gray-900 dark:hover:text-white`

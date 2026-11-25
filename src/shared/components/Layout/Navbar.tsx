@@ -14,7 +14,7 @@ const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
 const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };
 
 const ICON_BTN =
-  "relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-gray-800 transition hover:bg-[#9677df] hover:text-white dark:text-white";
+  "relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-gray-800 transition hover:bg-[#b79bff] hover:text-white dark:text-white";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -150,12 +150,12 @@ const Navbar = () => {
               }}
               title="Saved properties"
               aria-label="View saved properties"
-              className="flex cursor-pointer items-center transition-colors hover:text-[#703BF7]"
+              className="flex cursor-pointer items-center transition-colors hover:text-[#b79bff]"
             >
               <span className="relative rounded-full bg-gray-200 p-1 text-black transition-all duration-300 dark:bg-gray-700 dark:text-white">
                 <FiHeart size={18} />
                 {savedPropertyCount > 0 && (
-                  <span className="absolute -right-2 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#703BF7] px-1 text-[10px] font-bold text-white">
+                  <span className="absolute -right-2 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#b79bff] px-1 text-[10px] font-bold text-white">
                     {savedPropertyCount}
                   </span>
                 )}
@@ -200,8 +200,8 @@ const Navbar = () => {
                     aria-current={isActive ? "page" : undefined}
                     className={`rounded-full px-4 py-2 text-[15px] transition ${
                       isActive
-                        ? "bg-[#703BF7] text-white"
-                        : "text-gray-800 hover:bg-[#9677df] hover:text-white dark:text-white"
+                        ? "bg-[#b79bff] text-white"
+                        : "text-gray-800 hover:bg-[#b79bff] hover:text-white dark:text-white"
                     }`}
                   >
                     {item.name}
@@ -219,7 +219,7 @@ const Navbar = () => {
                   title="Profile"
                   aria-label="Profile"
                   onClick={() => navigate("/auth/profile")}
-                  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-[#703BF7] text-sm font-semibold text-white transition hover:bg-[#9677df]"
+                  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-[#b79bff] text-sm font-semibold text-white transition hover:bg-[#b79bff]"
                 >
                   {profileInitials}
                 </button>
@@ -239,7 +239,7 @@ const Navbar = () => {
               <button
                 type="button"
                 onClick={() => navigate("/list-property")}
-                className="ml-1 hidden cursor-pointer rounded-full bg-[#703BF7] px-5 py-2.5 text-[15px] font-semibold text-white transition hover:bg-[#9677df] sm:block"
+                className="ml-1 hidden cursor-pointer rounded-full bg-[#b79bff] px-5 py-2.5 text-[15px] font-semibold text-white transition hover:bg-[#b79bff] sm:block"
               >
                 List your property
               </button>
@@ -300,7 +300,7 @@ const Navbar = () => {
                   to={item.path}
                   className={`block rounded-xl px-4 py-3.5 text-[17px] ${
                     isActive
-                      ? "bg-[#703BF7]/10 font-semibold text-[#703BF7] dark:text-white"
+                      ? "bg-[#b79bff]/10 font-semibold text-[#b79bff] dark:text-white"
                       : "text-gray-800 dark:text-gray-200"
                   }`}
                 >
@@ -313,7 +313,7 @@ const Navbar = () => {
               to={accountPath}
               className={`block rounded-xl px-4 py-3.5 text-[17px] ${
                 checkActive(accountPath)
-                  ? "bg-[#703BF7]/10 font-semibold text-[#703BF7] dark:text-white"
+                  ? "bg-[#b79bff]/10 font-semibold text-[#b79bff] dark:text-white"
                   : "text-gray-800 dark:text-gray-200"
               }`}
             >
@@ -338,7 +338,7 @@ const Navbar = () => {
                 setIsOpen(false);
                 navigate("/list-property");
               }}
-              className="w-full cursor-pointer rounded-full bg-[#703BF7] px-5 py-3.5 text-base font-semibold text-white transition hover:bg-[#9677df]"
+              className="w-full cursor-pointer rounded-full bg-[#b79bff] px-5 py-3.5 text-base font-semibold text-white transition hover:bg-[#b79bff]"
             >
               List your property
             </button>

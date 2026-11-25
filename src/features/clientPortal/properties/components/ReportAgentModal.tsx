@@ -222,7 +222,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                     required
                     value={guestName}
                     onChange={(e) => setGuestName(e.target.value)}
-                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#b79bff] dark:bg-[#1A1A1A] dark:text-white"
                   />
                 </div>
                 <div>
@@ -234,7 +234,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                     required
                     value={guestEmail}
                     onChange={(e) => setGuestEmail(e.target.value)}
-                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#b79bff] dark:bg-[#1A1A1A] dark:text-white"
                   />
                 </div>
                 <div>
@@ -246,7 +246,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                     required
                     value={guestPhone}
                     onChange={(e) => setGuestPhone(e.target.value)}
-                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#703BF7] dark:bg-[#1A1A1A] dark:text-white"
+                    className="w-full rounded-md border border-gray-600/30 bg-white/80 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:border-[#b79bff] dark:bg-[#1A1A1A] dark:text-white"
                   />
                 </div>
               </div>
@@ -274,7 +274,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Please provide more details..."
-                className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#703BF7] dark:text-white text-gray-900"
+                className="w-full bg-gray-600/10 border border-gray-600/30 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#b79bff] dark:text-white text-gray-900"
               />
             </div>
 
@@ -297,7 +297,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                   to="/terms"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-[#703BF7] underline"
+                  className="text-[#b79bff] underline"
                 >
                   Terms
                 </Link>{" "}
@@ -306,7 +306,7 @@ const ReportAgentModal: React.FC<ReportAgentModalProps> = ({
                   to="/privacy-policy"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-[#703BF7] underline"
+                  className="text-[#b79bff] underline"
                 >
                   Privacy Policy
                 </Link>

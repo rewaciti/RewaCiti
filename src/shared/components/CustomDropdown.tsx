@@ -154,7 +154,7 @@ export default function CustomDropdown({
               onChange(option.value);
               setOpen(false);
             }}
-            className={`${portal ? menuItemClassName : "block w-full px-4 py-3 text-left whitespace-nowrap transition text-sm"} ${option.danger ? "is-danger" : value === option.value ? "bg-[#703BF7] text-white font-medium" : "hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-900 dark:text-white"}`}
+            className={`${portal ? menuItemClassName : "block w-full px-4 py-3 text-left whitespace-nowrap transition text-sm"} ${option.danger ? "is-danger" : value === option.value ? "bg-[#b79bff] text-white font-medium" : "hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-900 dark:text-white"}`}
           >
             {option.icon}
             <span>{option.label}</span>

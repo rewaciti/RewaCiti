@@ -101,28 +101,28 @@ const AgentDashboardPage = () => {
           <>
             <section className="grid grid-cols-4 gap-6 max-[1000px]:grid-cols-2 max-[1000px]:gap-4 max-[430px]:gap-3" aria-label="Your key figures">
               <a className="relative flex min-h-[140px] flex-col rounded-3xl border border-[#e5e7eb] bg-white p-[22px] text-inherit no-underline transition-[transform,box-shadow] duration-200 ease-[ease] hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(0,0,0,0.1)] dark:border-white/10 dark:bg-[#1a1a1a] max-[430px]:min-h-[120px] max-[430px]:rounded-[20px] max-[430px]:p-4" id="listings" href="#listings">
-                <span className="flex items-center justify-between text-[13px] font-medium text-[#4b5563] dark:text-[#9ca3af]">Live listings <ArrowRight className="text-[#703bf7] dark:text-[#b79bff]" size={15} /></span>
+                <span className="flex items-center justify-between text-[13px] font-medium text-[#4b5563] dark:text-[#9ca3af]">Live listings <ArrowRight className="text-highlight dark:text-highlight" size={15} /></span>
                 <span className="mt-2.5 font-serif text-[32px] font-semibold tracking-[-0.02em] text-[#111827] leading-[1.1] dark:text-white max-[430px]:text-[26px]">{dashboard.activeListings}</span>
                 <span className="mt-1.5 text-xs text-[#6b7280] dark:text-[#9ca3af]">{stats.listings} in total</span>
-                <Building2 className="absolute right-5 bottom-5 text-[#703bf7] opacity-[0.85] dark:text-[#b79bff] max-[430px]:right-3.5 max-[430px]:bottom-[14px]" size={19} />
+                <Building2 className="absolute right-5 bottom-5 text-highlight opacity-[0.85] dark:text-highlight max-[430px]:right-3.5 max-[430px]:bottom-[14px]" size={19} />
               </a>
               <Link className="relative flex min-h-[140px] flex-col rounded-3xl border border-[#e5e7eb] bg-white p-[22px] text-inherit no-underline transition-[transform,box-shadow] duration-200 ease-[ease] hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(0,0,0,0.1)] dark:border-white/10 dark:bg-[#1a1a1a] max-[430px]:min-h-[120px] max-[430px]:rounded-[20px] max-[430px]:p-4" id="leads" to="/agent/leads">
-                <span className="flex items-center justify-between text-[13px] font-medium text-[#4b5563] dark:text-[#9ca3af]">Open leads <ArrowRight className="text-[#703bf7] dark:text-[#b79bff]" size={15} /></span>
+                <span className="flex items-center justify-between text-[13px] font-medium text-[#4b5563] dark:text-[#9ca3af]">Open leads <ArrowRight className="text-highlight dark:text-highlight" size={15} /></span>
                 <span className="mt-2.5 font-serif text-[32px] font-semibold tracking-[-0.02em] text-[#111827] leading-[1.1] dark:text-white max-[430px]:text-[26px]">{stats.openLeads}</span>
                 <span className="mt-1.5 text-xs text-[#6b7280] dark:text-[#9ca3af]">{dashboard.newInquiries} new inquiries</span>
-                <MessageSquareText className="absolute right-5 bottom-5 text-[#703bf7] opacity-[0.85] dark:text-[#b79bff] max-[430px]:right-3.5 max-[430px]:bottom-[14px]" size={19} />
+                <MessageSquareText className="absolute right-5 bottom-5 text-highlight opacity-[0.85] dark:text-highlight max-[430px]:right-3.5 max-[430px]:bottom-[14px]" size={19} />
               </Link>
               <Link className="relative flex min-h-[140px] flex-col rounded-3xl border border-[#e5e7eb] bg-white p-[22px] text-inherit no-underline transition-[transform,box-shadow] duration-200 ease-[ease] hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(0,0,0,0.1)] dark:border-white/10 dark:bg-[#1a1a1a] max-[430px]:min-h-[120px] max-[430px]:rounded-[20px] max-[430px]:p-4" id="visits" to="/agent/visits">
-                <span className="flex items-center justify-between text-[13px] font-medium text-[#4b5563] dark:text-[#9ca3af]">Upcoming visits <ArrowRight className="text-[#703bf7] dark:text-[#b79bff]" size={15} /></span>
+                <span className="flex items-center justify-between text-[13px] font-medium text-[#4b5563] dark:text-[#9ca3af]">Upcoming visits <ArrowRight className="text-highlight dark:text-highlight" size={15} /></span>
                 <span className="mt-2.5 font-serif text-[32px] font-semibold tracking-[-0.02em] text-[#111827] leading-[1.1] dark:text-white max-[430px]:text-[26px]">{dashboard.upcomingVisits}</span>
                 <span className="mt-1.5 text-xs text-[#6b7280] dark:text-[#9ca3af]">Scheduled with clients</span>
-                <CalendarClock className="absolute right-5 bottom-5 text-[#703bf7] opacity-[0.85] dark:text-[#b79bff] max-[430px]:right-3.5 max-[430px]:bottom-[14px]" size={19} />
+                <CalendarClock className="absolute right-5 bottom-5 text-highlight opacity-[0.85] dark:text-highlight max-[430px]:right-3.5 max-[430px]:bottom-[14px]" size={19} />
               </Link>
               <Link className="relative flex min-h-[140px] flex-col rounded-3xl border border-[#e5e7eb] bg-white p-[22px] text-inherit no-underline transition-[transform,box-shadow] duration-200 ease-[ease] hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(0,0,0,0.1)] dark:border-white/10 dark:bg-[#1a1a1a] max-[430px]:min-h-[120px] max-[430px]:rounded-[20px] max-[430px]:p-4" id="earnings" to="/agent/earnings">
-                <span className="flex items-center justify-between text-[13px] font-medium text-[#4b5563] dark:text-[#9ca3af]">Estimated commission <ArrowRight className="text-[#703bf7] dark:text-[#b79bff]" size={15} /></span>
+                <span className="flex items-center justify-between text-[13px] font-medium text-[#4b5563] dark:text-[#9ca3af]">Estimated commission <ArrowRight className="text-highlight dark:text-highlight" size={15} /></span>
                 <span className="mt-2.5 font-serif text-[32px] font-semibold tracking-[-0.02em] text-[#111827] leading-[1.1] dark:text-white max-[430px]:text-[26px]">{money(stats.estimatedCommission)}</span>
                 <span className="mt-1.5 text-xs text-[#6b7280] dark:text-[#9ca3af]">{plural(attention.payouts, "payout")} waiting</span>
-                <Wallet className="absolute right-5 bottom-5 text-[#703bf7] opacity-[0.85] dark:text-[#b79bff] max-[430px]:right-3.5 max-[430px]:bottom-[14px]" size={19} />
+                <Wallet className="absolute right-5 bottom-5 text-highlight opacity-[0.85] dark:text-highlight max-[430px]:right-3.5 max-[430px]:bottom-[14px]" size={19} />
               </Link>
             </section>
 
@@ -130,14 +130,14 @@ const AgentDashboardPage = () => {
               <article className="min-h-[150px] rounded-3xl border border-[#e5e7eb] bg-white p-6 dark:border-white/10 dark:bg-[#1a1a1a]">
                 <div className="flex items-center justify-between">
                   <h2 className="m-0 font-serif text-xl font-semibold text-[#111827] dark:text-white">Next visits</h2>
-                  <Link to="/agent/visits" className="inline-flex items-center gap-[5px] text-[13px] font-semibold text-[#703bf7] no-underline dark:text-[#b79bff]">All <ArrowRight size={15} /></Link>
+                  <Link to="/agent/visits" className="inline-flex items-center gap-[5px] text-[13px] font-semibold text-highlight no-underline dark:text-highlight">All <ArrowRight size={15} /></Link>
                 </div>
                 <p className="m-0 mt-5 text-sm text-[#4b5563] leading-[1.6] dark:text-[#9ca3af]">{dashboard.upcomingVisits === 0 ? "No upcoming visits." : `${plural(dashboard.upcomingVisits, "visit")} coming up.`}</p>
               </article>
               <article className="min-h-[150px] rounded-3xl border border-[#e5e7eb] bg-white p-6 dark:border-white/10 dark:bg-[#1a1a1a]">
                 <div className="flex items-center justify-between">
                   <h2 className="m-0 font-serif text-xl font-semibold text-[#111827] dark:text-white">New leads</h2>
-                  <Link to="/agent/leads" className="inline-flex items-center gap-[5px] text-[13px] font-semibold text-[#703bf7] no-underline dark:text-[#b79bff]">All <ArrowRight size={15} /></Link>
+                  <Link to="/agent/leads" className="inline-flex items-center gap-[5px] text-[13px] font-semibold text-highlight no-underline dark:text-highlight">All <ArrowRight size={15} /></Link>
                 </div>
                 <p className="m-0 mt-5 text-sm text-[#4b5563] leading-[1.6] dark:text-[#9ca3af]">{dashboard.newInquiries === 0 ? "You’re all caught up." : `${plural(dashboard.newInquiries, "new inquiry", "new inquiries")} to follow up.`}</p>
               </article>
@@ -147,7 +147,7 @@ const AgentDashboardPage = () => {
           <section className="rounded-3xl border border-[#e5e7eb] bg-white px-6 py-10 text-center dark:border-white/10 dark:bg-[#1a1a1a]">
             <h2 className="m-0 font-serif text-[22px]">Your dashboard couldn’t load</h2>
             <p className="mt-2 mb-[22px] text-sm text-[#4b5563] dark:text-[#9ca3af]">Check your connection and try again.</p>
-            <button className="inline-flex min-h-12 items-center justify-center gap-[9px] rounded-full border-0 bg-[#703bf7] px-6 text-sm font-semibold text-white transition-colors duration-150 ease-[ease] hover:bg-[#9677df]" type="button" onClick={() => void loadDashboard()}>Try again</button>
+            <button className="inline-flex min-h-12 items-center justify-center gap-[9px] rounded-full border-0 bg-highlight px-6 text-sm font-semibold text-white transition-colors duration-150 ease-[ease] hover:bg-[#b79bff]" type="button" onClick={() => void loadDashboard()}>Try again</button>
           </section>
         )}
       </main>

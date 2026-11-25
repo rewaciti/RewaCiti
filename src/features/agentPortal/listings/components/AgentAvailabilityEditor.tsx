@@ -119,7 +119,7 @@ const AgentAvailabilityEditor = ({
             type="button"
             aria-label="Close visiting hours"
             onClick={onClose}
-            className="grid h-[38px] w-[38px] shrink-0 place-items-center rounded-[10px] border border-[#e5e7eb] bg-white p-0 text-[#4b5563] transition-colors hover:border-[#703bf7] hover:bg-[#f3f4f6] hover:text-[#111827] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-[#9ca3af] dark:hover:border-[#703bf7] dark:hover:bg-[#232323] dark:hover:text-white"
+            className="grid h-[38px] w-[38px] shrink-0 place-items-center rounded-[10px] border border-[#e5e7eb] bg-white p-0 text-[#4b5563] transition-colors hover:border-highlight hover:bg-[#f3f4f6] hover:text-[#111827] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-[#9ca3af] dark:hover:border-highlight dark:hover:bg-[#232323] dark:hover:text-white"
           >
             <X size={19} />
           </button>
@@ -127,7 +127,7 @@ const AgentAvailabilityEditor = ({
         {loading ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-3 py-12" role="status" aria-live="polite">
             <span
-              className="h-9 w-9 animate-spin rounded-full border-[3px] border-gray-200 border-t-[#703bf7] dark:border-white/10 dark:border-t-[#b79bff]"
+              className="h-9 w-9 animate-spin rounded-full border-[3px] border-gray-200 border-t-highlight dark:border-white/10 dark:border-t-highlight"
               aria-hidden="true"
             />
             <p className="m-0 text-sm text-[#4b5563] dark:text-[#9ca3af]">Loading visiting hours…</p>
@@ -143,7 +143,7 @@ const AgentAvailabilityEditor = ({
                   aria-checked={availability.useDefault}
                   aria-label="Use RewaCiti’s usual hours"
                   onClick={() => setAvailability((current) => current ? { ...current, useDefault: !current.useDefault } : current)}
-                  className={`relative h-[26px] w-12 shrink-0 rounded-full transition-colors ${availability.useDefault ? "bg-[#703bf7]" : "bg-gray-300"}`}
+                  className={`relative h-[26px] w-12 shrink-0 rounded-full transition-colors ${availability.useDefault ? "bg-highlight" : "bg-gray-300"}`}
                 >
                   <span className={`absolute top-[3px] left-[3px] h-5 w-5 rounded-full bg-white transition-transform ${availability.useDefault ? "translate-x-[22px]" : ""}`} />
                 </button>
@@ -166,7 +166,7 @@ const AgentAvailabilityEditor = ({
                           aria-label={`${label} visits`}
                           disabled={availability.useDefault}
                           onClick={() => updateDay(day, { enabled: !entry.enabled })}
-                          className={`relative h-[27px] w-12 rounded-full p-0 transition-colors ${entry.enabled ? "bg-[#703bf7]" : "bg-gray-300"} ${availability.useDefault ? "cursor-not-allowed" : "cursor-pointer"}`}
+                          className={`relative h-[27px] w-12 rounded-full p-0 transition-colors ${entry.enabled ? "bg-highlight" : "bg-gray-300"} ${availability.useDefault ? "cursor-not-allowed" : "cursor-pointer"}`}
                         >
                           <span className={`absolute top-[3px] left-[3px] h-[21px] w-[21px] rounded-full bg-white transition-transform ${entry.enabled ? "translate-x-[21px]" : ""}`} />
                         </button>
@@ -227,7 +227,7 @@ const AgentAvailabilityEditor = ({
                   type="button"
                   aria-expanded={blackoutPickerOpen}
                   onClick={() => setBlackoutPickerOpen((open) => !open)}
-                  className="inline-flex min-h-[38px] items-center gap-2 rounded-md border border-[#e5e7eb] bg-white px-3 text-xs text-[#4b5563] hover:border-[#703bf7] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-[#9ca3af] dark:hover:border-[#703bf7]"
+                  className="inline-flex min-h-[38px] items-center gap-2 rounded-md border border-[#e5e7eb] bg-white px-3 text-xs text-[#4b5563] hover:border-highlight dark:border-white/10 dark:bg-[#1a1a1a] dark:text-[#9ca3af] dark:hover:border-highlight"
                 >
                   <CalendarDays size={15} /> Close on certain days
                 </button>
@@ -240,8 +240,8 @@ const AgentAvailabilityEditor = ({
               </section>
             </div>
             <div className="-mx-5 flex flex-[0_0_auto] justify-end gap-2.5 border-t border-[#e5e7eb] bg-white px-5 py-2.5 pb-[calc(10px+env(safe-area-inset-bottom))] dark:border-white/10 dark:bg-[#1a1a1a] sm:-mx-7 sm:px-7 sm:pb-2.5">
-              <button type="button" onClick={onClose} className="min-h-10 min-w-28 rounded-lg border border-[#e5e7eb] bg-white px-[18px] text-[13px] font-semibold text-[#111827] transition-colors hover:border-[#703bf7] hover:bg-[#f3f4f6] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:border-[#703bf7] dark:hover:bg-[#232323] max-[700px]:min-w-0 max-[700px]:flex-1">Cancel</button>
-              <button type="submit" disabled={saving} className="min-h-10 min-w-28 rounded-lg border border-[#703bf7] bg-[#703bf7] px-[18px] text-[13px] font-semibold text-white transition-colors hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-65 max-[700px]:min-w-0 max-[700px]:flex-1">{saving ? "Saving..." : "Save"}</button>
+              <button type="button" onClick={onClose} className="min-h-10 min-w-28 rounded-lg border border-[#e5e7eb] bg-white px-[18px] text-[13px] font-semibold text-[#111827] transition-colors hover:border-highlight hover:bg-[#f3f4f6] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:border-highlight dark:hover:bg-[#232323] max-[700px]:min-w-0 max-[700px]:flex-1">Cancel</button>
+              <button type="submit" disabled={saving} className="min-h-10 min-w-28 rounded-lg border border-highlight bg-highlight px-[18px] text-[13px] font-semibold text-white transition-colors hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-65 max-[700px]:min-w-0 max-[700px]:flex-1">{saving ? "Saving..." : "Save"}</button>
             </div>
           </form>
         ) : (

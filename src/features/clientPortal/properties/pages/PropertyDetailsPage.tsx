@@ -422,7 +422,7 @@ function PropertyDetails() {
           <button
             type="button"
             onClick={openInspection}
-            className="min-w-0 flex-1 cursor-pointer rounded-lg bg-[#703BF7] px-3 py-3 text-sm font-semibold text-white hover:bg-[#5c2fe0] sm:flex-none sm:px-5"
+            className="min-w-0 flex-1 cursor-pointer rounded-lg bg-[#b79bff] px-3 py-3 text-sm font-semibold text-white hover:bg-[#b79bff] sm:flex-none sm:px-5"
           >
             Book a visit
           </button>
@@ -488,7 +488,7 @@ function PropertyDetails() {
           <button
             type="button"
             onClick={openInspection}
-            className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#703BF7] px-4 py-3.5 text-base font-semibold text-white transition hover:bg-[#5c2fe0]"
+            className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#b79bff] px-4 py-3.5 text-base font-semibold text-white transition hover:bg-[#b79bff]"
           >
             <FiCalendar size={18} /> Book a visit
           </button>
@@ -517,7 +517,7 @@ function PropertyDetails() {
           <p className="mt-5 border-t border-gray-200 pt-4 text-center text-xs leading-5 text-gray-600 dark:border-gray-600/30 dark:text-gray-400">
             <Link
               to="/auth/login"
-              className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#5c2fe0] dark:text-[#b69bff]"
+              className="font-semibold text-[#b79bff] underline underline-offset-2 hover:text-[#b79bff] dark:text-[#b79bff]"
             >
               Create an account
             </Link>{" "}
@@ -549,7 +549,7 @@ function PropertyDetails() {
         ) : (
           <span
             aria-hidden="true"
-            className="flex h-[70px] w-[70px] shrink-0 items-center justify-center rounded-full bg-gray-300 font-serif text-2xl font-semibold text-[#703BF7] dark:bg-white/10 dark:text-white"
+            className="flex h-[70px] w-[70px] shrink-0 items-center justify-center rounded-full bg-gray-300 font-serif text-2xl font-semibold text-[#b79bff] dark:bg-white/10 dark:text-white"
           >
             {name[0].toUpperCase()}
           </span>
@@ -643,7 +643,7 @@ function PropertyDetails() {
               internet connection.
             </p>
             <Link to="/Properties">
-              <button className="cursor-pointer rounded-lg bg-[#703BF7] px-4 py-2 text-sm text-white hover:bg-[#5c2fe0]">
+              <button className="cursor-pointer rounded-lg bg-[#b79bff] px-4 py-2 text-sm text-white hover:bg-[#b79bff]">
                 Browse Properties
               </button>
             </Link>
@@ -702,7 +702,7 @@ function PropertyDetails() {
                       {property.category}
                     </span>
                     {property.listingType && (
-                      <span className="inline-flex rounded-full bg-[#703BF7]/10 px-3 py-1 text-xs font-semibold text-[#703BF7] dark:bg-[#703BF7]/20 dark:text-[#b69bff]">
+                      <span className="inline-flex rounded-full bg-[#b79bff]/10 px-3 py-1 text-xs font-semibold text-[#b79bff] dark:bg-[#b79bff]/20 dark:text-[#b79bff]">
                         {property.listingType}
                       </span>
                     )}
@@ -715,7 +715,7 @@ function PropertyDetails() {
                     <button type="button" onClick={handleShortlist} className={GHOST_BTN}>
                       <FiHeart
                         size={16}
-                        className={isShortlisted ? "fill-current text-[#703BF7]" : ""}
+                        className={isShortlisted ? "fill-current text-[#b79bff]" : ""}
                       />
                       <span className="hidden sm:inline">
                         {isShortlisted ? "Saved" : "Save"}
@@ -1290,7 +1290,7 @@ function PropertyDetails() {
                       role="switch"
                       aria-checked={sameAgentOnly}
                       onClick={() => setSameAgentOnly((prev) => !prev)}
-                      className={`relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full transition ${sameAgentOnly ? "bg-[#703BF7]" : "bg-gray-300 dark:bg-gray-600"}`}
+                      className={`relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full transition ${sameAgentOnly ? "bg-[#b79bff]" : "bg-gray-300 dark:bg-gray-600"}`}
                     >
                       <span
                         className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${sameAgentOnly ? "translate-x-5" : "translate-x-0.5"}`}

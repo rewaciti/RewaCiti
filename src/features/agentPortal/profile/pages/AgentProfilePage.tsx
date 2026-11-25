@@ -51,26 +51,26 @@ const ui = {
   label: "mb-1.5 block text-[13px] font-medium text-[#111827] dark:text-white",
   muted: "text-[#4b5563] dark:text-[#9ca3af]",
   input:
-    "w-full rounded-xl border border-[#e5e7eb] bg-[#f3f4f6] px-3 py-2.5 text-sm text-[#111827] outline-none placeholder:text-[#6b7280] focus:border-[#703bf7] focus:ring-2 focus:ring-[#703bf7]/10 disabled:bg-white disabled:text-[#9ca3af] dark:border-white/10 dark:bg-[#232323] dark:text-white dark:placeholder:text-[#9ca3af] dark:focus:border-[#b79bff] dark:focus:ring-[#b79bff]/15 dark:disabled:bg-[#232323]/60",
+    "w-full rounded-xl border border-[#e5e7eb] bg-[#f3f4f6] px-3 py-2.5 text-sm text-[#111827] outline-none placeholder:text-[#6b7280] focus:border-highlight focus:ring-2 focus:ring-highlight/10 disabled:bg-white disabled:text-[#9ca3af] dark:border-white/10 dark:bg-[#232323] dark:text-white dark:placeholder:text-[#9ca3af] dark:focus:border-highlight dark:focus:ring-highlight/15 dark:disabled:bg-[#232323]/60",
   dropzone:
-    "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#d1d5db] px-4 py-8 text-center transition-colors hover:border-[#703bf7] hover:bg-[#703bf7]/5 dark:border-white/15 dark:hover:border-[#b79bff] dark:hover:bg-[#b79bff]/5",
+    "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#d1d5db] px-4 py-8 text-center transition-colors hover:border-highlight hover:bg-highlight/5 dark:border-white/15 dark:hover:border-highlight dark:hover:bg-highlight/5",
   iconCircle:
-    "grid h-10 w-10 place-items-center rounded-full bg-[#703bf7]/10 text-[#703bf7] dark:bg-[#b79bff]/15 dark:text-[#b79bff]",
+    "grid h-10 w-10 place-items-center rounded-full bg-highlight/10 text-highlight dark:bg-highlight/15 dark:text-highlight",
   primaryButton:
-    "inline-flex min-h-10 cursor-pointer items-center justify-center rounded-full bg-[#703bf7] px-5 text-sm font-semibold text-white transition-[background-color,color,opacity] duration-150 ease-[ease] hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-55 dark:bg-[#b79bff] dark:text-black",
+    "inline-flex min-h-10 cursor-pointer items-center justify-center rounded-full bg-highlight px-5 text-sm font-semibold text-white transition-[background-color,color,opacity] duration-150 ease-[ease] hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-55 dark:bg-highlight dark:text-black",
   ghostButton:
     "inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#e5e7eb] bg-white px-3 py-1.5 text-xs font-medium text-[#111827] dark:border-white/10 dark:bg-[#232323] dark:text-white",
   submitButton:
-    "mt-3 inline-flex min-h-10 w-full cursor-pointer items-center justify-center rounded-full bg-[#703bf7] px-5 text-sm font-semibold text-white transition-[background-color,color,opacity] duration-150 ease-[ease] hover:opacity-90 disabled:cursor-not-allowed disabled:bg-[#e5e7eb] disabled:text-[#9ca3af] disabled:opacity-100 disabled:hover:opacity-100 dark:bg-[#b79bff] dark:text-black dark:disabled:bg-white/10 dark:disabled:text-neutral-500",
+    "mt-3 inline-flex min-h-10 w-full cursor-pointer items-center justify-center rounded-full bg-highlight px-5 text-sm font-semibold text-white transition-[background-color,color,opacity] duration-150 ease-[ease] hover:opacity-90 disabled:cursor-not-allowed disabled:bg-[#e5e7eb] disabled:text-[#9ca3af] disabled:opacity-100 disabled:hover:opacity-100 dark:bg-highlight dark:text-black dark:disabled:bg-white/10 dark:disabled:text-neutral-500",
   photoPanel: "flex items-center gap-4 rounded-xl border border-dashed border-[#d1d5db] p-4 dark:border-white/15",
-  pill: "rounded-full border border-[#e5e7eb] bg-[#703bf7]/10 px-2.5 py-0.5 text-[11px] font-medium text-[#703bf7] dark:border-white/10 dark:bg-[#b79bff]/15 dark:text-[#b79bff]",
-  counter: "m-0 mt-2 text-right text-[11px] text-[#703bf7] dark:text-[#b79bff]",
-  avatarPreview: "grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#703bf7]/10 text-[11px] font-semibold text-[#703bf7] dark:bg-[#b79bff]/15 dark:text-[#b79bff]",
+  pill: "rounded-full border border-[#e5e7eb] bg-highlight/10 px-2.5 py-0.5 text-[11px] font-medium text-highlight dark:border-white/10 dark:bg-highlight/15 dark:text-highlight",
+  counter: "m-0 mt-2 text-right text-[11px] text-highlight dark:text-highlight",
+  avatarPreview: "grid h-12 w-12 shrink-0 place-items-center rounded-full bg-highlight/10 text-[11px] font-semibold text-highlight dark:bg-highlight/15 dark:text-highlight",
 };
 
 const Spinner = () => (
   <span role="status" className="inline-flex">
-    <span className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#e5e7eb] border-t-[#703bf7] dark:border-white/10 dark:border-t-[#b79bff]" aria-hidden="true" />
+    <span className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#e5e7eb] border-t-highlight dark:border-white/10 dark:border-t-highlight" aria-hidden="true" />
     <span className="sr-only">Loading profile</span>
   </span>
 );
@@ -102,7 +102,7 @@ const Dropzone = ({ id, accept, onFile, className = "", children }: DropzoneProp
       }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
-      className={`${ui.dropzone} ${dragging ? "bg-[#703bf7]/10 dark:bg-[#b79bff]/10" : ""} ${className}`}
+      className={`${ui.dropzone} ${dragging ? "bg-highlight/10 dark:bg-highlight/10" : ""} ${className}`}
     >
       <input
         id={id}

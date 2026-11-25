@@ -251,7 +251,7 @@ const AgentBookInspectionModal = ({ property, open, onOpenChange, onBooked }: Ag
                   aria-checked={mode === "virtual"}
                   aria-label="Virtual visit"
                   disabled={!modes.includes("virtual") || !modes.includes("in_person")}
-                  className={`relative h-[26px] w-11 shrink-0 rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-55 ${mode === "virtual" ? "bg-[#703BF7]" : "bg-gray-300"}`}
+                  className={`relative h-[26px] w-11 shrink-0 rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-55 ${mode === "virtual" ? "bg-[#b79bff]" : "bg-gray-300"}`}
                   onClick={() => setMode(mode === "virtual" ? "in_person" : "virtual")}
                 ><span className={`absolute top-[3px] left-[3px] h-5 w-5 rounded-full bg-white transition-transform ${mode === "virtual" ? "translate-x-[18px]" : ""}`} /></button>
               </section>
@@ -283,7 +283,7 @@ const AgentBookInspectionModal = ({ property, open, onOpenChange, onBooked }: Ag
                       <button
                         type="button"
                         key={day.value}
-                        className={`grid min-h-9 place-items-center rounded-[3px] text-[13px] hover:bg-gray-100 dark:hover:bg-white/8 disabled:cursor-not-allowed disabled:text-gray-300 dark:disabled:text-neutral-600 ${visitDate === day.value ? "bg-[#703BF7] text-white hover:bg-[#703BF7]" : "bg-transparent text-inherit"}`}
+                        className={`grid min-h-9 place-items-center rounded-[3px] text-[13px] hover:bg-gray-100 dark:hover:bg-white/8 disabled:cursor-not-allowed disabled:text-gray-300 dark:disabled:text-neutral-600 ${visitDate === day.value ? "bg-[#b79bff] text-white hover:bg-[#b79bff]" : "bg-transparent text-inherit"}`}
                         disabled={day.disabled}
                         aria-pressed={visitDate === day.value}
                         onClick={() => {
@@ -300,7 +300,7 @@ const AgentBookInspectionModal = ({ property, open, onOpenChange, onBooked }: Ag
                   {slotsLoading ? (
                     <div className="flex items-center gap-2 py-2 text-xs text-gray-500 dark:text-gray-400" role="status">
                       <span
-                        className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-gray-200 border-t-[#703BF7] dark:border-white/10 dark:border-t-[#B79BFF]"
+                        className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-gray-200 border-t-[#b79bff] dark:border-white/10 dark:border-t-[#b79bff]"
                         aria-hidden="true"
                       />
                       <span>Loading visit times…</span>
@@ -311,7 +311,7 @@ const AgentBookInspectionModal = ({ property, open, onOpenChange, onBooked }: Ag
                         <button
                           type="button"
                           key={slot.start}
-                          className={`grid min-h-[50px] min-w-0 content-center justify-items-center gap-0.5 rounded-[5px] border px-[7px] py-[5px] text-[13px] hover:border-[#703BF7] ${visitTime === slot.start ? "border-[#703BF7] bg-[#703BF7] text-white" : "border-gray-300 bg-white text-gray-900 dark:border-white/15 dark:bg-[#202020] dark:text-white"}`}
+                          className={`grid min-h-[50px] min-w-0 content-center justify-items-center gap-0.5 rounded-[5px] border px-[7px] py-[5px] text-[13px] hover:border-[#b79bff] ${visitTime === slot.start ? "border-[#b79bff] bg-[#b79bff] text-white" : "border-gray-300 bg-white text-gray-900 dark:border-white/15 dark:bg-[#202020] dark:text-white"}`}
                           aria-pressed={visitTime === slot.start}
                           onClick={() => setVisitTime(slot.start)}
                         >
@@ -325,14 +325,14 @@ const AgentBookInspectionModal = ({ property, open, onOpenChange, onBooked }: Ag
               </div>
 
               <section className="grid grid-cols-2 gap-4 border-t border-gray-200 pt-[23px] dark:border-white/15 max-[430px]:grid-cols-1">
-                <label className="grid min-w-0 gap-1.5 text-[13px] font-medium">Customer *<input required value={customerName} onChange={(event) => setCustomerName(event.target.value)} placeholder="Search or add a customer" autoComplete="name" className="min-h-11 w-full rounded-[5px] border border-gray-300 bg-white px-3 text-[13px] outline-none focus:border-[#703BF7] focus:ring-[3px] focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white" /></label>
-                <label className="grid min-w-0 gap-1.5 text-[13px] font-medium">Number of visitors<input type="number" min="1" max={selectedSlot?.placesLeft ?? 20} value={visitors} onChange={(event) => setVisitors(Number(event.target.value))} className="min-h-11 w-full rounded-[5px] border border-gray-300 bg-white px-3 text-[13px] outline-none focus:border-[#703BF7] focus:ring-[3px] focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white" /></label>
-                <label className="grid min-w-0 gap-1.5 text-[13px] font-medium">Email<input required type="email" value={guestEmail} onChange={(event) => setGuestEmail(event.target.value)} placeholder="Email address" autoComplete="email" className="min-h-11 w-full rounded-[5px] border border-gray-300 bg-white px-3 text-[13px] outline-none placeholder:text-gray-500 focus:border-[#703BF7] focus:ring-[3px] focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white" /></label>
-                <label className="grid min-w-0 gap-1.5 text-[13px] font-medium">Phone<input required type="tel" value={guestPhone} onChange={(event) => setGuestPhone(event.target.value)} placeholder="+234..." autoComplete="tel" className="min-h-11 w-full rounded-[5px] border border-gray-300 bg-white px-3 text-[13px] outline-none placeholder:text-gray-500 focus:border-[#703BF7] focus:ring-[3px] focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white" /></label>
+                <label className="grid min-w-0 gap-1.5 text-[13px] font-medium">Customer *<input required value={customerName} onChange={(event) => setCustomerName(event.target.value)} placeholder="Search or add a customer" autoComplete="name" className="min-h-11 w-full rounded-[5px] border border-gray-300 bg-white px-3 text-[13px] outline-none focus:border-[#b79bff] focus:ring-[3px] focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white" /></label>
+                <label className="grid min-w-0 gap-1.5 text-[13px] font-medium">Number of visitors<input type="number" min="1" max={selectedSlot?.placesLeft ?? 20} value={visitors} onChange={(event) => setVisitors(Number(event.target.value))} className="min-h-11 w-full rounded-[5px] border border-gray-300 bg-white px-3 text-[13px] outline-none focus:border-[#b79bff] focus:ring-[3px] focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white" /></label>
+                <label className="grid min-w-0 gap-1.5 text-[13px] font-medium">Email<input required type="email" value={guestEmail} onChange={(event) => setGuestEmail(event.target.value)} placeholder="Email address" autoComplete="email" className="min-h-11 w-full rounded-[5px] border border-gray-300 bg-white px-3 text-[13px] outline-none placeholder:text-gray-500 focus:border-[#b79bff] focus:ring-[3px] focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white" /></label>
+                <label className="grid min-w-0 gap-1.5 text-[13px] font-medium">Phone<input required type="tel" value={guestPhone} onChange={(event) => setGuestPhone(event.target.value)} placeholder="+234..." autoComplete="tel" className="min-h-11 w-full rounded-[5px] border border-gray-300 bg-white px-3 text-[13px] outline-none placeholder:text-gray-500 focus:border-[#b79bff] focus:ring-[3px] focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white" /></label>
               </section>
 
-              <label className="flex items-start gap-2.5 text-xs leading-normal text-gray-500 [&_a]:font-semibold [&_a]:text-[#703BF7] [&_a]:underline dark:text-gray-400 dark:[&_a]:text-[#B79BFF]">
-                <input className="mt-0.5 h-[22px] w-[22px] shrink-0 accent-[#703BF7]" type="checkbox" checked={agreed} onChange={(event) => setAgreed(event.target.checked)} required />
+              <label className="flex items-start gap-2.5 text-xs leading-normal text-gray-500 [&_a]:font-semibold [&_a]:text-[#b79bff] [&_a]:underline dark:text-gray-400 dark:[&_a]:text-[#b79bff]">
+                <input className="mt-0.5 h-[22px] w-[22px] shrink-0 accent-[#b79bff]" type="checkbox" checked={agreed} onChange={(event) => setAgreed(event.target.checked)} required />
                 <span>{consentText || "I agree that my details can be used to reply to this request."}</span>
               </label>
             </div>
@@ -341,7 +341,7 @@ const AgentBookInspectionModal = ({ property, open, onOpenChange, onBooked }: Ag
               <div className="flex items-baseline gap-[5px]"><span className="text-[13px] text-gray-500">Visit fee:</span><strong className="text-sm">{feeLabel}</strong></div>
               <div className="flex items-center gap-[9px] max-[700px]:gap-[7px] max-[430px]:grid max-[430px]:grid-cols-[auto_minmax(0,1fr)]">
                 <button type="button" className="min-h-[43px] rounded-[5px] border border-gray-300 bg-white px-[17px] text-[13px] font-medium text-gray-900 dark:border-white/15 dark:bg-[#202020] dark:text-white max-[430px]:w-full max-[430px]:min-w-0 max-[430px]:px-[15px] max-[430px]:text-xs" onClick={() => onOpenChange(false)}>Cancel</button>
-                <button type="submit" className="min-h-[43px] rounded-[5px] border border-[#703BF7] bg-[#703BF7] px-[17px] text-[13px] font-semibold text-white hover:bg-[#9677DF] disabled:cursor-not-allowed disabled:opacity-50 max-[430px]:w-full max-[430px]:min-w-0 max-[430px]:px-[15px] max-[430px]:text-xs" disabled={!canSubmit}>
+                <button type="submit" className="min-h-[43px] rounded-[5px] border border-[#b79bff] bg-[#b79bff] px-[17px] text-[13px] font-semibold text-white hover:bg-[#b79bff] disabled:cursor-not-allowed disabled:opacity-50 max-[430px]:w-full max-[430px]:min-w-0 max-[430px]:px-[15px] max-[430px]:text-xs" disabled={!canSubmit}>
                   {submitting ? "Booking…" : amount === 0 ? "Book visit" : "Book & send payment link"}
                 </button>
               </div>

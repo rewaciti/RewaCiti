@@ -211,7 +211,7 @@ const StepCard = ({ item }: { item: Step }) => {
 
   return (
     <article className={`${CARD} flex h-full flex-col p-6`}>
-      <span className="mb-4 inline-flex w-fit rounded-full bg-[#703BF7]/10 px-3 py-1 text-xs font-semibold text-[#703BF7] dark:bg-[#703BF7]/25 dark:text-white">
+      <span className="mb-4 inline-flex w-fit rounded-full bg-[#b79bff]/10 px-3 py-1 text-xs font-semibold text-[#b79bff] dark:bg-[#b79bff]/25 dark:text-white">
         {item.step}
       </span>
 
@@ -228,7 +228,7 @@ const StepCard = ({ item }: { item: Step }) => {
             type="button"
             onClick={() => setIsExpanded((v) => !v)}
             aria-expanded={isExpanded}
-            className="ml-1 inline-block cursor-pointer text-xs font-semibold text-[#703BF7] hover:underline dark:text-[#a98bff]"
+            className="ml-1 inline-block cursor-pointer text-xs font-semibold text-[#b79bff] hover:underline dark:text-[#b79bff]"
           >
             {isExpanded ? "Show less" : "Show more"}
           </button>
@@ -401,7 +401,7 @@ function About() {
                     className="space-y-4 bg-white p-6 dark:bg-[#1A1A1A]"
                   >
                     <div className="flex items-center gap-4">
-                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#703BF7]/10 text-[#703BF7] dark:bg-[#703BF7]/25 dark:text-[#c3b0fb]">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#b79bff]/10 text-[#b79bff] dark:bg-[#b79bff]/25 dark:text-[#b79bff]">
                         <Icon className="h-5 w-5" aria-hidden="true" />
                       </span>
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -433,7 +433,7 @@ function About() {
             <div className="grid gap-4 md:grid-cols-3 lg:gap-6">
               {Achievements.map((item: AchievementItem) => (
                 <article key={item.id} className={`${CARD} h-full p-6`}>
-                  <div className="mb-4 h-1 w-10 rounded-full bg-[#703BF7]" />
+                  <div className="mb-4 h-1 w-10 rounded-full bg-[#b79bff]" />
                   <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
                     {item.title}
                   </h3>
@@ -494,7 +494,7 @@ function About() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`${member.name} on LinkedIn`}
-                      className="absolute -bottom-5 left-1/2 -translate-x-1/2 cursor-pointer rounded-full bg-[#703BF7] p-1 shadow-md ring-4 ring-white transition-colors hover:bg-[#5b2fd1] dark:ring-[#1A1A1A]"
+                      className="absolute -bottom-5 left-1/2 -translate-x-1/2 cursor-pointer rounded-full bg-[#b79bff] p-1 shadow-md ring-4 ring-white transition-colors hover:bg-[#b79bff] dark:ring-[#1A1A1A]"
                     >
                       <FaLinkedin className="h-7 w-7 p-1 text-white" />
                     </a>
@@ -513,7 +513,7 @@ function About() {
                   {/* Say hello (opens the user's email app) */}
                   <form
                     onSubmit={(e) => handleMessage(e, member)}
-                    className="flex w-full items-center overflow-hidden rounded-full border border-gray-300 p-1.5 pl-4 focus-within:border-[#703BF7] dark:border-white/15"
+                    className="flex w-full items-center overflow-hidden rounded-full border border-gray-300 p-1.5 pl-4 focus-within:border-[#b79bff] dark:border-white/15"
                   >
                     <input
                       type="text"
@@ -526,7 +526,7 @@ function About() {
                     <button
                       type="submit"
                       aria-label={`Email ${member.name}`}
-                      className="flex shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#703BF7] p-2 transition-colors hover:bg-[#5b2fd1]"
+                      className="flex shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#b79bff] p-2 transition-colors hover:bg-[#b79bff]"
                     >
                       <Send className="h-4 w-4 text-white" />
                     </button>
