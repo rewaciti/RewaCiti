@@ -10,7 +10,7 @@ import AgentListingEditorSkeleton from "./AgentListingEditorSkeleton";
 import { blankDraft, draftFromProperty } from "@/features/agentPortal/listings/utils/agentListingDraft";
 import type { ListingDraft } from "@/features/agentPortal/listings/utils/agentListingDraft";
 
-const inputBaseClass = "w-full border border-[#e5e7eb] bg-white text-xs text-[#111827] outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-[#9ca3af] focus:border-[#703bf7] focus:ring-2 focus:ring-[#703bf7]/10 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:placeholder:text-[#6b7280] dark:focus:ring-[#b79bff]/15";
+const inputBaseClass = "w-full border border-[#e5e7eb] bg-white text-xs text-[#111827] outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-[#9ca3af] focus:border-brand focus:ring-2 focus:ring-brand/10 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:placeholder:text-[#6b7280] dark:focus:ring-brand-light/15";
 const fieldInputClass = `${inputBaseClass} min-h-[42px] rounded-[6px] px-3 py-2.5`;
 const cardInputClass = `${inputBaseClass} min-h-[43px] rounded-[5px] px-3 py-2.5`;
 const rentalInputClass = `${inputBaseClass} min-h-[38px] rounded-[5px] px-2.5 py-0`;
@@ -21,17 +21,17 @@ const cardFieldClass = "block min-w-0 mb-[5px] [&>span]:mb-1.5 [&>span]:block [&
 const cardFieldNoMarginClass = "block min-w-0 [&>span]:mb-1.5 [&>span]:block [&>span]:text-xs [&>span]:font-medium [&>span]:text-[#111827] dark:[&>span]:text-white [&>span_b]:text-[#c24e42]";
 
 const detailCardClass = "m-0 rounded-[3px] border border-[#e5e7eb] bg-white p-[21px_26px] text-[#111827] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white max-[700px]:p-[17px_14px]";
-const cardTitleClass = "mb-4 flex items-center gap-[9px] text-[#703bf7] dark:text-[#b79bff] [&>h3]:m-0 [&>h3]:text-[15px] [&>h3]:font-bold [&>h3]:text-[#111827] dark:[&>h3]:text-white";
+const cardTitleClass = "mb-4 flex items-center gap-[9px] text-brand dark:text-brand-light [&>h3]:m-0 [&>h3]:text-[15px] [&>h3]:font-bold [&>h3]:text-[#111827] dark:[&>h3]:text-white";
 const explainerClass = "-mt-1 mb-[17px] text-xs leading-[1.6] text-[#4b5563] dark:text-[#9ca3af]";
 
 const dropdownWrapClass = "w-full max-w-[545px] mb-[23px]";
 const dropdownWrapFlushClass = "w-full mb-[18px]";
 const dropdownWrapPriceClass = "w-full mb-0";
-const dropdownTriggerClass = "w-full min-h-[43px] rounded-[5px] border border-[#e5e7eb] bg-white px-[13px] text-left text-xs text-[#111827] outline-none transition-[border-color,box-shadow] duration-150 hover:border-[#703bf7] focus:border-[#703bf7] focus:outline-none focus:ring-2 focus:ring-[#703bf7]/10 focus-visible:border-[#703bf7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#703bf7]/10 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:focus:ring-[#b79bff]/15 dark:focus-visible:ring-[#b79bff]/15";
-const rentalTriggerClass = "w-full min-h-[38px] rounded-[5px] border border-[#e5e7eb] bg-white px-2.5 text-left text-xs text-[#111827] outline-none hover:border-[#703bf7] focus:border-[#703bf7] focus:outline-none focus-visible:border-[#703bf7] focus-visible:outline-none dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white";
-const chargeRecipientTriggerClass = "w-full min-h-9 rounded-[6px] border border-[#e5e7eb] bg-white px-2 text-left text-[11px] text-[#111827] outline-none hover:border-[#703bf7] focus:border-[#703bf7] focus:outline-none focus-visible:border-[#703bf7] focus-visible:outline-none dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white";
+const dropdownTriggerClass = "w-full min-h-[43px] rounded-[5px] border border-[#e5e7eb] bg-white px-[13px] text-left text-xs text-[#111827] outline-none transition-[border-color,box-shadow] duration-150 hover:border-brand focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/10 focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/10 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:focus:ring-brand-light/15 dark:focus-visible:ring-brand-light/15";
+const rentalTriggerClass = "w-full min-h-[38px] rounded-[5px] border border-[#e5e7eb] bg-white px-2.5 text-left text-xs text-[#111827] outline-none hover:border-brand focus:border-brand focus:outline-none focus-visible:border-brand focus-visible:outline-none dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white";
+const chargeRecipientTriggerClass = "w-full min-h-9 rounded-[6px] border border-[#e5e7eb] bg-white px-2 text-left text-[11px] text-[#111827] outline-none hover:border-brand focus:border-brand focus:outline-none focus-visible:border-brand focus-visible:outline-none dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white";
 const dropdownMenuClass = "!border-[#e5e7eb] !bg-white !text-[#111827] dark:!border-white/10 dark:!bg-[#1a1a1a] dark:!text-white";
-const dropdownMenuItemClass = "block w-full px-4 py-3 text-left text-sm whitespace-nowrap transition hover:!bg-[#703bf7] hover:!text-white dark:hover:!bg-[#703bf7] dark:hover:!text-white";
+const dropdownMenuItemClass = "block w-full px-4 py-3 text-left text-sm whitespace-nowrap transition hover:!bg-brand hover:!text-white dark:hover:!bg-brand dark:hover:!text-white";
 
 const statusPillClasses: Record<string, string> = {
   published: "bg-[#dcfce7] text-[#166534]",
@@ -403,7 +403,7 @@ const AgentListingEditor = ({
         <header className="flex min-h-14 shrink-0 items-center justify-between gap-[13px] border-b border-[#e5e7eb] bg-white px-5 dark:border-white/10 dark:bg-[#1a1a1a] max-[700px]:px-3.5">
           <div className="flex min-w-0 flex-1 items-center gap-2.5">
             <h2 id="agent-listing-form-title" className="m-0 truncate text-lg font-bold text-[#111827] dark:text-white max-[700px]:text-base">{property ? property.title : "New Property"}</h2>
-            <span className={`inline-flex min-h-[24px] shrink-0 items-center whitespace-nowrap rounded-full px-2.5 text-[11px] font-semibold ${statusPillClasses[draft.status] ?? statusPillClasses.draft}`}>
+            <span className={`inline-flex min-h-6 shrink-0 items-center whitespace-nowrap rounded-full px-2.5 text-[11px] font-semibold ${statusPillClasses[draft.status] ?? statusPillClasses.draft}`}>
               {statusLabel(draft.status)}
             </span>
           </div>
@@ -416,7 +416,7 @@ const AgentListingEditor = ({
               <Icon size={16} />
               <span>{label}</span>
               {value === "media" && photos.length > 0 && (
-                <span className="inline-grid h-4 min-w-4 place-items-center rounded-full bg-[#703bf7]/12 px-1 text-[10px] font-semibold text-[#703bf7] dark:bg-[#b79bff]/15 dark:text-[#b79bff]">
+                <span className="inline-grid h-4 min-w-4 place-items-center rounded-full bg-brand/12 px-1 text-[10px] font-semibold text-brand dark:bg-brand-light/15 dark:text-brand-light">
                   {photos.length}
                 </span>
               )}
@@ -436,18 +436,18 @@ const AgentListingEditor = ({
                 {completionCount}/{completionItems.length} details
               </span>
               <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#f3f4f6] dark:bg-[#232323]">
-                <span className="block h-full rounded-full bg-[#703bf7] transition-[width] duration-180" style={{ width: `${completionPercent}%` }} />
+                <span className="block h-full rounded-full bg-brand transition-[width] duration-180" style={{ width: `${completionPercent}%` }} />
               </span>
-              <span className="text-[11px] font-bold text-[#703bf7] dark:text-[#b79bff]">{completionPercent}%</span>
+              <span className="text-[11px] font-bold text-brand dark:text-brand-light">{completionPercent}%</span>
               <ChevronDown size={15} className={`shrink-0 text-[#4b5563] transition-transform duration-150 dark:text-[#9ca3af] ${mobileProgressOpen ? "rotate-180" : ""}`} />
             </button>
             {mobileProgressOpen && (
               <ul className="mt-2.5 grid list-none gap-2 border-t border-[#e5e7eb] pt-2.5 pl-0 dark:border-white/10">
                 {completionItems.map((item) => (
-                  <li key={item.label} className={`flex items-center gap-2 text-[11px] text-[#4b5563] dark:text-[#9ca3af] ${item.complete ? "[&>span]:border-[#703bf7] [&>span]:bg-[#703bf7] [&>span]:text-white" : ""}`}>
+                  <li key={item.label} className={`flex items-center gap-2 text-[11px] text-[#4b5563] dark:text-[#9ca3af] ${item.complete ? "[&>span]:border-brand [&>span]:bg-brand [&>span]:text-white" : ""}`}>
                     <span className="grid h-4 w-4 shrink-0 place-items-center rounded-full border border-[#e5e7eb] dark:border-white/10">{item.complete ? <Check size={11} /> : null}</span>
                     <span>{item.label}</span>
-                    <button type="button" className="ml-auto border-0 bg-transparent px-1 py-0.5 text-[11px] font-semibold text-[#703bf7] dark:text-[#b79bff]" onClick={() => selectTab(item.tab)}>
+                    <button type="button" className="ml-auto border-0 bg-transparent px-1 py-0.5 text-[11px] font-semibold text-brand dark:text-brand-light" onClick={() => selectTab(item.tab)}>
                       {item.complete ? "Edit" : "Add"}
                     </button>
                   </li>
@@ -460,7 +460,7 @@ const AgentListingEditor = ({
         {optionsError ? (
           <div className="grid flex-1 place-content-center gap-3 text-center text-sm text-[#4b5563] dark:text-[#9ca3af]">
             <p className="m-0">Listing options couldn’t be loaded.</p>
-            <button type="button" className="inline-flex min-h-11 items-center justify-center gap-[7px] rounded-full border border-[#e5e7eb] bg-white px-4 text-[13px] font-semibold text-[#111827] transition-colors hover:border-[#703bf7] hover:text-[#703bf7] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:text-[#b79bff] disabled:cursor-wait disabled:opacity-60" onClick={() => void loadOptions()}>Try again</button>
+            <button type="button" className="inline-flex min-h-11 items-center justify-center gap-[7px] rounded-full border border-[#e5e7eb] bg-white px-4 text-[13px] font-semibold text-[#111827] transition-colors hover:border-brand hover:text-brand dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:text-brand-light disabled:cursor-wait disabled:opacity-60" onClick={() => void loadOptions()}>Try again</button>
           </div>
         ) : (
           <form ref={formRef} className="flex min-h-0 flex-1 flex-col" onSubmit={(event) => event.preventDefault()}>
@@ -473,7 +473,7 @@ const AgentListingEditor = ({
                         <div className="mb-[7px] block text-xs font-semibold text-[#111827] dark:text-white [&_b]:text-[#c24e42]">Listed for <b>*</b></div>
                         <div className="mb-5 grid grid-cols-5 gap-2.5 max-[1000px]:grid-cols-3 max-[700px]:grid-cols-2 max-[700px]:gap-[7px]">
                           {PROPERTY_PURPOSES.map(([value, label]) => (
-                            <label className={`flex min-h-12 items-center gap-[9px] rounded-[6px] border px-3 text-xs cursor-pointer [&>input]:m-0 [&>input]:accent-[#703bf7] max-[700px]:min-h-[41px] max-[700px]:gap-[7px] max-[700px]:px-[9px] max-[700px]:text-[10px] ${draft.purpose === value ? "border-[#703bf7] bg-[#703bf7]/10 text-[#703bf7] dark:bg-[#b79bff]/15 dark:text-[#b79bff]" : "border-[#e5e7eb] bg-white text-[#111827] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white"}`} key={value}>
+                            <label className={`flex min-h-12 items-center gap-[9px] rounded-[6px] border px-3 text-xs cursor-pointer [&>input]:m-0 [&>input]:accent-brand max-[700px]:min-h-[41px] max-[700px]:gap-[7px] max-[700px]:px-[9px] max-[700px]:text-[10px] ${draft.purpose === value ? "border-brand bg-brand/10 text-brand dark:bg-brand-light/15 dark:text-brand-light" : "border-[#e5e7eb] bg-white text-[#111827] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white"}`} key={value}>
                               <input type="radio" name="listing-purpose" value={value} checked={draft.purpose === value} onChange={() => update("purpose", value)} />
                               <span>{label}</span>
                             </label>
@@ -509,7 +509,7 @@ const AgentListingEditor = ({
                         <div className={cardTitleClass}><CircleDollarSign size={17} /><h3>Price</h3></div>
                         <div className="grid grid-cols-[minmax(200px,1.4fr)_minmax(150px,0.8fr)_minmax(150px,0.8fr)] items-start gap-4 max-[1000px]:grid-cols-2 max-[1000px]:[&>label:first-child]:col-span-2 max-[700px]:grid-cols-1 max-[700px]:gap-0 max-[700px]:[&>label:first-child]:col-span-1">
                           <label className={cardFieldNoMarginClass}><span>Property cost <b>*</b></span>
-                            <div className="flex min-h-[42px] items-center overflow-hidden rounded-[6px] border border-[#e5e7eb] bg-white dark:border-white/10 dark:bg-[#1a1a1a]"><span className="px-3 text-xs text-[#4b5563] dark:text-[#9ca3af]">{currencySymbol(draft.currency)}</span><input className="min-h-10 w-full min-w-0 flex-1 rounded-none border-0 border-l border-[#e5e7eb] bg-transparent px-3 py-0 text-xs text-[#111827] outline-none focus:border-[#703bf7] focus:ring-2 focus:ring-[#703bf7]/10 dark:border-white/10 dark:text-white dark:focus:ring-[#b79bff]/15" required type="number" min="1" step="1" value={draft.price} onChange={(event) => update("price", event.target.value)} placeholder="e.g. 85,000,000" /></div>
+                            <div className="flex min-h-[42px] items-center overflow-hidden rounded-[6px] border border-[#e5e7eb] bg-white dark:border-white/10 dark:bg-[#1a1a1a]"><span className="px-3 text-xs text-[#4b5563] dark:text-[#9ca3af]">{currencySymbol(draft.currency)}</span><input className="min-h-10 w-full min-w-0 flex-1 rounded-none border-0 border-l border-[#e5e7eb] bg-transparent px-3 py-0 text-xs text-[#111827] outline-none focus:border-brand focus:ring-2 focus:ring-brand/10 dark:border-white/10 dark:text-white dark:focus:ring-brand-light/15" required type="number" min="1" step="1" value={draft.price} onChange={(event) => update("price", event.target.value)} placeholder="e.g. 85,000,000" /></div>
                           </label>
                           <label className={cardFieldNoMarginClass}><span>Currency</span>
                             <CustomDropdown
@@ -580,17 +580,17 @@ const AgentListingEditor = ({
                                 options={CHARGE_RECIPIENT_OPTIONS}
                                 onChange={(value) => update("charges", draft.charges.map((item, itemIndex) => itemIndex === index ? { ...item, keptBy: value } : item))}
                               />
-                              <label className="flex items-center gap-1.5 text-[11px] text-[#111827] dark:text-white [&>input]:accent-[#703bf7] max-[700px]:col-start-2"><input type="checkbox" checked={Boolean(charge.refundable)} onChange={(event) => update("charges", draft.charges.map((item, itemIndex) => itemIndex === index ? { ...item, refundable: event.target.checked } : item))} /><span>{charge.refundable ? "Yes" : "No"}</span></label>
+                              <label className="flex items-center gap-1.5 text-[11px] text-[#111827] dark:text-white [&>input]:accent-brand max-[700px]:col-start-2"><input type="checkbox" checked={Boolean(charge.refundable)} onChange={(event) => update("charges", draft.charges.map((item, itemIndex) => itemIndex === index ? { ...item, refundable: event.target.checked } : item))} /><span>{charge.refundable ? "Yes" : "No"}</span></label>
                               <button type="button" className="grid h-[29px] w-[29px] place-items-center rounded-[5px] border-0 bg-transparent text-[#4b5563] cursor-pointer hover:bg-[#f3f4f6] hover:text-[#b34a42] dark:text-[#9ca3af] dark:hover:bg-[#232323] max-[700px]:col-start-3 max-[700px]:row-start-2" aria-label={`Remove ${charge.name}`} onClick={() => update("charges", draft.charges.filter((_, itemIndex) => itemIndex !== index))}><X size={15} /></button>
                             </div>
                           )) : <div className="border-t border-[#e5e7eb] p-[15px] text-[11px] text-[#4b5563] dark:border-white/10 dark:text-[#9ca3af]">No charges on this listing.</div>}
                           <div className="grid grid-cols-[1fr_auto] gap-x-[18px] gap-y-2 border-t border-[#e5e7eb] bg-[#f3f4f6] p-[13px] text-[11px] text-[#4b5563] dark:border-white/10 dark:bg-[#232323] dark:text-[#9ca3af] max-[700px]:gap-y-1"><span>Property cost</span><strong className="text-right text-xs text-[#111827] dark:text-white">{money(propertyCost, draft.currency)}</strong><span>Charges</span><strong className="text-right text-xs text-[#111827] dark:text-white">{money(chargeTotal, draft.currency)}</strong><span>Service charge (5%)</span><strong className="text-right text-xs text-[#111827] dark:text-white">{money(serviceCharge, draft.currency)}</strong><span className="border-t border-[#e5e7eb] pt-[7px] font-bold text-[#111827] dark:border-white/10 dark:text-white">Customer pays</span><strong className="border-t border-[#e5e7eb] pt-[7px] text-right text-xs font-bold text-[#111827] dark:border-white/10 dark:text-white">{money(propertyCost + chargeTotal + serviceCharge, draft.currency)}</strong></div>
                         </div>
                         <div className="mt-[13px] flex flex-wrap gap-2 max-[700px]:gap-1.5">
-                          {chargeOptions.filter((option) => !draft.charges.some((charge) => charge.name.toLowerCase() === option.name.toLowerCase())).map((option) => <button type="button" key={option.name} className="inline-flex min-h-[33px] items-center gap-[5px] rounded-[5px] border border-[#e5e7eb] bg-white px-[11px] text-[10px] text-[#111827] cursor-pointer hover:border-[#703bf7] hover:text-[#703bf7] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:text-[#b79bff] max-[700px]:min-h-[31px] max-[700px]:px-2 max-[700px]:text-[9px]" onClick={() => addCharge(option)}><Plus size={14} /> {option.name}</button>)}
-                          <button type="button" className="inline-flex min-h-[33px] items-center gap-[5px] rounded-[5px] border border-[#e5e7eb] bg-white px-[11px] text-[10px] text-[#111827] cursor-pointer hover:border-[#703bf7] hover:text-[#703bf7] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:text-[#b79bff] max-[700px]:min-h-[31px] max-[700px]:px-2 max-[700px]:text-[9px]" onClick={() => setCustomChargeOpen((open) => !open)}><Plus size={14} /> Another charge</button>
+                          {chargeOptions.filter((option) => !draft.charges.some((charge) => charge.name.toLowerCase() === option.name.toLowerCase())).map((option) => <button type="button" key={option.name} className="inline-flex min-h-[33px] items-center gap-[5px] rounded-[5px] border border-[#e5e7eb] bg-white px-[11px] text-[10px] text-[#111827] cursor-pointer hover:border-brand hover:text-brand dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:text-brand-light max-[700px]:min-h-[31px] max-[700px]:px-2 max-[700px]:text-[9px]" onClick={() => addCharge(option)}><Plus size={14} /> {option.name}</button>)}
+                          <button type="button" className="inline-flex min-h-[33px] items-center gap-[5px] rounded-[5px] border border-[#e5e7eb] bg-white px-[11px] text-[10px] text-[#111827] cursor-pointer hover:border-brand hover:text-brand dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:text-brand-light max-[700px]:min-h-[31px] max-[700px]:px-2 max-[700px]:text-[9px]" onClick={() => setCustomChargeOpen((open) => !open)}><Plus size={14} /> Another charge</button>
                         </div>
-                        {customChargeOpen && <div className="mt-[11px] flex gap-2 max-[700px]:flex-col max-[700px]:items-stretch"><input aria-label="Custom charge name" className={customChargeInputClass} value={customChargeName} onChange={(event) => setCustomChargeName(event.target.value)} placeholder="e.g. Estate levy" /><button type="button" className="min-h-[39px] rounded-[5px] border-0 bg-[#703bf7] px-[13px] text-xs font-semibold text-white cursor-pointer hover:bg-[#9677df] disabled:cursor-not-allowed disabled:opacity-55" onClick={addCustomCharge} disabled={!customChargeName.trim()}>Add charge</button></div>}
+                        {customChargeOpen && <div className="mt-[11px] flex gap-2 max-[700px]:flex-col max-[700px]:items-stretch"><input aria-label="Custom charge name" className={customChargeInputClass} value={customChargeName} onChange={(event) => setCustomChargeName(event.target.value)} placeholder="e.g. Estate levy" /><button type="button" className="min-h-[39px] rounded-[5px] border-0 bg-brand px-[13px] text-xs font-semibold text-white cursor-pointer hover:bg-[#9677df] disabled:cursor-not-allowed disabled:opacity-55" onClick={addCustomCharge} disabled={!customChargeName.trim()}>Add charge</button></div>}
                         <p className="my-2 mb-[13px] text-[10px] leading-normal text-[#6b7280] dark:text-[#9ca3af]">Refundable charges are held for the customer and returned later, like a caution fee.</p>
                       </section>
 
@@ -598,11 +598,11 @@ const AgentListingEditor = ({
                         <div className={cardTitleClass}><CalendarClock size={17} /><h3>Visit fee</h3></div>
                         <p className={explainerClass}>Choose the fee a visitor pays to book a viewing. This stays separate from the property price.</p>
                         <div className="grid grid-cols-3 gap-2 max-[1000px]:grid-cols-1">
-                          <label className={`flex min-h-[57px] items-center gap-2.5 rounded-[7px] border p-[10px_12px] cursor-pointer [&>input]:accent-[#703bf7] ${draft.visitFeeMode === "default" ? "border-[#703bf7] bg-[#703bf7]/10 dark:bg-[#b79bff]/15" : "border-[#e5e7eb] dark:border-white/10"}`}><input type="radio" name="visit-fee" checked={draft.visitFeeMode === "default"} onChange={() => update("visitFeeMode", "default")} /><span className="grid gap-1"><strong className="text-xs text-[#111827] dark:text-white">Use default visit fee</strong><small className="text-[10px] text-[#4b5563] dark:text-[#9ca3af]">{defaultVisitFee === null ? "Use the fee set in your agent settings" : money(defaultVisitFee)}</small></span></label>
-                          <label className={`flex min-h-[57px] items-center gap-2.5 rounded-[7px] border p-[10px_12px] cursor-pointer [&>input]:accent-[#703bf7] ${draft.visitFeeMode === "free" ? "border-[#703bf7] bg-[#703bf7]/10 dark:bg-[#b79bff]/15" : "border-[#e5e7eb] dark:border-white/10"}`}><input type="radio" name="visit-fee" checked={draft.visitFeeMode === "free"} onChange={() => update("visitFeeMode", "free")} /><span className="grid gap-1"><strong className="text-xs text-[#111827] dark:text-white">No visit fee</strong><small className="text-[10px] text-[#4b5563] dark:text-[#9ca3af]">Make property visits free</small></span></label>
-                          <label className={`flex min-h-[57px] items-center gap-2.5 rounded-[7px] border p-[10px_12px] cursor-pointer [&>input]:accent-[#703bf7] ${draft.visitFeeMode === "custom" ? "border-[#703bf7] bg-[#703bf7]/10 dark:bg-[#b79bff]/15" : "border-[#e5e7eb] dark:border-white/10"}`}><input type="radio" name="visit-fee" checked={draft.visitFeeMode === "custom"} onChange={() => update("visitFeeMode", "custom")} /><span className="grid gap-1"><strong className="text-xs text-[#111827] dark:text-white">Set a different fee</strong><small className="text-[10px] text-[#4b5563] dark:text-[#9ca3af]">Enter a fee for this property</small></span></label>
+                          <label className={`flex min-h-[57px] items-center gap-2.5 rounded-[7px] border p-[10px_12px] cursor-pointer [&>input]:accent-brand ${draft.visitFeeMode === "default" ? "border-brand bg-brand/10 dark:bg-brand-light/15" : "border-[#e5e7eb] dark:border-white/10"}`}><input type="radio" name="visit-fee" checked={draft.visitFeeMode === "default"} onChange={() => update("visitFeeMode", "default")} /><span className="grid gap-1"><strong className="text-xs text-[#111827] dark:text-white">Use default visit fee</strong><small className="text-[10px] text-[#4b5563] dark:text-[#9ca3af]">{defaultVisitFee === null ? "Use the fee set in your agent settings" : money(defaultVisitFee)}</small></span></label>
+                          <label className={`flex min-h-[57px] items-center gap-2.5 rounded-[7px] border p-[10px_12px] cursor-pointer [&>input]:accent-brand ${draft.visitFeeMode === "free" ? "border-brand bg-brand/10 dark:bg-brand-light/15" : "border-[#e5e7eb] dark:border-white/10"}`}><input type="radio" name="visit-fee" checked={draft.visitFeeMode === "free"} onChange={() => update("visitFeeMode", "free")} /><span className="grid gap-1"><strong className="text-xs text-[#111827] dark:text-white">No visit fee</strong><small className="text-[10px] text-[#4b5563] dark:text-[#9ca3af]">Make property visits free</small></span></label>
+                          <label className={`flex min-h-[57px] items-center gap-2.5 rounded-[7px] border p-[10px_12px] cursor-pointer [&>input]:accent-brand ${draft.visitFeeMode === "custom" ? "border-brand bg-brand/10 dark:bg-brand-light/15" : "border-[#e5e7eb] dark:border-white/10"}`}><input type="radio" name="visit-fee" checked={draft.visitFeeMode === "custom"} onChange={() => update("visitFeeMode", "custom")} /><span className="grid gap-1"><strong className="text-xs text-[#111827] dark:text-white">Set a different fee</strong><small className="text-[10px] text-[#4b5563] dark:text-[#9ca3af]">Enter a fee for this property</small></span></label>
                         </div>
-                        {draft.visitFeeMode === "custom" && <label className={`${cardFieldClass} mt-3.5 max-w-[250px]`}><span>Visit fee amount</span><div className="flex min-h-[42px] items-center overflow-hidden rounded-[6px] border border-[#e5e7eb] bg-white dark:border-white/10 dark:bg-[#1a1a1a]"><span className="px-3 text-xs text-[#4b5563] dark:text-[#9ca3af]">{currencySymbol(draft.currency)}</span><input className="min-h-10 w-full min-w-0 flex-1 rounded-none border-0 border-l border-[#e5e7eb] bg-transparent px-3 py-0 text-xs text-[#111827] outline-none focus:border-[#703bf7] focus:ring-2 focus:ring-[#703bf7]/10 dark:border-white/10 dark:text-white dark:focus:ring-[#b79bff]/15" type="number" min="0" value={draft.visitFeeOverride} onChange={(event) => update("visitFeeOverride", event.target.value)} placeholder="e.g. 5,000" /></div></label>}
+                        {draft.visitFeeMode === "custom" && <label className={`${cardFieldClass} mt-3.5 max-w-[250px]`}><span>Visit fee amount</span><div className="flex min-h-[42px] items-center overflow-hidden rounded-[6px] border border-[#e5e7eb] bg-white dark:border-white/10 dark:bg-[#1a1a1a]"><span className="px-3 text-xs text-[#4b5563] dark:text-[#9ca3af]">{currencySymbol(draft.currency)}</span><input className="min-h-10 w-full min-w-0 flex-1 rounded-none border-0 border-l border-[#e5e7eb] bg-transparent px-3 py-0 text-xs text-[#111827] outline-none focus:border-brand focus:ring-2 focus:ring-brand/10 dark:border-white/10 dark:text-white dark:focus:ring-brand-light/15" type="number" min="0" value={draft.visitFeeOverride} onChange={(event) => update("visitFeeOverride", event.target.value)} placeholder="e.g. 5,000" /></div></label>}
                       </section>
                     </div>
                   )}
@@ -626,7 +626,7 @@ const AgentListingEditor = ({
                       <div className="mt-[17px] block rounded-[3px] border border-[#e5e7eb] bg-white p-[24px_27px_26px] dark:border-white/10 dark:bg-[#1a1a1a] max-[700px]:p-[18px_14px]">
                         <div className="flex items-center gap-2.5 text-[#111827] dark:text-white [&>svg]:text-[#4b5563] dark:[&>svg]:text-[#9ca3af]"><MapPin size={17} /><strong className="text-sm font-bold">Map pin</strong></div>
                         <p className="mt-[11px] mb-[19px] text-xs leading-normal text-[#4b5563] dark:text-[#9ca3af]">Stand at the property and use your location to mark it on a map.</p>
-                        <button type="button" className="flex w-full min-h-[41px] items-center justify-center gap-2.5 rounded-[5px] border border-[#e5e7eb] bg-white px-3 text-xs font-semibold text-[#111827] cursor-pointer transition-[border-color,background-color] duration-150 hover:border-[#703bf7] hover:bg-[#703bf7]/10 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:bg-[#b79bff]/15" onClick={locateMe}><MapPin size={17} /> Use My Location</button>
+                        <button type="button" className="flex w-full min-h-[41px] items-center justify-center gap-2.5 rounded-[5px] border border-[#e5e7eb] bg-white px-3 text-xs font-semibold text-[#111827] cursor-pointer transition-[border-color,background-color] duration-150 hover:border-brand hover:bg-brand/10 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:bg-brand-light/15" onClick={locateMe}><MapPin size={17} /> Use My Location</button>
                         {draft.lat && draft.lng && <small className="mt-2.5 block text-[10px] text-[#4b5563] dark:text-[#9ca3af]">Location pinned: {Number(draft.lat).toFixed(5)}, {Number(draft.lng).toFixed(5)}</small>}
                       </div>
                     </section>
@@ -652,8 +652,8 @@ const AgentListingEditor = ({
                             { value: "shared_room", title: "Shared room", description: "People share a room, priced per person" },
                             { value: "shared_apartment", title: "Shared apartment", description: "People have a room each and share the rest" },
                           ].map((option) => (
-                            <label className={`flex min-h-[70px] items-center gap-[9px] rounded-[7px] border p-[11px_12px] bg-white cursor-pointer transition-[border-color,background-color] duration-150 hover:border-[#703bf7] hover:bg-[#703bf7]/10 dark:bg-[#1a1a1a] dark:hover:bg-[#b79bff]/15 max-[700px]:min-h-[58px] ${draft.sharing === option.value ? "border-[#703bf7] bg-[#703bf7]/10 dark:bg-[#b79bff]/15" : "border-[#e5e7eb] dark:border-white/10"}`} key={option.value}>
-                              <input className="m-0 h-[18px] w-[18px] shrink-0 accent-[#703bf7]" type="radio" name="property-sharing" value={option.value} checked={draft.sharing === option.value} onChange={() => update("sharing", option.value)} />
+                            <label className={`flex min-h-[70px] items-center gap-[9px] rounded-[7px] border p-[11px_12px] bg-white cursor-pointer transition-[border-color,background-color] duration-150 hover:border-brand hover:bg-brand/10 dark:bg-[#1a1a1a] dark:hover:bg-brand-light/15 max-[700px]:min-h-[58px] ${draft.sharing === option.value ? "border-brand bg-brand/10 dark:bg-brand-light/15" : "border-[#e5e7eb] dark:border-white/10"}`} key={option.value}>
+                              <input className="m-0 h-[18px] w-[18px] shrink-0 accent-brand" type="radio" name="property-sharing" value={option.value} checked={draft.sharing === option.value} onChange={() => update("sharing", option.value)} />
                               <span className="grid gap-[3px]"><strong className="text-xs font-semibold text-[#111827] dark:text-white">{option.title}</strong><small className="text-[10px] leading-[1.4] text-[#4b5563] dark:text-[#9ca3af]">{option.description}</small></span>
                             </label>
                           ))}
@@ -669,7 +669,7 @@ const AgentListingEditor = ({
                         <div className="mb-2.5 flex flex-wrap gap-2 max-[700px]:gap-1.5">
                           {amenityOptions.map((amenity) => {
                             const selected = currentAmenities.includes(amenity);
-                            return <button type="button" key={amenity} aria-pressed={selected} className={`inline-flex min-h-[33px] items-center gap-[5px] rounded-full border px-3 text-xs text-[#111827] cursor-pointer transition-[border-color,background-color,color] duration-150 hover:border-[#703bf7] hover:text-[#703bf7] dark:text-white dark:hover:text-[#b79bff] max-[700px]:min-h-[30px] max-[700px]:px-[9px] max-[700px]:text-[10px] ${selected ? "border-[#703bf7] bg-[#703bf7] text-white hover:text-white dark:bg-[#703bf7] dark:text-white dark:hover:text-white" : "border-[#e5e7eb] bg-white dark:border-white/10 dark:bg-[#1a1a1a]"}`} onClick={() => toggleLineValue("amenities", amenity)}>{selected && <Check size={12} />}<span>{amenity}</span></button>;
+                            return <button type="button" key={amenity} aria-pressed={selected} className={`inline-flex min-h-[33px] items-center gap-[5px] rounded-full border px-3 text-xs text-[#111827] cursor-pointer transition-[border-color,background-color,color] duration-150 hover:border-brand hover:text-brand dark:text-white dark:hover:text-brand-light max-[700px]:min-h-[30px] max-[700px]:px-[9px] max-[700px]:text-[10px] ${selected ? "border-brand bg-brand text-white hover:text-white dark:bg-brand dark:text-white dark:hover:text-white" : "border-[#e5e7eb] bg-white dark:border-white/10 dark:bg-[#1a1a1a]"}`} onClick={() => toggleLineValue("amenities", amenity)}>{selected && <Check size={12} />}<span>{amenity}</span></button>;
                           })}
                         </div>
                         <div className="flex min-h-[72px] flex-wrap items-center gap-[7px] rounded-[5px] border border-[#e5e7eb] bg-white p-[10px_12px] dark:border-white/10 dark:bg-[#1a1a1a] max-[700px]:gap-1.5 max-[700px]:p-[9px]">
@@ -683,7 +683,7 @@ const AgentListingEditor = ({
                         <div className="mb-2.5 flex flex-wrap gap-2 max-[700px]:gap-1.5">
                           {ruleOptions.map((rule) => {
                             const selected = currentRules.includes(rule);
-                            return <button type="button" key={rule} aria-pressed={selected} className={`inline-flex min-h-[33px] items-center gap-[5px] rounded-full border px-3 text-xs text-[#111827] cursor-pointer transition-[border-color,background-color,color] duration-150 hover:border-[#703bf7] hover:text-[#703bf7] dark:text-white dark:hover:text-[#b79bff] max-[700px]:min-h-[30px] max-[700px]:px-[9px] max-[700px]:text-[10px] ${selected ? "border-[#703bf7] bg-[#703bf7] text-white hover:text-white dark:bg-[#703bf7] dark:text-white dark:hover:text-white" : "border-[#e5e7eb] bg-white dark:border-white/10 dark:bg-[#1a1a1a]"}`} onClick={() => toggleLineValue("rules", rule)}>{selected && <Check size={12} />}<span>{rule}</span></button>;
+                            return <button type="button" key={rule} aria-pressed={selected} className={`inline-flex min-h-[33px] items-center gap-[5px] rounded-full border px-3 text-xs text-[#111827] cursor-pointer transition-[border-color,background-color,color] duration-150 hover:border-brand hover:text-brand dark:text-white dark:hover:text-brand-light max-[700px]:min-h-[30px] max-[700px]:px-[9px] max-[700px]:text-[10px] ${selected ? "border-brand bg-brand text-white hover:text-white dark:bg-brand dark:text-white dark:hover:text-white" : "border-[#e5e7eb] bg-white dark:border-white/10 dark:bg-[#1a1a1a]"}`} onClick={() => toggleLineValue("rules", rule)}>{selected && <Check size={12} />}<span>{rule}</span></button>;
                           })}
                         </div>
                         <div className="flex min-h-[72px] flex-wrap items-center gap-[7px] rounded-[5px] border border-[#e5e7eb] bg-white p-[10px_12px] dark:border-white/10 dark:bg-[#1a1a1a] max-[700px]:gap-1.5 max-[700px]:p-[9px]">
@@ -697,7 +697,7 @@ const AgentListingEditor = ({
                         <div className="mb-2.5 flex flex-wrap gap-2 max-[700px]:gap-1.5">
                           {billOptions.map((bill) => {
                             const selected = currentBills.includes(bill);
-                            return <button type="button" key={bill} aria-pressed={selected} className={`inline-flex min-h-[33px] items-center gap-[5px] rounded-full border px-3 text-xs text-[#111827] cursor-pointer transition-[border-color,background-color,color] duration-150 hover:border-[#703bf7] hover:text-[#703bf7] dark:text-white dark:hover:text-[#b79bff] max-[700px]:min-h-[30px] max-[700px]:px-[9px] max-[700px]:text-[10px] ${selected ? "border-[#703bf7] bg-[#703bf7] text-white hover:text-white dark:bg-[#703bf7] dark:text-white dark:hover:text-white" : "border-[#e5e7eb] bg-white dark:border-white/10 dark:bg-[#1a1a1a]"}`} onClick={() => toggleLineValue("bills", bill)}>{selected && <Check size={12} />}<span>{bill}</span></button>;
+                            return <button type="button" key={bill} aria-pressed={selected} className={`inline-flex min-h-[33px] items-center gap-[5px] rounded-full border px-3 text-xs text-[#111827] cursor-pointer transition-[border-color,background-color,color] duration-150 hover:border-brand hover:text-brand dark:text-white dark:hover:text-brand-light max-[700px]:min-h-[30px] max-[700px]:px-[9px] max-[700px]:text-[10px] ${selected ? "border-brand bg-brand text-white hover:text-white dark:bg-brand dark:text-white dark:hover:text-white" : "border-[#e5e7eb] bg-white dark:border-white/10 dark:bg-[#1a1a1a]"}`} onClick={() => toggleLineValue("bills", bill)}>{selected && <Check size={12} />}<span>{bill}</span></button>;
                           })}
                         </div>
                         <div className="flex min-h-[72px] flex-wrap items-center gap-[7px] rounded-[5px] border border-[#e5e7eb] bg-white p-[10px_12px] dark:border-white/10 dark:bg-[#1a1a1a] max-[700px]:gap-1.5 max-[700px]:p-[9px]">
@@ -750,7 +750,7 @@ const AgentListingEditor = ({
                         <div className="grid grid-cols-4 gap-2.5 max-[1000px]:grid-cols-3 max-[520px]:grid-cols-2">
                           {photos.map((url, index) => (
                             <div
-                              className="group relative flex aspect-[4/3] touch-pan-y flex-col items-center justify-center gap-[3px] overflow-hidden rounded-[6px] border border-solid border-[#e5e7eb] text-[#4b5563] cursor-pointer dark:border-white/10 dark:text-[#9ca3af]"
+                              className="group relative flex aspect-4/3 touch-pan-y flex-col items-center justify-center gap-[3px] overflow-hidden rounded-[6px] border border-solid border-[#e5e7eb] text-[#4b5563] cursor-pointer dark:border-white/10 dark:text-[#9ca3af]"
                               key={`${url}-${index}`}
                               data-actions-open={activePhotoActions === index ? "true" : undefined}
                               onTouchStart={() => startPhotoLongPress(index)}
@@ -770,7 +770,7 @@ const AgentListingEditor = ({
                           {photos.length < 20 && (
                             <button
                               type="button"
-                              className={`relative flex aspect-[4/3] w-full flex-col items-center justify-center gap-1 overflow-hidden rounded-[6px] border border-dashed border-[#e5e7eb] bg-white p-2 text-[#4b5563] cursor-pointer transition-[border-color,background-color] duration-150 hover:border-[#703bf7] hover:bg-[#703bf7]/10 disabled:cursor-wait dark:border-white/10 dark:bg-[#1a1a1a] dark:text-[#9ca3af] dark:hover:bg-[#b79bff]/15 ${photoDropActive ? "border-[#703bf7] bg-[#703bf7]/10 dark:border-[#b79bff] dark:bg-[#b79bff]/15" : ""}`}
+                              className={`relative flex aspect-[4/3] w-full flex-col items-center justify-center gap-1 overflow-hidden rounded-[6px] border border-dashed border-[#e5e7eb] bg-white p-2 text-[#4b5563] cursor-pointer transition-[border-color,background-color] duration-150 hover:border-brand hover:bg-brand/10 disabled:cursor-wait dark:border-white/10 dark:bg-[#1a1a1a] dark:text-[#9ca3af] dark:hover:bg-brand-light/15 ${photoDropActive ? "border-brand bg-brand/10 dark:border-brand-light dark:bg-brand-light/15" : ""}`}
                               disabled={photoUploading}
                               onClick={() => photoInputRef.current?.click()}
                               onDragEnter={(event) => { event.preventDefault(); setPhotoDropActive(true); }}
@@ -784,7 +784,7 @@ const AgentListingEditor = ({
                                 void addPhotoFiles(event.dataTransfer.files);
                               }}
                             >
-                              <Upload className="text-[#703bf7] dark:text-[#b79bff]" size={22} />
+                              <Upload className="text-brand dark:text-brand-light" size={22} />
                               <span className="text-[11px] font-semibold text-[#111827] dark:text-white">{photoUploading ? "Adding photos..." : photos.length ? "Add more" : "Add photos"}</span>
                               <span className="text-[10px] text-[#6b7280] dark:text-[#9ca3af]">Up to 25MB each</span>
                             </button>
@@ -830,7 +830,7 @@ const AgentListingEditor = ({
                         />
                         <button
                           type="button"
-                          className={`mt-3 flex w-full min-h-[160px] flex-col items-center justify-center gap-2 rounded-[6px] border border-dashed border-[#e5e7eb] bg-white p-5 text-[#4b5563] cursor-pointer transition-[border-color,background-color] duration-150 hover:border-[#703bf7] hover:bg-[#703bf7]/10 disabled:cursor-wait dark:border-white/10 dark:bg-[#1a1a1a] dark:text-[#9ca3af] dark:hover:bg-[#b79bff]/15 ${documentDropActive ? "border-[#703bf7] bg-[#703bf7]/10 dark:border-[#b79bff] dark:bg-[#b79bff]/15" : ""}`}
+                          className={`mt-3 flex w-full min-h-[160px] flex-col items-center justify-center gap-2 rounded-[6px] border border-dashed border-[#e5e7eb] bg-white p-5 text-[#4b5563] cursor-pointer transition-[border-color,background-color] duration-150 hover:border-brand hover:bg-brand/10 disabled:cursor-wait dark:border-white/10 dark:bg-[#1a1a1a] dark:text-[#9ca3af] dark:hover:bg-brand-light/15 ${documentDropActive ? "border-brand bg-brand/10 dark:border-brand-light dark:bg-brand-light/15" : ""}`}
                           disabled={documentUploading}
                           onClick={() => documentInputRef.current?.click()}
                           onDragEnter={(event) => { event.preventDefault(); setDocumentDropActive(true); }}
@@ -844,7 +844,7 @@ const AgentListingEditor = ({
                             void addDocumentFile(event.dataTransfer.files[0]);
                           }}
                         >
-                          <span className="mb-1 grid h-12 w-12 place-items-center rounded-full bg-[#703bf7]/10 text-[#703bf7] dark:bg-[#b79bff]/15 dark:text-[#b79bff]"><FileText size={22} /></span>
+                          <span className="mb-1 grid h-12 w-12 place-items-center rounded-full bg-brand/10 text-brand dark:bg-brand-light/15 dark:text-brand-light"><FileText size={22} /></span>
                           <strong className="text-[13px] font-semibold text-[#111827] dark:text-white">{documentUploading ? "Preparing document..." : "Add a document"}</strong>
                           <span className="text-[11px]">Click to upload or drag and drop</span>
                           <small className="text-[10px]">PDF, DOC, DOCX up to 25MB</small>
@@ -857,8 +857,8 @@ const AgentListingEditor = ({
                 <aside className="sticky top-0 grid gap-[13px] max-[700px]:hidden">
                   <section className="rounded-[9px] border border-[#e5e7eb] bg-white p-[17px] dark:border-white/10 dark:bg-[#1a1a1a]">
                     <div className="flex items-start justify-between gap-2.5 [&>div>h3]:m-0 [&>div>h3]:text-[13px] [&>div>h3]:font-bold [&>div>h3]:text-[#111827] dark:[&>div>h3]:text-white [&>div>p]:mt-1 [&>div>p]:text-[10px] [&>div>p]:text-[#4b5563] dark:[&>div>p]:text-[#9ca3af] [&>strong]:text-xs [&>strong]:text-[#111827] dark:[&>strong]:text-white"><div><h3>Completeness</h3><p>{completionCount} of {completionItems.length} details added</p></div><strong>{completionPercent}%</strong></div>
-                    <div className="my-[15px] mb-[13px] h-[5px] overflow-hidden rounded-full bg-[#f3f4f6] dark:bg-[#232323]"><span className="block h-full rounded-full bg-[#703bf7] transition-[width] duration-180" style={{ width: `${completionPercent}%` }} /></div>
-                    <ul className="m-0 grid list-none gap-[11px] p-0">{completionItems.map((item) => <li key={item.label} className={`flex items-center gap-[7px] text-[10px] text-[#4b5563] dark:text-[#9ca3af] ${item.complete ? "[&>span]:border-[#703bf7] [&>span]:bg-[#703bf7] [&>span]:text-white" : ""}`}><span className="grid h-4 w-4 shrink-0 place-items-center rounded-full border border-[#e5e7eb] dark:border-white/10">{item.complete ? <Check size={12} /> : null}</span>{item.label}<button type="button" className="ml-auto cursor-pointer border-0 bg-transparent px-1 py-0.5 text-[10px] font-semibold text-[#111827] hover:text-[#703bf7] dark:text-white dark:hover:text-[#b79bff]" onClick={() => selectTab(item.tab)}>{item.complete ? "Edit" : "Add"}</button></li>)}</ul>
+                    <div className="my-[15px] mb-[13px] h-[5px] overflow-hidden rounded-full bg-[#f3f4f6] dark:bg-[#232323]"><span className="block h-full rounded-full bg-brand transition-[width] duration-180" style={{ width: `${completionPercent}%` }} /></div>
+                    <ul className="m-0 grid list-none gap-[11px] p-0">{completionItems.map((item) => <li key={item.label} className={`flex items-center gap-[7px] text-[10px] text-[#4b5563] dark:text-[#9ca3af] ${item.complete ? "[&>span]:border-brand [&>span]:bg-brand [&>span]:text-white" : ""}`}><span className="grid h-4 w-4 shrink-0 place-items-center rounded-full border border-[#e5e7eb] dark:border-white/10">{item.complete ? <Check size={12} /> : null}</span>{item.label}<button type="button" className="ml-auto cursor-pointer border-0 bg-transparent px-1 py-0.5 text-[10px] font-semibold text-[#111827] hover:text-brand dark:text-white dark:hover:text-brand-light" onClick={() => selectTab(item.tab)}>{item.complete ? "Edit" : "Add"}</button></li>)}</ul>
                   </section>
 
                   <section className="rounded-[9px] border border-[#e5e7eb] bg-white p-[17px] dark:border-white/10 dark:bg-[#1a1a1a]">
@@ -873,14 +873,14 @@ const AgentListingEditor = ({
                       <button
                         type="button"
                         onClick={() => selectTab("media")}
-                        className="shrink-0 cursor-pointer rounded-[6px] border border-[#e5e7eb] bg-white px-2.5 py-1.5 text-[11px] font-semibold text-[#111827] transition-colors hover:border-[#703bf7] hover:text-[#703bf7] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:text-[#b79bff]"
+                        className="shrink-0 cursor-pointer rounded-[6px] border border-[#e5e7eb] bg-white px-2.5 py-1.5 text-[11px] font-semibold text-[#111827] transition-colors hover:border-brand hover:text-brand dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:text-brand-light"
                       >
                         {photos.length ? "Manage" : "Add"}
                       </button>
                     </div>
                   </section>
 
-                  <section className="flex items-start gap-[9px] rounded-md border border-[#703bf7]/10 bg-[#703bf7]/10 p-3 text-[#703bf7] dark:border-white/10 dark:bg-[#232323] dark:text-[#b79bff]"><Info className="shrink-0" size={17} /><p className="m-0 text-[10px] leading-normal">New listings are reviewed by RewaCiti before they appear on the website.</p></section>
+                  <section className="flex items-start gap-[9px] rounded-md border border-brand/10 bg-brand/10 p-3 text-brand dark:border-white/10 dark:bg-[#232323] dark:text-brand-light"><Info className="shrink-0" size={17} /><p className="m-0 text-[10px] leading-normal">New listings are reviewed by RewaCiti before they appear on the website.</p></section>
                 </aside>
               </div>
 
@@ -890,7 +890,7 @@ const AgentListingEditor = ({
                     <button
                       type="button"
                       onClick={() => selectTab(previousTab.value)}
-                      className="inline-flex min-h-9 items-center gap-1.5 rounded-[6px] border border-[#e5e7eb] bg-white px-3 text-xs font-semibold text-[#111827] transition-colors hover:border-[#703bf7] hover:text-[#703bf7] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:text-[#b79bff]"
+                      className="inline-flex min-h-9 items-center gap-1.5 rounded-[6px] border border-[#e5e7eb] bg-white px-3 text-xs font-semibold text-[#111827] transition-colors hover:border-brand hover:text-brand dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:text-brand-light"
                     >
                       <ArrowLeft size={14} /> {previousTab.label}
                     </button>
@@ -899,7 +899,7 @@ const AgentListingEditor = ({
                     <button
                       type="button"
                       onClick={() => selectTab(nextTab.value)}
-                      className="inline-flex min-h-9 items-center gap-1.5 rounded-[6px] border border-[#e5e7eb] bg-white px-3 text-xs font-semibold text-[#111827] transition-colors hover:border-[#703bf7] hover:text-[#703bf7] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:text-[#b79bff]"
+                      className="inline-flex min-h-9 items-center gap-1.5 rounded-[6px] border border-[#e5e7eb] bg-white px-3 text-xs font-semibold text-[#111827] transition-colors hover:border-brand hover:text-brand dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:text-brand-light"
                     >
                       Next: {nextTab.label} <ArrowRight size={14} />
                     </button>
@@ -911,7 +911,7 @@ const AgentListingEditor = ({
               <button type="button" className="inline-flex min-h-10 items-center justify-center border-0 bg-transparent pr-[15px] text-[11px] font-semibold text-[#4b5563] cursor-pointer disabled:cursor-wait disabled:opacity-65 dark:text-[#9ca3af] max-[700px]:pr-2" onClick={onClose} disabled={saving}>Cancel</button>
               <div className="flex items-center gap-[9px] max-[700px]:gap-1.5">
                 <button type="button" className="inline-flex min-h-10 items-center justify-center rounded-[6px] border border-[#e5e7eb] bg-white px-[15px] text-[11px] font-semibold text-[#111827] cursor-pointer disabled:cursor-wait disabled:opacity-65 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white max-[700px]:min-h-[37px] max-[700px]:px-[9px] max-[700px]:text-[10px]" onClick={() => void save("draft")} disabled={saving}>{saving ? "Saving…" : "Save as Draft"}</button>
-                <button type="button" className="inline-flex min-h-10 items-center justify-center gap-[7px] rounded-[6px] border border-[#703bf7] bg-[#703bf7] px-[15px] text-[11px] font-semibold text-white cursor-pointer hover:bg-[#9677df] disabled:cursor-wait disabled:opacity-65 max-[700px]:min-h-[37px] max-[700px]:px-[9px] max-[700px]:text-[10px]" onClick={() => void save("published")} disabled={saving}>{saving ? "Sending…" : "Send for Approval"} <ArrowRight size={16} /></button>
+                <button type="button" className="inline-flex min-h-10 items-center justify-center gap-[7px] rounded-[6px] border border-brand bg-brand px-[15px] text-[11px] font-semibold text-white cursor-pointer hover:bg-[#9677df] disabled:cursor-wait disabled:opacity-65 max-[700px]:min-h-[37px] max-[700px]:px-[9px] max-[700px]:text-[10px]" onClick={() => void save("published")} disabled={saving}>{saving ? "Sending…" : "Send for Approval"} <ArrowRight size={16} /></button>
               </div>
             </footer>
           </form>

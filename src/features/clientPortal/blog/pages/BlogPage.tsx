@@ -9,7 +9,7 @@ import { Skeleton } from "@/shared/components/ui/Skeleton";
 
 const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
 const paginationButton =
-  "inline-flex cursor-pointer items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] disabled:cursor-not-allowed disabled:opacity-40 dark:border-white/20 dark:bg-[#101010] dark:text-white dark:hover:border-[#b79bff] dark:hover:text-[#b79bff]";
+  "inline-flex cursor-pointer items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] disabled:cursor-not-allowed disabled:opacity-40 dark:border-white/20 dark:bg-[#101010] dark:text-white dark:hover:border-brand-light dark:hover:text-brand-light";
 
 const BlogCardSkeleton = () => (
   <article className="overflow-hidden rounded-2xl border border-gray-900/15 bg-white dark:border-white/10 dark:bg-[#1A1A1A]">
@@ -54,7 +54,7 @@ const BlogPage = () => {
       {/* Hero Section */}
       <header className="border-b border-gray-300 bg-gray-300 py-7 dark:border-white/10 dark:bg-black/30 sm:py-9">
         <div className={`${PAGE_CONTAINER} space-y-1`}>
-          <p className="text-xs font-semibold uppercase tracking-wide text-[#703BF7] dark:text-[#b79bff]">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[#703BF7] dark:text-brand-light">
             Insights
           </p>
           <h1 className="text-3xl font-semibold text-gray-900 dark:text-white md:text-4xl">
@@ -93,7 +93,7 @@ const BlogPage = () => {
                     />
                   </Link>
                   <div className="flex flex-1 flex-col p-6">
-                    <div className="mb-3 flex items-center gap-4 text-xs font-medium text-[#703BF7] dark:text-[#b79bff]">
+                    <div className="mb-3 flex items-center gap-4 text-xs font-medium text-[#703BF7] dark:text-brand-light">
                       <span className="rounded-full bg-[#703BF7]/10 px-3 py-1">{post.category}</span>
                     </div>
                     <Link to={`/blog/${post.slug}`}>

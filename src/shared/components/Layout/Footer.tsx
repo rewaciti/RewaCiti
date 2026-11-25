@@ -20,7 +20,7 @@ const PHONE_DISPLAY = "+234 706 530 4417";
 const PHONE_TEL = "+2347065304417";
 
 const linkClass =
-  "text-sm text-gray-800 transition hover:text-[#703BF7] dark:text-gray-300 dark:hover:text-[#b79bff]";
+  "text-sm text-gray-800 transition hover:text-[#703BF7] dark:text-gray-300 dark:hover:text-brand-light";
 const headingClass = "mb-4 text-sm font-semibold text-gray-900 dark:text-white";
 const socialClass =
   "flex h-9 w-9 items-center justify-center rounded-full border border-gray-500/40 text-gray-800 transition hover:border-[#703BF7] hover:bg-[#703BF7] hover:text-white dark:border-white/20 dark:text-gray-300";
@@ -215,12 +215,12 @@ function Footer() {
         >
           <span>© {currentYear} RewaCiti. All rights reserved.</span>
           <div className="flex items-center gap-5">
-            <Link to="/terms" className="transition hover:text-[#703BF7] dark:hover:text-[#b79bff]">
+            <Link to="/terms" className="transition hover:text-[#703BF7] dark:hover:text-brand-light">
               Terms
             </Link>
             <Link
               to="/privacy-policy"
-              className="transition hover:text-[#703BF7] dark:hover:text-[#b79bff]"
+              className="transition hover:text-[#703BF7] dark:hover:text-brand-light"
             >
               Privacy Policy
             </Link>

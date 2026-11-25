@@ -336,7 +336,7 @@ function Contact() {
       >
         <div className={`${PAGE_CONTAINER} grid gap-8 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:gap-12`}>
           <div className="h-fit lg:sticky lg:top-28">
-            <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">
+            <p className="text-sm font-semibold text-[#703BF7] dark:text-brand-light">
               Get in touch
             </p>
             <h1
@@ -353,7 +353,7 @@ function Contact() {
             </p>
             <a
               href="#Ouroffices"
-              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#703BF7] underline-offset-2 hover:underline dark:text-[#b79bff]"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#703BF7] underline-offset-2 hover:underline dark:text-brand-light"
             >
               <FiMapPin size={16} /> Find our office
             </a>
@@ -479,7 +479,7 @@ function Contact() {
                     to="/terms"
                     target="_blank"
                     rel="noreferrer"
-                    className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#9677df] dark:text-[#b79bff]"
+                    className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#9677df] dark:text-brand-light"
                   >
                     Terms
                   </Link>{" "}
@@ -488,7 +488,7 @@ function Contact() {
                     to="/privacy-policy"
                     target="_blank"
                     rel="noreferrer"
-                    className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#9677df] dark:text-[#b79bff]"
+                    className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#9677df] dark:text-brand-light"
                   >
                     Privacy Policy
                   </Link>
@@ -515,7 +515,7 @@ function Contact() {
       >
         <div className={PAGE_CONTAINER}>
           <div className="max-w-2xl">
-            <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">Our office</p>
+            <p className="text-sm font-semibold text-[#703BF7] dark:text-brand-light">Our office</p>
             <h2
               style={SERIF}
               className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl"

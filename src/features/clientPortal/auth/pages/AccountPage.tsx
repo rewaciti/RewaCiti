@@ -590,7 +590,7 @@ const DealCard = ({
         <button
           type="button"
           onClick={() => setIsRatingOpen(true)}
-          className="mt-1.5 cursor-pointer text-sm font-semibold text-[#703BF7] hover:underline dark:text-[#b79bff]"
+          className="mt-1.5 cursor-pointer text-sm font-semibold text-[#703BF7] hover:underline dark:text-brand-light"
         >
           Rate our service
         </button>
@@ -1268,7 +1268,7 @@ const AccountPage = () => {
               >
                 {property.name}
               </button>
-              <p className="mt-3 font-semibold text-[#703BF7] dark:text-[#b79bff]">
+              <p className="mt-3 font-semibold text-[#703BF7] dark:text-brand-light">
                 {formatMoney(property.pricing.total || property.pricing.base)}
                 {pricePeriodLabel(property.pricePeriod) && (
                   <span className={`ml-1 text-xs font-normal ${mutedClass}`}>
@@ -1280,7 +1280,7 @@ const AccountPage = () => {
                 <button
                   type="button"
                   onClick={() => openProperty(property.slug)}
-                  className="cursor-pointer font-semibold text-[#703BF7] hover:underline dark:text-[#b79bff]"
+                  className="cursor-pointer font-semibold text-[#703BF7] hover:underline dark:text-brand-light"
                 >
                   View property
                 </button>
@@ -1517,7 +1517,7 @@ const AccountPage = () => {
       <header className="border-b border-gray-400 dark:border-neutral-800">
         <div className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 py-5">
           <div className={`${PAGE_CONTAINER} space-y-1`}>
-            <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">Your account</p>
+            <p className="text-sm font-semibold text-[#703BF7] dark:text-brand-light">Your account</p>
             <h1 style={SERIF} className="text-4xl font-semibold sm:text-5xl">
               Hello, {customer?.firstName || "there"}
             </h1>

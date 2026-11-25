@@ -51,26 +51,26 @@ const ui = {
   label: "mb-1.5 block text-[13px] font-medium text-[#111827] dark:text-white",
   muted: "text-[#4b5563] dark:text-[#9ca3af]",
   input:
-    "w-full rounded-xl border border-[#e5e7eb] bg-[#f3f4f6] px-3 py-2.5 text-sm text-[#111827] outline-none placeholder:text-[#6b7280] focus:border-[#703bf7] focus:ring-2 focus:ring-[#703bf7]/10 disabled:bg-white disabled:text-[#9ca3af] dark:border-white/10 dark:bg-[#232323] dark:text-white dark:placeholder:text-[#9ca3af] dark:focus:border-[#b79bff] dark:focus:ring-[#b79bff]/15 dark:disabled:bg-[#232323]/60",
+    "w-full rounded-xl border border-[#e5e7eb] bg-[#f3f4f6] px-3 py-2.5 text-sm text-[#111827] outline-none placeholder:text-[#6b7280] focus:border-brand focus:ring-2 focus:ring-brand/10 disabled:bg-white disabled:text-[#9ca3af] dark:border-white/10 dark:bg-[#232323] dark:text-white dark:placeholder:text-[#9ca3af] dark:focus:border-brand-light dark:focus:ring-brand-light/15 dark:disabled:bg-[#232323]/60",
   dropzone:
-    "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#d1d5db] px-4 py-8 text-center transition-colors hover:border-[#703bf7] hover:bg-[#703bf7]/5 dark:border-white/15 dark:hover:border-[#b79bff] dark:hover:bg-[#b79bff]/5",
+    "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#d1d5db] px-4 py-8 text-center transition-colors hover:border-brand hover:bg-brand/5 dark:border-white/15 dark:hover:border-brand-light dark:hover:bg-brand-light/5",
   iconCircle:
-    "grid h-10 w-10 place-items-center rounded-full bg-[#703bf7]/10 text-[#703bf7] dark:bg-[#b79bff]/15 dark:text-[#b79bff]",
+    "grid h-10 w-10 place-items-center rounded-full bg-brand/10 text-brand dark:bg-brand-light/15 dark:text-brand-light",
   primaryButton:
-    "inline-flex min-h-10 cursor-pointer items-center justify-center rounded-full bg-[#703bf7] px-5 text-sm font-semibold text-white transition-[background-color,color,opacity] duration-150 ease-[ease] hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-55 dark:bg-[#b79bff] dark:text-black",
+    "inline-flex min-h-10 cursor-pointer items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white transition-[background-color,color,opacity] duration-150 ease-[ease] hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-55 dark:bg-brand-light dark:text-black",
   ghostButton:
     "inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#e5e7eb] bg-white px-3 py-1.5 text-xs font-medium text-[#111827] dark:border-white/10 dark:bg-[#232323] dark:text-white",
   submitButton:
-    "mt-3 inline-flex min-h-10 w-full cursor-pointer items-center justify-center rounded-full bg-[#703bf7] px-5 text-sm font-semibold text-white transition-[background-color,color,opacity] duration-150 ease-[ease] hover:opacity-90 disabled:cursor-not-allowed disabled:bg-[#e5e7eb] disabled:text-[#9ca3af] disabled:opacity-100 disabled:hover:opacity-100 dark:bg-[#b79bff] dark:text-black dark:disabled:bg-white/10 dark:disabled:text-neutral-500",
+    "mt-3 inline-flex min-h-10 w-full cursor-pointer items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white transition-[background-color,color,opacity] duration-150 ease-[ease] hover:opacity-90 disabled:cursor-not-allowed disabled:bg-[#e5e7eb] disabled:text-[#9ca3af] disabled:opacity-100 disabled:hover:opacity-100 dark:bg-brand-light dark:text-black dark:disabled:bg-white/10 dark:disabled:text-neutral-500",
   photoPanel: "flex items-center gap-4 rounded-xl border border-dashed border-[#d1d5db] p-4 dark:border-white/15",
-  pill: "rounded-full border border-[#e5e7eb] bg-[#703bf7]/10 px-2.5 py-0.5 text-[11px] font-medium text-[#703bf7] dark:border-white/10 dark:bg-[#b79bff]/15 dark:text-[#b79bff]",
-  counter: "m-0 mt-2 text-right text-[11px] text-[#703bf7] dark:text-[#b79bff]",
-  avatarPreview: "grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#703bf7]/10 text-[11px] font-semibold text-[#703bf7] dark:bg-[#b79bff]/15 dark:text-[#b79bff]",
+  pill: "rounded-full border border-[#e5e7eb] bg-brand/10 px-2.5 py-0.5 text-[11px] font-medium text-brand dark:border-white/10 dark:bg-brand-light/15 dark:text-brand-light",
+  counter: "m-0 mt-2 text-right text-[11px] text-brand dark:text-brand-light",
+  avatarPreview: "grid h-12 w-12 shrink-0 place-items-center rounded-full bg-brand/10 text-[11px] font-semibold text-brand dark:bg-brand-light/15 dark:text-brand-light",
 };
 
 const Spinner = () => (
   <span role="status" className="inline-flex">
-    <span className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#e5e7eb] border-t-[#703bf7] dark:border-white/10 dark:border-t-[#b79bff]" aria-hidden="true" />
+    <span className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#e5e7eb] border-t-brand dark:border-white/10 dark:border-t-brand-light" aria-hidden="true" />
     <span className="sr-only">Loading profile</span>
   </span>
 );
@@ -102,7 +102,7 @@ const Dropzone = ({ id, accept, onFile, className = "", children }: DropzoneProp
       }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
-      className={`${ui.dropzone} ${dragging ? "bg-[#703bf7]/10 dark:bg-[#b79bff]/10" : ""} ${className}`}
+      className={`${ui.dropzone} ${dragging ? "bg-brand/10 dark:bg-brand-light/10" : ""} ${className}`}
     >
       <input
         id={id}
@@ -309,7 +309,7 @@ const AgentProfilePage = () => {
                         id="agent-photo-input"
                         accept="image/*"
                         onFile={handlePhotoFile}
-                        className="!flex-row !gap-1.5 !rounded-full !border-solid !border-[#e5e7eb] !px-3 !py-1.5 text-xs font-medium"
+                        className="flex-row! gap-1.5! rounded-full! border-solid! border-[#e5e7eb]! px-3! py-1.5! text-xs font-medium"
                       >
                         <ImageIcon size={14} aria-hidden="true" />
                         {uploadingPhoto ? "Reading..." : "Change photo"}
@@ -321,7 +321,7 @@ const AgentProfilePage = () => {
                   </div>
                 ) : (
                   <Dropzone id="agent-photo-input" accept="image/*" onFile={handlePhotoFile} className="min-h-[134px]">
-                    <span className={`${ui.iconCircle} !h-7 !w-7`}><ImageIcon size={14} aria-hidden="true" /></span>
+                    <span className={`${ui.iconCircle} h-7! w-7!`}><ImageIcon size={14} aria-hidden="true" /></span>
                     <span className="text-xs font-medium">{uploadingPhoto ? "Reading..." : "Upload an image"}</span>
                   </Dropzone>
                 )}
@@ -348,7 +348,7 @@ const AgentProfilePage = () => {
                   <label htmlFor="agent-bio" className={ui.label}>Bio</label>
                   <textarea
                     id="agent-bio"
-                    className={`${ui.input} min-h-[80px] resize-y`}
+                    className={`${ui.input} min-h-20 resize-y`}
                     rows={3}
                     maxLength={BIO_MAX}
                     placeholder="Areas you cover, experience, languages..."
@@ -397,7 +397,7 @@ const AgentProfilePage = () => {
                   id="agent-document-input"
                   accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                   onFile={handleDocumentFile}
-                  className="mt-4 min-h-[160px]"
+                  className="mt-4 min-h-40"
                 >
                   <span className={ui.iconCircle}><FileText size={18} aria-hidden="true" /></span>
                   {documentFile ? (
