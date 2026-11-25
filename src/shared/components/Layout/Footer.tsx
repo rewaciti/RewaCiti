@@ -20,10 +20,10 @@ const PHONE_DISPLAY = "+234 706 530 4417";
 const PHONE_TEL = "+2347065304417";
 
 const linkClass =
-  "text-sm text-gray-800 transition hover:text-[#b79bff] dark:text-gray-300 dark:hover:text-[#b79bff]";
+  "text-sm text-gray-800 transition hover:text-[#703BF7] dark:text-gray-300 dark:hover:text-[#b79bff]";
 const headingClass = "mb-4 text-sm font-semibold text-gray-900 dark:text-white";
 const socialClass =
-  "flex h-9 w-9 items-center justify-center rounded-full border border-gray-500/40 text-gray-800 transition hover:border-[#b79bff] hover:bg-[#b79bff] hover:text-white dark:border-white/20 dark:text-gray-300";
+  "flex h-9 w-9 items-center justify-center rounded-full border border-gray-500/40 text-gray-800 transition hover:border-[#703BF7] hover:bg-[#703BF7] hover:text-white dark:border-white/20 dark:text-gray-300";
 
 const explore = [
   { label: "Properties", to: "/properties" },
@@ -79,6 +79,7 @@ function Footer() {
     <footer className="border-t border-gray-400 bg-gray-300 text-gray-900 dark:border-white/10 dark:bg-[#1A1A1A] dark:text-white">
       <div className={`${PAGE_CONTAINER} py-12`}>
         <div className="grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-[1.5fr_1fr_1fr_1.3fr] lg:gap-12">
+          {/* Brand + newsletter */}
           <div className="border-b border-gray-900/30 pb-8 dark:border-gray-400/30 sm:col-span-2 lg:col-span-1 lg:border-b-0 lg:pb-0">
             <Link to="/" className="inline-flex items-center gap-2">
               <img src={logo} alt="" className="h-9" />
@@ -92,7 +93,7 @@ function Footer() {
 
             <form
               onSubmit={handleSubmit}
-              className="mt-5 flex max-w-sm items-center gap-1 rounded-full border border-gray-500/50 bg-white p-1 pl-4 focus-within:border-[#b79bff] dark:border-white/20 dark:bg-[#101010]"
+              className="mt-5 flex max-w-sm items-center gap-1 rounded-full border border-gray-500/50 bg-white p-1 pl-4 focus-within:border-[#703BF7] dark:border-white/20 dark:bg-[#101010]"
             >
               <input
                 type="email"
@@ -106,7 +107,7 @@ function Footer() {
               <button
                 type="submit"
                 aria-label="Subscribe"
-                className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#b79bff] text-white transition hover:bg-[#b79bff] disabled:opacity-50"
+                className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#703BF7] text-white transition hover:bg-[#9677df] disabled:opacity-50"
                 disabled={isSubmitting}
               >
                 <Send className="h-4 w-4" />
@@ -214,12 +215,12 @@ function Footer() {
         >
           <span>© {currentYear} RewaCiti. All rights reserved.</span>
           <div className="flex items-center gap-5">
-            <Link to="/terms" className="transition hover:text-[#b79bff] dark:hover:text-[#b79bff]">
+            <Link to="/terms" className="transition hover:text-[#703BF7] dark:hover:text-[#b79bff]">
               Terms
             </Link>
             <Link
               to="/privacy-policy"
-              className="transition hover:text-[#b79bff] dark:hover:text-[#b79bff]"
+              className="transition hover:text-[#703BF7] dark:hover:text-[#b79bff]"
             >
               Privacy Policy
             </Link>

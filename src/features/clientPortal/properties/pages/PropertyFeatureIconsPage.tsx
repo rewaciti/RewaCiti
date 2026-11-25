@@ -12,7 +12,7 @@ function FeatureIconCard({ item }: { item: PropertyFeatureIconItem }) {
 
   return (
     <div className="flex min-h-24 items-center gap-4 rounded-xl border border-gray-600/20 bg-white p-4 dark:bg-[#1A1A1A]">
-      <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#b79bff]/10 text-[#b79bff] dark:bg-[#b79bff]/20">
+      <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#703BF7]/10 text-[#703BF7] dark:bg-[#703BF7]/20">
         <Icon aria-hidden="true" size={24} strokeWidth={1.5} />
         {item.prohibited && (
           <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-red-600 text-white dark:border-[#1A1A1A]">

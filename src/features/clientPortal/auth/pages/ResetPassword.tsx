@@ -115,7 +115,7 @@ const ResetPassword = () => {
           {/* Back Button */}
           <button
             onClick={() => navigate("/auth/forgot-password")}
-            className="flex items-center gap-2 text-[#b79bff] hover:underline text-sm font-medium mb-6"
+            className="flex items-center gap-2 text-[#703BF7] hover:underline text-sm font-medium mb-6"
           >
             <FiArrowLeft size={16} />
             Back
@@ -145,7 +145,7 @@ const ResetPassword = () => {
                   placeholder="At least 8 characters"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#b79bff] placeholder:text-[12px] dark:placeholder:text-gray-400 placeholder:text-gray-600"
+                  className="w-full px-4 py-2 border border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#703BF7] placeholder:text-[12px] dark:placeholder:text-gray-400 placeholder:text-gray-600"
                   required
                 />
 
@@ -174,7 +174,7 @@ const ResetPassword = () => {
                   placeholder="Confirm your password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#b79bff] placeholder:text-[12px] dark:placeholder:text-gray-400 placeholder:text-gray-600"
+                  className="w-full px-4 py-2 border border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#703BF7] placeholder:text-[12px] dark:placeholder:text-gray-400 placeholder:text-gray-600"
                   required
                 />
 
@@ -198,7 +198,7 @@ const ResetPassword = () => {
               className={`w-full px-4 py-3 rounded-lg font-medium transition ${
                 isLoading || !isPasswordValid
                   ? "bg-gray-400 cursor-not-allowed text-gray-700"
-                  : "bg-[#b79bff] text-white hover:bg-[#b79bff]"
+                  : "bg-[#703BF7] text-white hover:bg-[#5c2fe0]"
               }`}
             >
               {isLoading ? "Resetting..." : "Reset Password"}

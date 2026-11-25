@@ -12,7 +12,7 @@ const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
 const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };
 
 const viewAllClass =
-  "shrink-0 items-center justify-center gap-2 rounded-full bg-[#b79bff] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#b79bff]";
+  "shrink-0 items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#9677df]";
 
 function PropertySection() {
   const { featuredProperties, featuredLoading, featuredError, fetchFeaturedProperties } =
@@ -28,7 +28,7 @@ function PropertySection() {
     <div className={PAGE_CONTAINER}>
       <div className="mb-8 flex items-end justify-between gap-4">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold text-[#b79bff] dark:text-[#b79bff]">Featured</p>
+          <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">Featured</p>
           <h2
             style={SERIF}
             className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl"
@@ -66,7 +66,7 @@ function PropertySection() {
             <button
               type="button"
               onClick={() => fetchFeaturedProperties()}
-              className="cursor-pointer rounded-full bg-[#b79bff] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#b79bff] active:scale-95"
+              className="cursor-pointer rounded-full bg-[#703BF7] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df] active:scale-95"
             >
               Try again
             </button>

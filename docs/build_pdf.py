@@ -100,7 +100,7 @@ body {
   font-size: 9pt;
   letter-spacing: 2pt;
   text-transform: uppercase;
-  color: #b79bff;
+  color: #703BF7;
 }
 .cover-title {
   font-family: BodyFontBold;
@@ -120,7 +120,7 @@ body {
 .cover-line {
   width: 40mm;
   height: 2mm;
-  background-color: #b79bff;
+  background-color: #703BF7;
   margin: 8mm 0 8mm 0;
 }
 .cover-desc {
@@ -139,7 +139,7 @@ h1 {
   font-family: BodyFont;
   font-size: 19pt;
   color: #2e1065;
-  border-bottom: 2pt solid #b79bff;
+  border-bottom: 2pt solid #703BF7;
   padding-bottom: 3pt;
   margin: 0 0 10pt 0;
   page-break-before: always;
@@ -180,7 +180,7 @@ pre {
   line-height: 1.3;
   background-color: #fafafa;
   border: 0.6pt solid #e5e7eb;
-  border-left: 2.5pt solid #b79bff;
+  border-left: 2.5pt solid #703BF7;
   padding: 5pt 6pt;
   margin: 5pt 0 8pt 0;
   white-space: pre-wrap;

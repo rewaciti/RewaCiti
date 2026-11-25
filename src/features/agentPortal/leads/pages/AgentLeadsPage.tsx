@@ -45,7 +45,7 @@ import {
 
 const ui = {
   btn: "inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold transition-colors disabled:cursor-wait disabled:opacity-60 sm:h-10",
-  btnPrimary: "bg-[#b79bff] text-white shadow-sm hover:bg-[#b79bff]/90",
+  btnPrimary: "bg-brand text-white shadow-sm hover:bg-brand/90",
   btnGhost: "bg-transparent text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-neutral-800",
   control: "h-11 rounded-lg border border-gray-300 bg-white text-sm text-gray-900 dark:border-white/15 dark:bg-neutral-900 dark:text-white sm:h-10",
   card: "rounded-xl border border-gray-200 bg-white dark:border-white/10 dark:bg-neutral-900",
@@ -57,18 +57,18 @@ const ui = {
 
 const FILTER_DROPDOWN = {
   className: "w-full",
-  buttonClassName: "h-10 w-full rounded-lg border border-gray-200 bg-white! px-3 text-left text-sm text-gray-900! hover:border-[#b79bff] dark:border-white/10 dark:bg-neutral-900! dark:text-white!",
+  buttonClassName: "h-10 w-full rounded-lg border border-gray-200 bg-white! px-3 text-left text-sm text-gray-900! hover:border-brand dark:border-white/10 dark:bg-neutral-900! dark:text-white!",
   menuClassName: "overflow-hidden rounded-xl border-gray-300! bg-white! text-gray-900! shadow-lg! dark:border-white/15! dark:bg-neutral-900! dark:text-white! [&>div]:max-h-60 [&>div]:overflow-x-hidden [&>div]:overflow-y-auto [&>div]:bg-white! dark:[&>div]:bg-neutral-900! [&>div]:[scrollbar-width:none] [&>div::-webkit-scrollbar]:hidden [&>div>button]:whitespace-normal",
   menuItemClassName: "block w-full bg-white! px-4 py-2.5 text-left text-sm whitespace-normal text-gray-900! transition hover:bg-gray-100! dark:bg-neutral-900! dark:text-white! dark:hover:bg-neutral-800!",
 };
 
 const roundButton =
-  "cursor-pointer rounded-full border border-gray-300 bg-white p-2.5 text-gray-900 transition hover:border-[#b79bff] hover:text-[#b79bff] disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:bg-[#101010] dark:text-white";
+  "cursor-pointer rounded-full border border-gray-300 bg-white p-2.5 text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:bg-[#101010] dark:text-white";
 
 const Spinner = ({ size = 32, label = "Loading" }: { size?: number; label?: string }) => (
   <span role="status" className="inline-flex">
     <span
-      className="animate-spin rounded-full border-[3px] border-gray-200 border-t-[#b79bff] dark:border-white/10 dark:border-t-[#b79bff]"
+      className="animate-spin rounded-full border-[3px] border-gray-200 border-t-brand dark:border-white/10 dark:border-t-brand"
       style={{ width: size, height: size }}
       aria-hidden="true"
     />
@@ -312,7 +312,7 @@ const AgentLeadsPage = () => {
 
   const emptyState = (
     <div className="flex min-h-[300px] flex-col items-center justify-center px-5 py-10 text-center">
-      <div className="mb-3 grid h-12 w-12 place-items-center rounded-full bg-[#b79bff]/10 text-[#b79bff] dark:bg-[#b79bff]/15 dark:text-[#b79bff]">
+      <div className="mb-3 grid h-12 w-12 place-items-center rounded-full bg-brand/10 text-brand dark:bg-brand-light/15 dark:text-brand-light">
         <MessageSquareText size={22} />
       </div>
       <h2 className="m-0 text-base font-semibold">
@@ -383,11 +383,11 @@ const AgentLeadsPage = () => {
                   aria-current={active ? "page" : undefined}
                   onClick={() => changeStatus(filter.value)}
                   className={`-mb-px inline-flex h-11 items-center gap-2 border-b-2 px-3 text-sm whitespace-nowrap transition-colors ${active
-                    ? "border-[#b79bff] font-semibold text-gray-900 dark:border-[#b79bff] dark:text-white"
+                    ? "border-brand font-semibold text-gray-900 dark:border-brand-light dark:text-white"
                     : "border-transparent text-gray-700 hover:border-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:border-white/30 dark:hover:text-white"}`}
                 >
                   {filter.label}
-                  <span className={`inline-grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-xs font-semibold ${active ? "bg-[#b79bff]/10 text-[#b79bff] dark:bg-[#b79bff]/15 dark:text-[#b79bff]" : "bg-gray-200 text-gray-700 dark:bg-neutral-800 dark:text-gray-400"}`}>
+                  <span className={`inline-grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-xs font-semibold ${active ? "bg-brand/10 text-brand dark:bg-brand-light/15 dark:text-brand-light" : "bg-gray-200 text-gray-700 dark:bg-neutral-800 dark:text-gray-400"}`}>
                     {countForStatus(filter.value)}
                   </span>
                 </button>
@@ -398,7 +398,7 @@ const AgentLeadsPage = () => {
 
         {/* Search + filters */}
         <div className="mb-5 flex items-center gap-2 sm:gap-3">
-          <label className={`${ui.control} flex min-w-0 flex-1 items-center gap-2 px-3 text-gray-500 focus-within:border-[#b79bff] focus-within:ring-2 focus-within:ring-[#b79bff]/15 sm:max-w-md dark:text-gray-400`}>
+          <label className={`${ui.control} flex min-w-0 flex-1 items-center gap-2 px-3 text-gray-500 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/15 sm:max-w-md dark:text-gray-400`}>
             <Search size={17} aria-hidden="true" className="shrink-0" />
             <input
               type="search"
@@ -421,11 +421,11 @@ const AgentLeadsPage = () => {
               disabled={filterDisabled}
               aria-expanded={filtersOpen && !filterDisabled}
               onClick={() => setFiltersOpen((open) => !open)}
-              className={`${ui.control} inline-flex items-center gap-2 px-3.5 max-sm:min-w-11 max-sm:justify-center max-sm:px-3 ${filterDisabled ? "cursor-not-allowed opacity-50" : "hover:border-[#b79bff]"} ${filtersOpen ? "border-[#b79bff]" : ""}`}
+              className={`${ui.control} inline-flex items-center gap-2 px-3.5 max-sm:min-w-11 max-sm:justify-center max-sm:px-3 ${filterDisabled ? "cursor-not-allowed opacity-50" : "hover:border-brand"} ${filtersOpen ? "border-brand" : ""}`}
             >
               <Filter size={16} />
               <span className="max-sm:sr-only">Filters</span>
-              {activeFilterCount > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-[#b79bff] px-1.5 text-xs font-semibold text-white">{activeFilterCount}</span>}
+              {activeFilterCount > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-brand px-1.5 text-xs font-semibold text-white">{activeFilterCount}</span>}
               <ChevronDown size={15} className={`transition-transform duration-200 max-sm:hidden ${filtersOpen ? "rotate-180" : ""}`} />
             </button>
 
@@ -506,7 +506,7 @@ const AgentLeadsPage = () => {
                           <tr
                             key={inquiry.id}
                             {...rowProps(inquiry)}
-                            className="cursor-pointer transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#b79bff] dark:hover:bg-neutral-800/60"
+                            className="cursor-pointer transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand dark:hover:bg-neutral-800/60"
                           >
                             <td className={`${ui.td} pl-5`}>
                               <div className="min-w-48">
@@ -576,7 +576,7 @@ const AgentLeadsPage = () => {
                     <li
                       key={inquiry.id}
                       {...rowProps(inquiry)}
-                      className={`${ui.card} cursor-pointer p-3 transition-colors hover:border-gray-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b79bff] dark:hover:border-white/20`}
+                      className={`${ui.card} cursor-pointer p-3 transition-colors hover:border-gray-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand dark:hover:border-white/20`}
                     >
                       <div className="flex items-start gap-3">
                         <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-md bg-gray-100 text-gray-500 dark:bg-neutral-800 dark:text-gray-400">
@@ -609,7 +609,7 @@ const AgentLeadsPage = () => {
                               href={`tel:${inquiry.contact.phone}`}
                               onClick={(event) => event.stopPropagation()}
                               aria-label={`Call ${contactName(inquiry)}`}
-                              className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-gray-200 text-gray-700 hover:border-[#b79bff] hover:text-[#b79bff] dark:border-white/10 dark:text-gray-300"
+                              className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-gray-200 text-gray-700 hover:border-brand hover:text-brand dark:border-white/10 dark:text-gray-300"
                             >
                               <Phone size={13} />
                             </a>
@@ -619,7 +619,7 @@ const AgentLeadsPage = () => {
                               href={`mailto:${inquiry.contact.email}`}
                               onClick={(event) => event.stopPropagation()}
                               aria-label={`Email ${contactName(inquiry)}`}
-                              className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-gray-200 text-gray-700 hover:border-[#b79bff] hover:text-[#b79bff] dark:border-white/10 dark:text-gray-300"
+                              className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-gray-200 text-gray-700 hover:border-brand hover:text-brand dark:border-white/10 dark:text-gray-300"
                             >
                               <Mail size={13} />
                             </a>

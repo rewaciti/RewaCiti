@@ -77,7 +77,7 @@ function AllComments() {
               comments.map((comment: Comment) => (
                 <article
                   key={comment.id}
-                  className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-6 text-gray-900 shadow-sm transition-colors hover:border-[#b79bff]/50 dark:border-white/10 dark:bg-[#1A1A1A] dark:text-white dark:hover:border-[#b79bff]/50"
+                  className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-6 text-gray-900 shadow-sm transition-colors hover:border-[#703BF7]/50 dark:border-white/10 dark:bg-[#1A1A1A] dark:text-white dark:hover:border-[#a98bff]/50"
                 >
                   <Stars rating={comment.rating} />
 
@@ -108,7 +108,7 @@ function AllComments() {
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block truncate text-sm text-gray-500 transition-colors hover:text-[#b79bff] dark:text-gray-400 dark:hover:text-[#b79bff]"
+                        className="block truncate text-sm text-gray-500 transition-colors hover:text-[#703BF7] dark:text-gray-400 dark:hover:text-[#a98bff]"
                       >
                         {comment.location}
                       </a>

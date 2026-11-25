@@ -30,7 +30,7 @@ const SWIPE_THRESHOLD = 40;
 function listingPillClass(type: string): string {
   if (/sale/i.test(type)) return "bg-emerald-500";
   if (/short-?let/i.test(type)) return "bg-rose-500";
-  if (/rent/i.test(type)) return "bg-[#b79bff]";
+  if (/rent/i.test(type)) return "bg-[#703BF7]";
   if (/lease/i.test(type)) return "bg-amber-500";
   if (/invest/i.test(type)) return "bg-sky-500";
   return "bg-black/60";
@@ -241,9 +241,9 @@ function PropertyCard({ property, featured }: PropertyCardProps) {
   const circleBase =
     "w-9 h-9 flex items-center justify-center rounded-full shadow-md transition hover:scale-105 cursor-pointer";
   const circleIdle =
-    "bg-white text-gray-800 hover:bg-[#b79bff] hover:text-white";
+    "bg-white text-gray-800 hover:bg-[#703BF7] hover:text-white";
   const arrowBtn =
-    "absolute z-10 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white/95 text-gray-800 shadow-md opacity-0 transition hover:bg-[#b79bff] hover:text-white hover:scale-105 cursor-pointer max-sm:!opacity-0";
+    "absolute z-10 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white/95 text-gray-800 shadow-md opacity-0 transition hover:bg-[#703BF7] hover:text-white hover:scale-105 cursor-pointer max-sm:!opacity-0";
   const pill =
     "text-xs sm:text-sm font-semibold px-3.5 py-1.5 rounded-full shadow";
 
@@ -256,7 +256,7 @@ function PropertyCard({ property, featured }: PropertyCardProps) {
       onKeyDown={(e) => {
         if (e.key === "Enter" && e.target === e.currentTarget) handleCardClick();
       }}
-      className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 text-gray-900 dark:text-white shadow-sm hover:shadow-lg transition-all duration-300 rounded-2xl overflow-hidden flex flex-col h-full cursor-pointer animate-fade-in-up focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b79bff]"
+      className="bg-white/90 dark:bg-[#1A1A1A] border border-purple-100 dark:border-gray-600/30 text-gray-900 dark:text-white shadow-sm hover:shadow-lg transition-all duration-300 rounded-2xl overflow-hidden flex flex-col h-full cursor-pointer animate-fade-in-up focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#703BF7]"
     >
       {/* Image carousel, edge to edge */}
       <div
@@ -316,7 +316,7 @@ function PropertyCard({ property, featured }: PropertyCardProps) {
             title={isShortlisted ? "Remove from shortlist" : "Add to shortlist"}
             aria-label={isShortlisted ? "Remove from shortlist" : "Add to shortlist"}
             aria-pressed={isShortlisted}
-            className={`${circleBase} ${isShortlisted ? "bg-[#b79bff] text-white" : circleIdle}`}
+            className={`${circleBase} ${isShortlisted ? "bg-[#703BF7] text-white" : circleIdle}`}
           >
             <FiHeart size={18} className={isShortlisted ? "fill-current" : ""} />
           </button>
@@ -385,7 +385,7 @@ function PropertyCard({ property, featured }: PropertyCardProps) {
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => e.stopPropagation()}
-          className="mt-2 flex items-center gap-2 w-fit text-sm text-gray-500 dark:text-gray-400 hover:text-[#b79bff] dark:hover:text-[#b79bff] transition-colors"
+          className="mt-2 flex items-center gap-2 w-fit text-sm text-gray-500 dark:text-gray-400 hover:text-[#703BF7] dark:hover:text-[#703BF7] transition-colors"
         >
           <LuMapPin size={18} className="shrink-0" />
           <span>{addressOf(property)}</span>
@@ -417,7 +417,7 @@ function PropertyCard({ property, featured }: PropertyCardProps) {
             )}
             {placesTotal > 1 &&
               (placesLeft > 0 ? (
-                <span className="font-semibold text-[#b79bff]">{placesLeft} left</span>
+                <span className="font-semibold text-[#703BF7]">{placesLeft} left</span>
               ) : (
                 <span className="font-semibold text-rose-500">Fully booked</span>
               ))}
@@ -430,7 +430,7 @@ function PropertyCard({ property, featured }: PropertyCardProps) {
                 <span className="ml-1 text-sm font-semibold">{periodLabel}</span>
               )}
             </p>
-            <span className="inline-flex max-w-full items-center gap-1.5 rounded-xl border border-[#d6c6ff] bg-[#eee8ff] px-3 py-1.5 text-sm font-semibold text-[#5423c5] dark:border-[#b79bff]/40 dark:bg-[#b79bff]/15 dark:text-[#b79bff]">
+            <span className="inline-flex max-w-full items-center gap-1.5 rounded-xl border border-[#d6c6ff] bg-[#eee8ff] px-3 py-1.5 text-sm font-semibold text-[#5423c5] dark:border-[#703BF7]/40 dark:bg-[#703BF7]/15 dark:text-[#d4c2ff]">
               <FaHome />
               {property.category}
             </span>

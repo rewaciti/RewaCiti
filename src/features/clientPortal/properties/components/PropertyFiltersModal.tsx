@@ -333,7 +333,7 @@ export default function PropertyFiltersModal({
                   <button
                     onClick={() => setSharedRoomOnly?.(!sharedRoomOnly)}
                     className={`w-11 h-6 rounded-full flex items-center transition px-0.5 cursor-pointer ${
-                      sharedRoomOnly ? "bg-[#b79bff] justify-end" : "bg-gray-300 dark:bg-gray-600 justify-start"
+                      sharedRoomOnly ? "bg-[#703BF7] justify-end" : "bg-gray-300 dark:bg-gray-600 justify-start"
                     }`}
                   >
                     <span className="w-5 h-5 bg-white rounded-full shadow" />
@@ -352,7 +352,7 @@ export default function PropertyFiltersModal({
           </button>
           <button
             onClick={onClose}
-            className="bg-[#b79bff] hover:bg-[#b79bff] text-white px-5 py-3 rounded-full text-sm font-semibold cursor-pointer"
+            className="bg-[#703BF7] hover:bg-[#5c2fe0] text-white px-5 py-3 rounded-full text-sm font-semibold cursor-pointer"
           >
             Show {totalProperties} {totalProperties === 1 ? "place" : "places"}
           </button>

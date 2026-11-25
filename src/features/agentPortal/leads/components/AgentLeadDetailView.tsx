@@ -47,10 +47,10 @@ const TABS: { value: ComposerTab; label: string; placeholder: string }[] = [
 ];
 
 const fieldInputClass =
-  "w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-500 focus:border-[#b79bff] focus:ring-2 focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-[#b79bff] dark:focus:ring-[#b79bff]/15";
+  "w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-500 focus:border-[#703bf7] focus:ring-2 focus:ring-[#703bf7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-[#b79bff] dark:focus:ring-[#b79bff]/15";
 
 const outlineBtn =
-  "inline-flex h-9 items-center justify-center gap-2 rounded-md border border-gray-200 bg-white px-3 text-sm font-medium text-gray-900 no-underline transition-colors hover:border-[#b79bff] hover:text-[#b79bff] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:border-[#b79bff] dark:hover:text-[#b79bff]";
+  "inline-flex h-9 items-center justify-center gap-2 rounded-md border border-gray-200 bg-white px-3 text-sm font-medium text-gray-900 no-underline transition-colors hover:border-[#703bf7] hover:text-[#703bf7] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:border-[#b79bff] dark:hover:text-[#b79bff]";
 
 const toWhatsAppNumber = (phone: string) => {
   const digits = phone.replace(/\D/g, "");
@@ -249,7 +249,7 @@ const AgentLeadDetailView = ({ inquiry, onClose, onUpdated, agentName, onBookVis
           )}
 
           {/* Message */}
-          <blockquote className="mx-0 mt-4 mb-0 border-l-2 border-[#b79bff]/40 pl-3 text-sm leading-relaxed whitespace-pre-wrap text-gray-800 italic dark:border-[#b79bff]/40 dark:text-gray-200">
+          <blockquote className="mx-0 mt-4 mb-0 border-l-2 border-[#703bf7]/40 pl-3 text-sm leading-relaxed whitespace-pre-wrap text-gray-800 italic dark:border-[#b79bff]/40 dark:text-gray-200">
             “{inquiry.message}”
           </blockquote>
 
@@ -276,7 +276,7 @@ const AgentLeadDetailView = ({ inquiry, onClose, onUpdated, agentName, onBookVis
               <span className="mb-1.5 block text-xs text-gray-600 dark:text-gray-400">Status</span>
               <CustomDropdown
                 className="w-full"
-                buttonClassName={`h-10 w-full rounded-md border border-gray-300 bg-white! px-3 text-left text-sm text-gray-900! hover:border-[#b79bff] dark:border-white/15 dark:bg-[#101010]! dark:text-white! ${updatingStatus ? "pointer-events-none opacity-60" : ""}`}
+                buttonClassName={`h-10 w-full rounded-md border border-gray-300 bg-white! px-3 text-left text-sm text-gray-900! hover:border-[#703bf7] dark:border-white/15 dark:bg-[#101010]! dark:text-white! ${updatingStatus ? "pointer-events-none opacity-60" : ""}`}
                 menuClassName="overflow-hidden rounded-xl border-gray-300! bg-white! text-gray-900! shadow-lg! dark:border-white/15! dark:bg-[#1a1a1a]! dark:text-white!"
                 menuItemClassName="block w-full bg-white! px-4 py-2.5 text-left text-sm text-gray-900! transition hover:bg-gray-100! dark:bg-[#1a1a1a]! dark:text-white! dark:hover:bg-neutral-800!"
                 placeholder="Select status"
@@ -338,14 +338,14 @@ const AgentLeadDetailView = ({ inquiry, onClose, onUpdated, agentName, onBookVis
                     type="datetime-local"
                     value={dueAt}
                     onChange={(event) => setDueAt(event.target.value)}
-                    className="rounded-md border border-gray-300 bg-white px-2.5 py-1.5 text-xs text-gray-900 outline-none focus:border-[#b79bff] dark:border-white/15 dark:bg-[#101010] dark:text-white"
+                    className="rounded-md border border-gray-300 bg-white px-2.5 py-1.5 text-xs text-gray-900 outline-none focus:border-[#703bf7] dark:border-white/15 dark:bg-[#101010] dark:text-white"
                   />
                 </label>
               ) : <span />}
               <button
                 type="submit"
                 disabled={saving || !body.trim()}
-                className="inline-flex h-10 items-center justify-center rounded-md bg-[#b79bff] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#b79bff] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-80 dark:disabled:bg-neutral-600"
+                className="inline-flex h-10 items-center justify-center rounded-md bg-[#703bf7] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#5c2fe0] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-80 dark:disabled:bg-neutral-600"
               >
                 {saving ? "Saving..." : "Save"}
               </button>
@@ -374,7 +374,7 @@ const AgentLeadDetailView = ({ inquiry, onClose, onUpdated, agentName, onBookVis
                       disabled={togglingTaskId === activity.id}
                       onClick={() => void toggleTask(activity.id)}
                       aria-label={isDone ? `Mark "${activity.body}" as not done` : `Mark "${activity.body}" as done`}
-                      className={`relative z-[1] grid h-[27px] w-[27px] shrink-0 place-items-center rounded-full border border-gray-300 bg-white p-0 transition-colors disabled:opacity-50 dark:border-white/15 dark:bg-[#1a1a1a] ${isDone ? "text-green-600 dark:text-green-400" : "text-gray-500 hover:text-[#b79bff] dark:text-gray-400 dark:hover:text-[#b79bff]"}`}
+                      className={`relative z-[1] grid h-[27px] w-[27px] shrink-0 place-items-center rounded-full border border-gray-300 bg-white p-0 transition-colors disabled:opacity-50 dark:border-white/15 dark:bg-[#1a1a1a] ${isDone ? "text-green-600 dark:text-green-400" : "text-gray-500 hover:text-[#703bf7] dark:text-gray-400 dark:hover:text-[#b79bff]"}`}
                     >
                       {isDone ? <CheckCircle2 size={15} /> : <Circle size={15} />}
                     </button>

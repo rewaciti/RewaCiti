@@ -52,7 +52,7 @@ const AgentDealsTable = ({ deals, onSelect }: AgentDealsTableProps) => (
               <td className={`${ui.td} pl-5`}>
                 <p className="m-0 flex items-center gap-1.5 font-semibold">
                   {deal.orderNumber}
-                  <ArrowUpRight size={14} className="text-[#b79bff] dark:text-[#b79bff]" aria-hidden="true" />
+                  <ArrowUpRight size={14} className="text-brand dark:text-brand-light" aria-hidden="true" />
                 </p>
                 <p className={`m-0 mt-1 text-xs ${ui.muted}`}>{deal.depositPercent}% deposit</p>
               </td>
@@ -84,7 +84,7 @@ const AgentDealsTable = ({ deals, onSelect }: AgentDealsTableProps) => (
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="m-0 flex items-center gap-2 font-semibold">
-                  <ArrowUpRight size={16} className="shrink-0 text-[#b79bff] dark:text-[#b79bff]" aria-hidden="true" />
+                  <ArrowUpRight size={16} className="shrink-0 text-brand dark:text-brand-light" aria-hidden="true" />
                   <span className="truncate">{deal.orderNumber}</span>
                 </p>
                 <p className={`m-0 mt-1 truncate text-xs ${ui.muted}`}>{formatDealDate(deal.createdAt)}</p>

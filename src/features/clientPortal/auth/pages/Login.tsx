@@ -79,7 +79,7 @@ const Login = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const inputStyle =
-    "w-full px-4 py-2 border border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#b79bff] placeholder:text-[12px] dark:placeholder:text-gray-400 placeholder:text-gray-600 disabled:cursor-not-allowed disabled:opacity-60";
+    "w-full px-4 py-2 border border-gray-600/30 rounded-lg bg-gray-600/30 dark:bg-gray-600/30 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#703BF7] placeholder:text-[12px] dark:placeholder:text-gray-400 placeholder:text-gray-600 disabled:cursor-not-allowed disabled:opacity-60";
 
   // Validation
   const isSignInValid = email && password;
@@ -225,7 +225,7 @@ const Login = () => {
                   onClick={handleGoogle}
                   disabled={isLoading || isGoogleLoading}
                   aria-busy={isGoogleLoading}
-                  className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-600/30 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 transition hover:border-[#b79bff] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b79bff] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-gray-600/30 dark:text-gray-100"
+                  className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-600/30 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 transition hover:border-[#703BF7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#703BF7] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-gray-600/30 dark:text-gray-100"
                 >
                   {isGoogleLoading ? (
                     <FiLoader aria-hidden="true" size={18} className="animate-spin" />
@@ -242,11 +242,11 @@ const Login = () => {
                 {isSignUp && (
                   <p className="text-xs text-gray-600 dark:text-gray-400">
                     By continuing with Google, you agree to the{" "}
-                    <Link to="/terms" className="text-[#b79bff] hover:underline">
+                    <Link to="/terms" className="text-[#703BF7] hover:underline">
                       Terms
                     </Link>{" "}
                     and{" "}
-                    <Link to="/privacy-policy" className="text-[#b79bff] hover:underline">
+                    <Link to="/privacy-policy" className="text-[#703BF7] hover:underline">
                       Privacy Policy
                     </Link>
                     .
@@ -341,7 +341,7 @@ const Login = () => {
                 {!isSignUp && (
                   <Link
                     to="/auth/forgot-password"
-                    className="text-xs text-[#b79bff] hover:underline"
+                    className="text-xs text-[#703BF7] hover:underline"
                   >
                     Forgot Password?
                   </Link>
@@ -364,7 +364,7 @@ const Login = () => {
                   type="button"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-gray-700 transition hover:text-[#b79bff] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b79bff] dark:text-gray-300 dark:hover:text-[#b79bff]"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-gray-700 transition hover:text-[#703BF7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#703BF7] dark:text-gray-300 dark:hover:text-[#b79bff]"
                 >
                   {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                 </button>
@@ -385,7 +385,7 @@ const Login = () => {
                       localStorage.setItem(REMEMBERED_EMAIL_KEY, email);
                     }
                   }}
-                  className="h-4 w-4 rounded border-gray-300 accent-[#b79bff]"
+                  className="h-4 w-4 rounded border-gray-300 accent-[#703BF7]"
                   disabled={isGoogleLoading}
                 />
                 Remember my email on this device
@@ -416,7 +416,7 @@ const Login = () => {
                     onClick={() =>
                       setShowConfirmPassword(!showConfirmPassword)
                     }
-                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-gray-700 transition hover:text-[#b79bff] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b79bff] dark:text-gray-300 dark:hover:text-[#b79bff]"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-gray-700 transition hover:text-[#703BF7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#703BF7] dark:text-gray-300 dark:hover:text-[#b79bff]"
                   >
                     {showConfirmPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                   </button>
@@ -449,14 +449,14 @@ const Login = () => {
                   I agree to the{" "}
                   <Link
                     to="/terms"
-                    className="text-[#b79bff] cursor-pointer hover:underline"
+                    className="text-[#703BF7] cursor-pointer hover:underline"
                   >
                     Terms
                   </Link>{" "}
                   and{" "}
                   <Link
                     to="/privacy-policy"
-                    className="text-[#b79bff] cursor-pointer hover:underline"
+                    className="text-[#703BF7] cursor-pointer hover:underline"
                   >
                     Privacy Policy
                   </Link>
@@ -474,7 +474,7 @@ const Login = () => {
                 className={`px-6 py-2 rounded-lg font-semibold text-sm transition ${
                   (isSignUp ? !isSignUpValid : !isSignInValid) || isLoading || isGoogleLoading
                     ? "bg-gray-400 cursor-not-allowed text-gray-200"
-                    : "bg-[#b79bff] text-white hover:bg-[#b79bff]"
+                    : "bg-[#703BF7] text-white hover:bg-[#5c2fe0]"
                 }`}
               >
                 {isLoading
@@ -503,7 +503,7 @@ const Login = () => {
                 setConfirmPassword("");
                 setAgree(false);
               }}
-              className="text-[#b79bff] cursor-pointer font-semibold hover:underline"
+              className="text-[#703BF7] cursor-pointer font-semibold hover:underline"
             >
               {isSignUp ? "Sign In" : "Sign Up"}
             </span>

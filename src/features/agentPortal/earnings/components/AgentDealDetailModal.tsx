@@ -106,7 +106,7 @@ const AgentDealDetailModal = ({ deal, onClose, onUpdated }: AgentDealDetailModal
           ) : error ? (
             <div className={`${ui.card} p-5`}>
               <p className="m-0 text-sm text-red-600 dark:text-red-400">{error}</p>
-              <button type="button" onClick={() => void loadDeal()} className="mt-3 h-10 rounded-lg bg-[#b79bff] px-4 text-sm font-semibold text-white hover:bg-[#b79bff]/90">
+              <button type="button" onClick={() => void loadDeal()} className="mt-3 h-10 rounded-lg bg-brand px-4 text-sm font-semibold text-white hover:bg-brand/90">
                 Try again
               </button>
             </div>
@@ -135,12 +135,12 @@ const AgentDealDetailModal = ({ deal, onClose, onUpdated }: AgentDealDetailModal
                 {(detail.customer?.email || detail.customer?.phone) && (
                   <div className={`mt-4 flex flex-wrap gap-3 border-t border-gray-200 pt-3 text-xs dark:border-white/10 ${ui.muted}`}>
                     {detail.customer?.email && (
-                      <a href={`mailto:${detail.customer.email}`} className="inline-flex items-center gap-1.5 hover:text-[#b79bff]">
+                      <a href={`mailto:${detail.customer.email}`} className="inline-flex items-center gap-1.5 hover:text-brand">
                         <Mail size={14} /> {detail.customer.email}
                       </a>
                     )}
                     {detail.customer?.phone && (
-                      <a href={`tel:${detail.customer.phone}`} className="inline-flex items-center gap-1.5 hover:text-[#b79bff]">
+                      <a href={`tel:${detail.customer.phone}`} className="inline-flex items-center gap-1.5 hover:text-brand">
                         <Phone size={14} /> {detail.customer.phone}
                       </a>
                     )}
@@ -186,7 +186,7 @@ const AgentDealDetailModal = ({ deal, onClose, onUpdated }: AgentDealDetailModal
                             <button
                               type="button"
                               onClick={() => void copyPaymentLink(invoice.paymentLink)}
-                              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-gray-300 px-2.5 text-xs font-semibold text-gray-900 hover:border-[#b79bff] hover:text-[#b79bff] dark:border-white/15 dark:text-white dark:hover:border-[#b79bff] dark:hover:text-[#b79bff]"
+                              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-gray-300 px-2.5 text-xs font-semibold text-gray-900 hover:border-brand hover:text-brand dark:border-white/15 dark:text-white dark:hover:border-brand-light dark:hover:text-brand-light"
                             >
                               <Copy size={13} /> Copy link
                             </button>
@@ -204,7 +204,7 @@ const AgentDealDetailModal = ({ deal, onClose, onUpdated }: AgentDealDetailModal
                   <ol className="m-0 grid list-none gap-4 border-l border-gray-200 pl-4 p-0 dark:border-white/10">
                     {detail.timeline.map((entry) => (
                       <li key={entry.id} className="relative">
-                        <span className="absolute top-1 -left-[21px] grid h-3 w-3 place-items-center rounded-full bg-[#b79bff] ring-4 ring-white dark:ring-neutral-900" />
+                        <span className="absolute top-1 -left-[21px] grid h-3 w-3 place-items-center rounded-full bg-brand ring-4 ring-white dark:ring-neutral-900" />
                         <p className="m-0 text-sm font-semibold">{entry.label}</p>
                         {entry.remark && <p className={`m-0 mt-1 text-xs ${ui.muted}`}>{entry.remark}</p>}
                         <p className={`mt-1 flex items-center gap-1.5 text-xs ${ui.muted}`}>

@@ -13,9 +13,9 @@ const PAGE_CONTAINER = "mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-10";
 const SERIF = { fontFamily: '"Fraunces", "Playfair Display", Georgia, serif' };
 
 const viewAllClass =
-  "shrink-0 items-center justify-center gap-2 rounded-full bg-[#b79bff] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#b79bff]";
+  "shrink-0 items-center justify-center gap-2 rounded-full bg-[#703BF7] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#9677df]";
 const roundButton =
-  "cursor-pointer rounded-full border border-gray-300 bg-white p-2.5 text-gray-900 transition hover:border-[#b79bff] hover:text-[#b79bff] disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:bg-[#101010] dark:text-white";
+  "cursor-pointer rounded-full border border-gray-300 bg-white p-2.5 text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:bg-[#101010] dark:text-white";
 
 function FAQSection() {
   const { faq, loading, page, ITEMS_PER_PAGE, fetchFAQs, nextPage, prevPage } = useFAQStore();
@@ -43,7 +43,7 @@ function FAQSection() {
       {/* Header */}
       <div className="mb-8 flex items-end justify-between gap-4">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold text-[#b79bff] dark:text-[#b79bff]">Help</p>
+          <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">Help</p>
           <h2
             style={SERIF}
             className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl"
@@ -91,7 +91,7 @@ function FAQSection() {
                           [item.id]: !prev[item.id],
                         }))
                       }
-                      className="mt-4 w-fit cursor-pointer text-sm font-semibold text-[#b79bff] hover:underline dark:text-[#b79bff]"
+                      className="mt-4 w-fit cursor-pointer text-sm font-semibold text-[#703BF7] hover:underline dark:text-[#b79bff]"
                     >
                       {expanded[item.id] ? "Show less" : "Read more"}
                     </button>

@@ -26,9 +26,9 @@ const PURPOSE_OPTIONS = [
 const digits = (value: string) => value.replace(/[^\d]/g, "");
 
 const inputClass =
-  "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#b79bff] focus:ring-2 focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white";
+  "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#703BF7] focus:ring-2 focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white";
 const dropdownClass =
-  "flex h-[46px] w-full cursor-pointer items-center justify-between rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-900 transition hover:border-[#b79bff] dark:border-white/15 dark:bg-[#101010] dark:text-white";
+  "flex h-[46px] w-full cursor-pointer items-center justify-between rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-900 transition hover:border-[#703BF7] dark:border-white/15 dark:bg-[#101010] dark:text-white";
 const labelClass = "mb-1.5 block text-sm font-medium text-gray-900 dark:text-white";
 const sectionTitleClass = "mb-4 text-xl font-semibold text-gray-900 dark:text-white";
 const cardClass =
@@ -407,13 +407,13 @@ const RequestPropertyPage: React.FC = () => {
                 checked={agreed}
                 onChange={(event) => setAgreed(event.target.checked)}
                 required
-                className="mt-0.5 h-4 w-4 cursor-pointer accent-[#b79bff]"
+                className="mt-0.5 h-4 w-4 cursor-pointer accent-[#703BF7]"
               />
               <span>
                 I agree that my details can be used to reply to this request. Read our{" "}
                 <Link
                   to="/privacy-policy"
-                  className="font-semibold text-[#b79bff] underline underline-offset-2 hover:text-[#b79bff] dark:text-[#b79bff]"
+                  className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#9677df] dark:text-[#b79bff]"
                 >
                   Privacy Policy
                 </Link>
@@ -423,7 +423,7 @@ const RequestPropertyPage: React.FC = () => {
             <button
               type="submit"
               disabled={!agreed || isSubmitting}
-              className="w-full cursor-pointer rounded-full bg-[#b79bff] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#b79bff] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+              className="w-full cursor-pointer rounded-full bg-[#703BF7] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#9677df] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
             >
               {isSubmitting ? "Sending request…" : "Send my request"}
             </button>

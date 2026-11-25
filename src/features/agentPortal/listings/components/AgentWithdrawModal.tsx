@@ -87,7 +87,7 @@ const AgentWithdrawModal = ({ property, open, onOpenChange, onWithdrawn }: Agent
               placeholder="This is saved in history"
               value={withdrawReason}
               onChange={(event) => setWithdrawReason(event.target.value)}
-              className="box-border min-h-[96px] w-full resize-y rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#b79bff] focus:ring-2 focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-[#b79bff] dark:focus:ring-[#b79bff]/15"
+              className="box-border min-h-[96px] w-full resize-y rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#703BF7] focus:ring-2 focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-[#B79BFF] dark:focus:ring-[#B79BFF]/15"
             />
             <div className="mt-3 flex items-center justify-end gap-2.5 max-sm:grid max-sm:grid-cols-2">
               <Dialog.Close asChild>

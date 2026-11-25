@@ -189,7 +189,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="h-11 w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#b79bff] focus:outline-none focus:ring-2 focus:ring-[#b79bff]/30 dark:border-gray-500 dark:bg-[#262626] dark:text-white dark:placeholder:text-gray-400"
+                  className="h-11 w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none focus:ring-2 focus:ring-[#703BF7]/30 dark:border-gray-500 dark:bg-[#262626] dark:text-white dark:placeholder:text-gray-400"
                 />
               </div>
 
@@ -203,7 +203,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="h-11 w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#b79bff] focus:outline-none focus:ring-2 focus:ring-[#b79bff]/30 dark:border-gray-500 dark:bg-[#262626] dark:text-white dark:placeholder:text-gray-400"
+                  className="h-11 w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none focus:ring-2 focus:ring-[#703BF7]/30 dark:border-gray-500 dark:bg-[#262626] dark:text-white dark:placeholder:text-gray-400"
                 />
               </div>
 
@@ -217,7 +217,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-11 w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#b79bff] focus:outline-none focus:ring-2 focus:ring-[#b79bff]/30 dark:border-gray-500 dark:bg-[#262626] dark:text-white dark:placeholder:text-gray-400"
+                  className="h-11 w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none focus:ring-2 focus:ring-[#703BF7]/30 dark:border-gray-500 dark:bg-[#262626] dark:text-white dark:placeholder:text-gray-400"
                 />
               </div>
             </div>
@@ -230,7 +230,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
                 type="text"
                 value={[property.name, addressOf(property)].filter(Boolean).join(", ")}
                 readOnly
-                className="h-11 w-full rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm text-gray-900 focus:border-[#b79bff] focus:outline-none focus:ring-2 focus:ring-[#b79bff]/30 dark:border-gray-600 dark:bg-[#202020] dark:text-white"
+                className="h-11 w-full rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm text-gray-900 focus:border-[#703BF7] focus:outline-none focus:ring-2 focus:ring-[#703BF7]/30 dark:border-gray-600 dark:bg-[#202020] dark:text-white"
               />
             </div>
 
@@ -244,7 +244,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
                 required
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="min-h-32 w-full rounded-md border border-gray-400 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#b79bff] focus:outline-none focus:ring-2 focus:ring-[#b79bff]/30 dark:border-gray-500 dark:bg-[#262626] dark:text-white dark:placeholder:text-gray-400"
+                className="min-h-32 w-full rounded-md border border-gray-400 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-[#703BF7] focus:outline-none focus:ring-2 focus:ring-[#703BF7]/30 dark:border-gray-500 dark:bg-[#262626] dark:text-white dark:placeholder:text-gray-400"
               />
             </div>
 
@@ -257,7 +257,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
                 required
               />
               <p className="text-sm text-gray-700 dark:text-gray-300">
-                I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#b79bff] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#b79bff] underline">Privacy Policy</Link>.
+                I agree with the <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Terms</Link> and <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#703BF7] underline">Privacy Policy</Link>.
               </p>
             </div>
 
@@ -267,7 +267,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ property, open, onOpenChang
                 disabled={!agreed || isSubmitting || !fullName.trim() || !email.trim() || !phone.trim()}
                 className={`px-4 py-3 rounded-lg font-medium transition
                   ${agreed && !isSubmitting && fullName.trim() && email.trim() && phone.trim()
-                    ? "bg-[#b79bff] hover:bg-[#b79bff] text-white"
+                    ? "bg-[#703BF7] hover:bg-[#5c2fe0] text-white"
                     : "bg-gray-400 cursor-not-allowed text-gray-200"
                   }`}
               >

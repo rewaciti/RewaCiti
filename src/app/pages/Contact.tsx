@@ -44,9 +44,9 @@ const SOURCE_OPTIONS = [
 ];
 
 const inputClass =
-  "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#b79bff] focus:ring-2 focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white";
+  "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#703BF7] focus:ring-2 focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white";
 const dropdownClass =
-  "flex h-[46px] w-full cursor-pointer items-center justify-between rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-900 transition hover:border-[#b79bff] dark:border-white/15 dark:bg-[#101010] dark:text-white";
+  "flex h-[46px] w-full cursor-pointer items-center justify-between rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-900 transition hover:border-[#703BF7] dark:border-white/15 dark:bg-[#101010] dark:text-white";
 const labelClass = "mb-1.5 block text-sm font-medium text-gray-900 dark:text-white";
 const cardClass =
   "rounded-3xl border border-gray-200 bg-white p-6 dark:border-white/10 dark:bg-[#1A1A1A] sm:p-8";
@@ -54,7 +54,7 @@ const infoCardClass =
   "group flex flex-col rounded-3xl border border-gray-200 bg-white p-6 transition duration-200 dark:border-white/10 dark:bg-[#1A1A1A]";
 const infoCardLinkClass = "hover:-translate-y-0.5 hover:shadow-lg";
 const pillLinkClass =
-  "inline-flex items-center justify-center gap-3 rounded-full border border-gray-300 bg-gray-100 px-5 py-2.5 text-sm text-gray-900 transition hover:border-[#b79bff] hover:text-[#b79bff] dark:border-white/15 dark:bg-white/5 dark:text-white";
+  "inline-flex items-center justify-center gap-3 rounded-full border border-gray-300 bg-gray-100 px-5 py-2.5 text-sm text-gray-900 transition hover:border-[#703BF7] hover:text-[#703BF7] dark:border-white/15 dark:bg-white/5 dark:text-white";
 
 const Required = () => <span className="ml-1 text-red-600">*</span>;
 
@@ -336,7 +336,7 @@ function Contact() {
       >
         <div className={`${PAGE_CONTAINER} grid gap-8 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:gap-12`}>
           <div className="h-fit lg:sticky lg:top-28">
-            <p className="text-sm font-semibold text-[#b79bff] dark:text-[#b79bff]">
+            <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">
               Get in touch
             </p>
             <h1
@@ -353,7 +353,7 @@ function Contact() {
             </p>
             <a
               href="#Ouroffices"
-              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#b79bff] underline-offset-2 hover:underline dark:text-[#b79bff]"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#703BF7] underline-offset-2 hover:underline dark:text-[#b79bff]"
             >
               <FiMapPin size={16} /> Find our office
             </a>
@@ -468,7 +468,7 @@ function Contact() {
               <label className="flex cursor-pointer items-start gap-3 text-sm text-gray-700 dark:text-gray-400">
                 <input
                   type="checkbox"
-                  className="mt-0.5 h-4 w-4 cursor-pointer accent-[#b79bff]"
+                  className="mt-0.5 h-4 w-4 cursor-pointer accent-[#703BF7]"
                   checked={agreed}
                   onChange={(e) => setAgreed(e.target.checked)}
                   required
@@ -479,7 +479,7 @@ function Contact() {
                     to="/terms"
                     target="_blank"
                     rel="noreferrer"
-                    className="font-semibold text-[#b79bff] underline underline-offset-2 hover:text-[#b79bff] dark:text-[#b79bff]"
+                    className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#9677df] dark:text-[#b79bff]"
                   >
                     Terms
                   </Link>{" "}
@@ -488,7 +488,7 @@ function Contact() {
                     to="/privacy-policy"
                     target="_blank"
                     rel="noreferrer"
-                    className="font-semibold text-[#b79bff] underline underline-offset-2 hover:text-[#b79bff] dark:text-[#b79bff]"
+                    className="font-semibold text-[#703BF7] underline underline-offset-2 hover:text-[#9677df] dark:text-[#b79bff]"
                   >
                     Privacy Policy
                   </Link>
@@ -499,7 +499,7 @@ function Contact() {
               <button
                 type="submit"
                 disabled={!canSubmit}
-                className="w-full cursor-pointer rounded-full bg-[#b79bff] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#b79bff] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+                className="w-full cursor-pointer rounded-full bg-[#703BF7] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#9677df] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
               >
                 {isSubmitting ? "Sending..." : "Send your message"}
               </button>
@@ -515,7 +515,7 @@ function Contact() {
       >
         <div className={PAGE_CONTAINER}>
           <div className="max-w-2xl">
-            <p className="text-sm font-semibold text-[#b79bff] dark:text-[#b79bff]">Our office</p>
+            <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">Our office</p>
             <h2
               style={SERIF}
               className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl"
@@ -561,7 +561,7 @@ function Contact() {
                 href={`https://maps.google.com/?q=${MAP_COORDS}&entry=gps&g_st=awb`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#b79bff] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#b79bff] sm:w-fit"
+                className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#703BF7] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#9677df] sm:w-fit"
               >
                 <FaDirections />
                 Get directions

@@ -86,7 +86,7 @@ const AgentBookPropertyVisitModal = ({
         >
           <header className="flex shrink-0 items-start justify-between gap-2 border-b border-gray-200 px-6 py-5 dark:border-white/10 max-sm:gap-2 max-sm:px-5 max-sm:py-4">
             <div className="flex min-w-0 flex-1 items-start gap-3 max-sm:gap-2">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#b79bff]/10 text-[#b79bff] dark:bg-[#b79bff]/15 dark:text-[#b79bff] max-sm:h-9 max-sm:w-9" aria-hidden="true">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#703BF7]/10 text-[#703BF7] dark:bg-[#B79BFF]/15 dark:text-[#B79BFF] max-sm:h-9 max-sm:w-9" aria-hidden="true">
                 <CalendarPlus size={19} />
               </span>
               <div className="min-w-0">
@@ -110,7 +110,7 @@ const AgentBookPropertyVisitModal = ({
           </header>
 
           <div className="border-b border-gray-200 px-6 py-3 dark:border-white/10 max-sm:px-5">
-            <label className="flex h-10 items-center gap-2 rounded-xl border border-gray-300 bg-white px-3 text-gray-500 focus-within:border-[#b79bff] dark:border-white/15 dark:bg-[#101010] dark:text-gray-400">
+            <label className="flex h-10 items-center gap-2 rounded-xl border border-gray-300 bg-white px-3 text-gray-500 focus-within:border-[#703BF7] dark:border-white/15 dark:bg-[#101010] dark:text-gray-400">
               <Search size={16} aria-hidden="true" className="shrink-0" />
               <input
                 type="search"
@@ -126,7 +126,7 @@ const AgentBookPropertyVisitModal = ({
           <div className="min-h-[220px] flex-1 overflow-y-auto px-6 py-4 max-sm:px-5 max-sm:pb-[calc(16px+env(safe-area-inset-bottom))]">
             {loading ? (
               <div className="flex h-44 flex-col items-center justify-center gap-3" role="status" aria-live="polite">
-                <span className="h-8 w-8 animate-spin rounded-full border-[3px] border-gray-200 border-t-[#b79bff] dark:border-white/10 dark:border-t-[#b79bff]" aria-hidden="true" />
+                <span className="h-8 w-8 animate-spin rounded-full border-[3px] border-gray-200 border-t-[#703BF7] dark:border-white/10 dark:border-t-[#B79BFF]" aria-hidden="true" />
                 <p className="m-0 text-sm text-gray-600 dark:text-gray-400">Loading live properties…</p>
               </div>
             ) : filtered.length ? (
@@ -140,7 +140,7 @@ const AgentBookPropertyVisitModal = ({
                       <button
                         type="button"
                         onClick={() => setSelectedProperty(property)}
-                        className="flex w-full items-center gap-3 rounded-xl border border-gray-200 bg-white p-3 text-left transition-colors hover:border-[#b79bff] hover:bg-[#b79bff]/5 dark:border-white/10 dark:bg-[#101010] dark:hover:border-[#b79bff] dark:hover:bg-[#b79bff]/10"
+                        className="flex w-full items-center gap-3 rounded-xl border border-gray-200 bg-white p-3 text-left transition-colors hover:border-[#703BF7] hover:bg-[#703BF7]/5 dark:border-white/10 dark:bg-[#101010] dark:hover:border-[#B79BFF] dark:hover:bg-[#B79BFF]/10"
                       >
                         <div className="grid h-14 w-16 shrink-0 place-items-center overflow-hidden rounded-lg bg-gray-100 text-gray-500 dark:bg-[#232323] dark:text-gray-400">
                           {property.photos[0] ? (
@@ -156,7 +156,7 @@ const AgentBookPropertyVisitModal = ({
                           <p className="m-0 mt-0.5 flex items-center gap-1 truncate text-xs text-gray-500 dark:text-gray-400">
                             <MapPin size={12} className="shrink-0" /> {location || property.sku}
                           </p>
-                          <p className="m-0 mt-1 text-xs font-bold text-[#b79bff] dark:text-[#b79bff]">
+                          <p className="m-0 mt-1 text-xs font-bold text-[#703BF7] dark:text-[#B79BFF]">
                             {money(property.price, property.currency)}{periodShortLabel(property.pricePeriod)}
                           </p>
                         </div>

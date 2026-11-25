@@ -186,7 +186,7 @@ const ServiceSection = ({
   <section id={id} className={`scroll-mt-24 py-14 sm:py-20 ${tone}`}>
     <div className={PAGE_CONTAINER}>
       <div className="max-w-2xl">
-        <p className="text-sm font-semibold text-[#b79bff] dark:text-[#b79bff]">{eyebrow}</p>
+        <p className="text-sm font-semibold text-[#703BF7] dark:text-[#b79bff]">{eyebrow}</p>
         <h2
           style={SERIF}
           className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl"
@@ -244,7 +244,7 @@ const ServiceSection = ({
             <p className="mt-3 text-sm leading-6 text-gray-200">{cta.text}</p>
             <Link
               to="/contact"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#b79bff] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#b79bff]"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#703BF7] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9677df]"
             >
               Talk to us <FiArrowRight size={16} />
             </Link>
@@ -312,7 +312,7 @@ function Service() {
                   <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-400">
                     {item.description}
                   </p>
-                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#b79bff] transition group-hover:gap-2.5 dark:text-[#b79bff]">
+                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#703BF7] transition group-hover:gap-2.5 dark:text-[#b79bff]">
                     Learn more <FiArrowRight size={15} />
                   </span>
                 </>
@@ -345,7 +345,7 @@ function Service() {
       {/* Closing call to action */}
       <section className="bg-gray-200 py-14 dark:bg-black/50 sm:py-20">
         <div className={PAGE_CONTAINER}>
-          <div className="relative overflow-hidden rounded-3xl bg-[#b79bff] px-6 py-12 text-center text-white sm:px-12 sm:py-16">
+          <div className="relative overflow-hidden rounded-3xl bg-[#703BF7] px-6 py-12 text-center text-white sm:px-12 sm:py-16">
             <div
               aria-hidden="true"
               className="absolute inset-0 opacity-20 mix-blend-soft-light"
@@ -366,7 +366,7 @@ function Service() {
               <div className="mt-8 flex flex-wrap justify-center gap-3">
                 <Link
                   to="/contact"
-                  className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#b79bff] transition hover:bg-gray-100"
+                  className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#703BF7] transition hover:bg-gray-100"
                 >
                   Contact us
                 </Link>

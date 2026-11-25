@@ -119,7 +119,7 @@ const SectionCard = ({icon, title, section, editingSection, isSaving, cancelEdit
               type="button"
               disabled={isSaving}
               onClick={onSubmit}
-              className="flex items-center gap-1 text-xs font-semibold text-[#b79bff] hover:text-[#b79bff] disabled:opacity-50 cursor-pointer"
+              className="flex items-center gap-1 text-xs font-semibold text-[#703BF7] hover:text-[#5c2fe0] disabled:opacity-50 cursor-pointer"
             >
               <FiSave size={12} /> {isSaving ? "Saving..." : "Save"}
             </button>
@@ -128,7 +128,7 @@ const SectionCard = ({icon, title, section, editingSection, isSaving, cancelEdit
           <button
             type="button"
             onClick={() => setEditingSection(section)}
-            className="flex items-center gap-1 text-xs font-semibold text-[#b79bff] hover:text-[#b79bff] cursor-pointer"
+            className="flex items-center gap-1 text-xs font-semibold text-[#703BF7] hover:text-[#5c2fe0] cursor-pointer"
           >
             <FiEdit2 size={12} /> Edit
           </button>
@@ -158,7 +158,7 @@ const LabeledInput = ({
     </label>
     <input
       type={type}
-      className="w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#b79bff] placeholder:text-[11px] dark:placeholder:text-gray-500 placeholder:text-gray-600 text-xs"
+      className="w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#703BF7] placeholder:text-[11px] dark:placeholder:text-gray-500 placeholder:text-gray-600 text-xs"
       value={value}
       onChange={(e) => onChange(e.target.value)}
     />
@@ -420,8 +420,8 @@ const Profile = () => {
             onClick={() => setActiveTab("info")}
             className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-4 rounded-md text-xs font-semibold transition cursor-pointer ${
               activeTab === "info"
-                ? "bg-[#b79bff] text-white shadow-sm"
-                : "text-gray-700 dark:text-gray-300 hover:text-[#b79bff]"
+                ? "bg-[#703BF7] text-white shadow-sm"
+                : "text-gray-700 dark:text-gray-300 hover:text-[#703BF7]"
             }`}
           >
             <FiUser size={14} /> Profile
@@ -430,8 +430,8 @@ const Profile = () => {
             onClick={() => setActiveTab("security")}
             className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-4 rounded-md text-xs font-semibold transition cursor-pointer ${
               activeTab === "security"
-                ? "bg-[#b79bff] text-white shadow-sm"
-                : "text-gray-700 dark:text-gray-300 hover:text-[#b79bff]"
+                ? "bg-[#703BF7] text-white shadow-sm"
+                : "text-gray-700 dark:text-gray-300 hover:text-[#703BF7]"
             }`}
           >
             <FiLock size={14} /> Security
@@ -454,7 +454,7 @@ const Profile = () => {
                         placeholder="Enter current password"
                         value={currentPassword}
                         onChange={(e) => handleCurrentPasswordChange(e.target.value)}
-                        className="w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#b79bff] placeholder:text-[11px] dark:placeholder:text-gray-500 placeholder:text-gray-600 text-xs"
+                        className="w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#703BF7] placeholder:text-[11px] dark:placeholder:text-gray-500 placeholder:text-gray-600 text-xs"
                       />
                       <button
                         type="button"
@@ -475,7 +475,7 @@ const Profile = () => {
                         placeholder="Enter new password"
                         value={newPassword}
                         onChange={(e) => handleNewPasswordChange(e.target.value)}
-                        className="w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#b79bff] placeholder:text-[11px] dark:placeholder:text-gray-500 placeholder:text-gray-600 text-xs"
+                        className="w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#703BF7] placeholder:text-[11px] dark:placeholder:text-gray-500 placeholder:text-gray-600 text-xs"
                       />
                       <button
                         type="button"
@@ -500,7 +500,7 @@ const Profile = () => {
                         placeholder="Re-enter new password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#b79bff] placeholder:text-[11px] dark:placeholder:text-gray-500 placeholder:text-gray-600 text-xs"
+                        className="w-full px-3 py-1.5 border border-gray-600/30 rounded-lg bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#703BF7] placeholder:text-[11px] dark:placeholder:text-gray-500 placeholder:text-gray-600 text-xs"
                       />
                       <button
                         type="button"
@@ -533,7 +533,7 @@ const Profile = () => {
                         newPassword !== confirmPassword ||
                         newPassword.length < 8
                       }
-                      className="flex items-center justify-center gap-1.5 bg-[#b79bff] text-white hover:bg-[#b79bff] px-4 py-1.5 rounded-lg text-xs font-semibold transition disabled:opacity-50 cursor-pointer"
+                      className="flex items-center justify-center gap-1.5 bg-[#703BF7] text-white hover:bg-[#5c2fe0] px-4 py-1.5 rounded-lg text-xs font-semibold transition disabled:opacity-50 cursor-pointer"
                     >
                       <FiLock size={14} />
                       {isChangingPassword ? "Updating..." : "Change Password"}
@@ -550,7 +550,7 @@ const Profile = () => {
             <div className="space-y-4">
               <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex flex-col items-center text-center">
                 <div className="relative w-16 h-16 mb-2">
-                  <div className="w-16 h-16 rounded-full bg-[#b79bff]/10 border border-[#b79bff]/40 text-[#b79bff] dark:text-white flex items-center justify-center text-lg font-bold overflow-hidden">
+                  <div className="w-16 h-16 rounded-full bg-[#703BF7]/10 border border-[#703BF7]/40 text-[#703BF7] dark:text-white flex items-center justify-center text-lg font-bold overflow-hidden">
                     {profilePicture ? (
                       <img
                         src={profilePicture}
@@ -571,7 +571,7 @@ const Profile = () => {
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isUploadingPhoto}
                     title="Upload photo"
-                    className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#b79bff] text-white flex items-center justify-center border-2 border-white dark:border-[#141414] hover:bg-[#b79bff] disabled:opacity-50 cursor-pointer"
+                    className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#703BF7] text-white flex items-center justify-center border-2 border-white dark:border-[#141414] hover:bg-[#5c2fe0] disabled:opacity-50 cursor-pointer"
                   >
                     <FiCamera size={11} />
                   </button>

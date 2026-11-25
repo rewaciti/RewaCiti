@@ -14,7 +14,7 @@ interface AgentAddLeadModalProps {
 }
 
 const inputClass =
-  "min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#b79bff] focus:ring-2 focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-[#b79bff] dark:focus:ring-[#b79bff]/15";
+  "min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#703BF7] focus:ring-2 focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-[#B79BFF] dark:focus:ring-[#B79BFF]/15";
 
 const AgentAddLeadModal = ({ open, onOpenChange, onCreated, initialPropertyId = "" }: AgentAddLeadModalProps) => {
   const [properties, setProperties] = useState<AgentProperty[]>([]);
@@ -112,7 +112,7 @@ const AgentAddLeadModal = ({ open, onOpenChange, onCreated, initialPropertyId = 
         >
           <header className="flex shrink-0 items-start justify-between gap-3 border-b border-gray-200 px-6 py-5 dark:border-white/10 max-sm:px-5 max-sm:py-4">
             <div className="flex items-start gap-3">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#b79bff]/10 text-[#b79bff] dark:bg-[#b79bff]/15 dark:text-[#b79bff]" aria-hidden="true">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#703BF7]/10 text-[#703BF7] dark:bg-[#B79BFF]/15 dark:text-[#B79BFF]" aria-hidden="true">
                 <UserPlus size={19} />
               </span>
               <div>
@@ -144,7 +144,7 @@ const AgentAddLeadModal = ({ open, onOpenChange, onCreated, initialPropertyId = 
                 </span>
                 <CustomDropdown
                   className="w-full"
-                  buttonClassName="h-11 w-full rounded-xl border border-gray-300 bg-white! px-3.5 text-left text-sm text-gray-900! hover:border-[#b79bff] dark:border-white/15 dark:bg-[#101010]! dark:text-white!"
+                  buttonClassName="h-11 w-full rounded-xl border border-gray-300 bg-white! px-3.5 text-left text-sm text-gray-900! hover:border-[#703BF7] dark:border-white/15 dark:bg-[#101010]! dark:text-white!"
                   menuClassName="overflow-hidden rounded-xl border-gray-300! bg-white! text-gray-900! shadow-lg! dark:border-white/15! dark:bg-[#1A1A1A]! dark:text-white! [&>div]:max-h-60 [&>div]:overflow-y-auto"
                   menuItemClassName="block w-full bg-white! px-4 py-2.5 text-left text-sm whitespace-normal text-gray-900! transition hover:bg-gray-100! dark:bg-[#1A1A1A]! dark:text-white! dark:hover:bg-neutral-800!"
                   placeholder={loadingProperties ? "Loading properties..." : "Select a property"}
@@ -204,7 +204,7 @@ const AgentAddLeadModal = ({ open, onOpenChange, onCreated, initialPropertyId = 
                   value={message}
                   onChange={(event) => setMessage(event.target.value)}
                   placeholder="What did the prospect ask about?"
-                  className="min-h-[96px] w-full resize-y rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#b79bff] focus:ring-2 focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-[#b79bff] dark:focus:ring-[#b79bff]/15"
+                  className="min-h-[96px] w-full resize-y rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#703BF7] focus:ring-2 focus:ring-[#703BF7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-[#B79BFF] dark:focus:ring-[#B79BFF]/15"
                 />
               </label>
 
@@ -214,7 +214,7 @@ const AgentAddLeadModal = ({ open, onOpenChange, onCreated, initialPropertyId = 
                   checked={consent}
                   onChange={(event) => setConsent(event.target.checked)}
                   required
-                  className="mt-0.5 h-4 w-4 shrink-0 accent-[#b79bff]"
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-[#703BF7]"
                 />
                 <span>The prospect agreed to be contacted regarding this property inquiry.</span>
               </label>
@@ -233,7 +233,7 @@ const AgentAddLeadModal = ({ open, onOpenChange, onCreated, initialPropertyId = 
               <button
                 type="submit"
                 disabled={!canSubmit}
-                className="min-h-11 rounded-lg border-0 bg-[#b79bff] px-5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#b79bff] disabled:cursor-not-allowed disabled:opacity-45"
+                className="min-h-11 rounded-lg border-0 bg-[#703BF7] px-5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#5c2fe0] disabled:cursor-not-allowed disabled:opacity-45"
               >
                 {submitting ? "Saving..." : "Save lead"}
               </button>

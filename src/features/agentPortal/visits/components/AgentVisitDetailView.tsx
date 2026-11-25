@@ -43,15 +43,15 @@ interface AgentVisitDetailViewProps {
 type PanelKey = "reschedule" | "cancel" | null;
 
 const fieldInputClass =
-  "w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-500 focus:border-[#b79bff] focus:ring-2 focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-[#b79bff] dark:focus:ring-[#b79bff]/15";
+  "w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-500 focus:border-[#703bf7] focus:ring-2 focus:ring-[#703bf7]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-[#b79bff] dark:focus:ring-[#b79bff]/15";
 
 const sectionLabel = "m-0 mb-2 text-xs font-medium tracking-wider text-gray-600 uppercase dark:text-gray-400";
 const rowClass = "flex min-h-9 items-center justify-between gap-3 text-sm";
 const mutedText = "text-gray-600 dark:text-gray-400";
 const primaryBtn =
-  "inline-flex h-10 items-center justify-center gap-2 rounded-md border-0 bg-[#b79bff] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#b79bff] disabled:cursor-not-allowed disabled:opacity-50";
+  "inline-flex h-10 items-center justify-center gap-2 rounded-md border-0 bg-[#703bf7] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#5c2fe0] disabled:cursor-not-allowed disabled:opacity-50";
 const outlineBtn =
-  "inline-flex h-10 items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 text-sm font-semibold text-gray-900 transition-colors hover:border-[#b79bff] hover:text-[#b79bff] disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/15 dark:bg-[#1a1a1a] dark:text-white dark:hover:border-[#b79bff] dark:hover:text-[#b79bff]";
+  "inline-flex h-10 items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 text-sm font-semibold text-gray-900 transition-colors hover:border-[#703bf7] hover:text-[#703bf7] disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/15 dark:bg-[#1a1a1a] dark:text-white dark:hover:border-[#b79bff] dark:hover:text-[#b79bff]";
 
 const initials = (name: string) =>
   name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("") || "?";
@@ -441,7 +441,7 @@ const AgentVisitDetailView = ({ booking, onClose, onUpdated, agentName }: AgentV
               <div className={rowClass}>
                 <span className={mutedText}>Agent</span>
                 <span className="inline-flex items-center gap-2 font-medium">
-                  <span className="grid h-6 w-6 place-items-center rounded-full bg-[#b79bff]/10 text-[10px] font-bold text-[#b79bff] dark:bg-[#b79bff]/15 dark:text-[#b79bff]">
+                  <span className="grid h-6 w-6 place-items-center rounded-full bg-[#703bf7]/10 text-[10px] font-bold text-[#703bf7] dark:bg-[#b79bff]/15 dark:text-[#b79bff]">
                     {initials(hostName)}
                   </span>
                   {hostName}
@@ -485,7 +485,7 @@ const AgentVisitDetailView = ({ booking, onClose, onUpdated, agentName }: AgentV
                 <button
                   type="submit"
                   disabled={savingDetails || !meetingLink.trim() || meetingLink.trim() === (booking.meetingLink ?? "")}
-                  className="h-11 shrink-0 rounded-md border border-gray-200 bg-white px-4 text-sm font-semibold text-gray-900 hover:border-[#b79bff] hover:text-[#b79bff] disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:border-gray-200 disabled:hover:text-gray-400 dark:border-white/10 dark:bg-[#232323] dark:text-white dark:disabled:text-gray-500"
+                  className="h-11 shrink-0 rounded-md border border-gray-200 bg-white px-4 text-sm font-semibold text-gray-900 hover:border-[#703bf7] hover:text-[#703bf7] disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:border-gray-200 disabled:hover:text-gray-400 dark:border-white/10 dark:bg-[#232323] dark:text-white dark:disabled:text-gray-500"
                 >
                   {savingDetails ? "Saving..." : booking.meetingLink ? "Update" : "Send"}
                 </button>
@@ -505,7 +505,7 @@ const AgentVisitDetailView = ({ booking, onClose, onUpdated, agentName }: AgentV
                       type="button"
                       onClick={() => setOutcomeStatus(value)}
                       className={`h-9 rounded-md border px-3 text-xs font-semibold transition-colors ${outcomeStatus === value
-                        ? "border-[#b79bff] bg-[#b79bff]/10 text-[#b79bff] dark:bg-[#b79bff]/15 dark:text-[#b79bff]"
+                        ? "border-[#703bf7] bg-[#703bf7]/10 text-[#703bf7] dark:bg-[#b79bff]/15 dark:text-[#b79bff]"
                         : "border-gray-300 bg-white text-gray-700 dark:border-white/15 dark:bg-[#101010] dark:text-gray-300"}`}
                     >
                       {value === "completed" ? "Completed" : "No show"}
@@ -585,7 +585,7 @@ const AgentVisitDetailView = ({ booking, onClose, onUpdated, agentName }: AgentV
                 </p>
                 <CustomDropdown
                   className="w-full"
-                  buttonClassName="h-10 w-full rounded-md border border-gray-300 bg-white! px-3 text-left text-sm text-gray-900! hover:border-[#b79bff] dark:border-white/15 dark:bg-[#101010]! dark:text-white!"
+                  buttonClassName="h-10 w-full rounded-md border border-gray-300 bg-white! px-3 text-left text-sm text-gray-900! hover:border-[#703bf7] dark:border-white/15 dark:bg-[#101010]! dark:text-white!"
                   menuClassName="overflow-hidden rounded-xl border-gray-300! bg-white! text-gray-900! shadow-lg! dark:border-white/15! dark:bg-[#1a1a1a]! dark:text-white!"
                   menuItemClassName="block w-full bg-white! px-4 py-2.5 text-left text-sm text-gray-900! transition hover:bg-gray-100! dark:bg-[#1a1a1a]! dark:text-white! dark:hover:bg-neutral-800!"
                   placeholder="Select method"
@@ -740,11 +740,11 @@ const AgentVisitDetailView = ({ booking, onClose, onUpdated, agentName }: AgentV
                             setRescheduleStart("");
                           }}
                           className={`mx-auto grid h-10 w-10 place-items-center rounded-md border-0 text-sm transition-colors ${isSelected
-                            ? "bg-[#b79bff] font-semibold text-white"
+                            ? "bg-[#703bf7] font-semibold text-white"
                             : isPast
                               ? "cursor-not-allowed bg-transparent text-gray-400 dark:text-gray-600"
                               : isToday
-                                ? "bg-[#b79bff]/15 font-semibold text-[#b79bff] hover:bg-[#b79bff]/25 dark:text-[#b79bff]"
+                                ? "bg-[#703bf7]/15 font-semibold text-[#703bf7] hover:bg-[#703bf7]/25 dark:text-[#b79bff]"
                                 : "bg-transparent hover:bg-gray-100 dark:hover:bg-neutral-800"}`}
                         >
                           {day}
@@ -772,8 +772,8 @@ const AgentVisitDetailView = ({ booking, onClose, onUpdated, agentName }: AgentV
                             aria-pressed={selected}
                             onClick={() => setRescheduleStart(slot.start)}
                             className={`grid min-h-[76px] content-center justify-items-center gap-0.5 rounded-md border px-1 py-2 text-center text-sm transition-colors ${selected
-                              ? "border-[#b79bff] bg-[#b79bff]/10 font-semibold text-[#b79bff] dark:border-[#b79bff] dark:bg-[#b79bff]/15 dark:text-[#b79bff]"
-                              : "border-gray-200 bg-white hover:border-[#b79bff] dark:border-white/10 dark:bg-[#1a1a1a]"}`}
+                              ? "border-[#703bf7] bg-[#703bf7]/10 font-semibold text-[#703bf7] dark:border-[#b79bff] dark:bg-[#b79bff]/15 dark:text-[#b79bff]"
+                              : "border-gray-200 bg-white hover:border-[#703bf7] dark:border-white/10 dark:bg-[#1a1a1a]"}`}
                           >
                             <span>{formatVisitTime(slot.start)}</span>
                             <span className={`text-xs font-normal ${selected ? "" : mutedText}`}>

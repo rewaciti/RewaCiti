@@ -42,7 +42,7 @@ const AgentEarningsCards = ({ summary, commissionPercent, rating }: AgentEarning
       <article className={cardClass}>
         <div className="flex items-center justify-between gap-2">
           <p className={labelClass}>Commission rate</p>
-          <Percent size={18} className="text-[#b79bff] dark:text-[#b79bff]" aria-hidden="true" />
+          <Percent size={18} className="text-brand dark:text-brand-light" aria-hidden="true" />
         </div>
         <p className={valueClass}>{Number(commissionPercent) || 0}%</p>
         <p className={noteClass}>Per successful deal</p>

@@ -26,7 +26,7 @@ export default function PropertyFeatureCard({
           : "border-gray-600/20 bg-gray-50 dark:bg-black/20"
       } ${className}`}
     >
-      <span className="relative text-[#b79bff]">
+      <span className="relative text-[#703BF7]">
         <Icon aria-hidden="true" size={24} strokeWidth={1.5} />
         {isProhibited && (
           <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full border border-white bg-red-600 text-white dark:border-[#1A1A1A]">
