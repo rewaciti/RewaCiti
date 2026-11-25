@@ -272,20 +272,20 @@ const AgentPropertyOverview = ({
   return (
     <div className="fixed inset-0 z-25 overflow-y-auto bg-gray-300 dark:bg-neutral-950">
       <section className="mx-auto w-full max-w-[1440px] border-0 bg-transparent px-4 pt-5 pb-12 text-[#111827] shadow-none sm:px-6 lg:px-10 dark:text-white" role="dialog" aria-modal="true" aria-labelledby="agent-listing-detail-title">
-        <button type="button" className="mb-3 mt-0 inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent px-0 py-1 font-[inherit] text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white" onClick={onClose}><ChevronLeft size={18} /> Back to listings</button>
-        <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-5 rounded-xl border border-gray-200 bg-white p-4 sm:p-5 dark:border-white/10 dark:bg-[#1a1a1a] max-[1000px]:grid-cols-1 max-[700px]:gap-4">
-          <div className="flex min-w-0 items-center gap-4 max-[700px]:items-start max-[700px]:gap-3">
+        <button type="button" className="mb-3 mt-0 inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent px-0 py-1 font-[inherit] text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white max-[430px]:text-xs" onClick={onClose}><ChevronLeft size={18} className="shrink-0" /> Back to listings</button>
+        <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-5 rounded-xl border border-gray-200 bg-white p-4 sm:p-5 dark:border-white/10 dark:bg-[#1a1a1a] max-[1000px]:grid-cols-1 max-[700px]:items-start max-[700px]:gap-4 max-[430px]:p-3">
+          <div className="flex min-w-0 items-center gap-4 max-[700px]:items-start max-[700px]:gap-3 max-[430px]:gap-2.5!">
             {property.photos[0]
-              ? <img src={property.photos[0]} alt="" className="h-[88px] w-[120px] shrink-0 rounded-lg object-cover max-[700px]:h-20 max-[700px]:w-20" />
-              : <div className="grid h-[88px] w-[120px] shrink-0 place-items-center rounded-lg bg-[#f3f4f6] text-[#6b7280] dark:bg-[#232323] dark:text-[#9ca3af] max-[700px]:h-20 max-[700px]:w-20"><ImagePlus size={24} /></div>}
+              ? <img src={property.photos[0]} alt="" className="h-[88px] w-[120px] shrink-0 rounded-lg object-cover max-[700px]:h-20 max-[700px]:w-20 max-[430px]:h-16! max-[430px]:w-16!" />
+              : <div className="grid h-[88px] w-[120px] shrink-0 place-items-center rounded-lg bg-[#f3f4f6] text-[#6b7280] dark:bg-[#232323] dark:text-[#9ca3af] max-[700px]:h-20 max-[700px]:w-20 max-[430px]:h-16! max-[430px]:w-16!"><ImagePlus size={24} /></div>}
             <div className="min-w-0">
-              <div className="mb-1.5 flex flex-wrap items-center gap-2">
-                <span className={`inline-flex h-6 items-center whitespace-nowrap rounded-full px-2.5 text-xs font-semibold ${statusPillClasses[property.status]}`}>{statusLabel(property.status)}</span>
-                <span className="inline-flex h-6 items-center gap-1.5 rounded-full border border-[#e5e7eb] px-2.5 text-xs text-[#111827] dark:border-white/10 dark:text-white">{purposeLabel(property.purpose)}</span>
-                {property.featured && <span className="inline-flex h-6 items-center gap-1 rounded-full border border-[#e5e7eb] px-2.5 text-xs text-[#b86a31] dark:border-white/10"><Star size={13} fill="currentColor" /> Featured</span>}
+              <div className="mb-1.5 flex flex-wrap items-center gap-1.5 max-[430px]:gap-1">
+                <span className={`inline-flex h-6 items-center whitespace-nowrap rounded-full px-2.5 text-xs font-semibold max-[430px]:h-5 max-[430px]:px-2 max-[430px]:text-[11px] ${statusPillClasses[property.status]}`}>{statusLabel(property.status)}</span>
+                <span className="inline-flex h-6 items-center gap-1.5 rounded-full border border-[#e5e7eb] px-2.5 text-xs text-[#111827] dark:border-white/10 dark:text-white max-[430px]:h-5 max-[430px]:px-2 max-[430px]:text-[11px]">{purposeLabel(property.purpose)}</span>
+                {property.featured && <span className="inline-flex h-6 items-center gap-1 rounded-full border border-[#e5e7eb] px-2.5 text-xs text-[#b86a31] dark:border-white/10 max-[430px]:h-5 max-[430px]:px-2 max-[430px]:text-[11px]"><Star size={13} fill="currentColor" /> Featured</span>}
               </div>
-              <h1 id="agent-listing-detail-title" className="m-0 overflow-hidden text-lg font-bold text-ellipsis text-[#111827] dark:text-white sm:text-2xl">{property.title}</h1>
-              <p className="mb-0 mt-1.5 flex items-center gap-1.5 text-xs text-[#4b5563] dark:text-[#9ca3af] sm:text-sm max-[700px]:items-start"><MapPin size={15} className="mt-0.5 shrink-0 text-[#6b7280] dark:text-[#9ca3af]" /> {[property.location.area, property.location.city, property.location.state].filter(Boolean).join(", ")} <span>· {typeName}</span></p>
+              <h1 id="agent-listing-detail-title" className="m-0 line-clamp-2 text-lg font-bold text-[#111827] dark:text-white sm:text-2xl max-[430px]:text-base">{property.title}</h1>
+              <p className="mb-0 mt-1.5 flex items-center gap-1.5 text-xs text-[#4b5563] dark:text-[#9ca3af] sm:text-sm max-[700px]:items-start max-[430px]:flex-wrap"><MapPin size={15} className="mt-0.5 shrink-0 text-[#6b7280] dark:text-[#9ca3af]" /> <span className="min-w-0">{[property.location.area, property.location.city, property.location.state].filter(Boolean).join(", ")}</span><span>· {typeName}</span></p>
             </div>
           </div>
           <div className="grid justify-items-end gap-3 max-[1000px]:justify-items-start max-[700px]:w-full">
@@ -293,31 +293,31 @@ const AgentPropertyOverview = ({
               <strong className="font-serif text-xl font-bold text-[#111827] dark:text-white sm:text-2xl">{money(property.price, property.currency)}{periodShortLabel(property.pricePeriod)}</strong>
               <span className="text-xs text-[#4b5563] dark:text-[#9ca3af]">{periodLabel(property.pricePeriod)}</span>
             </div>
-            <div className="flex flex-wrap items-center justify-end gap-2 max-[1000px]:justify-start max-[700px]:grid max-[700px]:w-full max-[700px]:grid-cols-2">
+            <div className="flex flex-wrap items-center justify-end gap-2 max-[1000px]:justify-start max-[700px]:grid max-[700px]:w-full max-[700px]:grid-cols-2 max-[430px]:gap-1.5!">
               <button
                 type="button"
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3.5 font-[inherit] text-xs font-semibold text-[#111827] hover:border-brand hover:bg-[#f3f4f6] hover:text-brand dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:border-brand dark:hover:bg-[#232323] dark:hover:text-brand-light sm:text-sm max-[700px]:w-full"
+                className="inline-flex h-10 min-w-0 items-center justify-center gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3.5 font-[inherit] text-xs font-semibold text-[#111827] hover:border-brand hover:bg-[#f3f4f6] hover:text-brand dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:border-brand dark:hover:bg-[#232323] dark:hover:text-brand-light sm:text-sm max-[700px]:w-full max-[430px]:gap-1.5 max-[430px]:px-2 max-[430px]:text-[11px]"
                 onClick={onEdit}
               >
-                <Pencil size={16} /> Edit
+                <Pencil size={16} className="shrink-0" /> <span className="truncate">Edit</span>
               </button>
 
               {property.status === "published" && (
                 <button
                   type="button"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3.5 font-[inherit] text-xs font-semibold text-[#111827] hover:border-brand hover:bg-[#f3f4f6] hover:text-brand dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:border-brand dark:hover:bg-[#232323] dark:hover:text-brand-light sm:text-sm max-[700px]:w-full"
+                  className="inline-flex h-10 min-w-0 items-center justify-center gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3.5 font-[inherit] text-xs font-semibold text-[#111827] hover:border-brand hover:bg-[#f3f4f6] hover:text-brand dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:border-brand dark:hover:bg-[#232323] dark:hover:text-brand-light sm:text-sm max-[700px]:w-full max-[430px]:gap-1.5 max-[430px]:px-2 max-[430px]:text-[11px]"
                   onClick={onViewWebsite}
                 >
-                  <ExternalLink size={16} /> View on website
+                  <ExternalLink size={16} className="shrink-0" /> <span className="truncate max-[430px]:hidden">View on website</span><span className="hidden truncate max-[430px]:inline!">View site</span>
                 </button>
               )}
 
               <CustomDropdown
                 className="w-[205px] min-w-[205px] max-[700px]:w-full max-[700px]:min-w-0"
-                buttonClassName="flex h-10 w-full items-center justify-between gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3 font-[inherit] text-xs font-medium text-[#111827] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white sm:text-sm"
+                buttonClassName="flex h-10 w-full min-w-0 items-center justify-between gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3 font-[inherit] text-xs font-medium text-[#111827] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white sm:text-sm max-[430px]:gap-1.5 max-[430px]:px-2 max-[430px]:text-[11px]"
                 placeholder="Status"
                 value={property.status}
-                triggerContent={<><span>{statusLabel(property.status)}</span><ChevronDown size={16} /></>}
+                triggerContent={<><span className="truncate max-[430px]:hidden">{statusLabel(property.status)}</span><span className="hidden truncate max-[430px]:inline!">{statusLabel(property.status).split(" ")[0]}</span><ChevronDown size={16} className="shrink-0" /></>}
                 options={statusActions}
                 onChange={(value) => void updateStatus(value)}
                 disabled={updatingStatus}
@@ -329,10 +329,10 @@ const AgentPropertyOverview = ({
               {property.status === "published" && (
                 <button
                   type="button"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-brand bg-brand px-3.5 font-[inherit] text-xs font-semibold text-white hover:brightness-[0.94] sm:text-sm max-[700px]:w-full"
+                  className="inline-flex h-10 min-w-0 items-center justify-center gap-2 rounded-lg border border-brand bg-brand px-3.5 font-[inherit] text-xs font-semibold text-white hover:brightness-[0.94] sm:text-sm max-[700px]:w-full max-[430px]:gap-1.5 max-[430px]:px-2 max-[430px]:text-[11px]"
                   onClick={() => setBookVisitOpen(true)}
                 >
-                  <CalendarPlus size={16} /> Book a visit
+                  <CalendarPlus size={16} className="shrink-0" /> <span className="truncate">Book a visit</span>
                 </button>
               )}
             </div>

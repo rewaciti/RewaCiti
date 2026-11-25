@@ -13,7 +13,7 @@ const cards = [
 ] as const;
 
 const AgentPayoutSummaryCards = ({ summary }: AgentPayoutSummaryCardsProps) => (
-  <section className="grid gap-3 sm:grid-cols-3" aria-label="Payout summary">
+  <section className="grid grid-cols-1 gap-3 xl:grid-cols-3" aria-label="Payout summary">
     {cards.map(({ key, label, icon: Icon, tone }) => {
       const bucket = summary?.[key];
       return (

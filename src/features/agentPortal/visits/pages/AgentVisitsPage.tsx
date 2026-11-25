@@ -505,7 +505,7 @@ const AgentVisitsPage = () => {
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-7">
+                <div className="grid grid-cols-1 gap-3 lg:grid-cols-7">
                   {weekDays.map((day) => {
                     const iso = toISODate(day);
                     const dayBookings = weekBookingsByDay.get(iso) ?? [];
@@ -588,7 +588,7 @@ const AgentVisitsPage = () => {
                 </div>
 
                 {/* Mobile / tablet cards */}
-                <ul className="m-0 grid list-none gap-3 p-0 md:grid-cols-2 lg:hidden">
+                <ul className="m-0 grid list-none gap-3 p-0 lg:hidden">
                   {visibleBookings.map((booking) => (
                     <li
                       key={booking.id}

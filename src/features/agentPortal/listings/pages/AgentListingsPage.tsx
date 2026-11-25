@@ -517,7 +517,7 @@ const AgentListingsPage = () => {
                   </div>
 
                   {/* Mobile / tablet cards */}
-                  <ul className="grid gap-3 md:grid-cols-2 lg:hidden">
+                  <ul className="grid gap-3 lg:hidden">
                     {visibleProperties.map((property) => (
                       <li
                         key={property.id}

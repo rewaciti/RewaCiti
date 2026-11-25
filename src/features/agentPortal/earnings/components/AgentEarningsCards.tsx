@@ -20,7 +20,7 @@ const AgentEarningsCards = ({ summary, commissionPercent, rating }: AgentEarning
   const filledStars = Math.max(0, Math.min(5, Math.round(average)));
 
   return (
-    <section className="grid grid-cols-2 gap-3 xl:grid-cols-4" aria-label="Earnings summary">
+    <section className="grid grid-cols-1 gap-3 xl:grid-cols-4" aria-label="Earnings summary">
       <article className={cardClass}>
         <div className="flex items-center justify-between gap-2">
           <p className={labelClass}>To be paid</p>
