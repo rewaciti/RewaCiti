@@ -413,7 +413,7 @@ const RequestPropertyPage: React.FC = () => {
                 I agree that my details can be used to reply to this request. Read our{" "}
                 <Link
                   to="/privacy-policy"
-                  className="font-semibold text-[#b79bff] underline underline-offset-2 hover:text-[#b79bff] dark:text-highlight"
+                  className="font-semibold text-[#b79bff] underline underline-offset-2 hover:text-[#b79bff] dark:text-[#b79bff]"
                 >
                   Privacy Policy
                 </Link>

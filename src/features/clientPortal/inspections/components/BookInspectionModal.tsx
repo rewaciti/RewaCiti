@@ -54,7 +54,7 @@ const monthLabel = (date: Date) => new Intl.DateTimeFormat("en-NG", { month: "lo
 
 const inputClass = "min-h-11 w-full rounded-[5px] border border-gray-300 bg-white px-3 text-[13px] text-gray-900 outline-none placeholder:text-gray-500 focus:border-[#b79bff] focus:ring-[3px] focus:ring-[#b79bff]/15 dark:border-white/15 dark:bg-[#101010] dark:text-white";
 const labelClass = "grid min-w-0 gap-1.5 text-[13px] font-medium";
-const linkClass = "font-semibold text-[#b79bff] underline underline-offset-2 dark:text-highlight";
+const linkClass = "font-semibold text-[#b79bff] underline underline-offset-2 dark:text-[#b79bff]";
 
 const BookInspectionModal = ({ property, open, onOpenChange }: BookInspectionModalProps) => {
   const { customer, isAuthenticated } = useAuthStore();

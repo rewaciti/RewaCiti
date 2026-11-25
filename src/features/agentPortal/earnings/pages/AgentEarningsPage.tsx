@@ -59,7 +59,7 @@ import { formatVisitDate, visitStatusLabel, VISITS_PAGE_SIZE } from "@/features/
 
 const ui = {
   btn: "inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold transition-colors disabled:cursor-wait disabled:opacity-60 sm:h-10",
-  btnPrimary: "bg-highlight text-white shadow-sm hover:bg-highlight/90",
+  btnPrimary: "bg-[#b79bff] text-white shadow-sm hover:bg-[#b79bff]/90",
   btnGhost: "bg-transparent text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-neutral-800",
   control: "h-11 rounded-lg border border-gray-300 bg-white text-sm text-gray-900 dark:border-white/15 dark:bg-neutral-900 dark:text-white sm:h-10",
   card: "rounded-xl border border-gray-200 bg-white dark:border-white/10 dark:bg-neutral-900",
@@ -69,18 +69,18 @@ const ui = {
 
 const FILTER_DROPDOWN = {
   className: "w-full",
-  buttonClassName: "h-10 w-full rounded-lg border border-gray-200 bg-white! px-3 text-left text-sm text-gray-900! hover:border-highlight dark:border-white/10 dark:bg-neutral-900! dark:text-white!",
+  buttonClassName: "h-10 w-full rounded-lg border border-gray-200 bg-white! px-3 text-left text-sm text-gray-900! hover:border-[#b79bff] dark:border-white/10 dark:bg-neutral-900! dark:text-white!",
   menuClassName: "overflow-hidden rounded-xl border-gray-300! bg-white! text-gray-900! shadow-lg! dark:border-white/15! dark:bg-neutral-900! dark:text-white! [&>div]:max-h-60 [&>div]:overflow-x-hidden [&>div]:overflow-y-auto [&>div]:bg-white! dark:[&>div]:bg-neutral-900! [&>div]:[scrollbar-width:none] [&>div::-webkit-scrollbar]:hidden [&>div>button]:whitespace-normal",
   menuItemClassName: "block w-full bg-white! px-4 py-2.5 text-left text-sm whitespace-normal text-gray-900! transition hover:bg-gray-100! dark:bg-neutral-900! dark:text-white! dark:hover:bg-neutral-800!",
 };
 
 const roundButton =
-  "cursor-pointer rounded-full border border-gray-300 bg-white p-2.5 text-gray-900 transition hover:border-highlight hover:text-highlight disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:bg-[#101010] dark:text-white";
+  "cursor-pointer rounded-full border border-gray-300 bg-white p-2.5 text-gray-900 transition hover:border-[#b79bff] hover:text-[#b79bff] disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/20 dark:bg-[#101010] dark:text-white";
 
 const Spinner = ({ size = 32, label = "Loading" }: { size?: number; label?: string }) => (
   <span role="status" className="inline-flex">
     <span
-      className="animate-spin rounded-full border-[3px] border-gray-200 border-t-highlight dark:border-white/10 dark:border-t-highlight"
+      className="animate-spin rounded-full border-[3px] border-gray-200 border-t-[#b79bff] dark:border-white/10 dark:border-t-[#b79bff]"
       style={{ width: size, height: size }}
       aria-hidden="true"
     />
@@ -432,12 +432,12 @@ const AgentEarningsPage = () => {
                   aria-current={active ? "page" : undefined}
                   onClick={() => changeTab(filter.value)}
                   className={`-mb-px inline-flex h-11 items-center gap-2 border-b-2 px-3 text-sm whitespace-nowrap transition-colors ${active
-                    ? "border-highlight font-semibold text-gray-900 dark:border-highlight dark:text-white"
+                    ? "border-[#b79bff] font-semibold text-gray-900 dark:border-[#b79bff] dark:text-white"
                     : "border-transparent text-gray-700 hover:border-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:border-white/30 dark:hover:text-white"}`}
                 >
                   {filter.label}
                   {countLabel !== "—" && (
-                    <span className={`inline-grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-xs font-semibold ${active ? "bg-highlight/10 text-highlight dark:bg-highlight/15 dark:text-highlight" : "bg-gray-200 text-gray-700 dark:bg-neutral-800 dark:text-gray-400"}`}>
+                    <span className={`inline-grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-xs font-semibold ${active ? "bg-[#b79bff]/10 text-[#b79bff] dark:bg-[#b79bff]/15 dark:text-[#b79bff]" : "bg-gray-200 text-gray-700 dark:bg-neutral-800 dark:text-gray-400"}`}>
                       {countLabel}
                     </span>
                   )}
@@ -448,7 +448,7 @@ const AgentEarningsPage = () => {
         </nav>
 
         <div className="mb-5 flex items-center justify-between gap-2 sm:gap-3">
-          <label className={`${ui.control} flex min-w-0 flex-1 items-center gap-2 px-3 text-gray-500 focus-within:border-highlight focus-within:ring-2 focus-within:ring-highlight/15 sm:max-w-md dark:text-gray-400`}>
+          <label className={`${ui.control} flex min-w-0 flex-1 items-center gap-2 px-3 text-gray-500 focus-within:border-[#b79bff] focus-within:ring-2 focus-within:ring-[#b79bff]/15 sm:max-w-md dark:text-gray-400`}>
             <Search size={17} aria-hidden="true" className="shrink-0" />
             <input
               type="search"
@@ -471,11 +471,11 @@ const AgentEarningsPage = () => {
               disabled={filterDisabled}
               aria-expanded={filtersOpen && !filterDisabled}
               onClick={() => setFiltersOpen((open) => !open)}
-              className={`${ui.control} inline-flex items-center gap-2 px-3.5 max-sm:min-w-11 max-sm:justify-center max-sm:px-3 ${filterDisabled ? "cursor-not-allowed opacity-50" : "hover:border-highlight"} ${filtersOpen ? "border-highlight" : ""}`}
+              className={`${ui.control} inline-flex items-center gap-2 px-3.5 max-sm:min-w-11 max-sm:justify-center max-sm:px-3 ${filterDisabled ? "cursor-not-allowed opacity-50" : "hover:border-[#b79bff]"} ${filtersOpen ? "border-[#b79bff]" : ""}`}
             >
               <Filter size={16} />
               <span className="max-sm:sr-only">Filters</span>
-              {currentActiveFilterCount > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-highlight px-1.5 text-xs font-semibold text-white">{currentActiveFilterCount}</span>}
+              {currentActiveFilterCount > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-[#b79bff] px-1.5 text-xs font-semibold text-white">{currentActiveFilterCount}</span>}
               <ChevronDown size={15} className={`transition-transform duration-200 max-sm:hidden ${filtersOpen ? "rotate-180" : ""}`} />
             </button>
 
@@ -546,7 +546,7 @@ const AgentEarningsPage = () => {
                 </div>
               ) : !visiblePayouts.length ? (
                 <div className={`${ui.card} flex min-h-[300px] flex-col items-center justify-center px-5 py-10 text-center`}>
-                  <div className="mb-3 grid h-12 w-12 place-items-center rounded-full bg-highlight/10 text-highlight dark:bg-highlight/15 dark:text-highlight">
+                  <div className="mb-3 grid h-12 w-12 place-items-center rounded-full bg-[#b79bff]/10 text-[#b79bff] dark:bg-[#b79bff]/15 dark:text-[#b79bff]">
                     <Wallet size={22} />
                   </div>
                   <h2 className="m-0 text-base font-semibold">
@@ -606,7 +606,7 @@ const AgentEarningsPage = () => {
                 </div>
               ) : !visibleDeals.length ? (
                 <div className={`${ui.card} flex min-h-[300px] flex-col items-center justify-center px-5 py-10 text-center`}>
-                  <div className="mb-3 grid h-12 w-12 place-items-center rounded-full bg-highlight/10 text-highlight dark:bg-highlight/15 dark:text-highlight">
+                  <div className="mb-3 grid h-12 w-12 place-items-center rounded-full bg-[#b79bff]/10 text-[#b79bff] dark:bg-[#b79bff]/15 dark:text-[#b79bff]">
                     <Wallet size={22} />
                   </div>
                   <h2 className="m-0 text-base font-semibold">
@@ -666,7 +666,7 @@ const AgentEarningsPage = () => {
                 </div>
               ) : !visibleVisitFees.length ? (
                 <div className={`${ui.card} flex min-h-[300px] flex-col items-center justify-center px-5 py-10 text-center`}>
-                  <div className="mb-3 grid h-12 w-12 place-items-center rounded-full bg-highlight/10 text-highlight dark:bg-highlight/15 dark:text-highlight">
+                  <div className="mb-3 grid h-12 w-12 place-items-center rounded-full bg-[#b79bff]/10 text-[#b79bff] dark:bg-[#b79bff]/15 dark:text-[#b79bff]">
                     <Wallet size={22} />
                   </div>
                   <h2 className="m-0 text-base font-semibold">

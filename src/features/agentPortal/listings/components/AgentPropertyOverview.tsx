@@ -50,7 +50,7 @@ const ActivityPlaceholder = ({ icon, children }: { icon: React.ReactNode; childr
 const ActivityError = ({ onRetry }: { onRetry: () => void }) => (
   <div className="grid min-h-28 content-center justify-items-center gap-2 rounded-lg border border-dashed border-[#e5e7eb] p-4 text-center dark:border-white/10">
     <span className="text-xs text-[#4b5563] dark:text-[#9ca3af]">We couldn’t load this activity.</span>
-    <button type="button" className="cursor-pointer rounded-full border-0 bg-transparent px-0 text-xs font-semibold text-highlight dark:text-highlight" onClick={onRetry}>Try again</button>
+    <button type="button" className="cursor-pointer rounded-full border-0 bg-transparent px-0 text-xs font-semibold text-[#b79bff] dark:text-[#b79bff]" onClick={onRetry}>Try again</button>
   </div>
 );
 
@@ -296,7 +296,7 @@ const AgentPropertyOverview = ({
             <div className="flex flex-wrap items-center justify-end gap-2 max-[1000px]:justify-start max-[700px]:grid max-[700px]:w-full max-[700px]:grid-cols-2">
               <button
                 type="button"
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3.5 font-[inherit] text-xs font-semibold text-[#111827] hover:border-highlight hover:bg-[#f3f4f6] hover:text-highlight dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:border-highlight dark:hover:bg-[#232323] dark:hover:text-highlight sm:text-sm max-[700px]:w-full"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3.5 font-[inherit] text-xs font-semibold text-[#111827] hover:border-[#b79bff] hover:bg-[#f3f4f6] hover:text-[#b79bff] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:border-[#b79bff] dark:hover:bg-[#232323] dark:hover:text-[#b79bff] sm:text-sm max-[700px]:w-full"
                 onClick={onEdit}
               >
                 <Pencil size={16} /> Edit
@@ -305,7 +305,7 @@ const AgentPropertyOverview = ({
               {property.status === "published" && (
                 <button
                   type="button"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3.5 font-[inherit] text-xs font-semibold text-[#111827] hover:border-highlight hover:bg-[#f3f4f6] hover:text-highlight dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:border-highlight dark:hover:bg-[#232323] dark:hover:text-highlight sm:text-sm max-[700px]:w-full"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3.5 font-[inherit] text-xs font-semibold text-[#111827] hover:border-[#b79bff] hover:bg-[#f3f4f6] hover:text-[#b79bff] dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white dark:hover:border-[#b79bff] dark:hover:bg-[#232323] dark:hover:text-[#b79bff] sm:text-sm max-[700px]:w-full"
                   onClick={onViewWebsite}
                 >
                   <ExternalLink size={16} /> View on website
@@ -329,7 +329,7 @@ const AgentPropertyOverview = ({
               {property.status === "published" && (
                 <button
                   type="button"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-highlight bg-highlight px-3.5 font-[inherit] text-xs font-semibold text-white hover:brightness-[0.94] sm:text-sm max-[700px]:w-full"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#b79bff] bg-[#b79bff] px-3.5 font-[inherit] text-xs font-semibold text-white hover:brightness-[0.94] sm:text-sm max-[700px]:w-full"
                   onClick={() => setBookVisitOpen(true)}
                 >
                   <CalendarPlus size={16} /> Book a visit
@@ -383,13 +383,13 @@ const AgentPropertyOverview = ({
                 </section>
 
                 <section className="m-0 min-w-0 rounded-xl border border-gray-200 bg-white p-4 text-[#111827] sm:p-6 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white">
-                  <div className="mb-4 flex items-center gap-2.5 text-highlight dark:text-highlight"><FileText size={18} /><h2 className="m-0 text-base font-bold text-[#111827] dark:text-white">Description</h2></div>
+                  <div className="mb-4 flex items-center gap-2.5 text-[#b79bff] dark:text-[#b79bff]"><FileText size={18} /><h2 className="m-0 text-base font-bold text-[#111827] dark:text-white">Description</h2></div>
                   <div className="wrap-anywhere text-sm leading-relaxed text-[#4b5563] dark:text-[#9ca3af] [&>p]:m-0 [&>p]:mb-2.5 [&>p:last-child]:mb-0" dangerouslySetInnerHTML={{ __html: sanitizeDescriptionHtml(property.description) }} />
                 </section>
 
                 {property.videoUrl && (
                   <section className="m-0 min-w-0 rounded-xl border border-gray-200 bg-white p-4 text-[#111827] sm:p-6 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white">
-                    <div className="mb-4 flex items-center gap-2.5 text-highlight dark:text-highlight"><ImagePlus size={18} /><h2 className="m-0 text-base font-bold text-[#111827] dark:text-white">Video tour</h2></div>
+                    <div className="mb-4 flex items-center gap-2.5 text-[#b79bff] dark:text-[#b79bff]"><ImagePlus size={18} /><h2 className="m-0 text-base font-bold text-[#111827] dark:text-white">Video tour</h2></div>
                     <div className="relative aspect-video overflow-hidden rounded-xl border border-[#e5e7eb] bg-black dark:border-white/10">
                       {videoEmbedUrl ? (
                         <iframe
@@ -416,7 +416,7 @@ const AgentPropertyOverview = ({
 
                 {(typeof property.customFields.landTitle === "string" || typeof property.customFields.specialNotes === "string") && (
                   <section className="m-0 min-w-0 rounded-xl border border-gray-200 bg-white p-4 text-[#111827] sm:p-6 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white">
-                    <div className="mb-4 flex items-center gap-2.5 text-highlight dark:text-highlight"><Info size={18} /><h2 className="m-0 text-base font-bold text-[#111827] dark:text-white">More details</h2></div>
+                    <div className="mb-4 flex items-center gap-2.5 text-[#b79bff] dark:text-[#b79bff]"><Info size={18} /><h2 className="m-0 text-base font-bold text-[#111827] dark:text-white">More details</h2></div>
                     {typeof property.customFields.landTitle === "string" && <p className="m-0 grid grid-cols-[minmax(90px,0.3fr)_1fr] gap-3 border-b border-[#e5e7eb] py-2.5 text-sm last:border-b-0 dark:border-white/10"><span className="text-[#4b5563] dark:text-[#9ca3af]">Land title</span><strong className="font-medium whitespace-pre-wrap text-[#111827] dark:text-white">{property.customFields.landTitle}</strong></p>}
                     {typeof property.customFields.specialNotes === "string" && <p className="m-0 grid grid-cols-[minmax(90px,0.3fr)_1fr] gap-3 border-b border-[#e5e7eb] py-2.5 text-sm last:border-b-0 dark:border-white/10"><span className="text-[#4b5563] dark:text-[#9ca3af]">Special notes</span><strong className="font-medium whitespace-pre-wrap text-[#111827] dark:text-white">{property.customFields.specialNotes}</strong></p>}
                   </section>
@@ -442,7 +442,7 @@ const AgentPropertyOverview = ({
                 ].filter((group) => group.items.length > 0).map((group) => (
                   <section className="m-0 min-w-0 rounded-xl border border-gray-200 bg-white p-4 text-[#111827] sm:p-6 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white" key={group.label}>
                     <h2 className="m-0 mb-3 text-base font-bold text-[#111827] dark:text-white">{group.label}</h2>
-                    <div className="flex flex-wrap gap-2">{group.items.map((item) => <span key={item} className="rounded-full bg-highlight/10 px-3 py-1.5 text-xs text-[#4b5563] dark:bg-highlight/15 dark:text-[#9ca3af]">{item}</span>)}</div>
+                    <div className="flex flex-wrap gap-2">{group.items.map((item) => <span key={item} className="rounded-full bg-[#b79bff]/10 px-3 py-1.5 text-xs text-[#4b5563] dark:bg-[#b79bff]/15 dark:text-[#9ca3af]">{item}</span>)}</div>
                   </section>
                 ))}
                 <section className="m-0 min-w-0 rounded-xl border border-gray-200 bg-white p-4 text-[#111827] sm:p-6 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white">
@@ -511,7 +511,7 @@ const AgentPropertyOverview = ({
                 <img className="h-full w-full min-w-0 select-none object-contain" src={property.photos[galleryIndex]} alt={`${property.title} photo ${galleryIndex + 1}`} draggable={false} />
                 <button type="button" className="grid h-9 w-9 shrink-0 place-items-center rounded-[5px] border-0 bg-[#f3f4f6] text-[#111827] disabled:cursor-not-allowed disabled:opacity-40 dark:bg-[#232323] dark:text-white max-[700px]:hidden" aria-label="Next photo" disabled={galleryIndex >= property.photos.length - 1} onClick={() => setGalleryIndex((index) => Math.min(property.photos.length - 1, index + 1))}><ChevronRight size={20} /></button>
               </div>
-              <div className="flex gap-[7px] overflow-x-auto px-3.5 pt-2.5">{property.photos.map((photo, index) => <button key={`${photo}-${index}`} type="button" className={`h-[52px] w-[68px] shrink-0 overflow-hidden border-2 bg-transparent p-0 ${galleryIndex === index ? "border-highlight" : "border-transparent"}`} onClick={() => setGalleryIndex(index)}><img className="h-full w-full object-cover" src={photo} alt={`Photo ${index + 1}`} /></button>)}</div>
+              <div className="flex gap-[7px] overflow-x-auto px-3.5 pt-2.5">{property.photos.map((photo, index) => <button key={`${photo}-${index}`} type="button" className={`h-[52px] w-[68px] shrink-0 overflow-hidden border-2 bg-transparent p-0 ${galleryIndex === index ? "border-[#b79bff]" : "border-transparent"}`} onClick={() => setGalleryIndex(index)}><img className="h-full w-full object-cover" src={photo} alt={`Photo ${index + 1}`} /></button>)}</div>
             </section>
           </div>
         )}

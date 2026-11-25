@@ -42,7 +42,7 @@ function CommentSection() {
     <div className={PAGE_CONTAINER}>
       <div className="mb-8 flex items-end justify-between gap-4">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold text-[#b79bff] dark:text-highlight">Testimonials</p>
+          <p className="text-sm font-semibold text-[#b79bff] dark:text-[#b79bff]">Testimonials</p>
           <h2
             style={SERIF}
             className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl"
@@ -95,7 +95,7 @@ function CommentSection() {
                         onClick={() =>
                           setExpanded((prev) => ({ ...prev, [comment.id]: !prev[comment.id] }))
                         }
-                        className="ml-2 cursor-pointer font-semibold text-[#b79bff] hover:underline dark:text-highlight"
+                        className="ml-2 cursor-pointer font-semibold text-[#b79bff] hover:underline dark:text-[#b79bff]"
                       >
                         {expanded[comment.id] ? "Show less" : "... Read more"}
                       </button>

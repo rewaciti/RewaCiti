@@ -262,7 +262,7 @@ const CoRentPage: React.FC = () => {
       <Navbar />
       <header className="border-b border-gray-300 bg-gray-200 py-7 dark:border-white/10 dark:bg-black/50 sm:py-8">
         <div className={`${PAGE_CONTAINER} max-w-7xl`}>
-          <p className="text-sm font-semibold text-[#b79bff] dark:text-highlight">
+          <p className="text-sm font-semibold text-[#b79bff] dark:text-[#b79bff]">
             RewaCiti co-renting
           </p>
           <h1 style={SERIF} className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl">
@@ -443,11 +443,11 @@ const CoRentPage: React.FC = () => {
                 />
                 <span>
                   I agree that my details can be used to reply to this request, and accept the{" "}
-                  <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#b79bff] underline dark:text-highlight">
+                  <Link to="/terms" target="_blank" rel="noreferrer" className="text-[#b79bff] underline dark:text-[#b79bff]">
                     Terms
                   </Link>{" "}
                   and{" "}
-                  <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#b79bff] underline dark:text-highlight">
+                  <Link to="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#b79bff] underline dark:text-[#b79bff]">
                     Privacy Policy
                   </Link>
                   .

@@ -258,7 +258,7 @@ function Home() {
                 <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-400">
                   {item.description}
                 </p>
-                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#b79bff] transition group-hover:gap-2.5 dark:text-highlight">
+                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#b79bff] transition group-hover:gap-2.5 dark:text-[#b79bff]">
                   Learn more <FiArrowRight size={15} />
                 </span>
               </Link>

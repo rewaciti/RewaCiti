@@ -891,7 +891,7 @@ function PropertySearchSection() {
       >
         <div className={PAGE_CONTAINER}>
           <div className="max-w-2xl">
-            <p className="text-sm font-semibold text-[#b79bff] dark:text-highlight">
+            <p className="text-sm font-semibold text-[#b79bff] dark:text-[#b79bff]">
               More ways we can help
             </p>
             <h2 style={SERIF} className="mt-2 text-3xl font-semibold sm:text-4xl">
@@ -907,7 +907,7 @@ function PropertySearchSection() {
             {/* Card 1: Property Preference */}
             <div className={`${cardShell} flex flex-col justify-between gap-6 p-6 sm:p-7`}>
               <div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#b79bff]/10 text-[#b79bff] dark:text-highlight">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#b79bff]/10 text-[#b79bff] dark:text-[#b79bff]">
                   <FiSliders size={22} />
                 </div>
                 <h3 style={SERIF} className="mt-4 text-xl font-semibold">
@@ -932,7 +932,7 @@ function PropertySearchSection() {
             {/* Card 2: Looking to Co-Rent */}
             <div className={`${cardShell} flex flex-col justify-between gap-6 p-6 sm:p-7`}>
               <div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#b79bff]/10 text-[#b79bff] dark:text-highlight">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#b79bff]/10 text-[#b79bff] dark:text-[#b79bff]">
                   <FiUsers size={22} />
                 </div>
                 <h3 style={SERIF} className="mt-4 text-xl font-semibold">
@@ -958,7 +958,7 @@ function PropertySearchSection() {
               className={`${cardShell} flex flex-col justify-between gap-6 p-6 sm:col-span-2 sm:p-7 lg:col-span-1`}
             >
               <div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#b79bff]/10 text-[#b79bff] dark:text-highlight">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#b79bff]/10 text-[#b79bff] dark:text-[#b79bff]">
                   <FiHome size={22} />
                 </div>
                 <h3 style={SERIF} className="mt-4 text-xl font-semibold">

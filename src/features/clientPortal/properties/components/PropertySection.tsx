@@ -28,7 +28,7 @@ function PropertySection() {
     <div className={PAGE_CONTAINER}>
       <div className="mb-8 flex items-end justify-between gap-4">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold text-[#b79bff] dark:text-highlight">Featured</p>
+          <p className="text-sm font-semibold text-[#b79bff] dark:text-[#b79bff]">Featured</p>
           <h2
             style={SERIF}
             className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl"

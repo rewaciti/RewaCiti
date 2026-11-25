@@ -186,7 +186,7 @@ const ServiceSection = ({
   <section id={id} className={`scroll-mt-24 py-14 sm:py-20 ${tone}`}>
     <div className={PAGE_CONTAINER}>
       <div className="max-w-2xl">
-        <p className="text-sm font-semibold text-[#b79bff] dark:text-highlight">{eyebrow}</p>
+        <p className="text-sm font-semibold text-[#b79bff] dark:text-[#b79bff]">{eyebrow}</p>
         <h2
           style={SERIF}
           className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl"
@@ -312,7 +312,7 @@ function Service() {
                   <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-400">
                     {item.description}
                   </p>
-                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#b79bff] transition group-hover:gap-2.5 dark:text-highlight">
+                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#b79bff] transition group-hover:gap-2.5 dark:text-[#b79bff]">
                     Learn more <FiArrowRight size={15} />
                   </span>
                 </>

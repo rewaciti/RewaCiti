@@ -204,7 +204,7 @@ const ListPropertyPage: React.FC = () => {
   const agentPortalHref = hasAgentToken ? "/agent" : "/agent/login";
   const agentPortalLabel = hasAgentToken ? "Go to agent portal" : "Sign in to agent portal";
   const agentPortalButtonClass =
-    "inline-flex w-full items-center justify-center rounded-lg bg-[#b79bff] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#b79bff] dark:bg-highlight dark:text-black dark:hover:bg-[#b79bff]";
+    "inline-flex w-full items-center justify-center rounded-lg bg-[#b79bff] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#b79bff] dark:bg-[#b79bff] dark:text-black dark:hover:bg-[#b79bff]";
 
   const renderAgentPortalMobileBar = () => (
     <div className="sticky bottom-0 z-40 border-t border-gray-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(0,0,0,0.08)] dark:border-white/10 dark:bg-[#1A1A1A] lg:hidden">
@@ -229,7 +229,7 @@ const ListPropertyPage: React.FC = () => {
       <Navbar />
       <header className="bg-linear-to-r dark:from-neutral-600/20 from-gray-300/50 dark:to-black/60 to-gray-400 py-5">
         <div className="mx-auto w-full max-w-7xl space-y-1 px-4 sm:px-6 lg:px-10">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[#b79bff] dark:text-highlight">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[#b79bff] dark:text-[#b79bff]">
             List with RewaCiti
           </p>
           <h1 className="text-3xl text-gray-900 dark:text-white md:text-4xl">
@@ -397,7 +397,7 @@ const ListPropertyPage: React.FC = () => {
           </section>
 
           <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
-            <div className="hidden rounded-2xl border border-[#b79bff]/20 bg-[#b79bff]/5 p-5 dark:border-highlight/20 dark:bg-[#b79bff]/10 lg:block">
+            <div className="hidden rounded-2xl border border-[#b79bff]/20 bg-[#b79bff]/5 p-5 dark:border-[#b79bff]/20 dark:bg-[#b79bff]/10 lg:block">
               <p className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">
                 Already approved as an agent?
               </p>

@@ -65,7 +65,7 @@ const AgentPayoutsTable = ({ payouts }: AgentPayoutsTableProps) => (
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="m-0 flex items-center gap-2 font-semibold">
-                <Wallet size={16} className="shrink-0 text-highlight dark:text-highlight" aria-hidden="true" />
+                <Wallet size={16} className="shrink-0 text-[#b79bff] dark:text-[#b79bff]" aria-hidden="true" />
                 <span className="truncate">{payoutReference(payout)}</span>
               </p>
               <p className={`m-0 mt-1 truncate text-xs ${ui.muted}`}>{payoutDescription(payout)}</p>

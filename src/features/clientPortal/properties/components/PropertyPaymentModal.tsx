@@ -232,7 +232,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 <div className={`${boxClass} space-y-3`}>
                   <div className="flex items-baseline justify-between gap-4">
                     <span className={`text-sm ${mutedClass}`}>Amount</span>
-                    <span className="text-xl font-semibold text-[#b79bff] dark:text-highlight">
+                    <span className="text-xl font-semibold text-[#b79bff] dark:text-[#b79bff]">
                       ₦{bankTransfer.bankTransfer.amount.toLocaleString()}
                     </span>
                   </div>
@@ -384,7 +384,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 <p className="text-center text-sm leading-6 text-gray-700 dark:text-gray-300">
                   Once your payment is confirmed, a verified agent will be assigned and our team
                   will contact you within{" "}
-                  <span className="font-semibold text-[#b79bff] dark:text-highlight">24 hours</span>{" "}
+                  <span className="font-semibold text-[#b79bff] dark:text-[#b79bff]">24 hours</span>{" "}
                   to schedule a meeting for necessary documentation and activities.
                 </p>
 
@@ -392,7 +392,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                 <details className="group rounded-2xl border border-gray-200 px-4 py-3 dark:border-white/10">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-sm font-semibold">
                     <span className="flex items-center gap-2">
-                      <FiInfo className="text-[#b79bff] dark:text-highlight" /> Safety tips &amp;
+                      <FiInfo className="text-[#b79bff] dark:text-[#b79bff]" /> Safety tips &amp;
                       payment info
                     </span>
                     <FiChevronDown className="transition group-open:rotate-180" />
@@ -424,7 +424,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                       to="/terms"
                       target="_blank"
                       rel="noreferrer"
-                      className="font-semibold text-[#b79bff] underline underline-offset-2 hover:text-[#b79bff] dark:text-highlight"
+                      className="font-semibold text-[#b79bff] underline underline-offset-2 hover:text-[#b79bff] dark:text-[#b79bff]"
                     >
                       Terms
                     </Link>{" "}
@@ -433,7 +433,7 @@ const PropertyPaymentModal: React.FC<PropertyPaymentModalProps> = ({
                       to="/privacy-policy"
                       target="_blank"
                       rel="noreferrer"
-                      className="font-semibold text-[#b79bff] underline underline-offset-2 hover:text-[#b79bff] dark:text-highlight"
+                      className="font-semibold text-[#b79bff] underline underline-offset-2 hover:text-[#b79bff] dark:text-[#b79bff]"
                     >
                       Privacy Policy
                     </Link>
