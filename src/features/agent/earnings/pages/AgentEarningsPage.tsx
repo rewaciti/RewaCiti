@@ -130,9 +130,9 @@ const AgentEarningsPage = () => {
   const [visitFilterValues, setVisitFilterValues] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [listError, setListError] = useState(false);
-  const [dealLoading, setDealLoading] = useState(false);
+  const [dealLoading, setDealLoading] = useState(true);
   const [dealListError, setDealListError] = useState(false);
-  const [visitLoading, setVisitLoading] = useState(false);
+  const [visitLoading, setVisitLoading] = useState(true);
   const [visitListError, setVisitListError] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<AgentDeal | null>(null);
 
@@ -230,12 +230,12 @@ const AgentEarningsPage = () => {
   }, [loadPayouts, token]);
 
   useEffect(() => {
-    if (token && tab === "deals") void loadDeals();
-  }, [loadDeals, tab, token]);
+    if (token) void loadDeals();
+  }, [loadDeals, token]);
 
   useEffect(() => {
-    if (token && tab === "visit_fee") void loadVisitFees();
-  }, [loadVisitFees, tab, token]);
+    if (token) void loadVisitFees();
+  }, [loadVisitFees, token]);
 
   useEffect(() => {
     if (token) void loadMeta();
