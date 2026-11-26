@@ -66,7 +66,7 @@ const Spinner = ({ size = 32, label = "Loading" }: { size?: number; label?: stri
 const ActivityStats = ({ property }: { property: AgentProperty }) => {
   const items = [
     { label: "Views", Icon: Eye, value: property.views },
-    { label: "Inquiries", Icon: MessageSquare, value: property.inquiryCount ?? 0 },
+    { label: "Enquiries", Icon: MessageSquare, value: property.inquiryCount ?? 0 },
     { label: "Visits", Icon: CalendarClock, value: property.visitCount ?? 0 },
     { label: "Reviews", Icon: Star, value: property.rating.count },
   ];

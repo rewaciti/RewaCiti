@@ -143,7 +143,7 @@ const AgentLeadsPage = () => {
       setTotal(response.total);
     } catch (error) {
       setListError(true);
-      toast.error(agentErrorMessage(error, "We couldn't load your leads. Please try again."));
+      toast.error(agentErrorMessage(error, "We couldn't load your enquiries. Please try again."));
       console.error("Agent inquiries failed to load:", error);
     } finally {
       setLoading(false);
@@ -154,7 +154,7 @@ const AgentLeadsPage = () => {
     try {
       setCounts(await agentAPI.getInquiryCounts());
     } catch (error) {
-      toast.error(agentErrorMessage(error, "We couldn't load your lead counts."));
+      toast.error(agentErrorMessage(error, "We couldn't load your enquiry counts."));
       console.error("Agent inquiry counts failed to load:", error);
     }
   }, []);
@@ -239,7 +239,7 @@ const AgentLeadsPage = () => {
     try {
       setSelectedInquiry(await agentAPI.getInquiry(id));
     } catch (error) {
-      toast.error(agentErrorMessage(error, "We couldn't open that lead. Please try again."));
+      toast.error(agentErrorMessage(error, "We couldn't open that enquiry. Please try again."));
       console.error("Agent inquiry detail failed to load:", error);
     } finally {
       setDetailLoading(false);
@@ -254,7 +254,7 @@ const AgentLeadsPage = () => {
       if (selectedInquiry?.id === response.data.id) setSelectedInquiry(response.data);
       refreshLeads();
     } catch (error) {
-      toast.error(agentErrorMessage(error, "We couldn't update that lead's status."));
+      toast.error(agentErrorMessage(error, "We couldn't update that enquiry's status."));
       console.error("Agent quick status update failed:", error);
     }
   };
@@ -270,7 +270,7 @@ const AgentLeadsPage = () => {
   };
 
   const actionOptions = (inquiry: AgentInquiry): ActionOption[] => [
-    { label: "View lead", value: "view", icon: <Eye size={16} /> },
+    { label: "View enquiry", value: "view", icon: <Eye size={16} /> },
     ...LEAD_STATUS_OPTIONS
       .filter((option) => option.value !== inquiry.status)
       .map((option) => ({
@@ -296,7 +296,7 @@ const AgentLeadsPage = () => {
 
   const rowProps = (inquiry: AgentInquiry) => ({
     tabIndex: 0,
-    "aria-label": `View lead ${inquiry.contact?.name || inquiry.reference}`,
+    "aria-label": `View enquiry ${inquiry.contact?.name || inquiry.reference}`,
     onClick: () => void openInquiry(inquiry.id),
     onKeyDown: (event: React.KeyboardEvent) => {
       if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) {
@@ -317,21 +317,21 @@ const AgentLeadsPage = () => {
       </div>
       <h2 className="m-0 text-base font-semibold">
         {isFiltering
-          ? "No matching leads"
+          ? "No matching enquiries"
           : status === "all"
-            ? "No leads yet"
-            : `No ${leadStatusLabel(status).toLowerCase()} leads`}
+            ? "No enquiries yet"
+            : `No ${leadStatusLabel(status).toLowerCase()} enquiries`}
       </h2>
       <p className={`mt-1.5 mb-5 text-sm ${ui.muted}`}>
         {isFiltering
           ? "Try changing your search or filters."
           : status === "all"
-            ? "Prospects who inquire about your properties will appear here, or you can log one yourself."
-            : "When leads reach this stage, they’ll appear here."}
+            ? "People who enquire about your properties will appear here, or you can log one yourself."
+            : "When enquiries reach this stage, they’ll appear here."}
       </p>
       {status === "all" && !isFiltering && (
         <button type="button" className={`${ui.btn} ${ui.btnPrimary}`} onClick={() => setAddLeadOpen(true)}>
-          <Plus size={18} /> Add lead
+          <Plus size={18} /> Add enquiry
         </button>
       )}
     </div>
@@ -340,8 +340,8 @@ const AgentLeadsPage = () => {
   return (
     <div data-agent-scroll className="fixed inset-0 overflow-y-auto overscroll-contain bg-gray-300 font-sans text-gray-900 dark:bg-neutral-950 dark:text-white">
       <Helmet>
-        <title>Leads | RewaCiti Agent Portal</title>
-        <meta name="description" content="Track and manage your RewaCiti property leads and inquiries." />
+        <title>Enquiries | RewaCiti Agent Portal</title>
+        <meta name="description" content="Track and manage your RewaCiti property enquiries." />
       </Helmet>
 
       <AgentPortalHeader
@@ -358,21 +358,21 @@ const AgentLeadsPage = () => {
         {/* Page title */}
         <div className="mb-5 flex items-center justify-between gap-3 sm:items-start">
           <div className="min-w-0">
-            <h1 className="m-0 text-xl font-bold tracking-tight sm:text-2xl">Leads</h1>
-            <p className={`mt-1 text-sm ${ui.muted}`}>Follow up with inquiries, log notes or tasks, and move deals forward.</p>
+            <h1 className="m-0 text-xl font-bold tracking-tight sm:text-2xl">Enquiries</h1>
+            <p className={`mt-1 text-sm ${ui.muted}`}>Follow up with enquiries, log notes or tasks, and move deals forward.</p>
           </div>
           <button
             type="button"
-            aria-label="Add lead"
+            aria-label="Add enquiry"
             className={`${ui.btn} ${ui.btnPrimary} max-sm:w-11 max-sm:px-0`}
             onClick={() => setAddLeadOpen(true)}
           >
-            <Plus size={20} strokeWidth={2.4} /> <span className="max-sm:sr-only">Add lead</span>
+            <Plus size={20} strokeWidth={2.4} /> <span className="max-sm:sr-only">Add enquiry</span>
           </button>
         </div>
 
         {/* Status tabs */}
-        <nav className="-mx-4 mb-4 overflow-x-auto border-b border-gray-400/60 px-4 [scrollbar-width:none] sm:mx-0 sm:px-0 dark:border-white/15 [&::-webkit-scrollbar]:hidden" aria-label="Filter leads by status">
+        <nav className="-mx-4 mb-4 overflow-x-auto border-b border-gray-400/60 px-4 [scrollbar-width:none] sm:mx-0 sm:px-0 dark:border-white/15 [&::-webkit-scrollbar]:hidden" aria-label="Filter enquiries by status">
           <div className="flex min-w-max gap-1">
             {LEAD_STATUS_FILTERS.map((filter) => {
               const active = status === filter.value;
@@ -402,8 +402,8 @@ const AgentLeadsPage = () => {
             <Search size={17} aria-hidden="true" className="shrink-0" />
             <input
               type="search"
-              aria-label="Search leads"
-              placeholder="Search leads, properties, or reference..."
+              aria-label="Search enquiries"
+              placeholder="Search enquiries, properties, or reference..."
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               className="w-full min-w-0 border-0 bg-transparent text-sm text-gray-900 outline-0 placeholder:text-gray-500 dark:text-white dark:placeholder:text-gray-400"
@@ -432,7 +432,7 @@ const AgentLeadsPage = () => {
             {filtersOpen && !filterDisabled && (
               <div className={`${ui.card} absolute top-[calc(100%+8px)] right-0 z-30 w-[min(20rem,calc(100vw-2rem))] p-4 shadow-xl`}>
                 <div className="mb-4 flex items-center justify-between">
-                  <strong className="text-sm">Filter leads</strong>
+                  <strong className="text-sm">Filter enquiries</strong>
                   <button type="button" aria-label="Close filters" onClick={() => setFiltersOpen(false)} className={ui.iconBtn}>
                     <X size={16} />
                   </button>
@@ -470,17 +470,17 @@ const AgentLeadsPage = () => {
 
         {listError ? (
           <section className={`${ui.card} flex min-h-[300px] flex-col items-center justify-center border-dashed p-8 text-center`}>
-            <h2 className="m-0 text-xl font-semibold">Leads couldn’t load</h2>
+            <h2 className="m-0 text-xl font-semibold">Enquiries couldn’t load</h2>
             <p className={`mt-2 mb-5 text-sm ${ui.muted}`}>Check your connection and try again.</p>
             <button type="button" className={`${ui.btn} ${ui.btnPrimary}`} onClick={() => void loadInquiries()}>
               Try again
             </button>
           </section>
         ) : (
-          <section aria-label="Leads list">
+          <section aria-label="Enquiries list">
             {loading ? (
               <div className={`${ui.card} flex items-center justify-center py-20`}>
-                <Spinner size={36} label="Loading leads" />
+                <Spinner size={36} label="Loading enquiries" />
               </div>
             ) : !visibleInquiries.length ? (
               <div className={ui.card}>{emptyState}</div>
@@ -491,9 +491,9 @@ const AgentLeadsPage = () => {
                   <table className="w-full min-w-[920px] border-collapse text-left [&>tbody>tr:last-child>td]:border-b-0">
                     <thead>
                       <tr>
-                        <th className={`${ui.th} pl-5`}>Lead</th>
+                        <th className={`${ui.th} pl-5`}>Enquiry</th>
                         <th className={ui.th}>Property</th>
-                        <th className={ui.th}>Inquiry</th>
+                        <th className={ui.th}>Message</th>
                         <th className={ui.th}>Status</th>
                         <th className={ui.th}>Received</th>
                         <th className={`${ui.th} w-20`}><span className="sr-only">Actions</span></th>
@@ -677,7 +677,7 @@ const AgentLeadsPage = () => {
       {detailLoading && (
         <div className="fixed inset-0 z-50 grid place-items-center bg-black/45 p-5 backdrop-blur-sm">
           <div className={`${ui.card} grid h-20 w-20 place-items-center rounded-2xl shadow-2xl`}>
-            <Spinner size={34} label="Loading lead" />
+            <Spinner size={34} label="Loading enquiry" />
           </div>
         </div>
       )}

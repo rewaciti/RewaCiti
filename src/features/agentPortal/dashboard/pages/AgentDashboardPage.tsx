@@ -74,7 +74,7 @@ const AgentDashboardPage = () => {
     <div data-agent-scroll className="fixed inset-0 overflow-y-auto overscroll-contain bg-[#d1d5db] font-sans text-[#111827] dark:bg-[#121212] dark:text-white">
       <Helmet>
         <title>Agent dashboard | RewaCiti</title>
-        <meta name="description" content="Manage your RewaCiti listings, leads, visits, and earnings." />
+        <meta name="description" content="Manage your RewaCiti listings, enquiries, visits, and earnings." />
       </Helmet>
       <AgentPortalHeader
         name={displayName}
@@ -107,9 +107,9 @@ const AgentDashboardPage = () => {
                 <Building2 className="absolute right-5 bottom-5 text-brand opacity-[0.85] dark:text-brand-light max-[430px]:right-3.5 max-[430px]:bottom-[14px]" size={19} />
               </a>
               <Link className="relative flex min-h-[140px] flex-col rounded-3xl border border-[#e5e7eb] bg-white p-[22px] text-inherit no-underline transition-[transform,box-shadow] duration-200 ease-[ease] hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(0,0,0,0.1)] dark:border-white/10 dark:bg-[#1a1a1a] max-[430px]:min-h-[120px] max-[430px]:rounded-[20px] max-[430px]:p-4" id="leads" to="/agent/leads">
-                <span className="flex items-center justify-between text-[13px] font-medium text-[#4b5563] dark:text-[#9ca3af]">Open leads <ArrowRight className="text-brand dark:text-brand-light" size={15} /></span>
+                <span className="flex items-center justify-between text-[13px] font-medium text-[#4b5563] dark:text-[#9ca3af]">Open enquiries <ArrowRight className="text-brand dark:text-brand-light" size={15} /></span>
                 <span className="mt-2.5 font-serif text-[32px] font-semibold tracking-[-0.02em] text-[#111827] leading-[1.1] dark:text-white max-[430px]:text-[26px]">{stats.openLeads}</span>
-                <span className="mt-1.5 text-xs text-[#6b7280] dark:text-[#9ca3af]">{dashboard.newInquiries} new inquiries</span>
+                <span className="mt-1.5 text-xs text-[#6b7280] dark:text-[#9ca3af]">{dashboard.newInquiries} new enquiries</span>
                 <MessageSquareText className="absolute right-5 bottom-5 text-brand opacity-[0.85] dark:text-brand-light max-[430px]:right-3.5 max-[430px]:bottom-[14px]" size={19} />
               </Link>
               <Link className="relative flex min-h-[140px] flex-col rounded-3xl border border-[#e5e7eb] bg-white p-[22px] text-inherit no-underline transition-[transform,box-shadow] duration-200 ease-[ease] hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(0,0,0,0.1)] dark:border-white/10 dark:bg-[#1a1a1a] max-[430px]:min-h-[120px] max-[430px]:rounded-[20px] max-[430px]:p-4" id="visits" to="/agent/visits">
@@ -136,10 +136,10 @@ const AgentDashboardPage = () => {
               </article>
               <article className="min-h-[150px] rounded-3xl border border-[#e5e7eb] bg-white p-6 dark:border-white/10 dark:bg-[#1a1a1a]">
                 <div className="flex items-center justify-between">
-                  <h2 className="m-0 font-serif text-xl font-semibold text-[#111827] dark:text-white">New leads</h2>
+                  <h2 className="m-0 font-serif text-xl font-semibold text-[#111827] dark:text-white">New enquiries</h2>
                   <Link to="/agent/leads" className="inline-flex items-center gap-[5px] text-[13px] font-semibold text-brand no-underline dark:text-brand-light">All <ArrowRight size={15} /></Link>
                 </div>
-                <p className="m-0 mt-5 text-sm text-[#4b5563] leading-[1.6] dark:text-[#9ca3af]">{dashboard.newInquiries === 0 ? "You’re all caught up." : `${plural(dashboard.newInquiries, "new inquiry", "new inquiries")} to follow up.`}</p>
+                <p className="m-0 mt-5 text-sm text-[#4b5563] leading-[1.6] dark:text-[#9ca3af]">{dashboard.newInquiries === 0 ? "You’re all caught up." : `${plural(dashboard.newInquiries, "new enquiry", "new enquiries")} to follow up.`}</p>
               </article>
             </section>
           </>

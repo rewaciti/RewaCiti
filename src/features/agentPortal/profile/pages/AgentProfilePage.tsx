@@ -1,5 +1,16 @@
 import { useEffect, useMemo, useState, type DragEvent, type ReactNode } from "react";
-import { FileText, Image as ImageIcon, Mail, Phone, ShieldCheck, Trash2 } from "lucide-react";
+import {
+  Camera,
+  Clock,
+  FileText,
+  Mail,
+  Phone,
+  ShieldAlert,
+  ShieldCheck,
+  Trash2,
+  UploadCloud,
+  X,
+} from "lucide-react";
 import { Navigate, useNavigate } from "react-router";
 import { Helmet } from "react-helmet-async";
 import { toast } from "sonner";
@@ -8,11 +19,8 @@ import { agentAPI, agentErrorMessage, type AgentAttention, type AgentProfile } f
 import { useAgentAuthStore } from "@/features/agentPortal/common/store/useAgentAuthStore";
 import { readFileAsDataUrl } from "@/features/agentPortal/common/utils/agentListingUtils";
 
-const VERIFICATION_LABELS: Record<string, string> = {
-  not_sent: "Not sent",
-  pending: "Under review",
-  verified: "Verified",
-};
+/* ---------------------------------- Config --------------------------------- */
+
 const BIO_MAX = 300;
 const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
 const MAX_DOCUMENT_SIZE = 25 * 1024 * 1024;
@@ -21,6 +29,32 @@ const DOCUMENT_TYPES = [
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
+const DOCUMENT_ACCEPT = ".pdf,.doc,.docx," + DOCUMENT_TYPES.join(",");
+
+const VERIFICATION = {
+  not_sent: {
+    label: "Not submitted",
+    icon: ShieldAlert,
+    badge: "bg-gray-100 text-gray-700 dark:bg-white/10 dark:text-gray-300",
+    hint: "Upload a valid government-issued ID so RewaCiti can confirm who you are.",
+  },
+  pending: {
+    label: "Under review",
+    icon: Clock,
+    badge: "bg-amber-100 text-amber-800 dark:bg-amber-400/15 dark:text-amber-300",
+    hint: "Your document is being reviewed by RewaCiti.",
+  },
+  verified: {
+    label: "Verified",
+    icon: ShieldCheck,
+    badge: "bg-green-100 text-green-800 dark:bg-green-400/15 dark:text-green-300",
+    hint: "Your identity has been confirmed by RewaCiti.",
+  },
+} as const;
+
+type VerificationKey = keyof typeof VERIFICATION;
+
+/* --------------------------------- Helpers --------------------------------- */
 
 const readString = (source: unknown, ...keys: string[]): string => {
   if (!source || typeof source !== "object") return "";
@@ -39,51 +73,86 @@ const initialsOf = (name: string) =>
     .map((part) => part[0]?.toUpperCase())
     .join("") || "A";
 
-const ui = {
-  page: "fixed inset-0 overflow-y-auto overscroll-contain bg-[#d1d5db] font-sans text-[#111827] dark:bg-[#121212] dark:text-white",
-  main: "isolate min-h-[calc(100vh-64px)] w-full px-4 pt-6 pb-24 sm:px-6 sm:pb-16 lg:px-5",
-  container: "mx-auto w-full max-w-[1000px]",
-  heading: "mb-4",
-  title: "m-0 text-xl font-bold tracking-tight",
-  grid: "grid items-start gap-4 lg:grid-cols-[minmax(0,1.9fr)_minmax(0,1fr)]",
-  card: "rounded-3xl border border-[#e5e7eb] bg-white dark:border-white/10 dark:bg-[#1a1a1a]",
-  section: "p-4 sm:p-5",
-  label: "mb-1.5 block text-[13px] font-medium text-[#111827] dark:text-white",
-  muted: "text-[#4b5563] dark:text-[#9ca3af]",
-  input:
-    "w-full rounded-xl border border-[#e5e7eb] bg-[#f3f4f6] px-3 py-2.5 text-sm text-[#111827] outline-none placeholder:text-[#6b7280] focus:border-brand focus:ring-2 focus:ring-brand/10 disabled:bg-white disabled:text-[#9ca3af] dark:border-white/10 dark:bg-[#232323] dark:text-white dark:placeholder:text-[#9ca3af] dark:focus:border-brand-light dark:focus:ring-brand-light/15 dark:disabled:bg-[#232323]/60",
-  dropzone:
-    "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#d1d5db] px-4 py-8 text-center transition-colors hover:border-brand hover:bg-brand/5 dark:border-white/15 dark:hover:border-brand-light dark:hover:bg-brand-light/5",
-  iconCircle:
-    "grid h-10 w-10 place-items-center rounded-full bg-brand/10 text-brand dark:bg-brand-light/15 dark:text-brand-light",
-  primaryButton:
-    "inline-flex min-h-10 cursor-pointer items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white transition-[background-color,color,opacity] duration-150 ease-[ease] hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-55 dark:bg-brand-light dark:text-black",
-  ghostButton:
-    "inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#e5e7eb] bg-white px-3 py-1.5 text-xs font-medium text-[#111827] dark:border-white/10 dark:bg-[#232323] dark:text-white",
-  submitButton:
-    "mt-3 inline-flex min-h-10 w-full cursor-pointer items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white transition-[background-color,color,opacity] duration-150 ease-[ease] hover:opacity-90 disabled:cursor-not-allowed disabled:bg-[#e5e7eb] disabled:text-[#9ca3af] disabled:opacity-100 disabled:hover:opacity-100 dark:bg-brand-light dark:text-black dark:disabled:bg-white/10 dark:disabled:text-neutral-500",
-  photoPanel: "flex items-center gap-4 rounded-xl border border-dashed border-[#d1d5db] p-4 dark:border-white/15",
-  pill: "rounded-full border border-[#e5e7eb] bg-brand/10 px-2.5 py-0.5 text-[11px] font-medium text-brand dark:border-white/10 dark:bg-brand-light/15 dark:text-brand-light",
-  counter: "m-0 mt-2 text-right text-[11px] text-brand dark:text-brand-light",
-  avatarPreview: "grid h-12 w-12 shrink-0 place-items-center rounded-full bg-brand/10 text-[11px] font-semibold text-brand dark:bg-brand-light/15 dark:text-brand-light",
+const formatBytes = (bytes: number) =>
+  bytes >= 1024 * 1024 ? `${(bytes / (1024 * 1024)).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
+
+const phoneErrorFor = (value: string) => {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  if (!/^[+\d\s()-]+$/.test(trimmed)) return "Use digits only, with an optional + at the start.";
+  const digits = trimmed.replace(/\D/g, "").length;
+  return digits < 7 || digits > 15 ? "Enter a valid phone number." : "";
 };
+
+/* ---------------------------------- Styles --------------------------------- */
+
+const ui = {
+  page: "fixed inset-0 overflow-y-auto overscroll-contain bg-gray-300 font-sans text-gray-900 dark:bg-neutral-950 dark:text-white",
+  main: "isolate min-h-[calc(100vh-64px)] w-full px-4 pt-6 pb-24 sm:px-6 sm:pb-16 lg:px-10",
+  container: "mx-auto w-full max-w-5xl",
+  grid: "grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_320px]",
+  card: "rounded-xl border border-gray-200 bg-white dark:border-white/10 dark:bg-neutral-900",
+  cardBody: "p-5 sm:p-6",
+  cardTitle: "m-0 text-base font-semibold",
+  muted: "text-gray-600 dark:text-gray-400",
+  label: "mb-1.5 block text-sm font-medium text-gray-900 dark:text-white",
+  hint: "m-0 mt-1.5 text-xs text-gray-600 dark:text-gray-400",
+  error: "m-0 mt-1.5 text-xs font-medium text-red-600 dark:text-red-400",
+  input:
+    "w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-500 focus:border-brand focus:ring-2 focus:ring-brand/15 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500 aria-[invalid=true]:border-red-500 dark:border-white/15 dark:bg-neutral-950 dark:text-white dark:placeholder:text-gray-500 dark:focus:border-brand-light dark:focus:ring-brand-light/15 dark:disabled:bg-white/5 dark:disabled:text-gray-500",
+  primaryButton:
+    "inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg bg-brand px-5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand/90 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-brand-light dark:text-black",
+  secondaryButton:
+    "inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-3.5 text-sm font-medium text-gray-900 transition-colors hover:border-brand hover:text-brand focus-within:ring-2 focus-within:ring-brand/30 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/15 dark:bg-neutral-900 dark:text-white dark:hover:border-brand-light dark:hover:text-brand-light",
+  ghostButton:
+    "inline-flex h-10 cursor-pointer items-center justify-center rounded-lg px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-300 dark:hover:bg-white/10",
+  dropzone:
+    "flex min-h-40 cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-gray-300 px-4 py-8 text-center transition-colors hover:border-brand hover:bg-brand/5 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/30 dark:border-white/15 dark:hover:border-brand-light dark:hover:bg-brand-light/5",
+  iconCircle: "grid h-10 w-10 place-items-center rounded-full bg-brand/10 text-brand dark:bg-brand-light/15 dark:text-brand-light",
+};
+
+/* ------------------------------- Small pieces ------------------------------ */
 
 const Spinner = () => (
   <span role="status" className="inline-flex">
-    <span className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#e5e7eb] border-t-brand dark:border-white/10 dark:border-t-brand-light" aria-hidden="true" />
+    <span
+      className="h-9 w-9 animate-spin rounded-full border-[3px] border-gray-200 border-t-brand dark:border-white/10 dark:border-t-brand-light"
+      aria-hidden="true"
+    />
     <span className="sr-only">Loading profile</span>
   </span>
+);
+
+const Avatar = ({ src, initials, className }: { src: string; initials: string; className: string }) =>
+  src ? (
+    <img src={src} alt="" className={`${className} shrink-0 rounded-full object-cover`} />
+  ) : (
+    <span
+      className={`${className} grid shrink-0 place-items-center rounded-full bg-brand/10 font-semibold text-brand dark:bg-brand-light/15 dark:text-brand-light`}
+      aria-hidden="true"
+    >
+      {initials}
+    </span>
+  );
+
+const CardHeader = ({ title, description, action }: { title: string; description?: string; action?: ReactNode }) => (
+  <div className="mb-5 flex items-start justify-between gap-3">
+    <div className="min-w-0">
+      <h2 className={ui.cardTitle}>{title}</h2>
+      {description && <p className={`m-0 mt-1 text-sm ${ui.muted}`}>{description}</p>}
+    </div>
+    {action}
+  </div>
 );
 
 type DropzoneProps = {
   id: string;
   accept: string;
   onFile: (file: File) => void;
-  className?: string;
   children: ReactNode;
 };
 
-const Dropzone = ({ id, accept, onFile, className = "", children }: DropzoneProps) => {
+const Dropzone = ({ id, accept, onFile, children }: DropzoneProps) => {
   const [dragging, setDragging] = useState(false);
 
   const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
@@ -102,13 +171,13 @@ const Dropzone = ({ id, accept, onFile, className = "", children }: DropzoneProp
       }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
-      className={`${ui.dropzone} ${dragging ? "bg-brand/10 dark:bg-brand-light/10" : ""} ${className}`}
+      className={`${ui.dropzone} ${dragging ? "border-brand bg-brand/10 dark:border-brand-light dark:bg-brand-light/10" : ""}`}
     >
       <input
         id={id}
         type="file"
         accept={accept}
-        className="hidden"
+        className="sr-only"
         onChange={(event) => {
           const file = event.target.files?.[0];
           event.target.value = "";
@@ -120,6 +189,10 @@ const Dropzone = ({ id, accept, onFile, className = "", children }: DropzoneProp
   );
 };
 
+/* ---------------------------------- Page ----------------------------------- */
+
+type SavedProfile = { bio: string; phone: string; photo: string };
+
 const AgentProfilePage = () => {
   const token = useAgentAuthStore((state) => state.token);
   const logout = useAgentAuthStore((state) => state.logout);
@@ -128,9 +201,13 @@ const AgentProfilePage = () => {
   const [agent, setAgent] = useState<AgentProfile | null>(null);
   const [attention, setAttention] = useState<AgentAttention | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const [saved, setSaved] = useState<SavedProfile>({ bio: "", phone: "", photo: "" });
   const [bioDraft, setBioDraft] = useState("");
   const [phoneDraft, setPhoneDraft] = useState("");
   const [photoDraft, setPhotoDraft] = useState("");
+  const [phoneTouched, setPhoneTouched] = useState(false);
+
   const [documentFile, setDocumentFile] = useState<File | null>(null);
   const [documentDataUrl, setDocumentDataUrl] = useState("");
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
@@ -144,11 +221,17 @@ const AgentProfilePage = () => {
     void Promise.all([agentAPI.getMe(), agentAPI.getAttention()])
       .then(([profile, needsAttention]) => {
         if (cancelled) return;
+        const snapshot = {
+          bio: profile.bio ?? "",
+          phone: readString(profile, "phone", "phoneNumber"),
+          photo: readString(profile, "photo", "avatar", "image"),
+        };
         setAgent(profile);
         setAttention(needsAttention);
-        setBioDraft(profile.bio ?? "");
-        setPhoneDraft(readString(profile, "phone", "phoneNumber"));
-        setPhotoDraft(readString(profile, "photo", "avatar", "image"));
+        setSaved(snapshot);
+        setBioDraft(snapshot.bio);
+        setPhoneDraft(snapshot.phone);
+        setPhotoDraft(snapshot.photo);
       })
       .catch((error: unknown) => {
         toast.error(agentErrorMessage(error, "We couldn't load your profile."));
@@ -165,6 +248,20 @@ const AgentProfilePage = () => {
   const name = agent?.name ?? "";
   const email = agent?.email ?? "";
   const initials = useMemo(() => initialsOf(name), [name]);
+  const phoneError = phoneErrorFor(phoneDraft);
+  const isDirty =
+    bioDraft !== saved.bio || phoneDraft.trim() !== saved.phone.trim() || photoDraft !== saved.photo;
+
+  // Warn before leaving the page with unsaved edits
+  useEffect(() => {
+    if (!isDirty) return;
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [isDirty]);
 
   if (!token) return <Navigate to="/agent/login" replace />;
 
@@ -213,15 +310,29 @@ const AgentProfilePage = () => {
     setDocumentDataUrl("");
   };
 
+  const discardChanges = () => {
+    setBioDraft(saved.bio);
+    setPhoneDraft(saved.phone);
+    setPhotoDraft(saved.photo);
+    setPhoneTouched(false);
+  };
+
   const saveProfile = async () => {
+    setPhoneTouched(true);
+    if (phoneError) return;
     setSaving(true);
     try {
       const response = await agentAPI.updateMe(bioDraft.trim(), photoDraft || undefined, phoneDraft.trim() || undefined);
       const updated = { ...response.data, photo: photoDraft || undefined };
+      const snapshot = {
+        bio: updated.bio ?? bioDraft.trim(),
+        phone: readString(updated, "phone", "phoneNumber") || phoneDraft.trim(),
+        photo: photoDraft,
+      };
       setAgent(updated);
-      setBioDraft(updated.bio ?? "");
-      setPhoneDraft(readString(updated, "phone", "phoneNumber") || phoneDraft.trim());
-      setPhotoDraft(readString(updated, "photo", "avatar", "image"));
+      setSaved(snapshot);
+      setBioDraft(snapshot.bio);
+      setPhoneDraft(snapshot.phone);
       toast.success(response.message || "Profile updated.");
     } catch (error) {
       toast.error(agentErrorMessage(error, "We couldn't save your profile."));
@@ -263,11 +374,13 @@ const AgentProfilePage = () => {
     }
   };
 
-  const verificationStatus = readString(agent?.verification, "status") || "not_sent";
-  const verificationLabel =
-    VERIFICATION_LABELS[verificationStatus] ?? verificationStatus.replaceAll("_", " ");
+  const rawStatus = readString(agent?.verification, "status") || "not_sent";
+  const statusKey: VerificationKey = rawStatus in VERIFICATION ? (rawStatus as VerificationKey) : "not_sent";
+  const status = VERIFICATION[statusKey];
+  const StatusIcon = status.icon;
   const documents = Array.isArray(agent?.verification?.documents) ? agent.verification.documents : [];
   const documentNames = documents.map((document) => readString(document, "name", "filename", "file") || "Document");
+  const showPhoneError = phoneTouched && Boolean(phoneError);
 
   return (
     <div data-agent-scroll className={ui.page}>
@@ -288,184 +401,234 @@ const AgentProfilePage = () => {
 
       <main className={ui.main}>
         <div className={ui.container}>
-          <div className={ui.heading}>
-            <h1 className={ui.title}>My profile</h1>
-            <p className={`m-0 mt-0.5 text-sm ${ui.muted}`}>Visitors see this on your listings.</p>
+          <div className="mb-6">
+            <h1 className="m-0 text-xl font-bold tracking-tight sm:text-2xl">My profile</h1>
+            <p className={`m-0 mt-1 text-sm ${ui.muted}`}>
+              Manage how visitors see you on your listings, and verify your identity.
+            </p>
           </div>
 
-        {loading ? (
-          <div className="grid min-h-[300px] place-items-center"><Spinner /></div>
-        ) : (
-          <div className={ui.grid}>
-            <div className="grid gap-4">
-              {/* Profile form */}
-              <section className={`${ui.card} ${ui.section}`} aria-label="Profile details">
-                <span className={ui.label}>Photo</span>
-                {photoDraft ? (
-                  <div className={ui.photoPanel}>
-                    <img src={photoDraft} alt="" className="h-20 w-20 shrink-0 rounded-full object-cover" />
-                    <div className="flex flex-wrap gap-2">
-                      <Dropzone
-                        id="agent-photo-input"
-                        accept="image/*"
-                        onFile={handlePhotoFile}
-                        className="flex-row! gap-1.5! rounded-full! border-solid! border-[#e5e7eb]! px-3! py-1.5! text-xs font-medium"
-                      >
-                        <ImageIcon size={14} aria-hidden="true" />
-                        {uploadingPhoto ? "Reading..." : "Change photo"}
-                      </Dropzone>
-                      <button type="button" onClick={() => setPhotoDraft("")} className={ui.ghostButton}>
-                        <Trash2 size={14} aria-hidden="true" /> Remove
-                      </button>
+          {loading ? (
+            <div className="grid min-h-[300px] place-items-center"><Spinner /></div>
+          ) : (
+            <div className={ui.grid}>
+              <div className="grid gap-4">
+                {/* Profile details */}
+                <section className={`${ui.card} ${ui.cardBody}`} aria-labelledby="profile-details-title">
+                  <CardHeader title="Profile details" description="This information is shown on your public listings." />
+
+                  {/* Photo */}
+                  <div className="flex items-center gap-4">
+                    <Avatar src={photoDraft} initials={initials} className="h-20 w-20 text-xl" />
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <label className={ui.secondaryButton}>
+                          <Camera size={15} aria-hidden="true" />
+                          {uploadingPhoto ? "Reading…" : photoDraft ? "Change photo" : "Upload photo"}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="sr-only"
+                            disabled={uploadingPhoto}
+                            onChange={(event) => {
+                              const file = event.target.files?.[0];
+                              event.target.value = "";
+                              if (file) handlePhotoFile(file);
+                            }}
+                          />
+                        </label>
+                        {photoDraft && (
+                          <button type="button" onClick={() => setPhotoDraft("")} className={`${ui.secondaryButton} hover:border-red-500 hover:text-red-600 dark:hover:border-red-400 dark:hover:text-red-400`}>
+                            <Trash2 size={15} aria-hidden="true" /> Remove
+                          </button>
+                        )}
+                      </div>
+                      <p className={ui.hint}>JPG or PNG, up to 5 MB.</p>
                     </div>
                   </div>
-                ) : (
-                  <Dropzone id="agent-photo-input" accept="image/*" onFile={handlePhotoFile} className="min-h-[134px]">
-                    <span className={`${ui.iconCircle} h-7! w-7!`}><ImageIcon size={14} aria-hidden="true" /></span>
-                    <span className="text-xs font-medium">{uploadingPhoto ? "Reading..." : "Upload an image"}</span>
-                  </Dropzone>
-                )}
 
-                <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="agent-name" className={ui.label}>Name</label>
-                    <input id="agent-name" className={ui.input} value={name} disabled readOnly />
+                  <hr className="my-6 border-0 border-t border-gray-200 dark:border-white/10" />
+
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <div>
+                      <label htmlFor="agent-name" className={ui.label}>Full name</label>
+                      <input id="agent-name" className={ui.input} value={name} disabled readOnly aria-describedby="agent-name-hint" />
+                      <p id="agent-name-hint" className={ui.hint}>Your name is managed by RewaCiti.</p>
+                    </div>
+                    <div>
+                      <label htmlFor="agent-email" className={ui.label}>Email</label>
+                      <input id="agent-email" type="email" className={ui.input} value={email} disabled readOnly />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label htmlFor="agent-phone" className={ui.label}>Phone number</label>
+                      <input
+                        id="agent-phone"
+                        type="tel"
+                        inputMode="tel"
+                        className={ui.input}
+                        value={phoneDraft}
+                        onChange={(event) => setPhoneDraft(event.target.value)}
+                        onBlur={() => setPhoneTouched(true)}
+                        autoComplete="tel"
+                        placeholder="+234 801 234 5678"
+                        aria-invalid={showPhoneError}
+                        aria-describedby={showPhoneError ? "agent-phone-error" : "agent-phone-hint"}
+                      />
+                      {showPhoneError ? (
+                        <p id="agent-phone-error" role="alert" className={ui.error}>{phoneError}</p>
+                      ) : (
+                        <p id="agent-phone-hint" className={ui.hint}>Visitors can use this to contact you about a listing.</p>
+                      )}
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label htmlFor="agent-bio" className={ui.label}>Bio</label>
+                      <textarea
+                        id="agent-bio"
+                        className={`${ui.input} min-h-28 resize-y`}
+                        rows={4}
+                        maxLength={BIO_MAX}
+                        placeholder="Areas you cover, experience, languages spoken…"
+                        value={bioDraft}
+                        onChange={(event) => setBioDraft(event.target.value)}
+                        aria-describedby="agent-bio-count"
+                      />
+                      <p id="agent-bio-count" className="m-0 mt-1.5 text-right text-xs text-gray-600 dark:text-gray-400" aria-live="polite">
+                        {bioDraft.length}/{BIO_MAX}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <label htmlFor="agent-phone" className={ui.label}>Phone</label>
-                    <input
-                      id="agent-phone"
-                      type="tel"
-                      className={ui.input}
-                      value={phoneDraft}
-                      onChange={(event) => setPhoneDraft(event.target.value)}
-                      autoComplete="tel"
-                    />
+
+                  <div className="mt-6 flex items-center justify-end gap-2 border-t border-gray-200 pt-5 dark:border-white/10">
+                    {isDirty && !saving && (
+                      <span className={`mr-auto text-xs ${ui.muted}`}>You have unsaved changes.</span>
+                    )}
+                    <button type="button" onClick={discardChanges} disabled={!isDirty || saving} className={ui.ghostButton}>
+                      Discard
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void saveProfile()}
+                      disabled={!isDirty || saving || uploadingPhoto}
+                      className={ui.primaryButton}
+                    >
+                      {saving ? "Saving…" : "Save changes"}
+                    </button>
                   </div>
-                </div>
+                </section>
 
-                <div className="mt-4">
-                  <label htmlFor="agent-bio" className={ui.label}>Bio</label>
-                  <textarea
-                    id="agent-bio"
-                    className={`${ui.input} min-h-20 resize-y`}
-                    rows={3}
-                    maxLength={BIO_MAX}
-                    placeholder="Areas you cover, experience, languages..."
-                    value={bioDraft}
-                    onChange={(event) => setBioDraft(event.target.value)}
-                  />
-                  <p className={ui.counter}>
-                    {bioDraft.length}/{BIO_MAX}
-                  </p>
-                </div>
-
-                <div className="mt-2 flex justify-end">
-                  <button type="button" onClick={() => void saveProfile()} disabled={saving || uploadingPhoto} className={ui.primaryButton}>
-                    {saving ? "Saving..." : "Save profile"}
-                  </button>
-                </div>
-              </section>
-
-              {/* Verification */}
-              <section className={`${ui.card} ${ui.section}`} aria-label="Verification">
-                <div className="flex items-center justify-between gap-3">
-                  <h2 className="m-0 flex items-center gap-2 text-sm font-semibold">
-                    <ShieldCheck size={16} aria-hidden="true" /> Verification
-                  </h2>
-                  <span className={ui.pill}>
-                    {verificationLabel}
-                  </span>
-                </div>
-                <p className={`m-0 mt-2 text-xs ${ui.muted}`}>
-                  {verificationStatus === "verified"
-                    ? "Your ID has been confirmed by RewaCiti."
-                    : verificationStatus === "pending"
-                      ? "Your document is being reviewed."
-                      : "Send a valid ID so RewaCiti can confirm who you are."}
-                </p>
-
-                {documentNames.length > 0 && (
-                  <ul className="m-0 mt-3 grid list-none gap-1.5 p-0">
-                    {documentNames.map((documentName, index) => (
-                      <li key={`${documentName}-${index}`} className={`truncate text-xs ${ui.muted}`}>{documentName}</li>
-                    ))}
-                  </ul>
-                )}
-
-                <Dropzone
-                  id="agent-document-input"
-                  accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                  onFile={handleDocumentFile}
-                  className="mt-4 min-h-40"
-                >
-                  <span className={ui.iconCircle}><FileText size={18} aria-hidden="true" /></span>
-                  {documentFile ? (
-                    <>
-                      <span className="max-w-full truncate text-sm font-medium">{documentFile.name}</span>
-                      <span className={`text-[11px] ${ui.muted}`}>
-                        {(documentFile.size / 1024).toFixed(0)} KB · Click to replace
+                {/* Verification */}
+                <section className={`${ui.card} ${ui.cardBody}`} aria-labelledby="verification-title">
+                  <CardHeader
+                    title="Identity verification"
+                    description={status.hint}
+                    action={(
+                      <span className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${status.badge}`}>
+                        <StatusIcon size={13} aria-hidden="true" /> {status.label}
                       </span>
-                    </>
-                  ) : (
+                    )}
+                  />
+
+                  {documentNames.length > 0 && (
+                    <ul className="m-0 mb-5 grid list-none gap-2 p-0" aria-label="Submitted documents">
+                      {documentNames.map((documentName, index) => (
+                        <li
+                          key={`${documentName}-${index}`}
+                          className="flex items-center gap-3 rounded-lg border border-gray-200 px-3 py-2.5 text-sm dark:border-white/10"
+                        >
+                          <FileText size={16} className="shrink-0 text-gray-500 dark:text-gray-400" aria-hidden="true" />
+                          <span className="min-w-0 flex-1 truncate">{documentName}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {statusKey !== "verified" && (
                     <>
-                      <span className="text-sm font-medium">{uploadingDocument ? "Reading..." : "Add a document"}</span>
-                      <span className={`text-[11px] ${ui.muted}`}>Click to upload or drag and drop</span>
-                      <span className={`text-[11px] ${ui.muted}`}>PDF, DOC, DOCX up to 25MB</span>
+                      {documentFile ? (
+                        <div className="flex items-center gap-3 rounded-xl border border-gray-200 p-4 dark:border-white/10">
+                          <span className={ui.iconCircle}><FileText size={18} aria-hidden="true" /></span>
+                          <div className="min-w-0 flex-1">
+                            <p className="m-0 truncate text-sm font-medium">{documentFile.name}</p>
+                            <p className={`m-0 mt-0.5 text-xs ${ui.muted}`}>{formatBytes(documentFile.size)}</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={clearDocument}
+                            aria-label="Remove selected document"
+                            className="grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-lg border-0 bg-transparent text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      ) : (
+                        <Dropzone id="agent-document-input" accept={DOCUMENT_ACCEPT} onFile={handleDocumentFile}>
+                          <span className={ui.iconCircle}><UploadCloud size={18} aria-hidden="true" /></span>
+                          <span className="text-sm font-medium">
+                            {uploadingDocument ? "Reading…" : "Upload a document"}
+                          </span>
+                          <span className={`text-xs ${ui.muted}`}>Click to browse or drag and drop</span>
+                          <span className={`text-xs ${ui.muted}`}>PDF, DOC or DOCX, up to 25 MB</span>
+                        </Dropzone>
+                      )}
+
+                      <div className="mt-4 flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => void submitDocument()}
+                          disabled={!documentFile || submittingDocument || uploadingDocument}
+                          className={ui.primaryButton}
+                        >
+                          {submittingDocument ? "Sending…" : "Submit for review"}
+                        </button>
+                      </div>
                     </>
                   )}
-                </Dropzone>
+                </section>
+              </div>
 
-                <button
-                  type="button"
-                  onClick={() => void submitDocument()}
-                  disabled={!documentFile || submittingDocument || uploadingDocument}
-                  className={ui.submitButton}
-                >
-                  {submittingDocument ? "Sending..." : "Send for checking"}
-                </button>
-              </section>
-            </div>
+              {/* Preview */}
+              <aside className={`${ui.card} ${ui.cardBody} order-first lg:sticky lg:top-24 lg:order-0`} aria-label="Preview">
+                <h2 className={ui.cardTitle}>Preview</h2>
+                <p className={`m-0 mt-1 text-sm ${ui.muted}`}>How visitors see you on your listings.</p>
 
-            {/* Preview */}
-            <aside className={`${ui.card} ${ui.section}`} aria-label="Preview">
-              <h2 className="m-0 text-[13px] font-semibold">Preview</h2>
-              <p className={`m-0 mt-1.5 text-[11px] ${ui.muted}`}>How visitors see you on your listings.</p>
+                <div className="mt-5 rounded-xl border border-gray-200 p-4 dark:border-white/10">
+                  <div className="flex items-center gap-3">
+                    <Avatar src={photoDraft} initials={initials} className="h-14 w-14 text-base" />
+                    <div className="min-w-0">
+                      <p className="m-0 flex items-center gap-1.5 text-sm font-bold">
+                        <span className="truncate">{name || "Your name"}</span>
+                        {statusKey === "verified" && (
+                          <ShieldCheck size={15} className="shrink-0 text-green-600 dark:text-green-400" aria-label="Verified agent" />
+                        )}
+                      </p>
+                      <p className={`m-0 mt-0.5 text-xs ${ui.muted}`}>Independent agent</p>
+                    </div>
+                  </div>
 
-              <div className="mt-4 flex items-center gap-3">
-                {photoDraft ? (
-                  <img src={photoDraft} alt="" className="h-12 w-12 shrink-0 rounded-full object-cover" />
-                ) : (
-                  <span className={ui.avatarPreview}>
-                    {initials}
-                  </span>
-                )}
-                <div className="min-w-0">
-                  <p className="m-0 truncate text-sm font-bold">{name || "Your name"}</p>
-                  <p className={`m-0 mt-0.5 text-[11px] ${ui.muted}`}>Independent agent</p>
+                  {(phoneDraft.trim() || email) && (
+                    <div className="mt-4 grid gap-2 border-t border-gray-200 pt-4 dark:border-white/10">
+                      {phoneDraft.trim() && (
+                        <p className="m-0 flex items-center gap-2 text-xs">
+                          <Phone size={13} className="shrink-0" aria-hidden="true" />
+                          <span className="truncate">{phoneDraft.trim()}</span>
+                        </p>
+                      )}
+                      {email && (
+                        <p className="m-0 flex items-center gap-2 text-xs">
+                          <Mail size={13} className="shrink-0" aria-hidden="true" />
+                          <span className="truncate">{email}</span>
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {bioDraft.trim() && (
+                    <p className={`m-0 mt-4 whitespace-pre-line text-xs leading-relaxed ${ui.muted}`}>{bioDraft.trim()}</p>
+                  )}
                 </div>
-              </div>
-
-              <div className="mt-4 grid gap-2">
-                {phoneDraft && (
-                  <p className="m-0 flex items-center gap-2 text-[11px]">
-                    <Phone size={12} className="shrink-0" aria-hidden="true" />
-                    <span className="truncate">{phoneDraft}</span>
-                  </p>
-                )}
-                {email && (
-                  <p className="m-0 flex items-center gap-2 text-[11px]">
-                    <Mail size={12} className="shrink-0" aria-hidden="true" />
-                    <span className="truncate">{email}</span>
-                  </p>
-                )}
-                {bioDraft.trim() && (
-                  <p className={`m-0 mt-1 whitespace-pre-line text-[11px] leading-relaxed ${ui.muted}`}>{bioDraft.trim()}</p>
-                )}
-              </div>
-            </aside>
-          </div>
-        )}
+              </aside>
+            </div>
+          )}
         </div>
       </main>
     </div>

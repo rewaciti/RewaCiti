@@ -30,7 +30,7 @@ const AgentPortalHeader = ({
   const nav = [
     { label: "Home", href: "/agent", active: activePage === "home", Icon: Home },
     { label: "Listings", href: "/agent/listings", active: activePage === "listings", Icon: Building2 },
-    { label: "Leads", href: "/agent/leads", active: activePage === "leads", Icon: MessageSquareText },
+    { label: "Enquiries", href: "/agent/leads", active: activePage === "leads", Icon: MessageSquareText },
     { label: "Visits", href: "/agent/visits", active: activePage === "visits", Icon: CalendarClock, badge: visitCount },
     { label: "Earnings", href: "/agent/earnings", active: activePage === "earnings", Icon: Wallet, badge: payoutCount },
   ];

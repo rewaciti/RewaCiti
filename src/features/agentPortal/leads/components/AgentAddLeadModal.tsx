@@ -40,7 +40,7 @@ const AgentAddLeadModal = ({ open, onOpenChange, onCreated, initialPropertyId = 
       .catch((error: unknown) => {
         if (!active) return;
         toast.error(agentErrorMessage(error, "We couldn't load your properties."));
-        console.error("Agent properties failed to load for add lead modal:", error);
+        console.error("Agent properties failed to load for add enquiry modal:", error);
       })
       .finally(() => {
         if (active) setLoadingProperties(false);
@@ -80,7 +80,7 @@ const AgentAddLeadModal = ({ open, onOpenChange, onCreated, initialPropertyId = 
       onCreated(response.data);
       onOpenChange(false);
     } catch (error) {
-      toast.error(agentErrorMessage(error, "We couldn't save this lead. Please try again."));
+      toast.error(agentErrorMessage(error, "We couldn't save this enquiry. Please try again."));
       console.error("Agent create inquiry failed:", error);
     } finally {
       setSubmitting(false);
@@ -117,10 +117,10 @@ const AgentAddLeadModal = ({ open, onOpenChange, onCreated, initialPropertyId = 
               </span>
               <div>
                 <Dialog.Title className="m-0 font-serif text-xl font-semibold text-gray-900 dark:text-white max-sm:text-lg">
-                  Add a lead
+                  Add an enquiry
                 </Dialog.Title>
                 <Dialog.Description id="agent-add-lead-description" className="mt-1 mb-0 text-xs text-gray-600 dark:text-gray-400 sm:text-sm">
-                  Record a prospect inquiry from a call, walk-in, or referral.
+                  Record an enquiry from a call, walk-in, or referral.
                 </Dialog.Description>
               </div>
             </div>
@@ -196,7 +196,7 @@ const AgentAddLeadModal = ({ open, onOpenChange, onCreated, initialPropertyId = 
               </div>
 
               <label className="grid gap-1.5 text-xs font-semibold text-gray-900 dark:text-white">
-                <span>Inquiry notes <span className="text-red-600 dark:text-red-400">*</span></span>
+                <span>Enquiry notes <span className="text-red-600 dark:text-red-400">*</span></span>
                 <textarea
                   required
                   rows={3}
@@ -216,7 +216,7 @@ const AgentAddLeadModal = ({ open, onOpenChange, onCreated, initialPropertyId = 
                   required
                   className="mt-0.5 h-4 w-4 shrink-0 accent-[#703BF7]"
                 />
-                <span>The prospect agreed to be contacted regarding this property inquiry.</span>
+                <span>They agreed to be contacted about this property enquiry.</span>
               </label>
             </div>
 
@@ -235,7 +235,7 @@ const AgentAddLeadModal = ({ open, onOpenChange, onCreated, initialPropertyId = 
                 disabled={!canSubmit}
                 className="min-h-11 rounded-lg border-0 bg-[#703BF7] px-5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#5c2fe0] disabled:cursor-not-allowed disabled:opacity-45"
               >
-                {submitting ? "Saving..." : "Save lead"}
+                {submitting ? "Saving..." : "Save enquiry"}
               </button>
             </footer>
           </form>

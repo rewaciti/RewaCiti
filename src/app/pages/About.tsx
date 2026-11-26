@@ -157,14 +157,6 @@ const teamData: TeamMember[] = [
     email: "arewatolulope5@gmail.com",
     linkedin: "https://www.linkedin.com/in/arewa-tolulope-1496a7238/",
   },
-  {
-    id: 4,
-    name: "Isaiah Olumide",
-    role: "Property Acquisition Specialist",
-    image: "/logo/Team/WhatsApp Image 2026-04-25 at 5.41.00 AM.jpeg",
-    email: "Isaiahmusicgiantimgsznf@gmail.com",
-    linkedin: "https://www.linkedin.com/in/isaiah-olumide-7426a9273/",
-  },
 ];
 
 const iconMap = {
@@ -473,7 +465,7 @@ function About() {
               description="At RewaCiti, our success is driven by the dedication and expertise of our team. Get to know the people behind our mission to make your real estate dreams a reality."
             />
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:gap-6">
               {teamData.map((member: TeamMember) => (
                 <article
                   key={member.id}
@@ -486,7 +478,7 @@ function About() {
                       alt={member.name}
                       loading="lazy"
                       decoding="async"
-                      className="h-60 w-full rounded-xl object-cover"
+                      className="h-60 w-full rounded-xl object-cover object-top"
                     />
 
                     <a

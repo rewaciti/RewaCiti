@@ -141,7 +141,7 @@ const AgentPropertyOverview = ({
       setVisits(bookingResponse.data.filter((entry) => entry.propertyId === property.id));
     } catch (error) {
       setActivityError(true);
-      toast.error(agentErrorMessage(error, "We couldn't load this property's inquiries and visits."));
+      toast.error(agentErrorMessage(error, "We couldn't load this property's enquiries and visits."));
       console.error("Agent property activity failed to load:", error);
     } finally {
       setActivityLoading(false);
@@ -170,9 +170,9 @@ const AgentPropertyOverview = ({
   }, [galleryOpen, property.photos.length]);
 
   const renderInquiries = (limit?: number) => {
-    if (activityLoading) return <ActivityPlaceholder icon={<MessageSquare size={20} />}>Loading inquiries...</ActivityPlaceholder>;
+    if (activityLoading) return <ActivityPlaceholder icon={<MessageSquare size={20} />}>Loading enquiries...</ActivityPlaceholder>;
     if (activityError) return <ActivityError onRetry={() => void loadPropertyActivity()} />;
-    if (!inquiries.length) return <ActivityPlaceholder icon={<MessageSquare size={20} />}>No inquiries for this property yet.</ActivityPlaceholder>;
+    if (!inquiries.length) return <ActivityPlaceholder icon={<MessageSquare size={20} />}>No enquiries for this property yet.</ActivityPlaceholder>;
     return <div className="grid gap-2">{(limit ? inquiries.slice(0, limit) : inquiries).map((inquiry) => <InquiryCard key={inquiry.id} inquiry={inquiry} compact={Boolean(limit)} />)}</div>;
   };
 
@@ -263,7 +263,7 @@ const AgentPropertyOverview = ({
 
   const detailTabs = [
     { value: "overview", label: "Overview", icon: LayoutDashboard },
-    { value: "inquiries", label: "Inquiries", icon: MessageSquare },
+    { value: "inquiries", label: "Enquiries", icon: MessageSquare },
     { value: "visits", label: "Visits", icon: CalendarClock },
     { value: "history", label: "History", icon: HistoryIcon },
   ] as const;
@@ -361,7 +361,7 @@ const AgentPropertyOverview = ({
           <>
             <div className="mb-4 grid grid-cols-4 gap-3 max-[700px]:grid-cols-2">
               <div className="relative grid min-h-[88px] content-center gap-1 rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-[#1a1a1a]"><span className="text-xs text-[#4b5563] dark:text-[#9ca3af]">Views</span><strong className="text-xl font-bold text-[#111827] dark:text-white sm:text-2xl">{property.views.toLocaleString()}</strong><Eye size={16} className="absolute top-4 right-4 text-[#6b7280] dark:text-[#9ca3af]" /></div>
-              <div className="relative grid min-h-[88px] content-center gap-1 rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-[#1a1a1a]"><span className="text-xs text-[#4b5563] dark:text-[#9ca3af]">Open inquiries</span><strong className="text-xl font-bold text-[#111827] dark:text-white sm:text-2xl">{property.inquiryCount ?? 0}</strong><MessageSquare size={16} className="absolute top-4 right-4 text-[#6b7280] dark:text-[#9ca3af]" /></div>
+              <div className="relative grid min-h-[88px] content-center gap-1 rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-[#1a1a1a]"><span className="text-xs text-[#4b5563] dark:text-[#9ca3af]">Open enquiries</span><strong className="text-xl font-bold text-[#111827] dark:text-white sm:text-2xl">{property.inquiryCount ?? 0}</strong><MessageSquare size={16} className="absolute top-4 right-4 text-[#6b7280] dark:text-[#9ca3af]" /></div>
               <div className="relative grid min-h-[88px] content-center gap-1 rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-[#1a1a1a]"><span className="text-xs text-[#4b5563] dark:text-[#9ca3af]">Upcoming visits</span><strong className="text-xl font-bold text-[#111827] dark:text-white sm:text-2xl">{property.visitCount ?? 0}</strong><CalendarClock size={16} className="absolute top-4 right-4 text-[#6b7280] dark:text-[#9ca3af]" /></div>
               <div className="relative grid min-h-[88px] content-center gap-1 rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-[#1a1a1a]"><span className="text-xs text-[#4b5563] dark:text-[#9ca3af]">Visit fee</span><strong className="text-xl font-bold text-[#111827] dark:text-white sm:text-2xl">{property.visitFeeOverride == null ? "Usual fee" : money(property.visitFeeOverride, property.currency)}</strong><CircleDollarSign size={16} className="absolute top-4 right-4 text-[#6b7280] dark:text-[#9ca3af]" /></div>
             </div>
@@ -459,7 +459,7 @@ const AgentPropertyOverview = ({
 
         {activeTab === "inquiries" && (
           <section className="grid min-h-[300px] content-start gap-4 rounded-xl border border-gray-200 bg-white p-5 text-[#111827] sm:p-6 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white">
-            <div><h2 className="m-0 text-base font-bold text-[#111827] sm:text-lg dark:text-white">Inquiries</h2><p className="mb-0 mt-1 text-sm text-[#4b5563] dark:text-[#9ca3af]">{activityLoading ? `${property.inquiryCount ?? 0} inquiries recorded for this property.` : `${inquiries.length} inquiries recorded for this property.`}</p></div>
+            <div><h2 className="m-0 text-base font-bold text-[#111827] sm:text-lg dark:text-white">Enquiries</h2><p className="mb-0 mt-1 text-sm text-[#4b5563] dark:text-[#9ca3af]">{activityLoading ? `${property.inquiryCount ?? 0} enquiries recorded for this property.` : `${inquiries.length} enquiries recorded for this property.`}</p></div>
             {renderInquiries()}
           </section>
         )}

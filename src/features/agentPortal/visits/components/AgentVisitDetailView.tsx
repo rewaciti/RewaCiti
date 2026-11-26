@@ -2,10 +2,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import * as React from "react";
 import {
   CalendarClock,
+  CalendarPlus,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Copy,
+  Download,
   ImagePlus,
   Mail,
   Phone,
@@ -65,6 +67,14 @@ const longDate = (iso: string) => {
 
 const toISODate = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
+const calendarStamp = (value: string) => {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+};
+
+const escapeIcsText = (value: string) =>
+  value.replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
 
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
@@ -294,6 +304,46 @@ const AgentVisitDetailView = ({ booking, onClose, onUpdated, agentName }: AgentV
   const isVirtual = booking.mode === "virtual";
   const availableSlots = rescheduleSlots.filter((slot) => slot.available && slot.booked < slot.capacity);
   const isPaid = booking.paymentStatus === "paid";
+
+  const visitTitle = `${booking.property?.title || "Property"} visit`;
+  const visitLocation = booking.address || booking.property?.title || "";
+  const calendarDetails = [
+    `Reference: ${booking.reference}`,
+    `Visitor: ${visitorName}`,
+    hostName ? `Agent: ${hostName}` : "",
+    booking.meetingLink ? `Video link: ${booking.meetingLink}` : "",
+  ].filter(Boolean).join("\n");
+  const calendarStart = calendarStamp(booking.startsAt || `${booking.date}T${booking.start}`);
+  const calendarEnd = calendarStamp(booking.endsAt || `${booking.date}T${booking.end}`);
+  const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(visitTitle)}&dates=${calendarStart}/${calendarEnd}&details=${encodeURIComponent(calendarDetails)}&location=${encodeURIComponent(visitLocation)}`;
+
+  const downloadCalendarEvent = () => {
+    const event = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//RewaCiti//Agent Visits//EN",
+      "CALSCALE:GREGORIAN",
+      "BEGIN:VEVENT",
+      `UID:${booking.reference}@rewaciti`,
+      `DTSTAMP:${calendarStamp(new Date().toISOString())}`,
+      `DTSTART:${calendarStart}`,
+      `DTEND:${calendarEnd}`,
+      `SUMMARY:${escapeIcsText(visitTitle)}`,
+      `DESCRIPTION:${escapeIcsText(calendarDetails)}`,
+      `LOCATION:${escapeIcsText(visitLocation)}`,
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    const blob = new Blob([event], { type: "text/calendar;charset=utf-8" });
+    const objectUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = objectUrl;
+    link.download = `rewaciti-visit-${booking.reference}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+  };
 
   const todayISO = toISODate(new Date());
   const monthDays = new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 0).getDate();
@@ -565,15 +615,25 @@ const AgentVisitDetailView = ({ booking, onClose, onUpdated, agentName }: AgentV
                 <Copy size={14} /> Copy payment link
               </button>
             )}
-            {booking.manageLink && (
+            <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <a
+                href={googleCalendarUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-disabled={!calendarStart || !calendarEnd}
+                className={`${outlineBtn} h-9 w-full justify-center text-xs whitespace-nowrap ${!calendarStart || !calendarEnd ? "pointer-events-none opacity-45" : ""}`}
+              >
+                <CalendarPlus size={14} className="shrink-0" /> Add to Google Calendar
+              </a>
               <button
                 type="button"
-                onClick={() => void copyLink(booking.manageLink!, "Manage link")}
-                className={`${outlineBtn} mt-2 h-9 w-full`}
+                onClick={downloadCalendarEvent}
+                disabled={!calendarStart || !calendarEnd}
+                className={`${outlineBtn} h-9 w-full justify-center text-xs whitespace-nowrap`}
               >
-                <Copy size={14} /> Copy visitor manage link
+                <Download size={14} className="shrink-0" /> Download for Apple / Outlook
               </button>
-            )}
+            </div>
 
             {booking.paymentStatus === "unpaid" && booking.status !== "cancelled" && (
               <form
@@ -836,7 +896,7 @@ const AgentVisitDetailView = ({ booking, onClose, onUpdated, agentName }: AgentV
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h2 id="agent-visit-cancel-title" className="m-0 text-lg font-bold">Cancel this visit?</h2>
-                  <p className={`mt-1 mb-0 text-sm ${mutedText}`}>The visit fee will not be refunded.</p>
+                  <p className={`mt-1 mb-0 text-sm ${mutedText}`}>Your reason will be shared with the visitor, and the visit fee will be refunded to them.</p>
                 </div>
                 <button
                   type="button"
@@ -858,7 +918,7 @@ const AgentVisitDetailView = ({ booking, onClose, onUpdated, agentName }: AgentV
                 maxLength={400}
                 value={cancelReason}
                 onChange={(event) => setCancelReason(event.target.value)}
-                placeholder="Shared with the visitor"
+                placeholder="Explain why you’re cancelling"
                 className={`${fieldInputClass} min-h-[84px] resize-y`}
               />
 

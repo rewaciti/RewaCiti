@@ -108,8 +108,8 @@ const AgentLeadDetailView = ({ inquiry, onClose, onUpdated, agentName, onBookVis
       toast.success(response.message);
       onUpdated(response.data);
     } catch (error) {
-      toast.error(agentErrorMessage(error, "We couldn't update this lead's status."));
-      console.error("Agent lead status update failed:", error);
+      toast.error(agentErrorMessage(error, "We couldn't update this enquiry's status."));
+      console.error("Agent enquiry status update failed:", error);
     } finally {
       setUpdatingStatus(false);
     }
@@ -165,7 +165,7 @@ const AgentLeadDetailView = ({ inquiry, onClose, onUpdated, agentName, onBookVis
       {/* Backdrop */}
       <button
         type="button"
-        aria-label="Close lead"
+        aria-label="Close enquiry"
         onClick={handleClose}
         className={`absolute inset-0 h-full w-full cursor-default border-0 bg-black/55 p-0 transition-opacity duration-300 motion-reduce:transition-none ${visible ? "opacity-100" : "opacity-0"}`}
       />
