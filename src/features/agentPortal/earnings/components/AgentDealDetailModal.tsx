@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CalendarDays, Copy, Mail, Phone, X } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -40,6 +40,28 @@ const AgentDealDetailModal = ({ deal, onClose, onUpdated }: AgentDealDetailModal
   const [detail, setDetail] = useState<AgentDeal>(deal);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [visible, setVisible] = useState(false);
+  const closeTimer = useRef<number | null>(null);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimer.current !== null) window.clearTimeout(closeTimer.current);
+    };
+  }, []);
+
+  const handleClose = useCallback(() => {
+    if (closeTimer.current !== null) return;
+    setVisible(false);
+    closeTimer.current = window.setTimeout(() => {
+      closeTimer.current = null;
+      onClose();
+    }, 300);
+  }, [onClose]);
 
   const loadDeal = useCallback(async () => {
     setLoading(true);
@@ -61,11 +83,11 @@ const AgentDealDetailModal = ({ deal, onClose, onUpdated }: AgentDealDetailModal
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") handleClose();
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [onClose]);
+  }, [handleClose]);
 
   const copyPaymentLink = async (link?: string) => {
     if (!link) return;
@@ -78,13 +100,18 @@ const AgentDealDetailModal = ({ deal, onClose, onUpdated }: AgentDealDetailModal
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/50" role="presentation" onMouseDown={onClose}>
+    <div className="fixed inset-0 z-50 flex justify-end overflow-hidden" role="presentation">
+      <button
+        type="button"
+        aria-label="Close deal details"
+        onClick={handleClose}
+        className={`absolute inset-0 h-full w-full cursor-default border-0 bg-black/50 p-0 transition-opacity duration-300 motion-reduce:transition-none ${visible ? "opacity-100" : "opacity-0"}`}
+      />
       <aside
         role="dialog"
         aria-modal="true"
         aria-label={`Deal ${detail.orderNumber}`}
-        className="flex h-full w-full max-w-xl flex-col bg-white shadow-2xl dark:bg-neutral-950"
-        onMouseDown={(event) => event.stopPropagation()}
+        className={`relative flex h-full w-full max-w-xl flex-col bg-white shadow-2xl transition-transform duration-300 ease-out motion-reduce:transition-none dark:bg-neutral-950 ${visible ? "translate-x-0" : "translate-x-full"}`}
       >
         <header className="flex items-start justify-between gap-4 border-b border-gray-200 px-5 py-4 dark:border-white/10">
           <div className="min-w-0">
@@ -95,7 +122,7 @@ const AgentDealDetailModal = ({ deal, onClose, onUpdated }: AgentDealDetailModal
             </div>
             <p className={`mt-1 truncate text-sm ${ui.muted}`}>{dealPropertyTitle(detail)}</p>
           </div>
-          <button type="button" aria-label="Close deal details" onClick={onClose} className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10">
+          <button type="button" aria-label="Close deal details" onClick={handleClose} className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10">
             <X size={18} />
           </button>
         </header>
